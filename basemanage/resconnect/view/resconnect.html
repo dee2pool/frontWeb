@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../../common/css/common.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-treeview.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../css/resc.css">
+</head>
+<body>
+    <div class="main-content main-left">
+        <div class="col-md-3">
+            <p>组织机构</p>
+            <form role="form">
+                <input type="text" class="form-control" placeholder="区域或中心名称"
+                       style="width: 230px;display: inline-block">
+                <button type="button" class="btn btn-default">搜索</button>
+            </form>
+            <div id="tree"></div>
+        </div>
+        <div id="t_list" class="col-md-9 main-right">
+            <div class="head">
+                <div class="head-left">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true">清空</span>
+                </div>
+                <div class="head-right">
+                    <form role="form">
+                        <input type="text" class="form-control" placeholder="请输入已配置的资源"
+                               style="width: 230px;display: inline-block">
+                        <button type="button" class="btn btn-default">搜索</button>
+                    </form>
+                </div>
+            </div>
+            <table data-toggle="table">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>门禁点</th>
+                    <th>监控点</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>门1</td>
+                    <td><a href="">SDK_云设备监控点</a></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Item 2</td>
+                    <td><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><a href="javascript:;" onclick="addList()">添加</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="t_add" class="main-right" style="display: none">
+            <div class="panel-left">
+                <table data-toggle="table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>序号</th>
+                        <th>监控点</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td>1</td>
+                        <td>门1</td>
+                    </tr>
+                    <tr>
+                        <td data-checkbox></td>
+                        <td>2</td>
+                        <td>Item 2</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-right">
+                <table data-toggle="table">
+                    <thead>
+                    <tr>
+                        <th data-checkbox></th>
+                        <th>序号</th>
+                        <th>监控点</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td data-checkbox></td>
+                        <td>1</td>
+                        <td>门1</td>
+                    </tr>
+                    <tr>
+                        <td data-checkbox></td>
+                        <td>2</td>
+                        <td>Item 2</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="btn-group-vertical btn-group-lg" style="position: absolute;left: 840px;top: 290px">
+                <button type="button" class="btn btn-danger" style="margin-bottom: 20px">添加</button>
+                <button type="button" class="btn btn-warning" style="margin-bottom: 20px">删除</button>
+                <button type="button" class="btn btn-default">清空</button>
+            </div>
+            <div class="btn-group" style="float: right;margin-top: 20px">
+                <button type="button" class="btn btn-danger" style="margin-right: 20px;width: 120px">完成</button>
+                <button type="button" class="btn btn-default" style="width: 120px">取消</button>
+            </div>
+        </div>
+    </div>
+<script src="../../../common/libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-treeview.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-table.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+<script>
+    /*组织树*/
+    function getTree() {
+        var tree = [{
+            text: '默认控制中心',
+            nodes: [
+                {
+                    text: '动环'
+                }, {
+                    text: '门禁'
+                }, {
+                    text: '1期',
+                    nodes: [{
+                        text: '1期01'
+                    }, {
+                        text: '1期02'
+                    }]
+                }
+            ]
+        }]
+        return tree;
+    }
+
+    $('#tree').treeview({
+        showBorder: false,
+        selectedBackColor: 'white',
+        selectedColor: 'black',
+        data: getTree()
+    })
+    function addList() {
+        $('#t_list').hide();
+        $('#t_add').show();
+    }
+</script>
+</body>
+</html>

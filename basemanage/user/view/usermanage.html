@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../../common/css/common.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-treeview.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../css/user.css">
+</head>
+<body>
+<div class="main-content">
+    <div class="main-left">
+        <p>用户组
+            <span class="user-opera">
+                <a href="javascript:;" onclick="addUgroup()"><img src="../img/add.png" height="20" width="20" title="添加"/></a>
+                <a href="javascript:;"><img src="../img/alt.png" height="20" width="20" title="修改"/></a>
+                <a href="javascript:;"><img src="../img/del.png" height="20" width="20" title="删除"/></a>
+                </span>
+        </p>
+        <form role="form">
+            <input type="text" class="form-control" placeholder="用户组名称"
+                   style="width: 230px;display: inline-block">
+            <button type="button" class="btn btn-default">搜索</button>
+        </form>
+        <div id="tree"></div>
+    </div>
+    <div class="main-right">
+        <div class="head">
+            <div class="head-left" style="width: 480px">
+                <a href="javascript:;" onclick="addUser()"><span class="glyphicon glyphicon-plus" aria-hidden="true">添加</span></a>
+                <a href="javascript:;"><span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span></a>
+                <a href="javascript:;"><span class="glyphicon glyphicon-ok-circle" aria-hidden="true">启用</span></a>
+                <a href="javascript:;"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true">禁用</span></a>
+                <a href="javascript:;"><span class="glyphicon glyphicon-log-in" aria-hidden="true">导入用户</span></a>
+                <a href="javascript:;"><span class="glyphicon glyphicon-log-out" aria-hidden="true">导出用户</span></a>
+            </div>
+            <div class="head-right" style="width: 400px">
+                <div class="dropdown" style="width: 65px;display: inline-block">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        用户
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="#">Action</a></li>
+
+                    </ul>
+                </div>
+                <form role="form" style="width: 300px;display: inline-block">
+                    <input type="text" class="form-control" placeholder="请输入已配置的资源"
+                           style="width: 230px;display: inline-block">
+                    <button type="button" class="btn btn-default">搜索</button>
+                </form>
+            </div>
+        </div>
+        <table data-toggle="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th>序号</th>
+                <th>用户名</th>
+                <th>姓名</th>
+                <th>角色</th>
+                <th>到期时间</th>
+                <th>备注</th>
+                <th>在线状态</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td></td>
+                <td>1</td>
+                <td><a href="#">admin</a></td>
+                <td>系统管理员</td>
+                <td>系统管理员</td>
+                <td>2018-08-01</td>
+                <td>系统管理员</td>
+                <td>在线</td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--添加用户组弹窗-->
+<div id="add_ugroup" class="add_ugroup" style="display: none;">
+    <div class="left-tab">
+        <dl>
+            <dd>
+                <span>基本信息</span>
+            </dd>
+            <dd>
+                <span>用户角色列表</span>
+            </dd>
+        </dl>
+    </div>
+    <div class="right-content">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">用户组编号：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">用户组姓名：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">上级用户组：</label>
+                    <div class="col-sm-7">
+                        <select class="form-control">
+                            <option>默认用户组</option>
+                        </select>
+                    </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-7">
+                    <textarea></textarea>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-danger" style="width: 80px;margin-right: 20px">确认</button>
+        <button class="btn btn-default"style="width: 80px">取消</button>
+    </div>
+</div>
+<!--添加用户弹出层-->
+<div id="add_user" class="add_ugroup" style="display: none;">
+    <div class="left-tab">
+        <dl id="user">
+            <dd id="101">
+                <span>基本信息</span>
+            </dd>
+            <dd id="102">
+                <span>账户安全</span>
+            </dd>
+            <dd id="103">
+                <span>角色列表</span>
+            </dd>
+            <dd id="104">
+                <span>组织权限</span>
+            </dd>
+        </dl>
+    </div>
+    <div class="right-content">
+        <div class="form-horizontal" id="t_101">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">用户名：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">密码：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">密码确认：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">姓名：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">手机：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">Email：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">用户级别：</label>
+                <div class="col-sm-7">
+                    <select class="form-control">
+                        <option>50</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">到期时间：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">备注：</label>
+                <div class="col-sm-7">
+                    <textarea></textarea>
+                </div>
+            </div>
+        </div>
+        <!--账号安全-->
+        <div class="accsecur" style="display: none" id="t_102">
+            <p><b>绑定IP区间</b>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: gray">只允许接入指定IP区间的设备登录该用户</span></p>
+            <input type="text" class="form-control" style="width: 160px;display: inline-block">--
+            <input type="text" class="form-control" style="width: 160px;display: inline-block">
+            <p style="margin-bottom: 30px"></p>
+            <p id="add_mac"><b>绑定MAC地址</b>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color: gray">只允许接入指定MAC地址的设备登录该用户</span></p>
+            <a href="javascript:;" onclick="addMac()" style="display: block"><i style="margin-right: 10px"><img src="../img/add.png" height="15" width="15"/></i><span>新增MAC地址</span></a>
+        </div>
+    </div>
+    <div class="btn-group">
+        <button class="btn btn-danger" style="width: 80px;margin-right: 20px">下一步</button>
+        <button class="btn btn-default"style="width: 80px">取消</button>
+    </div>
+</div>
+<script src="../../../common/libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-treeview.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-table.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+<script src="../../../common/libs/layer/layer.js"></script>
+<script src="../js/user.js"></script>
+<script>
+    /*组织树*/
+    function getTree() {
+        var tree = [{
+            text: '默认用户组',
+            nodes: [
+                {
+                    text: '组1'
+                }, {
+                    text: '组2'
+                }
+            ]
+        }]
+        return tree;
+    }
+
+    $('#tree').treeview({
+        showBorder: false,
+        selectedBackColor: 'white',
+        selectedColor: 'black',
+        data: getTree()
+    })
+    /*添加用户选择*/
+    $('#user dd').click(function () {
+        var id=$(this).attr('id')
+        $(".right-content>div[style!='display:none']").hide();
+        $("#t_"+id).show();
+    })
+</script>
+</body>
+</html>
