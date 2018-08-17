@@ -3246,7 +3246,6 @@
                 data = $this.data('bootstrap.table'),
                 options = $.extend({}, BootstrapTable.DEFAULTS, $this.data(),
                     typeof option === 'object' && option);
-
             if (typeof option === 'string') {
                 if ($.inArray(option, allowedMethods) < 0) {
                     throw new Error("Unknown method: " + option);
@@ -3255,7 +3254,6 @@
                 if (!data) {
                     return;
                 }
-
                 value = data[option].apply(data, args);
 
                 if (option === 'destroy') {

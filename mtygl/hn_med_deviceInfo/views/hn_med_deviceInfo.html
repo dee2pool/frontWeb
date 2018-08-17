@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-treeview.css">
     <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel='stylesheet' href='http://fonts.googleapis.com/icon?family=Material+Icons' type='text/css'>
     <link rel="stylesheet" href="../../../index/css/sidenav.css">
     <link rel="stylesheet" href="../css/deviceinfo.css">
@@ -220,16 +221,18 @@
             <div class="content-panel" style="min-height: calc(100vh - 110px)">
                 <div class="row">
                     <div class="col-md-2">
-                        <div id="device_tree"></div>
+                        <div class="slimscrollleft">
+                            <div id="device_tree"></div>
+                        </div>
                     </div>
                     <div class="col-md-10">
                         <div class="head">
                             <div class="head-left" style="width: 100%">
-                                <a href="javascript:;" onclick="add_device()"><span class="glyphicon glyphicon-plus"
+                                <a href="javascript:;" id="add_device"><span class="glyphicon glyphicon-plus"
                                                                                     aria-hidden="true">添加</span></a>
-                                <a href="javascript:;" onclick="alt_device()"><span class="glyphicon glyphicon-pencil"
+                                <a href="javascript:;" id="alt_device"><span class="glyphicon glyphicon-pencil"
                                                                                     aria-hidden="true">修改</span></a>
-                                <a href="javascript:;" onclick="del_device()"><span class="glyphicon glyphicon-remove"
+                                <a href="javascript:;" id="del_device"><span class="glyphicon glyphicon-remove"
                                                                                     aria-hidden="true">删除</span></a>
                                 <a href="#"><span class="glyphicon glyphicon-download-alt"
                                                   aria-hidden="true">下载模版</span></a>
@@ -263,7 +266,7 @@
                                 <button class="btn btn-default">重置</button>
                             </form>
                         </div>
-                        <table id="device_table">
+                        <table id="device_table" data-height="655">
                             <thead>
                             <tr>
                                 <th data-checkbox="true"></th>
@@ -295,77 +298,87 @@
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>设备名称</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <input name="cDeviceName" type="text" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>设备信息安装地址</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <input name="cDeviceAddress" type="text" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>设备IP地址</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <input name="cDeviceIp" type="text" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>拉流服务端口</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <input name="cAmgPort" type="text" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>拉流协议</label>
         <div class="col-sm-7">
-            <select class="form-control">
-                <option>请选择</option>
+            <select name="cAmgProto" class="form-control">
+                <option>DAHUA</option>
+                <option>HIKVISION</option>
+                <option>RTSP</option>
             </select>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>运维端口</label>
         <div class="col-sm-7">
-            <select class="form-control">
-                <option>请选择</option>
-            </select>
+            <input name="cAdgPort" type="text" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>运维设备协议</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <select name="cAdgProto" class="form-control">
+                <option>DAHUA</option>
+                <option>HIKVISION</option>
+                <option>RTSP</option>
+            </select>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>视频通道数</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <select name="iDeviceChaNum" class="form-control">
+                <option>1</option>
+                <option>4</option>
+                <option>8</option>
+                <option>16</option>
+                <option>32</option>
+            </select>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>设备登录用户名</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <input name="cDeviceUser" type="text" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>设备登录密码</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <input name="cDevicePwd" type="password" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>确认登录密码</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control">
+            <input name="re_cDevicePwd" type="password" class="form-control">
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>设备型号</label>
         <div class="col-sm-7">
-            <select class="form-control">
+            <select name="cModelId" class="form-control">
                 <option>请选择</option>
             </select>
         </div>
@@ -373,14 +386,14 @@
     <div class="form-group">
         <label class="control-label col-sm-4"><i class="required">*</i>设备厂商</label>
         <div class="col-sm-7">
-            <select class="form-control">
+            <select name="cManuId" class="form-control">
                 <option>请选择</option>
             </select>
         </div>
     </div>
     <div class="form-group" style="padding-left: 210px">
-        <button type="button" class="btn btn-info" style="margin-right: 20px">提交</button>
-        <button type="button" class="btn btn-default">取消</button>
+        <button id="doAdd" type="submit" class="btn btn-info" style="margin-right: 20px">提交</button>
+        <button id="doCancel" type="button" class="btn btn-default">取消</button>
     </div>
 </form>
 <script src="../../../common/libs/jquery/jquery-1.11.3.min.js"></script>
@@ -388,12 +401,20 @@
 <script src="../../../common/libs/bootstrap/js/bootstrap-treeview.js"></script>
 <script src="../../../common/libs/bootstrap/js/bootstrap-table.js"></script>
 <script src="../../../common/libs/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+<script src="../../../common/libs/bootstrap-validator/js/bootstrapValidator.min.js"></script>
+<script src="../../../common/libs/bootstrap-validator/js/language/zh_CN.js"></script>
 <script src="../../../common/libs/jquery-slimScroll/jquery.slimscroll.min.js"></script>
 <script src="../../../index/js/sidenav.js"></script>
 <script src="../../../index/js/frame.js"></script>
 <script src="../../../common/js/utils.js"></script>
-<script src="../js/deviceInfoService.js"></script>
+<script src="../../../common/js/DeviceInfoController.js"></script>
+<script src="../../../common/js/DeviceTypeController.js"></script>
 <script src="../js/deviceinfo.js"></script>
 <script src="../../../common/libs/layer/layer.js"></script>
+<script src="../../../common/libs/require.js" data-main="../js/device.js"></script>
 </body>
+<script>
+    /*侧边栏*/
+    $('[data-sidenav]').sidenav()
+</script>
 </html>

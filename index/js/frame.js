@@ -21,7 +21,7 @@ $(function () {
 //初始化侧边栏滚动条
 function initScroll(){
     $('.slimscrollleft').slimScroll({
-        height:'auto',
+        height:'730px',
         position:'right',
         color:'#7A868F',
         size:'5px',
