@@ -1,24 +1,8 @@
-require.config({
-    shim:{
-        'nav':{
-            deps:['jquery'],
-            exports:"nav"
-        },
-        'loginservice': {
-            deps: ['jquery', 'common'],
-            exports: "loginservice"
-        },
-    },
-    paths:{
-        "nav":'../../basemanage/common/libs/nav/js/nav.min',
-        "loginservice": "../../basemanage/common/js/service/LoginController"
-    }
-})
-define(["nav","loginservice"],function (nav,loginservice) {
+define(["../../../config/common/libs/nav/js/nav.min","../../../common/js/service/LoginController"],function (SuiNav,loginservice) {
     var topBar={};
     //logo图片路径
-    topBar.imgSrc='../../../../config/head/img/logo.png';
-    topBar.userManage='http://hnvmns-frontweb.frontconfig:8080/hnvmns-frontweb/basemanage/role/view/rolemanage.html';
+    topBar.imgSrc='../../../common/component/head/img/logo.png';
+    topBar.userManage='../../../config/user/view/usermanage.html';
     topBar.htm=['<div id="sui_nav" class="sui-nav horizontal">',
         '    <div class="sui-nav-wrapper nav-border nav-line">',
         '        <div class="pull-left nav-header">',

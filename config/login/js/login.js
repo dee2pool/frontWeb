@@ -21,23 +21,22 @@ require.config({
         }
     },
     paths: {
-        "jquery": "../../basemanage/common/libs/jquery/jquery-1.11.3.min",
-        "bootstrap": "../../basemanage/common/libs/bootstrap/js/bootstrap.min",
-        "bootstrap-table": "../../basemanage/common/libs/bootstrap/js/bootstrap-table",
-        "layer": "../../basemanage/common/libs/layer/layer",
-        "mock": "../../basemanage/common/libs/mock",
-        "loginservice": "../../basemanage/common/js/service/LoginController",
-        "common": "../../basemanage/common/js/util"
+        "jquery": "../../common/libs/jquery/jquery-1.11.3.min",
+        "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
+        "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
+        "layer": "../../common/libs/layer/layer",
+        "loginservice": "../../common/js/service/LoginController",
+        "common": "../../common/js/util"
     }
 });
-require(['jquery', 'bootstrap', 'layer', 'mock', 'loginservice', 'common'], function (jquery, bootstrap, layer, Mock, loginservice, common) {
+require(['jquery', 'bootstrap', 'layer', 'loginservice', 'common'], function (jquery, bootstrap, layer, loginservice, common) {
     //防止被嵌套到其它页面iframe中
     if (window.top !== window.self) {
         window.top.location.href = window.location.href;
     }
     //解决layer不显示问题
     layer.config({
-        path: 'basemanage/common/libs/layer/'
+        path: 'common/libs/layer/'
     });
     //页面初始化时判断ip是否被锁定，如果没有被锁定判断是否需要验证码
     isIpBlock(function (data) {
@@ -106,7 +105,7 @@ require(['jquery', 'bootstrap', 'layer', 'mock', 'loginservice', 'common'], func
             var captcha = $('#captchaVal').val();
             loginservice.login(userName, password, captchaId, captcha, function (data) {
                 if (data.result) {
-                    window.location.href = "http://hnvmns-frontweb.frontmain:8080/hnvmns-frontweb/index/views/index.html"
+                    window.location.href = "../main/index/views/index.html"
 
                 } else {
                     isIpBlock(function (msg) {

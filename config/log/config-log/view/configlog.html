@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../../common/css/common.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../css/configlog.css">
+</head>
+<body>
+<div class="main-content">
+    <div class="search-tool">
+        <form class="form-horizontal">
+            <div class="form-group">
+                <label>子系统：</label>
+                <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>配置类型：</label>
+                <select class="form-control">
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>查询范围：</label>
+                <input type="text" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label>ip地址：</label>
+                <input type="text" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label>用户：</label>
+                <input type="text" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label>用户：</label>
+                <input type="text" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label>用户：</label>
+                <input type="text" class="form-control" >
+            </div>
+            <div class="form-group">
+                <label>用户：</label>
+                <input type="text" class="form-control" >
+            </div>
+            <div class="btn-group-vertical btn-fixed">
+                <button type="button" class="btn btn-danger" style="width: 90px;margin-bottom: 15px">查询</button>
+                <button type="button" class="btn btn-default">重置</button>
+            </div>
+        </form>
+    </div>
+    <div class="head">
+        <div class="head-left" style="width: 280px">
+            <a href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true">导出</span></a>
+        </div>
+        <div class="head-right">
+            <form role="form">
+                <input type="text" class="form-control" placeholder="搜索角色名"
+                       style="width: 230px;display: inline-block">
+                <button type="button" class="btn btn-default">搜索</button>
+            </form>
+        </div>
+    </div>
+    <table data-toggle="table">
+        <thead>
+        <tr>
+            <th>序号</th>
+            <th>配置类型</th>
+            <th>用户</th>
+            <th>IP地址</th>
+            <th>时间</th>
+            <th>配置内容</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>1</td>
+            <td>用户配置</td>
+            <td>admin</td>
+            <td>192.168.0.1</td>
+            <td>2018-08-01</td>
+            <td>[新增]用户:zhz</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<script src="../../../common/libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-table.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+</body>
+</html>

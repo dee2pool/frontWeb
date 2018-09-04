@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-treeview.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel='stylesheet' href='http://fonts.googleapis.com/icon?family=Material+Icons' type='text/css'>
+    <link rel="stylesheet" href="../../../index/css/sidenav.css">
+    <link rel="stylesheet" href="../../../index/css/iframe.css">
+    <link rel="stylesheet" href="../css/person.css">
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <nav class="navbar navbar-default topbar" style="background-color: #2f353f;border: 0px">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#head-navbar-collapse" aria-expanded="false">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#"></a>
+            </div>
+            <div class="collapse navbar-collapse" id="head-navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <img src="../../../index/img/home.png" width="25px" height="25px">
+                        </a>
+                        <div class="dropdown-menu">
+                            <!--TODO 下拉信息-->
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="../../../index/img/people.png" width="25px" height="25px">
+                            <b>用户信息</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="../../../index/img/help.png" width="25px" height="25px">
+                            <b>用户文档</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="../../../index/img/msg.png" width="25px" height="25px">
+                            <b>软件信息</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="../../../index/img/iphone.png" width="25px" height="25px">
+                            <b>移动应用</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <img src="../../../index/img/download.png" width="25px" height="25px">
+                            <b>下载中心</b>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span style="font-weight: bold;font-size: 17px;color: white">退出</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!--侧边栏-->
+    <nav class="navbar navbar-inverse sidebar" data-sidenav data-sidenav-toggle="#sidenav-toggle">
+        <div class="slimscrollleft">
+            <ul class="sidenav-menu">
+                <li>
+                    <a href="javascript:;" data-sidenav-dropdown-toggle>
+                    <span class="sidenav-link-icon">
+                        <i><img src="../../../index/img/s_base.png" width="20px" height="20px"></i>
+                    </span>
+                        <span class="sidenav-link-title">
+                            基础应用
+                        </span>
+                        <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                        <i class="material-icons">arrow_drop_down</i>
+                        </span>
+                        <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                        <i class="material-icons">arrow_drop_up</i>
+	                    </span>
+                    </a>
+                    <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                        <li>
+                            <a href="#"
+                               onclick="openPage('basemanage/organization/view/orgmanagement.html','基础应用','组织管理')">
+                                组织管理
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" data-sidenav-dropdown-toggle>
+                                资源管理
+                                <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                                <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+                                </span>
+                            </a>
+                            <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                                <li><a href="#"
+                                       onclick="openPage('basemanage/resource/view/resmanagement.html','资源管理','统一资源入口')">统一资源入口</a>
+                                </li>
+                                <li><a href="#">服务器管理</a></li>
+                                <li><a href="#"
+                                       onclick="openPage('basemanage/resconnect/view/resconnect.html','资源管理','资源关联配置')">资源关联配置</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" data-sidenav-dropdown-toggle>
+                                用户管理
+                                <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                                <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+	                            </span>
+                            </a>
+                            <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                                <li><a href="#"
+                                       onclick="openPage('basemanage/user/view/usermanage.html','用户管理','用户管理')">用户管理</a>
+                                </li>
+                                <li><a href="#"
+                                       onclick="openPage('basemanage/role/view/rolemanage.html','用户管理','角色管理')">角色管理</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><a href="#" onclick="openPage('basemanage/person/view/personmanage.html','人员管理')">人员管理</a>
+                        </li>
+                        <li>
+                            <a href="#" data-sidenav-dropdown-toggle>
+                                日志管理
+                                <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                                <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+	                            </span>
+                            </a>
+                            <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                                <li><a href="#"
+                                       onclick="openPage('basemanage/log/config-log/view/configlog.html','日志管理','配置日志')">配置日志</a>
+                                </li>
+                                <li><a href="#"
+                                       onclick="openPage('basemanage/log/control-log/view/controllog.html','日志管理','控制日志')">控制日志</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" data-sidenav-dropdown-toggle>
+                                系统管理
+                                <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                                <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+	                            </span>
+                            </a>
+                            <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                                <li>
+                                    <a href="#" data-sidenav-dropdown-toggle>系统配置
+                                        <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                    <i class="material-icons">arrow_drop_down</i>
+                                    </span>
+                                        <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                    <i class="material-icons">arrow_drop_up</i>
+                                    </span>
+                                    </a>
+                                    <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                                        <li><a href="javascript:;"
+                                               onclick="openPage('basemanage/sysconfig/domain/view/domain.html','系统设置','网域配置')">网域配置</a>
+                                        </li>
+                                        <li><a href="#">系统邮箱</a></li>
+                                        <li><a href="#">短信设备配置</a></li>
+                                        <li><a href="#">数据库配置</a></li>
+                                        <li><a href="#">子系统配置</a></li>
+                                        <li><a href="#">Logo自定义</a></li>
+                                        <li><a href="javascript:;"
+                                               onclick="openPage('basemanage/sysconfig/apiconfig/view/apiconfig.html','系统设置','Api第三方接入设置')">Api第三方接入配置</a>
+                                        </li>
+                                        <li><a href="#">微信公众号配置</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="javascript:;">用户管理</a></li>
+                                <li><a href="">设备类型</a></li>
+                                <li><a href="">设备厂商</a></li>
+                                <li><a href="">设备型号</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="#" data-sidenav-dropdown-toggle>
+                                媒体源管理
+                                <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                                <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+	                            </span>
+                            </a>
+                            <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                                <li><a href="#">设备信息</a>
+                                </li>
+                                <li><a href="#">媒体源信息</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="javascript:;" data-sidenav-dropdown-toggle>
+                        <span class="sidenav-link-icon">
+                            <i><img src="../../../index/img/s_event.png" width="20px" height="20px"></i>
+                        </span>
+                        <span class="sidenav-link-title">
+                            事件中心
+                            <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                            <i class="material-icons">arrow_drop_down</i>
+                            </span>
+                            <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                            <i class="material-icons">arrow_drop_up</i>
+	                        </span>
+                        </span>
+                    </a>
+                    <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                        <li><a href="#">基础配置</a></li>
+                        <li><a href="#">预案配置</a></li>
+                        <li><a href="#">事件规则</a></li>
+                        <li><a href="#">事件日志</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content">
+            <div class="content-panel">
+            <div class="row">
+                <div class="col-md-3 main-left">
+                    <p>部门
+                        <span class="dept-opera">
+                <i><img src="../img/add.png" height="20" width="20" title="添加"/></i>
+                <i><img src="../img/alt.png" height="20" width="20" title="修改"/></i>
+                <i><img src="../img/del.png" height="20" width="20" title="删除"/></i>
+                <i><img src="../img/in.png" height="20" width="20" title="导入"/></i>
+                <i><img src="../img/out.png" height="20" width="20" title="导出"/></i>
+            </span>
+                    </p>
+                    <form role="form">
+                        <input type="text" class="form-control" placeholder="部门名称"
+                               style="width: 230px;display: inline-block">
+                        <button type="button" class="btn btn-default">搜索</button>
+                    </form>
+                    <div id="tree"></div>
+                </div>
+                <div class="col-md-9 main-right">
+                    <div class="head">
+                        <div class="head-left" style="width: 480px">
+                            <a href="javascript:;" onclick="addPerson()"><span class="glyphicon glyphicon-plus"
+                                                                               aria-hidden="true">添加</span></a>
+                            <a href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span></a>
+                            <a href="#"><span class="glyphicon glyphicon-export" aria-hidden="true">移至</span></a>
+                            <a href="#"><span class="glyphicon glyphicon-list-alt" aria-hidden="true">批量配置</span></a>
+                            <a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true">身份管理</span></a>
+                            <div class="dropdown" style="display: inline-block">
+                                <a href="#" data-toggle="dropdown" id="dropdownm1" class="dropdown-toggle">更多<span
+                                        class="caret"></span></a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownm1">
+                                    <li><a href="#">导入照片</a></li>
+                                    <li><a href="#">导入人员</a></li>
+                                    <li><a href="#">导出人员</a></li>
+                                    <li><a href="#">导入人脸</a></li>
+                                    <li><a href="#">批量删除人脸</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="head-right" style="width: 400px">
+                            <form role="form" style="width: 300px;display: inline-block">
+                                <input type="text" class="form-control" placeholder=""
+                                       style="width: 230px;display: inline-block">
+                                <button type="button" class="btn btn-default">搜索</button>
+                            </form>
+                        </div>
+                    </div>
+                    <table data-toggle="table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>序号</th>
+                            <th>姓名</th>
+                            <th>性别</th>
+                            <th>所属部门</th>
+                            <th>证件号</th>
+                            <th>证件类型</th>
+                            <th>拼音代码</th>
+                            <th>身份</th>
+                            <th>联系电话</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td></td>
+                            <td>1</td>
+                            <td>张三</td>
+                            <td>男</td>
+                            <td>研发部门</td>
+                            <td>111111111111111111</td>
+                            <td>身份证</td>
+                            <td>zs</td>
+                            <td>员工</td>
+                            <td>122333333333</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!--添加人员弹出层-->
+                <div class="add_person" style="display: none">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#base" data-toggle="tab">
+                                基本信息
+                            </a>
+                        </li>
+                        <li><a href="#detail" data-toggle="tab">
+                            详细信息
+                        </a>
+                        </li>
+                        <li><a href="#zwxx" data-toggle="tab">
+                            指纹信息
+                        </a>
+                        </li>
+                        <li><a href="#jmxx" data-toggle="tab">
+                            静脉信息
+                        </a>
+                        </li>
+
+                    </ul>
+                    <div class="tab-content" style="margin-top: 20px">
+                        <div class="tab-pane fade in active" id="base">
+                            <div class="col-md-6">
+                                <form class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">人员编号：</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">姓名：</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">部门：</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">性别：</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">身份类型：</label>
+                                        <div class="col-sm-7">
+                                            <select class="control-label">
+                                                <option>无</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">证件类型：</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">证件号码：</label>
+                                        <div class="col-sm-7">
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">出生日期：</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">拼音代码：</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">联系电话：</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-4 control-label">联系地址：</label>
+                                        <div class="col-sm-7">
+                                            <textarea></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="col-md-4 col-md-offset-1">
+                                <div class="profile">
+
+                                </div>
+                                <div class="btn-img">
+                                    <div class="btn-group-vertical">
+                                        <button class="btn btn-primary" style="width: 190px;margin-bottom: 20px">上传图片
+                                        </button>
+                                        <button class="btn btn-default" style="width: 190px">抓拍照片</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="detail">
+                            <form class="form-horizontal col-md-8">
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">英文名：</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">邮箱：</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">到职日期：</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">离职日期：</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">学历：</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">民族：</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">用户名：</label>
+                                    <div class="col-sm-7">
+
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">密码：</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">密码确认：</label>
+                                    <div class="col-sm-7">
+                                        <input type="text" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-4 control-label">备注：</label>
+                                    <div class="col-sm-7">
+                                        <textarea></textarea>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="zwxx">
+
+                        </div>
+                        <div class="tab-pane fade" id="jmxx">
+                        </div>
+                    </div>
+                    <div class="btn-opera">
+                        <button class="btn btn-danger" style="width: 80px;margin-right:20px">保存</button>
+                        <button class="btn btn-default" style="width: 80px">取消</button>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../common/libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="../../common/libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-treeview.js"></script>
+<script src="../../common/libs/bootstrap/js/bootstrap-table.js"></script>
+<script src="../../common/libs/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+<script src="../../common/libs/layer/layer.js"></script>
+<script src="../js/person.js"></script>
+</body>
+<script>
+    function getTree() {
+        var tree = [{
+            text: '默认部门',
+            nodes: [
+                {
+                    text: '测试部门'
+                }, {
+                    text: '研发部门'
+                }
+            ]
+        }]
+        return tree;
+    }
+
+    $('#tree').treeview({
+        showBorder: false,
+        selectedBackColor: 'white',
+        selectedColor: 'black',
+        data: getTree()
+    })
+</script>
+</html>
