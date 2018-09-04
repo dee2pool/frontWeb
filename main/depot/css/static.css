@@ -1,0 +1,31 @@
+@charset "UTF-8";
+.core-center section{
+    width: 100%;
+    margin: 15px auto;
+}
+
+.core-center-child{
+    width: 48%;
+    box-shadow: -10px 0px 15px #034c6a inset, 
+    0px -10px 15px #034c6a inset, 
+    10px 0px 15px #034c6a inset, 
+    0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    box-sizing: border-box;
+    position: relative;
+    margin-right: 2%;
+}
+
+.core-center-child-big{
+    width: 99%;
+    box-shadow: -10px 0px 15px #034c6a inset, 
+    0px -10px 15px #034c6a inset, 
+    10px 0px 15px #034c6a inset, 
+    0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    box-sizing: border-box;
+    position: relative;
+    margin-right: 2%;
+}
+
+

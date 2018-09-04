@@ -1,0 +1,83 @@
+body{
+    background-image: url("../assets/img/1.png");
+    background-repeat:repeat;
+    /*background-color: grey;*/
+}
+
+.container {
+    margin: 10px auto;
+}
+.container .body {
+    padding: 0px 10px;
+    position: relative;
+    padding-left: 220px;
+}
+.nav-second {
+    position: relative;
+    width: 210px;
+    float: left;
+}
+@media only screen and (max-width: 768px) {
+    .container .body {
+        padding: 0px;
+    }
+}
+
+.nav-header{
+    line-height: 60px;
+    font-size: large;
+}
+
+.dashboard-icon-position{
+    margin-top: 0.15em;
+}
+
+.dashboard-icon-little-title{
+    font-size: 22px;
+}
+
+.col-md-9 .width-12,
+.col-md-12 .width-9 {
+    display: none; /* just hiding labels for demo purposes */
+}
+#sidebar {
+    background-color: white;
+}
+.collapsed {
+    display: none; /* hide it for small displays */
+    margin-right: -25%;
+}
+
+.board-item.drag-shadow {z-index: 9999}
+/* 设置影子元素的 z-index，保证在页面顶层显示 */
+.btn.drag-shadow { z-index: 9999; }
+/* 为被拖动的按钮更改光标类型 */
+#droppableBtn { cursor: move; }
+
+
+/*右下角面板设置*/
+.setting{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+}
+.add-panel{
+    display: none;
+}
+
+/*添加小组件 组件样式设置*/
+.control-item{
+    border-top:1px solid #eaeaea;
+    border-bottom: 1px solid #eaeaea;
+    padding: 10px;
+}
+.control-item img{
+    width: 98px;
+    height: 98px;
+}
+.control-item p{
+    float: right;
+}
+
+
+

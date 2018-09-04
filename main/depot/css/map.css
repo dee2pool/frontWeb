@@ -1,0 +1,194 @@
+.core-map{
+    width: 100%;
+    padding: 0;
+    background-color: #081832cc;
+    height: 870px;
+}
+
+.map-left{
+    width: 79%;
+    height: 100%;
+}
+
+.map-right{
+    width: 20.5%;
+    height: 100%;
+    background-color: #081832;
+}
+
+.map-box{
+    width: 100%;
+    height: 100%;
+}
+
+.map-top{
+    position: absolute;
+    top: 80px;
+    left: 0;
+    height: 35px;
+    width: 79%;
+    border-bottom: 1px solid #4b8df8;
+    background-color: rgba(255, 255, 255, 0.84);
+    z-index: 9999;
+}
+.map-top > ul{
+    list-style: none;
+    font-size: 14px;
+    float: right;
+}
+
+.map-top > ul > li {
+    display: inline-block;
+    line-height: 35px;
+    padding: 0 10px;
+}
+
+.map-top>ul .active, .map-top>ul>li .active {
+    color: #0D8BBD;
+}
+
+.map-top > ul > li > a {
+    color: #2E2D3C;
+}
+
+.map-select {
+    position: fixed;
+    top: 160px;
+    right: 21.5%;
+    box-shadow: -10px 0px 15px #034c6a inset, 
+                0px -10px 15px #034c6a inset, 
+                10px 0px 15px #034c6a inset,
+                0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    width: 120px;
+    height: 180px;
+    border-radius: 5px;
+    background-color: #081832e3;
+    z-index: 9999;
+}
+
+.map-select p {
+    padding: 8px 15px;
+    color: #FFFFff;
+    font-size: 14px;
+}
+
+.map-select p input[type=checkbox] {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    top: 3px;
+    margin-right: 10px;
+}
+
+.map-right-top{
+    width: 100%;
+    height: 35px;
+    background-color: #034c6a;
+}
+
+.map-right-top>ul>li {
+    list-style: none;
+    display: inline-block;
+    line-height: 35px;
+    font-size: 14px;
+    text-align: center;
+    width: 32%;
+    color: #FFFFff;
+    cursor: pointer;
+}
+
+.map-right-top>ul>li.li-active {
+    background-color: #0D8BBD;
+}
+
+.map-core-content{
+    width: 100%;
+    padding: 0;
+    background-color: #081832cc;
+}
+
+.map-chart {
+    width: 100%;
+    height: 250px;
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 25px;
+}
+
+.map-table {
+    width: 100%;
+    height: 280px;
+    box-shadow: -10px 0px 15px #034c6a inset, 
+                0px -10px 15px #034c6a inset,
+                10px 0px 15px #034c6a inset,
+                0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 25px;
+}
+
+.set_list {
+    padding: 10px 5%;
+    color: #eee;
+    font-size: 14px;
+}
+
+.list_i {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    top: 3px;
+    position: relative;
+}
+
+.map-work{
+    margin-top: 5px;
+    border-top: 1px solid #0D8BBD;
+}
+
+.map-work>ul>li {
+    list-style: none;
+    display: inline-block;
+    width: 32%;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+.map-work>ul>li i {
+    width: 28px;
+    height: 24px;
+    margin: 0 auto;
+    display: block;
+}
+
+.map-work>ul>li div {
+    color: #FFFFff;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.map-reslist {
+    width: 96%;
+    margin: 0 auto;
+    font-size: 13px;
+    display: none;
+}
+
+.map-reslist>ul>li {
+    list-style: none;
+    margin-top: 8px;
+}
+
+.map-reslist>ul>li:nth-child(2n+1) {
+    background-color: #0d8bbd36;
+}
+
+.map-reslist>ul>li p {
+    padding: 5px 0;
+    color: #eeeeee;
+}

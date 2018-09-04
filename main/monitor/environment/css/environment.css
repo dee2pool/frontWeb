@@ -1,0 +1,141 @@
+/*环境environment.html的相关css*/
+head{
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    width: 100%;
+    height: 100%;
+    //overflow:hidden;
+}
+
+
+
+
+.headerTitle{
+    position: absolute;
+    display: inline-block;
+    margin: 0 auto;
+}
+
+.left-aside{
+    /*flex布局纵向排布*/
+
+    position: absolute;
+    top: 60px;
+    height: calc(100% - 60px);
+    width: 25%;
+    left: 0;
+    /*background-color: #67b168;*/
+}
+
+.center-main{
+    position: absolute;
+    top: 60px;
+    height: calc(100% - 60px);
+    width: 50%;
+    left: 25%;
+    /*background-color: #af4040;*/
+}
+
+.right-aside{
+    top: 60px;
+    height: calc(100% - 60px);
+    position: absolute;
+    width: 25%;
+    /*background-color: #67b168;*/
+    right: 0;
+}
+
+/*用于aside中*/
+.up{
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 33.3%;
+
+}
+
+.middle{
+    position: absolute;
+    top: 33.3%;
+    width: 100%;
+    height: 33.3%;
+}
+
+.down{
+    position: absolute;
+    top: 66.6%;
+    width: 100%;
+    height: 33.3%;
+}
+/*用于main中*/
+.upper{
+     position: absolute;
+     top: 0;
+     width: 100%;
+     height: 66.6%;
+ }
+
+.downer{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 33.3%;
+}
+
+#record{
+    position: absolute;
+    height: 100px;
+    overflow: scroll;
+}
+
+
+
+
+/*框结构定义*/
+.module{
+    padding: 5px;
+    /*margin-bottom: 15px;*/
+    border: 1px solid #17366c;
+    background: linear-gradient(to left,#3897cf,#3897cf) left top no-repeat,linear-gradient(to bottom,#3897cf,#3897cf) left top no-repeat,linear-gradient(to left,#3897cf,#3897cf) right top no-repeat,linear-gradient(to bottom,#3897cf,#3897cf) right top no-repeat,linear-gradient(to left,#3897cf,#3897cf) left bottom no-repeat,linear-gradient(to bottom,#3897cf,#3897cf) left bottom no-repeat,linear-gradient(to left,#3897cf,#3897cf) right bottom no-repeat,linear-gradient(to left,#3897cf,#3897cf) right bottom no-repeat;
+    background-size: 1px 20px,20px 1px,1px 20px,20px 1px;
+    background-color: rgba(0,0,0,.3);
+}
+
+/*标题*/
+.Module-text{
+    width: 15px;
+    float: left;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    border-top: 3px solid #3bc081;
+}
+
+/*框中的内容*/
+.Module-content{
+    float: right;
+    position: absolute;
+    width: calc(100% - 40px);
+    height: 95%;
+    right: 1px;
+    margin: 1px;
+}
+
+
+
+/*用于aside中*/
+
+
+
+/*.nav-header{*/
+    /*line-height: 60px;*/
+    /*font-size: large;*/
+/*}*/
+
+.sui-nav.horizontal{
+    border: none!important;
+}
+

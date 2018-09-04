@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>环境监测</title>
+    <link rel="stylesheet" href="../css/darkBase.css">
+
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/sui/css/sui.nav.css">
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=fZKxt0kXvtTMafD1AFD8WR8OTOXh7irh"></script>
+
+    <link rel="stylesheet" href="../css/environment.css">
+
+    <script src="../../../common/lib/requirejs/require.js" defer async="true"  data-main="../js/environment"></script>
+</head>
+<body>
+<!--头部-->
+<div id="head"></div>
+
+<!--左侧导航-->
+<aside class="left-aside">
+    <section class="up module">
+        <h4 class="Module-text">折线图</h4>
+        <section class="Module-content" id="left-up-content"></section>
+    </section>
+
+    <section class="middle module">
+        <h4 class="Module-text">标题</h4>
+        <section class="Module-content" id="left-up-middle"></section>
+    </section>
+
+    <section class="down module">
+        <h4 class="Module-text">标题</h4>
+        <section class="Module-content" id="left-up-down"></section>
+    </section>
+</aside>
+
+<main class="center-main">
+    <!--地图-->
+    <section class="upper module" id="map"></section>
+    <!--历史记录查询-->
+    <section class="downer module">
+    </section>
+</main>
+
+<!--右侧导航-->
+<aside class="right-aside">
+    <section class="up module">
+        <h4 class="Module-text">标题</h4>
+        <section class="Module-content" id="right-up-down"></section>
+    </section>
+
+    <section class="middle module">
+        <h4 class="Module-text">标题</h4>
+        <section class="Module-content"></section>
+    </section>
+
+    <section class="down module">
+        <h4 class="Module-text">标题</h4>
+        <section class="Module-content"></section>
+    </section>
+</aside>
+
+<script src="../js/bd-map.js"></script>
+</body>
+</html>

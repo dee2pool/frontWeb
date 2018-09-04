@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>要素管理</title>
+    <link rel="stylesheet" href="../../../common/css/base.css">
+    <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="../js/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="../../../common/lib/layx/layx.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/leaflet.css">
+
+    <link rel="stylesheet" href="../css/ztreeCore.css">
+
+    <script src="../../../common/lib/requirejs/require.js" defer async="true" data-main="../js/ztreeCore"></script>
+
+</head>
+<body>
+<div class="left">
+    <div class="head">
+        <a id="addParent" href="#" title="增加父节点" onclick="return false;"><i class="fa fa-plus-circle"></i>增加</a>
+        <a id="edit" href="#" title="编辑名称" onclick="return false;"><i class="fa fa-edit"></i>位置关联</a>
+        <a id="remove" href="#" title="删除节点" onclick="return false;"><i class="fa fa-remove"></i> 删除节点</a>
+    </div>
+    <div class="center">
+        <div class="left-tree">
+            <ul id="treeDemo" class="ztree"></ul>
+        </div>
+        <div class="right-map" id="map"></div>
+
+    </div>
+</div>
+
+<div class="foot">
+    <div class="container-fluid">
+        <ul id="featureTab" class="nav nav-tabs">
+            <li class="active">
+                <a href="#home" data-toggle="tab">
+                    位置关联
+                </a>
+            </li>
+            <li><a href="#ios" data-toggle="tab">位图查看</a></li>
+        </ul>
+        <div id="featureTabContent" class="tab-content">
+            <div class="tab-pane fade in active" id="home">
+                <form class="form-horizontal feature-edit">
+                    <!--要素名称-->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">要素名称:</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="feature-name" placeholder="要素名称">
+                        </div>
+                    </div>
+
+                    <!--要素类型-->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">要素类型:</label>
+                        <div class="col-md-9">
+                    <span class="col-md-6">
+                        <select class="form-control" id="feature-level1"></select>
+                    </span>
+                            <span class="col-md-6">
+                        <select class="form-control" id="feature-level2"></select>
+                    </span>
+                        </div>
+                    </div>
+
+                    <!--要素描述-->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">要素描述:</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <!--图片选择-->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">上传图片:</label>
+                        <div class="col-md-9">
+                            <input type="file" class="form-control" id="upload-img">
+                        </div>
+                    </div>
+
+                    <!--位置设置-->
+                    <div class="form-group">
+                        <label class="col-md-2 control-label">位置关联:</label>
+                        <div class="col-md-9">
+                            <button type="button" class="btn btn-primary">添加位置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="tab-pane fade" id="ios">
+
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+</body>
+</html>
