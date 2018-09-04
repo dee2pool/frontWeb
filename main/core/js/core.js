@@ -114,7 +114,7 @@ require.config({
         "mock": "../../common/lib/mock/mock",
         "indoor": "../../common/lib/leaflet-lib/indoor/leaflet-indoor",
         "snogylop":"../../common/lib/leaflet-lib/mask/leaflet.snogylop",
-        "topBar":"http://hnvmns-frontweb.frontconfig:8080/hnvmns-frontweb/head/js/topbar"
+        "topBar":"../../../common/component/head/js/topbar"
 
     }
 });

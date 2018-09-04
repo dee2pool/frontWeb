@@ -37,7 +37,7 @@ require.config({
         "dashboard":"../../common/lib/zui/lib/dashboard/zui.dashboard",
         "boards":"../../common/lib/zui/lib/board/zui.board.min",
         "Mock":"../../common/lib/mock/mock",
-        "topBar":"../../../config/head/js/topbar"
+        "topBar":"../../../common/component/head/js/topbar"
 
     }
 
