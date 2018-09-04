@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>看板2</title>
+    <link rel="stylesheet" href="../../../common/css/base.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/lib/zui/css/zui.css">
+
+    <link rel="stylesheet" href="../../../common/lib/zui/lib/dashboard/zui.dashboard.min.css">
+    <link rel="stylesheet" href="../../../common/lib/zui/lib/board/zui.board.min.css">
+
+    <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/sui/css/sui.nav.css">
+
+    <link rel="stylesheet" href="../css/board.css">
+
+    <script src="../../../common/lib/requirejs/require.js" defer async="true" data-main="../js/board"></script>
+</head>
+<body>
+<div id="head"></div>
+<div class="container-fluid">
+    <div class="col-md-12">
+        <div class="boards" id="myBoards">
+            <!-- .board 为单个容器 -->
+            <div class="board panel">
+                <div class="panel-heading">
+                    <strong>未完成</strong>
+                </div>
+                <div class="panel-body">
+                    <div class="board-list dashboard dashboard-draggable" id="dashboard">
+                        <!-- 使用 .board-item 来标识可以操作的条目 -->
+                        <div class="board-item ">
+                            <div class="panel" data-id="1">
+                                <div class="panel-heading">
+                                    <i class="icon icon-list"></i>
+                                    <span class="title">面板标题</span>
+                                </div>
+                                <div class="panel-body">
+                                    <p>面板内容。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="board-item">
+                            <div class="panel" data-id="2">
+                                <div class="panel-heading">
+                                    <i class="icon icon-list"></i>
+                                    <span class="title">包含列表组</span>
+                                </div>
+                                <div class="panel-body no-padding">
+                                    <div class="list-group">
+                                        ...
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="board-item">庆祝</div>
+                        <!-- 为 .board-item 添加 .disabled-dorp 类来禁止移动此条目 -->
+                        <div class="disable-drop board-item">不可拖拽</div>
+                    </div>
+                </div>
+            </div>
+            <div class="board panel">
+                <div class="panel-heading">
+                    <strong>进行中</strong>
+                </div>
+                <div class="panel-body">
+                    <div class="board-list">
+                        <div class="board-item">
+                            <div class="panel" data-id="6">
+                                <div class="panel-heading">
+                                    <div class="title">可移除的面板</div>
+                                    <div class="panel-actions">
+                                        <button type="button" class="btn remove-panel" data-toggle="tooltip" title="移除面板"><i class="icon-remove"></i></button>
+                                    </div>
+                                </div>
+                                <div class="panel-body">
+                                    <p>点击顶部右侧的 <i class="icon icon-remove"></i> 按钮来移除该面板。</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="board-item">撰写文档</div>
+                        <div class="board-item">紧急的任务</div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

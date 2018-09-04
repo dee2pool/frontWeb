@@ -1,0 +1,109 @@
+@charset "UTF-8";
+
+.device{
+    min-height: 870px;
+    height: 870px;
+    width: 100%;
+    background-color: #081832cc;
+    box-sizing: border-box;
+    overflow: auto;
+}
+
+.left-table {
+    height: 100%;
+    border-radius: 5px;
+    width: 18%!important;
+    background-color: #081832;
+}
+
+.right-table {
+    height: 100%;
+    border-radius: 5px;
+    width: 81.5%!important;
+    background-color: #081832;
+    margin-left: 0.5%;
+}
+
+.core-left-list{
+    padding: 10px 5%;
+    color: #eee;
+    font-size: 14px;
+}
+
+.left-list-i{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    top: 3px;
+    position: relative;
+}
+
+.table-find {
+    width: 100%;
+    padding: 8px 0;
+    border-bottom: 2px solid #a5c5f83b;
+    font-size: 13px;
+}
+
+.table-find div {
+    margin-top: 8px;
+}
+
+.table-find label {
+    color: #eeeeee;
+    width: 8%;
+    display: inline-block;
+    text-align: right;
+}
+
+.table-find input[type=text], .table-find input[type=date] {
+    width: 16%;
+    height: 24px;
+    border-radius: 3px;
+    text-indent: 1em;
+    border: 1px solid#4b8df8;
+    background-color: #cccccc4f;
+}
+
+.table-find select {
+    width: 12%;
+    height: 24px;
+    border-radius: 3px;
+    text-indent: 1em;
+    border: 1px solid #4b8df8;
+    background-color: #cccccc4f;
+}
+
+.table-find input[type=checkbox] {
+    width: 14px;
+    height: 14px;
+    position: relative;
+    top: 3px;
+    margin-right: 5px;
+}
+
+.table-find span {
+    color: #b2cbf3;
+    margin-right: 2%;
+}
+
+.table-div {
+    margin-top: 10px;
+    color: #FFFFff;
+}
+
+.table-but {
+    text-align: right;
+    font-size: 13px;
+    padding-bottom: 5px;
+    padding-top: 10px;
+}
+
+.table-but a {
+    margin-right: 15px;
+    color: #FFFFff;
+}
+
+.table-but a i {
+    margin-right: 5px;
+}

@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>一张图</title>
+    <link rel="stylesheet" href="../../common/css/base.css">
+    <!--bootstrap以及插件样式-->
+    <link rel="stylesheet" href="../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/lib/bootstrap/libs/sui/css/sui.nav.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+
+    <!--leaflet以及相关样式-->
+    <link rel="stylesheet" href="../../common/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/contextmenu/leaflet.contextmenu.min.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/history/leaflet-history.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/draw/Leaflet.Draw.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/minimap/Control.MiniMap.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/search/leaflet-search.css">
+
+    <!--其他相关-->
+    <link rel="stylesheet" href="../../common/lib/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../common/lib/layx/layx.css">
+    <link rel="stylesheet" href="../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+
+    <link rel="stylesheet" href="../css/core.css">
+
+    <script src="../../common/lib/requirejs/require.js" defer async="true" data-main="../js/core"></script>
+</head>
+
+<body>
+
+    <div id="head"></div>
+
+    <main class="map-container">
+        <section class="map" id="map"></section>
+
+        <section class="img-map" id="img-map">
+            <!-- <img src="../asset/img/indoor.jpg" alt=""> -->
+        </section>
+
+
+        <!--置顶在地图上的按钮组-->
+        <section class="map-container-btngroup">
+            <div class="btn-group" role="group" aria-label="...">
+
+                <button type="button" class="btn btn-default" id="layer-open"><i class="fa fa-tasks"></i>&nbsp;图层</button>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-cubes"></i>&nbsp;工具
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right ">
+                        <li><a href="void:javascript:void(0);" id="history-open"><i class="fa fa-history"></i>&nbsp;&nbsp;历史视图</a></li>
+                        <li><a href="void:javascript:void(0);" id="measure-open"><i class="fa fa-calculator"></i>&nbsp;&nbsp;测量</a></li>
+                        <li><a href="void:javascript:void(0);" id="print-open"><i class="fa fa-print"></i>&nbsp;&nbsp;打印</a></li>
+                        <!--<li><a href="void:javascript:void(0);" id="query-open"><i class="fa fa-search"></i>&nbsp;查询</a></li>-->
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#"><i class="fa fa-search"></i>&nbsp;&nbsp;查询<i class="fa fa-chevron-right pull-right"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a tabindex="-1" href="void:javascript:void(0);" id="query-open">精确查询</a></li>
+                                <li><a href="void:javascript:void(0);" id="open-query-range">范围查询</a></li>
+                                <li><a href="void:javascript:void(0);" id="open-query-buf">缓冲区查询</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="void:javascript:void(0);" id="coor-open"><i class="fa fa-map-pin"></i>&nbsp;&nbsp;坐标查看</a></li>
+                        <!-- 测试工具 -->
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#"><i class="fa fa-television"></i>&nbsp;&nbsp;测试工具<i class="fa fa-chevron-right pull-right"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a tabindex="-1" href="void:javascript:void(0);" id="test-image">显示图片</a></li>
+                                <li><a href="void:javascript:void(0);" id="test-map">返回地图</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    </li> <!-- .dropdown -->
+                    </ul>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-globe"></i>模块
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right ">
+                        <li class="dropdown-submenu">
+                            <a tabindex="-1" href="#"><i class="fa fa-search"></i>设备管理<i class="fa fa-chevron-right pull-right"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a tabindex="-1" href="void:javascript:void(0);">设备详情</a></li>
+                                <li><a tabindex="-1" href="void:javascript:void(0);" id="add-device">设备添加</a></li>
+                                <li><a tabindex="-1" href="void:javascript:void(0);" id="add-test">设备测试</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="void:javascript:void(0);"><i class="fa fa-history"></i>&nbsp;&nbsp;历史视图</a></li>
+                    </ul>
+                    </li> <!-- .dropdown -->
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!--<aside class="side"></aside>-->
+    </main>
+</body>
+<!--历史视图容器-->
+<section class="history layer-open-section" id="history">
+    <div class="layer-open-content-history">
+        <span class="layer-open-content-title">历史视图：</span>
+        <div id="historyControl" class="layer-open-content-control"></div>
+    </div>
+</section>
+<!--测量容器-->
+<section class="layer-open-section" id="measure">
+    <div class="form-group btn-group" role="group">
+        <button id="measure-length" type="button" class="btn btn-primary"><span class="fa fa-line-chart"></span>
+            距离测量
+        </button>
+        <button id="measure-area" type="button" class="btn btn-primary"><span class="fa fa-area-chart"></span>
+            面积测量
+        </button>
+        <button id="measure-clear" type="button" class="btn btn-danger"><span class="fa fa-trash"></span>
+            清除
+        </button>
+    </div>
+</section>
+<!--精确查询容器-->
+<!--class="layer-open-section",这个类是用来隐藏容器，供给layer使用的-->
+<section class="layer-open-section" id="query">
+    <span class="layer-open-content-title">精确查询：</span>
+    <div class="layer-open-content-history">
+        <div id="queryControl" class="layer-open-content-control"></div>
+    </div>
+</section>
+<!--图层控制器容器-->
+<section class="layer-open-section" id="layerControlContainer">
+    <span class="layer-open-content-title">图层控制：</span>
+    <div class="layer-open-content-history">
+        <div id="layerControl" class="layer-open-content-control"></div>
+    </div>
+</section>
+<!--坐标显示容器容器-->
+<section class="layer-open-section" id="coordinate">
+    <span class="layer-open-content-title">当前坐标：</span>
+    <span id="coordinateControl" class="layer-open-content-control"></span>
+</section>
+
+<!--设备添加容器——layx -->
+<section class="layer-open-section" id="add-device-form">
+    <div class="layx-div" id="add-device-div">
+        <h3>设备添加</h3>
+        <form>
+            <div class="input-group">
+                <span class="input-group-addon">设备名称</span>
+                <input id="device-name" type="text" class="form-control" name="device-name">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">坐标信息</span>
+                <input id="device-coors" type="text" class="form-control" name="device-coors" readonly>
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">设备类型</span>
+                <select class="form-control" id="device-type">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                    <option>D</option>
+                </select>
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">设备描述</span>
+                <input id="device-desc" type="text" class="form-control" name="device-desc">
+            </div>
+            <br>
+            <!--<div class="btn-group" style="left: 180px">-->
+            <!--<button type="button" class="btn btn-primary" id="sub-device-form">提交</button>-->
+            <!--<button type="button" class="btn btn-default" id="reset-device-form">重置</button>-->
+            <!--</div>-->
+        </form>
+    </div>
+</section>
+
+<!--用于设备详情的容器，里面包含了很多的东西-->
+<section class="layer-open-section" id="device">
+    <div class="layx-div" id="device-info">
+        <h3>设备信息</h3>
+        <div class="input-group">
+            <span class="input-group-addon">设备名称</span>
+            <input id="device-info-name" type="text" class="form-control" name="device-name" readonly>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">坐标信息</span>
+            <input id="device-info-coors" type="text" class="form-control" name="device-coors" readonly>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">设备类型</span>
+            <select class="form-control" id="device-info-type" readonly>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>D</option>
+            </select>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">设备描述</span>
+            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>
+        </div>
+    </div>
+    <div class="layx-div" id="device-chart">
+        <div id="c1" class="device-chart"></div>
+        <hr>
+        <div id="c2" class="device-chart"></div>
+    </div>
+    <div class="layx-div" id="device-history">
+
+    </div>
+</section>
+
+<!--告警中心，工单管理的layx左下角容器-->
+<section class="layer-open-section">
+    <div class="layx-div" id="workOrder-panel">
+        <div class="container-fluid">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Firstname</th>
+                        <th>Lastname</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>john@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>Mary</td>
+                        <td>Moe</td>
+                        <td>mary@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>July</td>
+                        <td>Dooley</td>
+                        <td>july@example.com</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="layx-div" id="alarm-panel">
+        <div class="container-fluid">
+            <table id="workOrder-table"></table>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+<!--模糊框，用于查看点的详情-->
+<!--查看详情的弹出框-->
+<div class="modal fade" tabindex="999" id="pointContent" class="pointContent" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 400px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">详细信息</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <ul class="nav nav-tabs deviceTab" role="tablist" id="">
+                        <li role="presentation" class="active"><a href="#pointInfo" aria-controls="pointInfo" role="tab"
+                                data-toggle="tab">详情</a></li>
+                        <li role="presentation"><a href="#realtimeInfo" aria-controls="realtimeInfo" role="tab" data-toggle="tab">实时信息</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane" id="realtimeInfo">
+                            <div id="realtimeInfoTable"></div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane active pointInfo" id="pointInfo">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <span class="title">设备点名称：</span>
+                                    <input id="point-modal-name" class="form-control" type="text" readonly />
+                                </div>
+                                <div class="col-md-12">
+                                    <span class="title">坐标：</span>
+                                    <input id="point-modal-coors" class="form-control" type="text" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" style="display: none">
+                    确认编辑
+                </button>
+                <button type="button" class="btn btn-primary" style="visibility: visible">编辑
+                </button>
+                <button type="button" class="btn btn-primary">删除</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</html>

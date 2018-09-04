@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+#widgets{
+    border: 1px black solid;
+}
+
+body{
+    background-image: url("../../../common/asset/img/common-bg.png");
+    background-repeat:repeat;
+}
+
+.padtop-10{
+    padding-top: 20px;
+}
+
+.panel{
+    height: 320px;
+    overflow-y: auto;
+}
+
+
+
+
+*{border-radius:0;}
+dl dt{text-align:left !important;}
+
+.panel{border:none; box-shadow:0 0 10px rgba(0,0,0,0.20); border-radius:4px 4px 0 0;}
+.panel .panel-heading{background:#FFF; padding:25px 20px; color:#151515; font:500 16px/1 'Roboto',sans-serif; border-color:#DDD; border-radius:4px 4px 0 0;}
+.panel .panel-body{padding:15px 20px;}
+.panel .panel-body dl{padding:12px 0; margin:0; font:300 14px 'Roboto',sans-serif;}
+.panel .panel-body dl dd{}
+.panel .panel-body dl dt{}

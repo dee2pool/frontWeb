@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="https://cdn.bootcss.com/leaflet/1.3.1/leaflet.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../../common/lib/leaflet-lib/contextmenu/leaflet.contextmenu.min.css">
+    <link href="https://cdn.bootcss.com/leaflet.draw/1.0.2/leaflet.draw.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        html,
+        body,
+        #map {
+            height: 100%;
+        }
+    </style>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/leaflet/1.3.1/leaflet.js"></script>
+    <script src="lib/leaflet.ChineseTmsProviders.js"></script>
+    <script src="../../../common/lib/leaflet-lib/contextmenu/leaflet.contextmenu.min.js"></script>
+    <script src="https://cdn.bootcss.com/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+    <script src="lib/leaflet-indoor.js"></script>
+</head>
+<body>
+<div id='map'></div>
+</body>
+<script type="text/javascript">
+    var normalm = L.tileLayer.chinaProvider('TianDiTu.Normal.Map', {
+            maxZoom: 18,
+            minZoom: 5
+        }),
+        normala = L.tileLayer.chinaProvider('TianDiTu.Normal.Annotion', {
+            maxZoom: 18,
+            minZoom: 5
+        }),
+        imgm = L.tileLayer.chinaProvider('TianDiTu.Satellite.Map', {
+            maxZoom: 18,
+            minZoom: 5
+        }),
+        imga = L.tileLayer.chinaProvider('TianDiTu.Satellite.Annotion', {
+            maxZoom: 18,
+            minZoom: 5
+        });
+
+    var normal = L.layerGroup([normalm, normala]),
+        image = L.layerGroup([imgm, imga]);
+
+    var baseLayers = {
+        "地图": normal,
+        "影像": image,
+    };
+
+    var overlayLayers = {
+
+    };
+
+    var map = L.map("map", {
+        center: [28.196914809258615, 112.9768216609955],
+        zoom: 17,
+        layers: [normal],
+        //右键菜单
+        contextmenu: true,
+        contextmenuWidth: 140,
+        contextmenuItems: [{
+            text: '显示坐标',
+            callback: showCoordinates
+        }, {
+            text: '以此为中心',
+            callback: centerMap
+        }, '-', {
+            text: '放大',
+            icon: '',
+            callback: zoomIn
+        }, {
+            text: '缩小',
+            icon: '',
+            callback: zoomOut
+        }, '-', {
+            text: '刷新',
+            icon: '',
+            callback:  refresh
+        }]
+    });
+    /**
+     *右键菜单的相关功能
+     */
+    function showCoordinates(e) {
+        //alert(e.latlng);
+        var y = e.latlng.lat;
+        var x = e.latlng.lng;
+        console.log("当前坐标为：" + x + "," + y);
+    }
+
+    function centerMap(e) {
+        map.panTo(e.latlng);
+    }
+
+    function zoomIn(e) {
+        map.zoomIn();
+    }
+
+    function zoomOut(e) {
+        map.zoomOut();
+    }
+
+    function refresh() {
+        location.reload();
+    }
+
+
+    var editableLayers = new L.FeatureGroup();
+    map.addLayer(editableLayers);
+    var options = {
+        position: 'topright',
+        draw: {
+            polyline: {
+                shapeOptions: {
+                    color: '#f357a1',
+                    weight: 10
+                }
+            },
+            polygon: {
+                allowIntersection: false, // Restricts shapes to simple polygons
+                drawError: {
+                    color: '#e1e100', // Color the shape will turn when intersects
+                    message: '<strong>Oh snap!<strong> you can\'t draw that!' // Message that will show when intersect
+                },
+                shapeOptions: {
+                    color: '#bada55'
+                }
+            },
+            circle: false, // Turns off this drawing tool
+            rectangle: {
+                shapeOptions: {
+                    clickable: false
+                }
+            },
+            marker: {
+
+            }
+        },
+        edit: {
+            featureGroup: editableLayers, //REQUIRED!!
+            remove: false
+        }
+    };
+
+    var drawControl = new L.Control.Draw(options);
+    map.addControl(drawControl);
+
+    map.on(L.Draw.Event.CREATED, function (e) {
+        var type = e.layerType,
+            layer = e.layer;
+
+        if (type === 'polygon') {
+            console.log(layer)
+        }
+
+        editableLayers.addLayer(layer);
+    });
+
+    $.getJSON("indoor.json", function(geoJSON) {
+        var indoorLayer = new L.Indoor(geoJSON, {
+            getLevel: function(feature) {
+                return feature.properties.level;
+            },
+            onEachFeature: function(feature, layer) {
+                layer.bindPopup(JSON.stringify(feature.properties, null, 4));
+            },
+            style: function(feature) {
+                return {
+                    fillColor: '#169EC6',
+                    weight: 1,
+                    color: 'black',
+                    fillOpacity: 1
+                };
+            }
+        });
+        indoorLayer.setLevel("1");
+        indoorLayer.addTo(map);
+        var levelControl = new L.Control.Level({
+            level: "1",
+            levels: indoorLayer.getLevels(),
+            indoorLayer: indoorLayer
+        });
+        levelControl.addTo(map);
+    });
+
+
+
+</script>
+</html>

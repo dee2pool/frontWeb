@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>配置</title>
+    <link rel="stylesheet" href="../../../common/css/base.css">
+    <link rel="stylesheet" href="../../../common/lib/jquery/lib/jqueryui/jquery-ui.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/sui/css/sui.nav.css">
+    <link rel="stylesheet" href="../../../common/lib/lobipanel/css/lobipanel.min.css">
+    <link rel="stylesheet" href="../css/setting.css">
+
+    <script src="../../../common/lib/requirejs/require.js" defer async="true" data-main="../js/setting"></script>
+</head>
+<body>
+<div id="head"></div>
+
+<div class="container-fluid core">
+    <div class="row">
+        <div class="col-md-4 padtop-10">
+            <div class="col-md-12" id="t1">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">1 - 表单信息</div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email address</label>
+                                <input type="email" class="form-control"  placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input type="password" class="form-control"  placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputFile">File input</label>
+                                <input type="file">
+                                <p class="help-block">Example block-level help text here.</p>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> Check me out
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">2 - 表格
+                        <span class="pull-right glyphicon glyphicon-remove"></span>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 padtop-10" id="widgets" >
+            <div id="1" class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">1 - 表单信息</div>
+                    <div class="panel-body">
+                        <form>
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">Email address</label>
+                                <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword1">Password</label>
+                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputFile">File input</label>
+                                <input type="file" id="exampleInputFile">
+                                <p class="help-block">Example block-level help text here.</p>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"> Check me out
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="2" class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">2 - 表格
+                        <span class="pull-right glyphicon glyphicon-remove"></span>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Username</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div id="3" class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">3 - 视频</div>
+                    <div class="panel-body" width="320" height="240" controls="controls">
+                        <video src="../asset/movie.ogg" controls="controls">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+            <div id="4" class="col-md-12">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">4 - 图表</div>
+                    <div class="panel-body">
+                        <div id="chart"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

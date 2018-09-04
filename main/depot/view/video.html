@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>视频监控</title>
+    <link rel="stylesheet" href="../../common/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/video.css">
+    <link rel="stylesheet" href="../lib/ztree/css/zTreeStyle/zTreeStyle.css">
+
+    <script src="../../common/lib/requirejs/require.js" defer async="true" data-main="../js/video"></script>
+    
+</head>
+<body>
+    <!-- 头部 -->
+    <div id="head"></div>
+
+    <!-- 左侧导航 -->
+    <div class="core left">
+            <div class="video-left left">
+                    <div class="video-left-up bow-shadow">
+                        <!-- input相关 -->
+                        <p>
+                            <input type="text" placeholder="输入设备名称" class="video-input">
+                            <input type="button" class="video-btn"/>
+                        </p>
+                
+                        <!-- 设备列表标题 -->
+                        <p class="video-left-list">
+                            <i class="video-left-list-i"></i> 设备列表：
+                        </p>
+        
+                        <!-- ztree -->
+                        <p >
+                            <ul id="treeDemo" class="ztree white"></ul>
+                        </p>
+        
+        
+                    </div>
+                <div class="video-left-down bow-shadow">
+                    <div class="text_center">
+                        <a href="javascript:void (0)" class="tab-a tab-a-Active">基本信息</a>
+                        <a href="javascript:void (0)" class="tab-a">云台控制</a> 
+                    </div>
+                        <div class="video-content">
+                            <p><span>车牌号：</span><span>K89076</span></p>
+                            <p><span>驾驶人姓名：</span><span>K89076</span></p>
+                            <p><span>车辆品牌：</span><span>K89076</span></p>
+                            <p><span>车辆型号：</span><span>K89076</span></p>
+                            <p><span>所属公司：</span><span>K89076xxxxxxxxxxxxxxxxxx</span></p>
+                            <p><span>行驶里程：</span><span>xxxxx</span></p>
+                            <p><span>状态：</span><span>xxxxx</span></p>
+                            <p><span>所在位置：</span><span>xxxxxxxxxxxxx</span></p>
+                        </div>
+                </div>
+            </div>
+
+            <!-- 视频区域 -->
+            <div class="left video-center">
+                    <video controls="controls" ></video>
+                    <video controls="controls" class="magin_left"></video>
+                    <video controls="controls" class="magin_top"></video>
+                    <video controls="controls" class="magin_top magin_left"></video>
+            </div>
+
+            <!-- 地图区域 -->
+            <div class="right video_right">
+                <div id="map"></div>
+            </div>
+        
+    </div>
+
+</body>
+</html>

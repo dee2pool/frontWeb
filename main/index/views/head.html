@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="../../common/css/base.css">-->
+    <link rel="stylesheet" href="../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/lib/bootstrap/libs/sui/css/sui.nav.css">
+    <script src="../../common/lib/jquery/jquery-3.3.1.min.js"></script>
+    <script src="../../common/lib/bootstrap/js/bootstrap.js"></script>
+    <script src="../../common/lib/bootstrap/libs/sui/js/sui.nav.min.js"></script>
+</head>
+<body>
+<div id="sui_nav" class="sui-nav horizontal">
+    <div class="sui-nav-wrapper nav-border nav-line">
+        <div class="pull-left nav-header">
+            <img src="../../common/asset/img/logo.png" alt="华南光电">
+            智能可视化监管系统
+        </div>
+        <ul>
+            <li><a class="" href="/GIS-Front/index/views/index.html"><span class="glyphicon glyphicon-home"></span>&nbsp;主页</a></li>
+            <li><a class="" href="/GIS-Front/core/view/core.html"><span class="glyphicon glyphicon-fire"></span>&nbsp;一张图</a></li>
+            <li><a href="#"><span class="glyphicon glyphicon-plane"></span>驾驶舱</a>
+                <ul>
+                    <li><a href="#"><span class="glyphicon glyphicon-edit"></span> editor</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-pencil"></span> pencil</a></li>
+                    <li><a href="#"><span class="glyphicon glyphicon-saved"></span> Level23</a>
+                        <span class="indicator">&gt;</span>
+                        <ul>
+                            <li><a href="#">Level31</a></li>
+                            <li><a href="#">Level32</a></li>
+                            <li><a href="#">Level33</a>
+                                <ul>
+                                    <li><a href="#">Level331</a></li>
+                                    <li><a href="#">333 is hide</a></li>
+                                    <li class="hide-in-horizontal"><a href="#">Level333</a></li>
+                                    <li><a href="#">Level334</a></li>
+                                </ul>
+                                <span class="indicator">&gt;</span>
+                            </li>
+                            <li><a href="#">Level34</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><span class="glyphicon glyphicon-save"></span> Level24</a></li>
+                </ul>
+            </li>
+
+        </ul>
+
+        <ul class="pull-right">
+            <li><a class="glyphicon glyphicon-home"></a>
+                <ul>
+                    <li><a>Right</a></li>
+                    <li><a>Right</a>
+                        <ul>
+                            <li><a>Right</a></li>
+                            <li><a>Right</a></li>
+                            <li><a>Right</a></li>
+                        </ul>
+                    </li>
+                    <li><a>Others</a></li>
+                </ul></li>
+            <li><a class="glyphicon glyphicon-user">&nbsp;关于</a>
+                <ul>
+                    <li><a>Right</a></li>
+                    <li><a>Right</a>
+                        <ul>
+                            <li><a>Right</a></li>
+                            <li><a>Right</a></li>
+                            <li><a>Right</a></li>
+                        </ul>
+                    </li>
+                    <li><a>Others</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    var topbar = $('#sui_nav').SuiNav({});
+    var navbar = topbar.create('nav_second', {}, {});
+    $('.MenuToggle').click(function() {
+        console.log("toggle");
+        topbar.toggle();
+    });
+    $('.MenuOpen').click(function() {
+        console.log("open");
+        topbar.show();
+    });
+</script>
+</body>
+</html>

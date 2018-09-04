@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/index.css">
+    <!-- leaflet -->
+    <link rel="stylesheet" href="../../common/lib/leaflet/leaflet.css">
+
+    <script src="../../common/lib/requirejs/require.js" defer async="true" data-main="../js/index"></script>
+</head>
+
+<body>
+    <!--头部-->
+    <div id="head"></div>
+
+    <!--内容部分-->
+    <main class="core left">
+        <!--总体概况-->
+        <div class="core-condition">
+            <div class="static_top left">
+                <i class="fa fa-area-chart white"></i><span>总体概况</span>
+            </div>
+        </div>
+
+        <!--数字描述-->
+        <div class="core-num">
+            <div class="core-num-text left">
+                <div class="core-num-text-content left">
+                    <img src="../img/info_1.png" class="left core-num-text-img">
+                    <div class="left core-num-text-text">
+                        <p>设备1总数</p>
+                        <p>12356</p>
+                    </div>
+                </div>
+                <div class="core-num-text-content right">
+                    <img src="../img/info_2.png" class="left core-num-text-img">
+                    <div class="left core-num-text-text">
+                        <p>设备1使用数(辆)</p>
+                        <p>12356</p>
+                    </div>
+                </div>
+            </div>
+            <div class="core-num-text left">
+                <div class="core-num-text-content left">
+                    <img src="../img/info_4.png" class="left core-num-text-img">
+                    <div class="left core-num-text-text">
+                        <p>设备2总数</p>
+                        <p class="">12356</p>
+                    </div>
+                </div>
+                <div class="core-num-text-content right">
+                    <img src="../img/info_5.png" class="left core-num-text-img">
+                    <div class="left core-num-text-text">
+                        <p>设备2使用数</p>
+                        <p class="">12356</p>
+                    </div>
+                </div>
+            </div>
+            <div class="core-num-text left">
+                <div class="core-num-text-content left">
+                    <img src="../img/info_6.png" class="left core-num-text-img">
+                    <div class="left core-num-text-text">
+                        <p>设备3总数</p>
+                        <p class="">12356</p>
+                    </div>
+                </div>
+                <div class="core-num-text-content right">
+                    <img src="../img/info_7.png" class="left core-num-text-img">
+                    <div class="left core-num-text-text">
+                        <p>设备3使用数</p>
+                        <p class="">12356</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--地图和表格部分,中心部分-->
+        <div class="core-center">
+            <div class="core-center-left left">
+                <div class="core-center-child">
+                    <div class="common-title">
+                        <!--<i class="fa fa-video-camera white"></i>-->
+                        标题
+                    </div>
+                    <p id="char1" class="p-chart"></p>
+                </div>
+                <div class="core-center-child">
+                    <div class="common-title">
+                        <!--<i class="fa fa-video-camera white"></i>-->
+                        标题
+                    </div>
+                    <p id="char2" class="p-chart"></p>
+                </div>
+            </div>
+
+            <div class="core-center-center left">
+                <div class="core-center-child core-center-child-map">
+                    <div class="common-title">
+                        <!--<i class="fa fa-video-camera white"></i>-->
+                        地图
+                    </div>
+
+                    <div class="core-center-map" id="map"></div>
+
+                </div>
+            </div>
+
+            <div class="core-center-right right">
+                <div class="core-center-child">
+                    <div class="common-title">
+                        <!--<i class="fa fa-video-camera white"></i>-->
+                        标题
+                    </div>
+                    <p id="char3" class="p-chart"></p>
+                </div>
+                <div class="core-center-child">
+                    <div class="common-title">
+                        <!--<i class="fa fa-video-camera white"></i>-->
+                        标题
+                    </div>
+                    <p id="char4" class="p-chart"></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 表格部分 -->
+        <div class="core-table">
+            <!-- 表格1 -->
+            <div class="core-table-box left">
+                <div class="core-center-child">
+                    <div class="common-title">标题</div>
+                    <div class="common-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>车牌号</th>
+                                    <th>里程数（km）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 表格2 -->
+            <div class="core-table-box left">
+                <div class="core-center-child">
+                    <div class="common-title">标题</div>
+                    <div class="common-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>车牌号</th>
+                                    <th>里程数（km）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="core-table-box left">
+                <div class="core-center-child">
+                    <div class="common-title">标题</div>
+                    <div class="common-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>车牌号</th>
+                                    <th>里程数（km）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="core-table-box left">
+                <div class="core-center-child">
+                    <div class="common-title">标题</div>
+                    <div class="common-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>排名</th>
+                                    <th>车牌号</th>
+                                    <th>里程数（km）</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+    </main>
+
+
+</body>
+
+</html>

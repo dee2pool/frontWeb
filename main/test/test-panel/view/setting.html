@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>看板设置</title>
+    <link rel="stylesheet" href="../../../common/css/base.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/lib/zui/css/zui.css">
+
+    <link rel="stylesheet" href="../../../common/lib/zui/lib/dashboard/zui.dashboard.css">
+
+    <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/sui/css/sui.nav.css">
+
+    <link rel="stylesheet" href="../css/setting.css">
+
+    <script src="../../../common/lib/requirejs/require.js" defer async="true" data-main="../js/setting"></script>
+</head>
+<body>
+<div id="head"></div>
+<div class="container-fluid">
+    <div class="col-md-6">
+        <ul class="nav nav-primary">
+            <li ><a href="panel.html">业务看板</a></li>
+            <li><a href="#">动态 <span class="label label-badge label-success">4</span></a></li>
+            <li class="active"><a href="setting.html">看板设置</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="container-fluid" >
+    <div class="row">
+        <div class="col-md-2 core">
+            <div id="dashboard2" class="dashboard dashboard-draggable" data-height="100">
+                <section class="row">
+                    <div class="col-md-12">
+                        <div class="panel" data-id="1">
+                            <div class="panel-heading">
+                                <i class="icon icon-list"></i>
+                                <span class="title">添加面板1</span>
+                                <div class="panel-actions">
+                                    <a href="void:javascript:void(0);" data-toggle="tooltip" title="添加" id="add1"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                <p>添加面板1</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel" data-id="2">
+                            <div class="panel-heading">
+                                <i class="icon icon-list"></i>
+                                <span class="title">添加面板2</span>
+                                <div class="panel-actions">
+                                    <a href="void:javascript:void(0);" data-toggle="tooltip" title="添加" id="add2"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <div class="panel-body no-padding">
+                                添加面板2
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel" data-id="3">
+                            <div class="panel-heading">
+                                <i class="icon icon-table"></i>
+                                <span class="title"> 添加面板3</span>
+                                <div class="panel-actions">
+                                    <a href="void:javascript:void(0);" data-toggle="tooltip" title="添加" id="add3"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <div class="panel-body no-padding">
+                                添加面板3
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="panel" data-id="4">
+                            <div class="panel-heading">
+                                <i class="icon icon-bolt"></i>
+                                <span class="title">添加面板4</span>
+                                <div class="panel-actions">
+                                    <a href="void:javascript:void(0);" data-toggle="tooltip" title="添加" id="add4"><i class="fa fa-plus" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <div class="panel-body">
+                                添加面板4
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="col-md-9 core" id="main">
+            <div id="dashboard" class="dashboard dashboard-draggable scrollbar-hover" data-height="300">
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+
+
+
+</body>
+</html>

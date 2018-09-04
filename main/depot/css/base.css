@@ -1,0 +1,329 @@
+@charset "UTF-8";
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+/* CSS Document */
+/*全局滚动条样式*/
+::-webkit-scrollbar-track{border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);}/*滚动条的滑轨背景颜色*/
+::-webkit-scrollbar-thumb{background-color: rgba(0,0,0,0.05);border-radius: 10px;-webkit-box-shadow: inset 1px 1px 0 rgba(75, 75, 75, 0.58);}/*滑块颜色*/
+::-webkit-scrollbar-thumb{background-color: rgba(0,0,0,0.2);border-radius: 10px;-webkit-box-shadow: inset 1px 1px 0 rgba(48, 48, 48, 0.92);}
+::-webkit-scrollbar{width: 16px;height: 16px;}/* 滑块整体设置*/
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb{border-radius: 999px;border: 5px solid transparent;}
+::-webkit-scrollbar-track{box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;}
+::-webkit-scrollbar-thumb{min-height: 20px;background-clip: content-box;box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;}
+::-webkit-scrollbar-corner{background: transparent;}/* 横向滚动条和纵向滚动条相交处尖角的颜色 */
+
+body{
+    font-size: 100%;
+}
+a:hover{
+    text-decoration: none;
+}
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.clear{
+    clear: both;
+}
+
+.text_right{
+    text-align: right;
+}
+
+/*start-全局通用颜色*/
+.white{
+    color: white;
+}
+
+.sky {
+    color: #25f3e6 !important;
+}
+
+.red {
+    color: red !important;
+}
+
+.margin-right-5{
+    margin-right: 5px;
+}
+
+
+/*end-全局通用颜色*/
+
+/* start-全局通用core */
+.core{
+    width: 100%;
+    background-color: #081832;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.core-center{
+    width: 98%;
+    margin-left: 1%;
+    margin-bottom: 25px;
+    height: 610px;
+}
+/* end-全局通用core */
+
+/*start-全局通用顶部标签，第一次在index-总体概况中出现*/
+.static_top {
+    width: 140px;
+    height: 36px;
+    line-height: 36px;
+    background-color: #04425f;
+    margin-bottom: 25px;
+    margin-left: 1%;
+    padding-left: 20px;
+    border-radius: 1px;
+    box-shadow: 0px 3px 3px #61d2f7;
+}
+.static_top span {
+    color: #25f3e6;
+}
+.static_top i {
+    display: inline-block;
+    position: relative;
+    margin-right: 6px;
+    top: 1px;
+}
+/*end-顶部标签，第一次在index-总体概况中出现*/
+
+/* start-全局通用表格展示标签 */
+.static-top-content {
+    background-color: #034c6a;
+    width: 96%;
+    margin-left: 1%;
+    margin-bottom: 25px;
+    padding: 10px 1%;
+    border-radius: 5px;
+}
+
+.static-top-content table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.static-table td{
+    color: #FFFFff;
+    padding: 5px;
+    font-size: 13px;
+    border: 1px solid #485f849c;
+}
+
+.static-table .label-td{
+    color: #61d2f7;
+    font-size: 14px;
+    width: 120px;
+    text-align: right;
+}
+
+
+
+/* end-全局通用表格展示标签 */
+
+
+
+/*start-通用title，主页中通用的“框”的标题*/
+.common-title{
+    background-color: #034c6a;
+    border-radius: 18px;
+    position: absolute;
+    height: 35px;
+    width: 60%;
+    top: -15px;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 16px;
+    left: 20%;
+    line-height: 35px;
+    text-align: center;
+}
+
+.common-title i{
+    margin-right: 5px;
+}
+
+/*end-通用title，主页中通用的“框”的标题*/
+
+/*通用表格样式*/
+.p-chart{
+    height: 250px;
+    padding: 5px 10px;
+    margin-top: 15px;
+}
+
+
+/* start-通用的table样式，参见static.html */
+.p-table{
+    height: 200px;
+}
+
+.p-table-div{
+    height: auto !important;
+    margin-top: 0!important;
+    position: relative;
+}
+
+.p-table-div-table{
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    position: absolute;
+    text-align: center;
+}
+
+.p-table-div-table tbody{
+    color: #ffffff;
+   font-size: 13px;
+}
+
+.p-table-div-table thead th{
+    color: #61d2f7;
+    font-size: 14px;
+    font-weight: 600;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.p-table-div-table tbody tr{
+    line-height: 32px;
+}
+
+/* 隔行阴影效果 */
+.p-table-div-table tbody tr:nth-child(2n+1){
+    background-color: #072951;
+    box-shadow: -10px 0px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset;
+}
+
+/* end-通用的table样式 */
+
+
+/* table通用样式 */
+.common-table{
+    height: 93%;
+    margin-top: 7%;
+    position: relative;
+}
+
+/*start-header头部*/
+.header{
+    width: 100%;
+    height: 80px;
+    background-color: #030829;
+}
+.header_center{
+    width: 30%;
+    margin: 0px auto;
+    color: #FFFFff;
+    text-align: center;
+    height: 80px;
+    background-image: url("../img/logoBg.png");
+    background-size: 100% 100%;
+    font-family: "微软雅黑"!important;
+}
+.header_center h2{
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    font-size: 18px !important;
+}
+.color_font{
+    color: #e8f7fe !important;
+    font-size: 12px !important;
+}
+.header_logo{
+    margin-left: 1%;
+    margin-top: 12px;
+
+}
+.header_logo img{
+    height: 56px;
+}
+.nav{
+    width: 35%;
+}
+.nav>ul{
+
+}
+.nav>ul>li{
+    display: inline-block;
+    width: 120px;
+    text-align: center;
+    height: 50px;
+    position: relative;
+    line-height: 50px;
+    margin-top: 15px;
+    box-sizing: border-box;
+    border-radius: 5px;
+
+}
+.nav>ul>li:hover{
+    box-shadow: -10px 0px 15px #034c6a inset, /*å·¦è¾¹é˜´å½±*/
+    0px -10px 15px #034c6a inset, /*ä¸Šè¾¹é˜´å½±*/
+    10px 0px 15px #034c6a inset, /*å³è¾¹é˜´å½±*/
+    0px 10px 15px #034c6a inset;
+
+    box-sizing: border-box;
+}
+.nav>ul>li i{
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    position: relative;
+    top:3px;
+    margin-right: 5px;
+}
+.nav>ul>li>a{
+    color: #ffffff;
+    font-size: 14px;
+}
+
+.nav_active{
+    border-bottom: 4px solid #4b8df8;
+    box-shadow: -10px 0px 15px #034c6a inset,
+    0px -10px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset,
+    0px 10px 15px #034c6a inset;
+    box-sizing: border-box;
+}
+/*end-header头部*/
+
+/* 外部用用印象效果 */
+.bow-shadow {
+    box-shadow: -8px 0px 10px #034c6a inset, 8px 0px 10px #034c6a inset;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 视频监控界面 左下角tab */
+.tab-a {
+    width: 45%;
+    height: 30px;
+    line-height: 30px;
+    color: #FFFFff;
+    background-color: #667fa7;
+    display: inline-block;
+    margin-right: 1%;
+    margin-top: 5px;
+    font-size: 14px;
+}
+.tab-a-Active {
+    background-color: #034c6a !important;
+    font-weight: 600;
+}
+
+/* 文字居中 */
+.text_center{
+    text-align: center;
+}

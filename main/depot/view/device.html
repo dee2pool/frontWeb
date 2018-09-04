@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>设备查询</title>
+    <!-- <link rel="stylesheet" href="../../common/lib/bootstrap/css/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="../css/base.css">
+
+    <link rel="stylesheet" href="../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/device.css">
+    <link rel="stylesheet" href="../lib/ztree/css/zTreeStyle/zTreeStyle.css">
+
+    <script src="../../common/lib/requirejs/require.js" defer async="true" data-main="../js/device"></script>
+</head>
+
+<body>
+    <div id="head"></div>
+
+    <div class="device" id="core">
+        <div class="left-table left bow-shadow">
+            <div class="core-left-list">
+                <i class="fa fa-cog white"></i> 设备列表：
+            </div>
+            <div>
+                <ul id="treeDemo" class="ztree white"></ul>
+            </div>
+        </div>
+
+        <div class="right-table right bow-shadow">
+            <div class="table-find">
+                <div>
+                    <label>名称：</label>
+                    <input type="text" placeholder="请输入名称">
+                    <label>编号：</label>
+                    <input type="text" placeholder="请输入编号">
+                    <label>选择类型：</label>
+                    <select><option>xxxxxx</option></select>
+                    <label>关键字：</label>
+                    <input type="text" placeholder="请输入关键字">
+                </div>
+
+                <div>
+                    <label>出生日期：</label>
+                    <input type="date">
+                    <label>编号：</label>
+                    <input type="text" placeholder="请输入编号">
+                    <label>品牌：</label>
+                    <select><option>xxxxxx</option></select>
+                    <label>关键字：</label>
+                    <input type="text" placeholder="请输入关键字">
+                </div>
+
+                <p>
+                    <label>选择方式：</label>
+                    <input type="checkbox">
+                    <span>方式1</span>
+                    <input type="checkbox">
+                    <span>方式2</span>
+                    <input type="checkbox">
+                    <span>方式3</span>
+                    <input type="checkbox">
+                    <span>方式4</span>
+                    <input type="checkbox">
+                    <span>方式5</span>
+                    <button class="btn btn-primary btn-sm">
+                        <i class="fa fa-search"></i>查询</button>
+                    <span class="more_find right" onclick="openList()" id="open">高级查询&gt;&gt;</span></p>
+            </div>
+
+            <div class="table-div">
+                
+                <!-- 按钮组 -->
+                <p class="table-but">
+                    <a href="javascript:void(0)" onclick="add()"><i class="fa fa-plus"></i>新增</a>
+                    <a href="javascript:void(0)"><i class="fa fa-remove"></i> 删除</a>
+                    <a href="javascript:void(0)"><i class="fa fa-print"></i>打印</a>
+                    <a href="javascript:void(0)"><i class="fa fa-outdent"></i>导出</a>
+                </p>
+
+                                        <div class="p-table">
+                            <div class="p-table-div">
+                                <table class="p-table-div-table">
+                                    <thead>
+                                        <tr>
+                                            <th>排名</th>
+                                            <th>车牌号</th>
+                                            <th>时长（km）</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>京A12345</td>
+                                            <td>134.2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>京A12345</td>
+                                            <td>134.2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>京A12345</td>
+                                            <td>134.2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>京A12345</td>
+                                            <td>134.2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>京A12345</td>
+                                            <td>134.2</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+</body>
+
+</html>
