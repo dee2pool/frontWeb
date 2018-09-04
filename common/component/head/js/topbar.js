@@ -3,7 +3,7 @@ define(["../../../config/common/libs/nav/js/nav.min","../../../common/js/service
     //logo图片路径
     topBar.imgSrc='../../../common/component/head/img/logo.png';
     topBar.userManage='../../../config/user/view/usermanage.html';
-    topBar.url = "/hnvmns-frontWEB"
+    topBar.url = "/hnvmns-frontweb"
     topBar.htm=['<div id="sui_nav" class="sui-nav horizontal">',
         '    <div class="sui-nav-wrapper nav-border nav-line">',
         '        <div class="pull-left nav-header">',
