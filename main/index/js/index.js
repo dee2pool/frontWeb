@@ -37,7 +37,7 @@ require.config({
         "dashboard":"../../common/lib/zui/lib/dashboard/zui.dashboard",
         "boards":"../../common/lib/zui/lib/board/zui.board.min",
         "Mock":"../../common/lib/mock/mock",
-        "topBar":"http://hnvmns-frontweb.frontconfig:8080/hnvmns-frontweb/head/js/topbar"
+        "topBar":"../../../config/head/js/topbar"
 
     }
 
