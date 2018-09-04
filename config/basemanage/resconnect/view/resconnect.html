@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../../common/css/common.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-treeview.css">
+    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel='stylesheet' href='http://fonts.googleapis.com/icon?family=Material+Icons' type='text/css'>
+    <link rel="stylesheet" href="../../../index/css/sidenav.css">
+    <link rel="stylesheet" href="../../../index/css/iframe.css">
+    <link rel="stylesheet" href="../css/resc.css">
+</head>
+<body>
+<!--头部-->
+<nav class="navbar navbar-default topbar" style="background-color: #2f353f;border: 0px">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#head-navbar-collapse" aria-expanded="false">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"></a>
+        </div>
+        <div class="collapse navbar-collapse" id="head-navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <img src="../../../index/img/home.png" width="25px" height="25px">
+                    </a>
+                    <div class="dropdown-menu">
+                        <!--TODO 下拉信息-->
+                    </div>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../../../index/img/people.png" width="25px" height="25px">
+                        <b>用户信息</b>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../../../index/img/help.png" width="25px" height="25px">
+                        <b>用户文档</b>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../../../index/img/msg.png" width="25px" height="25px">
+                        <b>软件信息</b>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../../../index/img/iphone.png" width="25px" height="25px">
+                        <b>移动应用</b>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <img src="../../../index/img/download.png" width="25px" height="25px">
+                        <b>下载中心</b>
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <span style="font-weight: bold;font-size: 17px;color: white">退出</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!--侧边栏-->
+<nav class="navbar navbar-inverse sidebar" data-sidenav data-sidenav-toggle="#sidenav-toggle">
+    <div class="slimscrollleft">
+        <ul class="sidenav-menu">
+            <li>
+                <a href="javascript:;" data-sidenav-dropdown-toggle>
+                    <span class="sidenav-link-icon">
+                        <i><img src="../../../index/img/s_base.png" width="20px" height="20px"></i>
+                    </span>
+                    <span class="sidenav-link-title">
+                            基础应用
+                        </span>
+                    <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                        <i class="material-icons">arrow_drop_down</i>
+                        </span>
+                    <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                        <i class="material-icons">arrow_drop_up</i>
+	                    </span>
+                </a>
+                <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                    <li>
+                        <a href="#"
+                           onclick="openPage('basemanage/organization/view/orgmanagement.html','基础应用','组织管理')">
+                            组织管理
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-sidenav-dropdown-toggle>
+                            资源管理
+                            <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                            <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+                                </span>
+                        </a>
+                        <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                            <li><a href="#"
+                                   onclick="openPage('basemanage/resource/view/resmanagement.html','资源管理','统一资源入口')">统一资源入口</a>
+                            </li>
+                            <li><a href="#">服务器管理</a></li>
+                            <li><a href="#"
+                                   onclick="openPage('basemanage/resconnect/view/resconnect.html','资源管理','资源关联配置')">资源关联配置</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-sidenav-dropdown-toggle>
+                            用户管理
+                            <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                            <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+	                            </span>
+                        </a>
+                        <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                            <li><a href="#"
+                                   onclick="openPage('basemanage/user/view/usermanage.html','用户管理','用户管理')">用户管理</a>
+                            </li>
+                            <li><a href="#"
+                                   onclick="openPage('basemanage/role/view/rolemanage.html','用户管理','角色管理')">角色管理</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a href="#" onclick="openPage('basemanage/person/view/personmanage.html','人员管理')">人员管理</a>
+                    </li>
+                    <li>
+                        <a href="#" data-sidenav-dropdown-toggle>
+                            日志管理
+                            <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                            <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+	                            </span>
+                        </a>
+                        <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                            <li><a href="#"
+                                   onclick="openPage('basemanage/log/config-log/view/configlog.html','日志管理','配置日志')">配置日志</a>
+                            </li>
+                            <li><a href="#"
+                                   onclick="openPage('basemanage/log/control-log/view/controllog.html','日志管理','控制日志')">控制日志</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-sidenav-dropdown-toggle>
+                            系统管理
+                            <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                            <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+	                            </span>
+                        </a>
+                        <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                            <li>
+                                <a href="#" data-sidenav-dropdown-toggle>系统配置
+                                    <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                    <i class="material-icons">arrow_drop_down</i>
+                                    </span>
+                                    <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                    <i class="material-icons">arrow_drop_up</i>
+                                    </span>
+                                </a>
+                                <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                                    <li><a href="javascript:;"
+                                           onclick="openPage('basemanage/sysconfig/domain/view/domain.html','系统设置','网域配置')">网域配置</a>
+                                    </li>
+                                    <li><a href="#">系统邮箱</a></li>
+                                    <li><a href="#">短信设备配置</a></li>
+                                    <li><a href="#">数据库配置</a></li>
+                                    <li><a href="#">子系统配置</a></li>
+                                    <li><a href="#">Logo自定义</a></li>
+                                    <li><a href="javascript:;"
+                                           onclick="openPage('basemanage/sysconfig/apiconfig/view/apiconfig.html','系统设置','Api第三方接入设置')">Api第三方接入配置</a>
+                                    </li>
+                                    <li><a href="#">微信公众号配置</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="javascript:;">用户管理</a></li>
+                            <li><a href="">设备类型</a></li>
+                            <li><a href="">设备厂商</a></li>
+                            <li><a href="">设备型号</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" data-sidenav-dropdown-toggle>
+                            媒体源管理
+                            <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_down</i>
+                                </span>
+                            <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                                <i class="material-icons">arrow_drop_up</i>
+	                            </span>
+                        </a>
+                        <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                            <li><a href="#">设备信息</a>
+                            </li>
+                            <li><a href="#">媒体源信息</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <a href="javascript:;" data-sidenav-dropdown-toggle>
+                        <span class="sidenav-link-icon">
+                            <i><img src="../../../index/img/s_event.png" width="20px" height="20px"></i>
+                        </span>
+                    <span class="sidenav-link-title">
+                            事件中心
+                            <span class="sidenav-dropdown-icon show" data-sidenav-dropdown-icon>
+	                            <i class="material-icons">arrow_drop_down</i>
+                            </span>
+                            <span class="sidenav-dropdown-icon" data-sidenav-dropdown-icon>
+	                            <i class="material-icons">arrow_drop_up</i>
+	                        </span>
+                        </span>
+                </a>
+                <ul class="sidenav-dropdown" data-sidenav-dropdown>
+                    <li><a href="#">基础配置</a></li>
+                    <li><a href="#">预案配置</a></li>
+                    <li><a href="#">事件规则</a></li>
+                    <li><a href="#">事件日志</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="contentpage">
+    <div class="content">
+        <div class="content-panel">
+            <div class="row">
+                <div class="main-left col-md-3">
+                    <p>组织机构</p>
+                    <form role="form">
+                        <input type="text" class="form-control" placeholder="区域或中心名称"
+                               style="width: 230px;display: inline-block">
+                        <button type="button" class="btn btn-default">搜索</button>
+                    </form>
+                    <div id="tree"></div>
+                </div>
+                <div id="t_list" class="col-md-9 main-right">
+                    <div class="head">
+                        <div class="head-left">
+                            <span class="glyphicon glyphicon-trash" aria-hidden="true">清空</span>
+                        </div>
+                        <div class="head-right">
+                            <form role="form">
+                                <input type="text" class="form-control" placeholder="请输入已配置的资源"
+                                       style="width: 230px;display: inline-block">
+                                <button type="button" class="btn btn-default">搜索</button>
+                            </form>
+                        </div>
+                    </div>
+                    <table data-toggle="table">
+                        <thead>
+                        <tr>
+                            <th>序号</th>
+                            <th>门禁点</th>
+                            <th>监控点</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>门1</td>
+                            <td><a href="">SDK_云设备监控点</a></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Item 2</td>
+                            <td><span class="glyphicon glyphicon-plus" aria-hidden="true"></span><a href="javascript:;"
+                                                                                                    onclick="addList()">添加</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="t_add" class="main-right" style="display: none">
+                    <div class="panel-left">
+                        <table data-toggle="table">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>序号</th>
+                                <th>监控点</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td></td>
+                                <td>1</td>
+                                <td>门1</td>
+                            </tr>
+                            <tr>
+                                <td data-checkbox></td>
+                                <td>2</td>
+                                <td>Item 2</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-right">
+                        <table data-toggle="table">
+                            <thead>
+                            <tr>
+                                <th data-checkbox></th>
+                                <th>序号</th>
+                                <th>监控点</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td data-checkbox></td>
+                                <td>1</td>
+                                <td>门1</td>
+                            </tr>
+                            <tr>
+                                <td data-checkbox></td>
+                                <td>2</td>
+                                <td>Item 2</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="btn-group-vertical btn-group-lg" style="position: absolute;left: 840px;top: 290px">
+                        <button type="button" class="btn btn-danger" style="margin-bottom: 20px">添加</button>
+                        <button type="button" class="btn btn-warning" style="margin-bottom: 20px">删除</button>
+                        <button type="button" class="btn btn-default">清空</button>
+                    </div>
+                    <div class="btn-group" style="float: right;margin-top: 20px">
+                        <button type="button" class="btn btn-danger" style="margin-right: 20px;width: 120px">完成</button>
+                        <button type="button" class="btn btn-default" style="width: 120px">取消</button>
+                    </div>
+                </div>
+        </div>
+        </div>
+    </div>
+</div>
+<script src="../../../common/libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-treeview.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-table.js"></script>
+<script src="../../../common/libs/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+<script src="../../../common/libs/jquery-slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../../index/js/sidenav.js"></script>
+<script src="../../../index/js/iframe.js"></script>
+<script>
+    /*侧边栏*/
+    $('[data-sidenav]').sidenav()
+
+    /*组织树*/
+    function getTree() {
+        var tree = [{
+            text: '默认控制中心',
+            nodes: [
+                {
+                    text: '动环'
+                }, {
+                    text: '门禁'
+                }, {
+                    text: '1期',
+                    nodes: [{
+                        text: '1期01'
+                    }, {
+                        text: '1期02'
+                    }]
+                }
+            ]
+        }]
+        return tree;
+    }
+
+    $('#tree').treeview({
+        showBorder: false,
+        selectedBackColor: 'white',
+        selectedColor: 'black',
+        data: getTree()
+    })
+
+    function addList() {
+        $('#t_list').hide();
+        $('#t_add').show();
+    }
+</script>
+</body>
+</html>

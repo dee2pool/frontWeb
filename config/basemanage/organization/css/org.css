@@ -1,0 +1,34 @@
+.org-head{
+    height: 50px;
+    margin-bottom: 30px;
+}
+.org-head h3{
+    display: inline-block;
+}
+.opera-icon{
+    height: 30px;
+    margin-bottom: 20px;
+}
+.opera-icon a{
+    margin-right: 20px;
+}
+/*.main-right input{
+    width: 260px;
+}*/
+/*.main-right>i{
+    display: block;
+    width: 1000px;
+    height: 1px;
+    margin-bottom: 50px;
+    background-color: lightgray;
+}*/
+/*
+.main-right>span{
+    width: 90px;
+    font-size: 18px;
+    text-align: center;
+    position: absolute;
+    top: 60px;
+    left: 450px;
+    background-color: white;
+}*/

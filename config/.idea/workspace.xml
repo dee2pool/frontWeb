@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="893501fd-473e-4092-8e67-63b372330aa6" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/basemanage/role/view/rolemanage.html" beforeDir="false" afterPath="$PROJECT_DIR$/basemanage/role/view/rolemanage.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/head/js/topbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/head/js/topbar.js" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/.tmp/" />
+    <ignored path="$PROJECT_DIR$/temp/" />
+    <ignored path="$PROJECT_DIR$/tmp/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="rolemanage.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/basemanage/role/view/rolemanage.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="110">
+              <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
+              <folding>
+                <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Role.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/basemanage/role/js/Role.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1430">
+              <caret line="65" column="17" selection-start-line="65" selection-start-column="17" selection-end-line="65" selection-end-column="17" />
+              <folding>
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="LoginController.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/basemanage/common/js/service/LoginController.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="13" lean-forward="true" selection-start-column="13" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="wframe.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sidebar/js/wframe.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3696">
+              <caret line="294" column="5" lean-forward="true" selection-start-line="294" selection-start-column="5" selection-end-line="294" selection-end-column="5" />
+              <folding>
+                <element signature="e#4200#4974#0" />
+                <element signature="e#5014#6450#0" />
+                <element signature="e#6456#7128#0" />
+                <element signature="e#7166#7413#0" />
+                <element signature="e#7451#7707#0" />
+                <element signature="e#7753#7981#0" />
+                <element signature="e#8027#9544#0" />
+                <element signature="n#style#0;n#div#0;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#3;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#div#0;n#div#0;n#div#3;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#4;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#5;n#form#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#button#0;n#div#5;n#form#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="sidebar.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sidebar/view/sidebar.html">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="util.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/basemanage/common/js/util.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="484">
+              <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="login.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/login/js/login.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2376">
+              <caret line="108" column="120" selection-start-line="108" selection-start-column="120" selection-end-line="108" selection-end-column="120" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="topbar.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/head/js/topbar.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="792">
+              <caret line="36" column="40" lean-forward="true" selection-start-line="36" selection-start-column="40" selection-end-line="36" selection-end-column="40" />
+              <folding>
+                <element signature="e#158#164#0" expanded="true" />
+                <element signature="e#155#161#0" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="frame.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/sidebar/css/frame.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="519">
+              <caret line="303" column="1" selection-start-line="303" selection-start-column="1" selection-end-line="303" selection-end-column="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="CSS File" />
+        <option value="HTML File" />
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>4</find>
+      <find>8</find>
+      <find>request</find>
+      <find>deviceTypeService</find>
+      <find>deviceInfoService</find>
+      <find>jQuery</find>
+      <find>navbar-right</find>
+      <find>content-head</find>
+      <find>service</find>
+      <find>body</find>
+      <find>5</find>
+      <find>3</find>
+      <find>7</find>
+      <find>完成</find>
+      <find>on</find>
+      <find>.on</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>8</replace>
+      <replace>4</replace>
+      <replace>5</replace>
+      <replace>7</replace>
+      <replace>required</replace>
+      <replace>deviceTypeController</replace>
+      <replace>deviceInfoController</replace>
+      <replace>loginservice</replace>
+      <replace>deviceInfoService</replace>
+      <replace>deviceTypeService</replace>
+      <replace>RoleService</replace>
+      <replace>3</replace>
+      <replace>2</replace>
+      <replace>6</replace>
+    </replaceStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/mtygl/hn_med_deviceInfo/js/deviceinfo.js" />
+        <option value="$PROJECT_DIR$/common/js/utils.js" />
+        <option value="$PROJECT_DIR$/common/js/LoginController.js" />
+        <option value="$PROJECT_DIR$/basemanage/organization/view/orgmanagement.html" />
+        <option value="$PROJECT_DIR$/login/css/login.css" />
+        <option value="$PROJECT_DIR$/frame.html" />
+        <option value="$PROJECT_DIR$/index/js/frame.js" />
+        <option value="$PROJECT_DIR$/common/js/DeviceTypeController.js" />
+        <option value="$PROJECT_DIR$/common/js/DeviceInfoController.js" />
+        <option value="$PROJECT_DIR$/xtgl/hn_sys_deviceType/views/hn_sys_deviceType.html" />
+        <option value="$PROJECT_DIR$/xtgl/hn_sys_deviceType/js/deviceType.js" />
+        <option value="$PROJECT_DIR$/common/libs/bootstrap-switch/js/bootstrap-switch.js" />
+        <option value="$PROJECT_DIR$/common/js/RoleController.js" />
+        <option value="$PROJECT_DIR$/basemanage/user/css/user.css" />
+        <option value="$PROJECT_DIR$/basemanage/log/config-log/css/configlog.css" />
+        <option value="$PROJECT_DIR$/common/css/common.css" />
+        <option value="$PROJECT_DIR$/basemanage/role/rolw.css" />
+        <option value="$PROJECT_DIR$/basemanage/role/role.css" />
+        <option value="$PROJECT_DIR$/basemanage/role/css/buttons.css" />
+        <option value="$PROJECT_DIR$/index/js/menu.js" />
+        <option value="$PROJECT_DIR$/common/libs/nav/css/nav.css" />
+        <option value="$PROJECT_DIR$/index/js/topbarUser.js" />
+        <option value="$PROJECT_DIR$/mtygl/hn_med_deviceInfo/views/hn_med_deviceInfo.html" />
+        <option value="$PROJECT_DIR$/mtygl/hn_med_deviceInfo/js/device.js" />
+        <option value="$PROJECT_DIR$/basemanage/role/js/role_del.js" />
+        <option value="$PROJECT_DIR$/basemanage/role/js/role_add.js" />
+        <option value="$PROJECT_DIR$/basemanage/role/js/role_edit.js" />
+        <option value="$PROJECT_DIR$/index/js/topbar.js" />
+        <option value="$PROJECT_DIR$/common/js/MenuController.js" />
+        <option value="$PROJECT_DIR$/index/js/wframe.js" />
+        <option value="$PROJECT_DIR$/index/css/frame.css" />
+        <option value="$PROJECT_DIR$/common/js/util.js" />
+        <option value="$PROJECT_DIR$/index/view/head.html" />
+        <option value="$PROJECT_DIR$/head/js/head.js" />
+        <option value="$PROJECT_DIR$/basemanage/common/css/frame.css" />
+        <option value="$PROJECT_DIR$/basemanage/common/view/sidebar.html" />
+        <option value="$PROJECT_DIR$/login.html" />
+        <option value="$PROJECT_DIR$/basemanage/common/js/sidebar/wframe.js" />
+        <option value="$PROJECT_DIR$/head/head.html" />
+        <option value="$PROJECT_DIR$/basemanage/user/js/user.js" />
+        <option value="$PROJECT_DIR$/basemanage/common/js/util.js" />
+        <option value="$PROJECT_DIR$/index/js/index.js" />
+        <option value="$PROJECT_DIR$/index.html" />
+        <option value="$PROJECT_DIR$/basemanage/user/view/usermanage.html" />
+        <option value="$PROJECT_DIR$/sidebar/js/wframe.js" />
+        <option value="$PROJECT_DIR$/sidebar/css/frame.css" />
+        <option value="$PROJECT_DIR$/login/js/login.js" />
+        <option value="$PROJECT_DIR$/head/js/topbar2.js" />
+        <option value="$PROJECT_DIR$/basemanage/role/js/Role.js" />
+        <option value="$PROJECT_DIR$/basemanage/role/view/rolemanage.html" />
+        <option value="$PROJECT_DIR$/head/js/topbar.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="243" />
+    <option name="y" value="107" />
+    <option name="width" value="1366" />
+    <option name="height" value="1061" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <showMembers ProjectPane="false" />
+      <autoscrollToSource ProjectPane="false" />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="hnvmns-frontweb" type="b2602c69:ProjectViewProjectNode" />
+              <item name="work" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://F:/work/index/css/sidenav.css" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="D:/Sortable-master" />
+    <property name="list.type.of.created.stylesheet" value="CSS" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\work\head\img" />
+      <recent name="F:\work\head\js" />
+      <recent name="F:\work\head" />
+      <recent name="F:\work\basemanage" />
+      <recent name="F:\work\basemanage\role\css" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\work\head\js" />
+      <recent name="F:\work\sidebar\css" />
+      <recent name="F:\work\sidebar\view" />
+      <recent name="F:\work\sidebar\js" />
+      <recent name="F:\work\basemanage\common\css" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="JavaScript Debug.usermanage.html">
+    <configuration name="hm_med_deviceMode.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:8090/work/xtgl/hn_med_deviceMode/view/hm_med_deviceMode.html" />
+    <configuration name="hn_med_deviceInfo.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:8090/work/mtygl/hn_med_deviceInfo/views/hn_med_deviceInfo.html" />
+    <configuration name="login.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:8090/work/login.html" />
+    <configuration name="orgmanagement.html" type="JavascriptDebugType" factoryName="JavaScript Debug" nameIsGenerated="true" uri="http://localhost:8090/work/basemanage/organization/view/orgmanagement.html" />
+    <configuration name="rolemanage.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:8090/work/basemanage/role/view/rolemanage.html" />
+    <configuration name="usermanage.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:8090/work/basemanage/user/view/usermanage.html" />
+    <list>
+      <item itemvalue="JavaScript Debug.orgmanagement.html" />
+      <item itemvalue="JavaScript Debug.hn_med_deviceInfo.html" />
+      <item itemvalue="JavaScript Debug.hm_med_deviceMode.html" />
+      <item itemvalue="JavaScript Debug.login.html" />
+      <item itemvalue="JavaScript Debug.rolemanage.html" />
+      <item itemvalue="JavaScript Debug.usermanage.html" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JavaScript Debug.usermanage.html" />
+        <item itemvalue="JavaScript Debug.rolemanage.html" />
+        <item itemvalue="JavaScript Debug.login.html" />
+        <item itemvalue="JavaScript Debug.hn_med_deviceInfo.html" />
+        <item itemvalue="JavaScript Debug.hm_med_deviceMode.html" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="893501fd-473e-4092-8e67-63b372330aa6" name="Default" comment="" />
+      <created>1532938730677</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1532938730677</updated>
+      <workItem from="1532938732537" duration="4974000" />
+      <workItem from="1532995548347" duration="11765000" />
+      <workItem from="1533007907065" duration="27935000" />
+      <workItem from="1533081529936" duration="17098000" />
+      <workItem from="1533108902022" duration="7760000" />
+      <workItem from="1533167961627" duration="320000" />
+      <workItem from="1533168715619" duration="38576000" />
+      <workItem from="1533254526635" duration="18545000" />
+      <workItem from="1533343890492" duration="10587000" />
+      <workItem from="1533514010528" duration="26763000" />
+      <workItem from="1533599985880" duration="1150000" />
+      <workItem from="1533601368004" duration="24042000" />
+      <workItem from="1533686463784" duration="21201000" />
+      <workItem from="1533715335494" duration="4219000" />
+      <workItem from="1533772859357" duration="36664000" />
+      <workItem from="1533859246409" duration="28345000" />
+      <workItem from="1534118436065" duration="23861000" />
+      <workItem from="1534218389159" duration="4648000" />
+      <workItem from="1534292637538" duration="26032000" />
+      <workItem from="1534378300401" duration="169000" />
+      <workItem from="1534378566955" duration="30838000" />
+      <workItem from="1534463974974" duration="23497000" />
+      <workItem from="1534554936010" duration="5186000" />
+      <workItem from="1534560142323" duration="1466000" />
+      <workItem from="1534572483000" duration="2249000" />
+      <workItem from="1534578148992" duration="1679000" />
+      <workItem from="1534723208292" duration="6750000" />
+      <workItem from="1534752899817" duration="2313000" />
+      <workItem from="1534810185656" duration="983000" />
+      <workItem from="1534811890782" duration="1623000" />
+      <workItem from="1534818345218" duration="19133000" />
+      <workItem from="1534896136629" duration="24497000" />
+      <workItem from="1534926031865" duration="4657000" />
+      <workItem from="1534982668203" duration="32181000" />
+      <workItem from="1535069769428" duration="26711000" />
+      <workItem from="1535327978158" duration="8184000" />
+      <workItem from="1535336181669" duration="21043000" />
+      <workItem from="1535414490040" duration="31932000" />
+      <workItem from="1535500349982" duration="24363000" />
+      <workItem from="1535586870709" duration="26817000" />
+      <workItem from="1535673306465" duration="329000" />
+      <workItem from="1535674858546" duration="1881000" />
+      <workItem from="1535676765862" duration="18865000" />
+      <workItem from="1535932671539" duration="29219000" />
+      <workItem from="1536019445241" duration="313000" />
+      <workItem from="1536020387089" duration="2745000" />
+      <workItem from="1536025439222" duration="12609000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="696717000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="243" y="107" width="1366" height="1061" extended-state="1" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16566265" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50052685" side_tool="true" weight="0.3809524" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49947312" weight="0.37997848" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32900432" />
+    </layout>
+    <layout-to-restore>
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.10800843" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49947312" weight="0.37997848" />
+      <window_info anchor="bottom" id="Terminal" order="8" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50052685" side_tool="true" weight="0.3809524" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32900432" />
+      <window_info id="Favorites" order="2" side_tool="true" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="43" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/index/js/topbarUser.js" />
+    <entry file="file://$PROJECT_DIR$/basemanage/mtygl/hn_med_deviceInfo/js/device.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="288" column="34" lean-forward="true" selection-start-line="288" selection-start-column="34" selection-end-line="288" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/role/js/role_del.js" />
+    <entry file="file://$PROJECT_DIR$/basemanage/mtygl/hn_med_deviceInfo/views/hn_med_deviceInfo.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="726">
+          <caret line="167" column="17" lean-forward="true" selection-start-line="167" selection-start-column="17" selection-end-line="167" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/role/js/role_edit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-53">
+          <caret line="13" column="10" selection-start-line="13" selection-start-column="10" selection-end-line="13" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/role/js/role_add.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="968">
+          <caret line="44" column="26" lean-forward="true" selection-start-line="44" selection-start-column="26" selection-end-line="44" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/js/RoleController.js" />
+    <entry file="file://$PROJECT_DIR$/common/js/MenuController.js" />
+    <entry file="file://$PROJECT_DIR$/common/js/utils.js" />
+    <entry file="file://$PROJECT_DIR$/common/js/util.js" />
+    <entry file="file://$PROJECT_DIR$/index/img/download.png" />
+    <entry file="file://$PROJECT_DIR$/index/img/help.png" />
+    <entry file="file://$PROJECT_DIR$/index/img/home.png" />
+    <entry file="file://$PROJECT_DIR$/index/img/iphone.png" />
+    <entry file="file://$PROJECT_DIR$/index/img/msg.png" />
+    <entry file="file://$PROJECT_DIR$/index/img/people.png" />
+    <entry file="file://$PROJECT_DIR$/index/img/s_base.png" />
+    <entry file="file://$PROJECT_DIR$/index/img/s_event.png" />
+    <entry file="file://$PROJECT_DIR$/index/img/ui-sam.jpg" />
+    <entry file="file://$PROJECT_DIR$/common/libs/nav/css/nav.css" />
+    <entry file="file://$PROJECT_DIR$/head/js/head.js" />
+    <entry file="file://$PROJECT_DIR$/index/js/wframe.js" />
+    <entry file="file://$PROJECT_DIR$/index/js/menu.js" />
+    <entry file="file://$PROJECT_DIR$/index/css/frame.css" />
+    <entry file="file://$PROJECT_DIR$/common/js/LoginController.js" />
+    <entry file="file://$PROJECT_DIR$/basemanage/common/js/sidebar/menu.js" />
+    <entry file="file://$PROJECT_DIR$/common/css/common.css" />
+    <entry file="file://$PROJECT_DIR$/basemanage/common/libs/layer/theme/default/layer.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-22" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/common/libs/jquery/jquery-1.11.3.min.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/common/js/sidebar/wframe.js" />
+    <entry file="file://$PROJECT_DIR$/basemanage/common/view/sidebar.html" />
+    <entry file="file://$PROJECT_DIR$/basemanage/common/css/frame.css" />
+    <entry file="file://$PROJECT_DIR$/sidebar/js/menu.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/index.html" />
+    <entry file="file://$PROJECT_DIR$/index/js/index.js" />
+    <entry file="file://$PROJECT_DIR$/head/head.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/common/css/common.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-603" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/user/js/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="46" column="43" selection-start-line="46" selection-start-column="43" selection-end-line="46" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/user/view/usermanage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="18" column="6" selection-start-line="18" selection-start-column="6" selection-end-line="18" selection-end-column="6" />
+          <folding>
+            <element signature="n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#ul#0;n#div#1;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#3;n#div#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#0;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#1;n#div#1;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#label#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#0;n#div#2;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#3;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#3;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#4;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#4;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#5;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#5;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#6;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#div#6;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#7;n#div#0;n#div#0;n#div#0;n#div#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/head/js/topbar2.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="13" column="25" lean-forward="true" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="125" />
+          <folding>
+            <element signature="e#158#164#0" expanded="true" />
+            <element signature="e#155#161#0" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="506">
+          <caret line="46" column="6" lean-forward="true" selection-start-line="46" selection-start-column="6" selection-end-line="46" selection-end-column="6" />
+          <folding>
+            <element signature="n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/common/js/util.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="484">
+          <caret line="22" column="30" lean-forward="true" selection-start-line="22" selection-start-column="30" selection-end-line="22" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/common/js/service/LoginController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="13" lean-forward="true" selection-start-column="13" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sidebar/js/wframe.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3696">
+          <caret line="294" column="5" lean-forward="true" selection-start-line="294" selection-start-column="5" selection-end-line="294" selection-end-column="5" />
+          <folding>
+            <element signature="e#4200#4974#0" />
+            <element signature="e#5014#6450#0" />
+            <element signature="e#6456#7128#0" />
+            <element signature="e#7166#7413#0" />
+            <element signature="e#7451#7707#0" />
+            <element signature="e#7753#7981#0" />
+            <element signature="e#8027#9544#0" />
+            <element signature="n#style#0;n#div#0;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#div#0;n#div#0;n#div#3;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#5;n#form#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#div#5;n#form#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sidebar/view/sidebar.html">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/sidebar/css/frame.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="303" column="1" selection-start-line="303" selection-start-column="1" selection-end-line="303" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/login/js/login.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2376">
+          <caret line="108" column="120" selection-start-line="108" selection-start-column="120" selection-end-line="108" selection-end-column="120" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/head/js/topbar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="792">
+          <caret line="36" column="40" lean-forward="true" selection-start-line="36" selection-start-column="40" selection-end-line="36" selection-end-column="40" />
+          <folding>
+            <element signature="e#158#164#0" expanded="true" />
+            <element signature="e#155#161#0" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/common/libs/layer/layer.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="66">
+          <caret line="1" column="326" selection-start-line="1" selection-start-column="326" selection-end-line="1" selection-end-column="326" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/role/js/Role.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1430">
+          <caret line="65" column="17" selection-start-line="65" selection-start-column="17" selection-end-line="65" selection-end-column="17" />
+          <folding>
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/basemanage/role/view/rolemanage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="110">
+          <caret line="5" column="39" selection-start-line="5" selection-start-column="39" selection-end-line="5" selection-end-column="39" />
+          <folding>
+            <element signature="n#style#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

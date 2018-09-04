@@ -1,0 +1,78 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+html,body{
+    height: 100%;
+}
+.login-wrapper{
+    position: relative;
+    height: 100%;
+}
+.login-header{
+    position: absolute;
+    width: 100%;
+    height: 60px;
+    padding-top: 10px;
+    padding-left: 75px;
+}
+.header-name span{
+    font-size: 24px;
+    letter-spacing: 3px;
+    color: #2ed1ff;
+}
+.login-main{
+    height: 100%;
+    padding-top: 60px;
+    padding-bottom: 60px;
+}
+.form-wrap{
+    position: relative;
+    height: 100%;
+    background-color: #1E9FFF;
+}
+.login-form{
+    position: absolute;
+    top: 20%;
+    left: 65%;
+    width: 398px;
+    height: 422px;
+    padding: 0 50px;
+    background-color: white;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
+    0 1px 5px 0 rgba(0, 0, 0, 0.12),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2);
+}
+.login-form-title{
+    font-size: 24px;
+    text-align: center;
+    width: 100%;
+    display: block;
+    padding-top: 30px;
+    margin-bottom: 50px;
+    color: #1E9FFF;
+}
+.input-wrap{
+    position: relative;
+    margin-bottom: 25px;
+}
+.captcha-input{
+    padding-right: 153px;
+    height: 44px;
+}
+.captcha-img{
+    position: absolute;
+    right: 2px;
+    top: 2px;
+}
+.login-foot{
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 60px;
+    padding-top: 15px;
+    text-align: center;
+}
+.login-copyright span{
+    color: grey;
+}
