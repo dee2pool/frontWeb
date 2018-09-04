@@ -125,6 +125,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         //$("#head").html(common.head);
         $('#head').html(topBar.htm);
         topBar.init();
+
         //全局通用地址
         var host = common.host;
         //全局通用变量，用于所有的绘图图层

@@ -3,6 +3,7 @@ define(["../../../config/common/libs/nav/js/nav.min","../../../common/js/service
     //logo图片路径
     topBar.imgSrc='../../../common/component/head/img/logo.png';
     topBar.userManage='../../../config/user/view/usermanage.html';
+    topBar.url = "/hnvmns-frontWEB"
     topBar.htm=['<div id="sui_nav" class="sui-nav horizontal">',
         '    <div class="sui-nav-wrapper nav-border nav-line">',
         '        <div class="pull-left nav-header">',
@@ -10,9 +11,9 @@ define(["../../../config/common/libs/nav/js/nav.min","../../../common/js/service
         '            智能可视化监管系统',
         '        </div>',
         '        <ul>',
-        '            <li><a class="" href="http://hnvmns-frontweb.frontmain:8080/hnvmns-frontweb/index/views/index.html"><span class="glyphicon glyphicon-home"></span>&nbsp;主页</a></li>',
-        '            <li><a class="" href="http://hnvmns-frontweb.frontmain:8080/hnvmns-frontweb/core/view/core.html"><span class="glyphicon glyphicon-fire"></span>&nbsp;一张图</a></li>',
-        '            <li><a href="http://hnvmns-frontweb.frontmain:8080/hnvmns-frontweb/depot/view/index.html"><span class="glyphicon glyphicon-plane"></span>驾驶舱</a>',
+        '            <li><a href="'+topBar.url+'/main/index.html\"><span class="glyphicon glyphicon-home"></span>&nbsp;主页</a></li>',
+        '            <li><a href="'+topBar.url+'/main/core/view/core.html\"><span class="glyphicon glyphicon-fire"></span>&nbsp;一张图</a></li>',
+        '            <li><a href="'+topBar.url+'/main/depot/view/index.html\"><span class="glyphicon glyphicon-plane"></span>驾驶舱</a>',
         '            </li>',
         '        </ul>',
         '        <ul class="pull-right">',
