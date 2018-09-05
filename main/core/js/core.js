@@ -35,11 +35,6 @@ require.config({
             deps: ['jquery'],
             exports: 'jqueryPrint'
         },
-        'iclient': {
-            deps: ['leaflet'],
-            exports: 'iclient'
-        },
-
         'minimap': {
             deps: ['leaflet'],
             exports: 'minimap'
@@ -100,7 +95,6 @@ require.config({
         "turf": "../../common/lib/turf/turf",
         "zoomhome": "../../common/lib/leaflet-lib/zoomhome/leaflet.zoomhome",
         "jqueryPrint": "../../common/lib/jquery/lib/jQuery.print",
-        "iclient": "../../common/lib/leaflet-lib/iclient/iclient9-leaflet",
         "minimap": "../../common/lib/leaflet-lib/minimap/Control.MiniMap",
         "search": "../../common/lib/leaflet-lib/search/leaflet-search",
         "providers": "../../common/lib/leaflet-lib/providers/leaflet.ChineseTmsProviders",
@@ -114,7 +108,7 @@ require.config({
         "mock": "../../common/lib/mock/mock",
         "indoor": "../../common/lib/leaflet-lib/indoor/leaflet-indoor",
         "snogylop":"../../common/lib/leaflet-lib/mask/leaflet.snogylop",
-        "topBar":"http://hnvmns-frontweb.frontconfig:8080/hnvmns-frontweb/head/js/topbar"
+        "topBar":"../../../common/component/head/js/topbar"
 
     }
 });
@@ -125,6 +119,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         //$("#head").html(common.head);
         $('#head').html(topBar.htm);
         topBar.init();
+
         //全局通用地址
         var host = common.host;
         //全局通用变量，用于所有的绘图图层
@@ -1012,8 +1007,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
             //三一工厂是否应该出现的判断
             if (evt.sourceTarget._animateToZoom >= 16) {
-                var center=[113.09898555278778,28.24381649494171];
-                console.log(map.getBounds());
+                // 113.10121178627014,28.24112355709076
+                var center=[113.10121178627014,28.24112355709076];
 
                 if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
                     if (map.hasLayer(testSanYiLayer)) {
@@ -1021,6 +1016,11 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     }
                     else {
                         testSanYiLayer.addTo(map);
+                        //设置中心点
+                        map.panTo([center[1],center[0]])
+                        map.setZoom(17);
+
+
                     }
                 }
 

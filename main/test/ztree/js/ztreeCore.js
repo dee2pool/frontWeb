@@ -213,7 +213,6 @@ require(["jquery", "ztree", "layx", "leaflet", "common", "bootstrap"], function 
             clickTreePoint = L.marker(treeNode.coors).addTo(map);
             map.panTo(treeNode.coors);
         }
-
     }
 
     $(document).ready(function () {
