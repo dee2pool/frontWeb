@@ -64,5 +64,5 @@ require(['jquery','layer','frame', 'bootstrap-table', 'bootstrapValidator','comm
             pageSize: 50,
             parameter: {}
         }
-        
+
 })
