@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>厂商管理</title>
-    <link rel="stylesheet" href="../../../common/css/common.css">
-    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../../common/libs/bootstrap/css/bootstrap-table.css">
+    <title>设备型号管理</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
     <link rel='stylesheet' href='http://fonts.googleapis.com/icon?family=Material+Icons' type='text/css'>
     <link rel="stylesheet" href="../../../index/css/sidenav.css">
     <link rel="stylesheet" href="../../../index/css/iframe.css">
@@ -222,29 +222,31 @@
                     <a href="#"><span class="glyphicon glyphicon-remove" aria-hidden="true">删除</span></a>
                 </div>
             </div>
-            <table id="manufacturer_table" data-height="655">
+            <table id="deviceMode_table" data-height="655">
                 <thead>
                 <tr>
                     <th data-checkbox="true"></th>
-                    <th data-field="manuName" data-align="center">厂商名称</th>
-                    <th data-field="manuIdentity" data-align="center">厂商标识</th>
-                    <th data-field="manuDesc" data-align="center">描述</th>
+                    <th data-field="modelName" data-align="center">型号名称</th>
+                    <th data-field="modelIdentity" data-align="center">型号标识</th>
+                    <th data-field="devTypeName" data-align="center">设备类型</th>
+                    <th data-field="manuName" data-align="center">厂商类型</th>
+                    <th data-field="modelDesc" data-align="center">型号描述</th>
                 </tr>
                 </thead>
             </table>
         </div>
     </div>
 </div>
-<script src="../../../common/libs/jquery/jquery-1.11.3.min.js"></script>
-<script src="../../../common/libs/bootstrap/js/bootstrap.min.js"></script>
-<script src="../../../common/libs/bootstrap/js/bootstrap-table.js"></script>
-<script src="../../../common/libs/bootstrap/js/bootstrap-table-zh-CN.js"></script>
-<script src="../../../common/libs/jquery-slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../common/libs/jquery/jquery-1.11.3.min.js"></script>
+<script src="../../common/libs/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../common/libs/bootstrap/js/bootstrap-table.js"></script>
+<script src="../../common/libs/bootstrap/js/bootstrap-table-zh-CN.js"></script>
+<script src="../../common/libs/jquery-slimScroll/jquery.slimscroll.min.js"></script>
 <script src="../../../index/js/sidenav.js"></script>
 <script src="../../../index/js/iframe.js"></script>
 <script src="../../../common/js/utils.js"></script>
-<script src="../../../../common/js/DeviceManufacturerController.js"></script>
-<script src="../js/manufacturer.js"></script>
+<script src="../../../../common/js/DeviceModelController.js"></script>
+<script src="../js/deviceMode.js"></script>
 </body>
 <script>
     /*侧边栏*/

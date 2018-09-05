@@ -121,6 +121,7 @@ define(['common'],function DeviceInfoController(common) {
         $.ajax({
             url:temp,
             type:"get",
+            cache:false,
             data:{
                 page:pageStr,
                 ip:ip,

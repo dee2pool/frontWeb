@@ -1,6 +1,6 @@
 define(['common'],function MenuController(common){
     var MenuService=new Object();
-    MenuService.url=common.host+"/auth"+"/menu";
+    MenuService.url=/*common.host+"/auth"+"/menu";*/
     /**
       *添加菜单项 
       *@param menu  待添加菜单项的信息 

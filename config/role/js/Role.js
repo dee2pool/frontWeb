@@ -54,8 +54,8 @@ require.config({
         "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
     }
 });
-require(['jquery', 'frame', 'bootstrap-table', 'RoleService','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','roleAdd','editRole'],
-    function (jquery, frame, bootstrapTable, RoleService,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,roleAdd,editRole) {
+require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','roleAdd','editRole'],
+    function (jquery,layer,frame,bootstrapTable, RoleService,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,roleAdd,editRole) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();

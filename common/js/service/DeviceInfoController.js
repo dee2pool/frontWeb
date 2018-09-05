@@ -133,7 +133,6 @@ define(['common'],function DeviceInfoController(common) {
             error:common.onError
         })
     }
-
     /**
      *根据设备信息id查询设备信息
      */

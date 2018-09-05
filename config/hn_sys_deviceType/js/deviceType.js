@@ -30,15 +30,15 @@ require.config({
         }
     },
     paths: {
-        "jquery": '../../../common/libs/jquery/jquery-1.11.3.min',
-        "bootstrap": "../../../common/libs/bootstrap/js/bootstrap.min",
-        "common": "../../../common/js/util",
-        "layer": "../../../common/libs/layer/layer",
+        "jquery": '../../common/libs/jquery/jquery-1.11.3.min',
+        "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
+        "common": "../../common/js/util",
+        "layer": "../../common/libs/layer/layer",
         "frame": "../../../../index/js/wframe",
-        "bootstrap-table": "../../../common/libs/bootstrap/js/bootstrap-table",
+        "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
         "menu": "../../../../index/js/menu",
         "MenuService": "../../../../common/js/MenuController",
-        "bootstrapValidator": "../../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
+        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
         "bootstrap-treeview": "../../../common/libs/bootstrap/js/bootstrap-treeview",
         "deviceTypeService": "../../../../common/js/DeviceTypeController"
     }

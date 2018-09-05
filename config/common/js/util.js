@@ -26,7 +26,7 @@ define(['layer'],function (layer) {
             }
         }
     })
-    /*//数据表格
+    //数据表格
     common.loadTableData=function(init_page,data,tableId){
         var pageFrom=(init_page.pageNumber-1)*init_page.pageSize+1;
         var pageTo=init_page.pageNumber*init_page.pageSize;
@@ -47,6 +47,6 @@ define(['layer'],function (layer) {
         for(var i=p;i>=1;i--){
             $('.page-pre').after('<li class="page-item"><a class="page-link" onclick="changePage(this)" href="#">'+i+'</a></li>')
         }
-    }*/
+    }
     return common;
 })
