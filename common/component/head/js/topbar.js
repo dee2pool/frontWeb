@@ -72,9 +72,7 @@ define(["../../../config/common/libs/nav/js/nav.min","../../../common/js/service
     function logOut(){
         $('#loginout').click(function () {
             loginservice.logout(function (data) {
-                if(data.result){
-                    window.location.href="../../login.html";
-                }
+                window.location.href="../../login.html";
             })
         })
     }

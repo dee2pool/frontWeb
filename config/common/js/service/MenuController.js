@@ -71,6 +71,8 @@ define(['common'],function MenuController(common){
          $.ajax({
              url:requestUrl,
              type:'Get',
+             cache:false,
+             async:false,
              data:{
                    parentMenuId:parentMenuIdStr,
              },
