@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="../css/feature.css">
     <link rel="stylesheet" href="../../../common/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/lib/draw/Leaflet.Draw.css">
 
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/feature"></script>
 </head>
@@ -70,7 +71,7 @@
                                     <div class="col-md-9">
                                     <span class="col-md-6">
                                         <select class="form-control" id="feature-level1">
-                                            <option value="">请选择</option>
+                                            <option value="none">请选择</option>
                                             <option value="feature-point">点要素</option>
                                             <option value="feature-line">线要素</option>
                                             <option value="feature-polygon">面要素</option>
@@ -113,10 +114,18 @@
                                     </div>
                                 </div>
 
+                                <!--坐标or范围-->
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">坐标（范围）:</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="feature-coors" placeholder="坐标（范围）" readonly="readonly">
+                                    </div>
+                                </div>
+
                                 <div class="form-group">
                                     <div class="col-sm-offset-2 col-sm-10">
-                                        <button type="button" class="btn btn-default">确认</button>
-                                        <button type="button" class="btn btn-default">取消</button>
+                                        <button type="button" class="btn btn-default" id="feature-submit">确认</button>
+                                        <button type="button" class="btn btn-default" id="feature-cancel">取消</button>
                                     </div>
                                 </div>
                             </form>

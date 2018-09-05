@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../Common/libs/zui/css/zui.css">
+    <link rel="stylesheet" href="../../Common/libs/zui/lib/dashboard/zui.dashboard.css">
+    <link rel="stylesheet" href="../../Common/libs/zui/lib/calendar/zui.calendar.css">
+
+    <script src="../../Common/js/jquery-3.3.1.min.js"></script>
+    <script src="../../Common/libs/zui/js/zui.min.js"></script>
+    <script src="../../Common/libs/zui/lib/dashboard/zui.dashboard.min.js"></script>
+    <script src="../../Common/libs/zui/lib/calendar/zui.calendar.js"></script>
+    <script src="../../Common/libs/mock.js"></script>
+
+    <link rel="stylesheet" href="../css/drag.css">
+
+
+</head>
+<body>
+
+<header>
+    <nav class="navbar navbar-inverse" role="navigation">
+        <div class="container-fluid">
+            <!-- 导航头部 -->
+            <div class="navbar-header">
+                <!-- 移动设备上的导航切换按钮 -->
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse-example">
+                    <span class="sr-only">切换导航</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- 品牌名称或logo -->
+                <a class="navbar-brand" href="your/nice/url">ZUI</a>
+            </div>
+            <!-- 导航项目 -->
+            <div class="collapse navbar-collapse navbar-collapse-example">
+                <!-- 一般导航项目 -->
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="your/nice/url">项目</a></li>
+                    <li><a href="your/nice/url">需求</a></li>
+                    ...
+                    <!-- 导航中的下拉菜单 -->
+                    <li class="dropdown">
+                        <a href="your/nice/url" class="dropdown-toggle" data-toggle="dropdown">管理 <b class="caret"></b></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="your/nice/url">任务</a></li>
+                            ...
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- END .navbar-collapse -->
+        </div>
+
+
+    </nav>
+</header>
+
+<main id="main">
+    <div id="dashboard" class="dashboard dashboard-draggable scrollbar-hover" data-height="300">
+    </div>
+</main>
+
+
+<section class="right-side">
+    <div class="container-fixed">
+        <div class="row side">
+            <div class="col-md-12">
+                <div class="side-content">Item1</div>
+                <button class="side-btn" id="add1">添加</button>
+            </div>
+        </div>
+        <div class="row side">
+            <div class="col-md-12">
+                <div class="side-content">Item2</div>
+                <button class="side-btn" id="add2">添加</button>
+            </div>
+        </div>
+    </div>
+    <div class="container-fixed">
+        <div class="row side">
+            <div class="col-md-12">
+                <div class="side-content">Item3</div>
+                <button class="side-btn" id="add3">添加</button>
+            </div>
+        </div>
+        <div class="row side">
+            <div class="col-md-12">
+                <div class="side-content">Item4</div>
+                <button class="side-btn" id="add4">添加</button>
+            </div>
+        </div>
+    </div>
+    <div class="container-fixed">
+        <div class="row side">
+            <div class="col-md-12">
+                <div class="side-content">Item5</div>
+                <button class="side-btn">添加</button>
+            </div>
+        </div>
+        <div class="row side">
+            <div class="col-md-12">
+                <div class="side-content">Item6</div>
+                <button class="side-btn">添加</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<script>
+    // var data =[
+    //     {
+    //         id: 'panel1',   // 面板编号
+    //         colWidth: '4',  // 栅格尺寸
+    //         content:'          <div class="panel-heading">\n' +
+    //         '            <i class="icon icon-list"></i>\n' +
+    //         '            <span class="title">面板标题</span>\n' +
+    //         '          </div>\n' +
+    //         '          <div class="panel-body">\n' +
+    //         '            <p>面板内容。</p>\n' +
+    //         '          </div>'
+    //     },
+    //     {
+    //         id: 'panel2',   // 面板编号
+    //         colWidth: '8',  // 栅格尺寸
+    //         content:'          <div class="panel-heading">\n' +
+    //         '            <i class="icon icon-list"></i>\n' +
+    //         '            <span class="title">包含列表组</span>\n' +
+    //         '          </div>\n' +
+    //         '          <div class="panel-body no-padding">\n' +
+    //         '            <div class="list-group">\n' +
+    //         '              <a href="" class="list-group-item">列表组项目1</a>\n' +
+    //         '              <a href="" class="list-group-item">列表组项目2</a>\n' +
+    //         '              <a href="" class="list-group-item">列表组项目3</a>\n' +
+    //         '              <a href="" class="list-group-item">列表组项目4</a>\n' +
+    //         '            </div>\n' +
+    //         '          </div>'
+    //     },
+    //     {
+    //         id: 'panel3',   // 面板编号
+    //         colWidth: '6',  // 栅格尺寸
+    //         content:'          <div class="panel-heading">\n' +
+    //         '            <i class="icon icon-bolt"></i>\n' +
+    //         '            <span class="title">包含操作按钮</span>\n' +
+    //         '            <div class="panel-actions">\n' +
+    //         '              <a href="###" data-toggle="tooltip" title="" data-original-title="编辑"><i class="icon-pencil"></i></a>\n' +
+    //         '              <button type="button" class="btn" data-toggle="tooltip" title="" data-original-title="收藏"><i class="icon-heart-empty"></i></button>\n' +
+    //         '              <div class="dropdown" data-toggle="tooltip" title="" data-original-title="更多操作">\n' +
+    //         '                <button class="btn" data-toggle="dropdown" type="button"><i class="icon icon-ellipsis-v"></i></button>\n' +
+    //         '                <ul class="dropdown-menu pull-right">\n' +
+    //         '                  <li><a href="###"><i class="icon icon-ok"></i> 确认</a></li>\n' +
+    //         '                  <li><a href="###"><i class="icon icon-thumbs-o-up"></i> 自定义操作</a></li>\n' +
+    //         '                </ul>\n' +
+    //         '              </div>\n' +
+    //         '            </div>\n' +
+    //         '          </div>\n' +
+    //         '          <div class="panel-body">\n' +
+    //         '            <p>在面板头部（<code>.panel-heading</code>）包含链接和按钮来自定义操作。</p>\n' +
+    //         '          </div>'
+    //     },
+    //     {
+    //         id: 'panel4',   // 面板编号
+    //         colWidth: '6',  // 栅格尺寸
+    //         content:'          <div class="panel-heading">\n' +
+    //         '            <div class="title">可移除的面板</div>\n' +
+    //         '            <div class="panel-actions">\n' +
+    //         '              <button type="button" class="btn remove-panel" data-toggle="tooltip" title="" data-original-title="移除面板"><i class="icon-remove"></i></button>\n' +
+    //         '            </div>\n' +
+    //         '          </div>\n' +
+    //         '          <div class="panel-body">\n' +
+    //         '            <p>点击顶部右侧的 <i class="icon icon-remove"></i> 按钮来移除该面板。</p>\n' +
+    //         '          </div>'
+    //     },
+    //     {
+    //         id: 'panel5',   // 面板编号
+    //         colWidth: '6',  // 栅格尺寸
+    //         content:'          <div class="panel-heading">\n' +
+    //         '            <div class="title">可移除的面板</div>\n' +
+    //         '            <div class="panel-actions">\n' +
+    //         '              <button type="button" class="btn remove-panel" data-toggle="tooltip" title="" data-original-title="移除面板"><i class="icon-remove"></i></button>\n' +
+    //         '            </div>\n' +
+    //         '          </div>\n' +
+    //         '          <div class="panel-body">\n' +
+    //         '            <p>点击顶部右侧的 <i class="icon icon-remove"></i> 按钮来移除该面板。</p>\n' +
+    //         '          </div>'
+    //     }
+    // ];
+
+    //$.zui.store.clear();
+    //$.zui.store.set('data', data);
+    // console.log($.zui.store.get('data'));
+    var data = $.zui.store.get('data');
+    // $('#dashboard2').dashboard({draggable: true});
+
+    var options = {
+        height: 300,
+        data:data,
+        draggable: true,
+        afterOrdered: function(newOrders) {
+            //console.log('当前面板被重新排序，新的顺序为', typeof newOrders);
+            var item;
+            var temp = [];
+            var i=0;
+            console.log(newOrders);
+            var newdata = [];
+            for(item in newOrders){
+                // console.log(item)
+                // //item当前顺序，newOrders[item]当前顺序所知的内容
+                var num =  parseInt(newOrders[item]);
+                //console.log(newOrders[item]);
+                // if(data[num-1].id != item){
+                //     temp[i++] = num-1;
+                // }
+                var i;
+                var id;
+                for(i=0;i<data.length;i++)
+                {
+                    if(data[i].id === item){
+                        id=i;
+                        newdata[num-1] = data[id];
+                    }
+                }
+
+            }
+            console.log(newdata);
+            $.zui.store.set('data', newdata);
+        },
+        //面板被删除
+        afterPanelRemoved: function(id) {
+            var i;
+            for(i=0;i<data.length;i++){
+                if(data[i].id === id){
+                    data.splice(i,1);
+                }
+            }
+            console.log(data);
+            $.zui.store.set('data', data);
+        },
+        //大小改变
+        onResize: function(e) {
+            console.log('当前面板栅格大小被更改为', e);
+            var i;
+            for(i=0;i<data.length;i++){
+                if(data[i].id === e.id){
+                    data[i].colWidth = e.grid;
+                }
+            }
+            console.log(data);
+            $.zui.store.set('data', data);
+        }
+    };
+
+
+
+    $('#dashboard').dashboard(options);
+
+
+    $("#add1").on("click",function () {
+        //$('#dashboard').html("");
+        var temp = {
+            id: 'panel-add4565',   // 面板编号
+            colWidth: '6',  // 栅格尺寸
+            content:'          <div class="panel-heading">\n' +
+            '            <div class="title">可移除的面板</div>\n' +
+            '            <div class="panel-actions">\n' +
+            '              <button type="button" class="btn remove-panel" data-toggle="tooltip" title="" data-original-title="移除面板"><i class="icon-remove"></i></button>\n' +
+            '            </div>\n' +
+            '          </div>\n' +
+            '          <div class="panel-body">\n' +
+            '            <p>点击顶部右侧的 <i class="icon icon-remove"></i> 按钮来移除该面板。</p>\n' +
+            '            <p>add1添加的面板</p>\n' +
+            '          </div>'
+        };
+        //把main中的第一div删除，main其实有且只有一个div
+        var parentDiv = document.getElementById("main");
+        var div2= document.getElementById("main").getElementsByTagName("div")[0];
+        parentDiv.removeChild(div2);
+
+        //再造一个新的div，并且一定要赋值class=dashboard dashboard-draggable，不然样式会混乱
+        var d2 = document.createElement("div");
+        d2.setAttribute("class","dashboard dashboard-draggable");
+        var t = Mock.mock('@integer(1, 100)');
+        d2.setAttribute("id",t);
+        parentDiv.appendChild(d2);
+
+        //加载div即可
+        data[data.length] = temp;
+        $.zui.store.set('data', data);
+        options.data = data;
+        $('#'+t).dashboard(options);
+        console.log(data);
+    });
+
+    $("#add2").on("click",function () {
+        //$('#dashboard').html("");
+        var temp = {
+            id: 'panel-add4565',   // 面板编号
+            colWidth: '6',  // 栅格尺寸
+            content:'          <div class="panel-heading">\n' +
+            '            <div class="title">可移除的面板</div>\n' +
+            '            <div class="panel-actions">\n' +
+            '              <button type="button" class="btn remove-panel" data-toggle="tooltip" title="" data-original-title="移除面板"><i class="icon-remove"></i></button>\n' +
+            '            </div>\n' +
+            '          </div>\n' +
+            '          <div class="panel-body">\n' +
+            '            <p>点击顶部右侧的 <i class="icon icon-remove"></i> 按钮来移除该面板。</p>\n' +
+            '            <p>add2添加的面板</p>\n' +
+            '          </div>'
+        };
+        //把main中的第一div删除，main其实有且只有一个div
+        var parentDiv = document.getElementById("main");
+        var div2= document.getElementById("main").getElementsByTagName("div")[0];
+        parentDiv.removeChild(div2);
+
+        //再造一个新的div，并且一定要赋值class=dashboard dashboard-draggable，不然样式会混乱
+        var d2 = document.createElement("div");
+        d2.setAttribute("class","dashboard dashboard-draggable");
+        var t = Mock.mock('@integer(1, 100)');
+        d2.setAttribute("id",t);
+        parentDiv.appendChild(d2);
+
+        //加载div即可
+        data[data.length] = temp;
+        $.zui.store.set('data', data);
+        options.data = data;
+        $('#'+t).dashboard(options);
+        console.log(data);
+    });
+
+    $("#add3").on("click",function () {
+        //$('#dashboard').html("");
+        var temp = {
+            id: 'panel-add4565',   // 面板编号
+            colWidth: '6',  // 栅格尺寸
+            content:'          <div class="panel-heading">\n' +
+            '            <div class="title">可移除的面板</div>\n' +
+            '            <div class="panel-actions">\n' +
+            '              <button type="button" class="btn remove-panel" data-toggle="tooltip" title="" data-original-title="移除面板"><i class="icon-remove"></i></button>\n' +
+            '            </div>\n' +
+            '          </div>\n' +
+            '          <div class="panel-body">\n' +
+            '            <p>点击顶部右侧的 <i class="icon icon-remove"></i> 按钮来移除该面板。</p>\n' +
+            '            <p>add3添加的面板</p>\n' +
+            '          </div>'
+        };
+        //把main中的第一div删除，main其实有且只有一个div
+        var parentDiv = document.getElementById("main");
+        var div2= document.getElementById("main").getElementsByTagName("div")[0];
+        parentDiv.removeChild(div2);
+
+        //再造一个新的div，并且一定要赋值class=dashboard dashboard-draggable，不然样式会混乱
+        var d2 = document.createElement("div");
+        d2.setAttribute("class","dashboard dashboard-draggable");
+        var t = Mock.mock('@integer(1, 100)');
+        d2.setAttribute("id",t);
+        parentDiv.appendChild(d2);
+
+        //加载div即可
+        data[data.length] = temp;
+        $.zui.store.set('data', data);
+        options.data = data;
+        $('#'+t).dashboard(options);
+        console.log(data);
+    });
+
+    $("#add4").on("click",function () {
+        //$('#dashboard').html("");
+        var temp = {
+            id: 'panel-add4565',   // 面板编号
+            colWidth: '6',  // 栅格尺寸
+            content:'          <div class="panel-heading">\n' +
+            '            <div class="title">可移除的面板</div>\n' +
+            '            <div class="panel-actions">\n' +
+            '              <button type="button" class="btn remove-panel" data-toggle="tooltip" title="" data-original-title="移除面板"><i class="icon-remove"></i></button>\n' +
+            '            </div>\n' +
+            '          </div>\n' +
+            '          <div class="panel-body">\n' +
+            '            <p>点击顶部右侧的 <i class="icon icon-remove"></i> 按钮来移除该面板。</p>\n' +
+            '            <p>add4添加的面板</p>\n' +
+            '          </div>'
+        };
+        //把main中的第一div删除，main其实有且只有一个div
+        var parentDiv = document.getElementById("main");
+        var div2= document.getElementById("main").getElementsByTagName("div")[0];
+        parentDiv.removeChild(div2);
+
+        //再造一个新的div，并且一定要赋值class=dashboard dashboard-draggable，不然样式会混乱
+        var d2 = document.createElement("div");
+        d2.setAttribute("class","dashboard dashboard-draggable");
+        var t = Mock.mock('@integer(1, 100)');
+        d2.setAttribute("id",t);
+        parentDiv.appendChild(d2);
+
+        //加载div即可
+        data[data.length] = temp;
+        $.zui.store.set('data', data);
+        options.data = data;
+        $('#'+t).dashboard(options);
+        console.log(data);
+    });
+
+</script>
+</body>
+</html>

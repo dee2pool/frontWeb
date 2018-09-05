@@ -35,11 +35,6 @@ require.config({
             deps: ['jquery'],
             exports: 'jqueryPrint'
         },
-        'iclient': {
-            deps: ['leaflet'],
-            exports: 'iclient'
-        },
-
         'minimap': {
             deps: ['leaflet'],
             exports: 'minimap'
@@ -100,7 +95,6 @@ require.config({
         "turf": "../../common/lib/turf/turf",
         "zoomhome": "../../common/lib/leaflet-lib/zoomhome/leaflet.zoomhome",
         "jqueryPrint": "../../common/lib/jquery/lib/jQuery.print",
-        "iclient": "../../common/lib/leaflet-lib/iclient/iclient9-leaflet",
         "minimap": "../../common/lib/leaflet-lib/minimap/Control.MiniMap",
         "search": "../../common/lib/leaflet-lib/search/leaflet-search",
         "providers": "../../common/lib/leaflet-lib/providers/leaflet.ChineseTmsProviders",
