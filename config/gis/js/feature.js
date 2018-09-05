@@ -289,6 +289,7 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             //点要素
             if(treeNode.category === 'feature-point'){
                 //当坐标存在时，才向地图上加点
+                //$.zui.store.get('coors');
                 var coors = $.zui.store.get(treeNode.id + 'coors');
                 if(coors != undefined){
                     // if(clickTreePoint != null){
@@ -333,10 +334,15 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
         $("#setPosition").on("click",function () {
             var category = $('#feature-level1 option:selected').val();
 
-            //图层清空操作
-            // $("#feature-coors").val("");
-            // $("#feature-name").val("");
-            //$("#upload-img").val("");
+            //如果没有上传图片，需要进行提示的操作
+
+            if(category === 'feature-point' || category === 'feature-polygon'){
+                if($("#upload-img").val() == ''){
+                    alert('请先上传图像');
+                    return ;
+                }
+            }
+
 
             /**
              * 构造线要素
@@ -383,6 +389,28 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
             //构造线要素
             if(category === 'feature-line'){
+                var index = null;
+                //用之前先清空一下图层，重新加载一下
+                drawGroup.clearLayers();
+                drawGroup.remove();
+                drawGroup.addTo(map);
+
+                //构造画图工具
+                var drawer = new L.Draw.Polyline(map);
+                drawer.enable(); //启动工具
+
+                map.on('draw:created', function (e) {
+                    var type = e.layerType,
+                        layer = e.layer;
+                    drawGroup.addLayer(layer);
+                    console.log(layer);
+                    // var coors = layer._latlngs;
+                    // $.zui.store.set('test' + layer._latlngs[0].lat);
+
+                });
+
+                drawer = null;
+
 
             }
 
@@ -415,12 +443,6 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 drawer.enable(); //启动工具
 
                 map.on('draw:created', function (e) {
-                    //每次画之前清除一下已经存在的图层
-                    // if(map.hashLayer(imageoverlay)){
-                    //     map.removeLayer(imageoverlay);
-                    // }
-
-
                     var type = e.layerType,
                         layer = e.layer;
 
@@ -540,6 +562,7 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             $("#addParent").bind("click", {isParent: true}, add);
             $("#edit").bind("click", edit);
             $("#remove").bind("click", remove);
+            console.log($.zui.store.get('test'));
         });
 
 

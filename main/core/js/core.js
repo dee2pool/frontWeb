@@ -1007,8 +1007,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
             //三一工厂是否应该出现的判断
             if (evt.sourceTarget._animateToZoom >= 16) {
-                var center=[113.09898555278778,28.24381649494171];
-                console.log(map.getBounds());
+                // 113.10121178627014,28.24112355709076
+                var center=[113.10121178627014,28.24112355709076];
 
                 if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
                     if (map.hasLayer(testSanYiLayer)) {
@@ -1016,6 +1016,11 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     }
                     else {
                         testSanYiLayer.addTo(map);
+                        //设置中心点
+                        map.panTo([center[1],center[0]])
+                        map.setZoom(17);
+
+
                     }
                 }
 
