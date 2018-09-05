@@ -966,32 +966,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         /**
          * 地图分级
          */
-        //mask所用到的geojson
-        // var a = {
-        //         "type": "FeatureCollection",
-        //     "features": [
-        //         {
-        //             "id":"1",
-        //             "type": "Feature",
-        //             "geometry": {
-        //                 "type": "Polygon",
-        //                 "coordinates":[
-        //                     [
-        //                         [28.25219321,113.08259818],
-        //                         [28.25380815,113.08434188],
-        //                         [28.25433718,113.08051083],
-        //                         [28.25219321,113.08259818],
-        //                     ]
-        //                 ]
-        //             }
-        //         }
-        //     ]
-        // };
-        //
-        // $(function () {
-        //     L.geoJson(a, {invert: true}).addTo(map);
-        // });
-
         map.on("zoomend", function (evt) {
             //对于楼层的操作
             if (evt.sourceTarget._animateToZoom === 17) {
@@ -1007,7 +981,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
             //三一工厂是否应该出现的判断
             if (evt.sourceTarget._animateToZoom >= 16) {
-                // 113.10121178627014,28.24112355709076
+                //min 113.09600830078125 28.23760986328125
+                //max 113.10699462890625 28.245849609375
                 var center=[113.10121178627014,28.24112355709076];
 
                 if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
@@ -1015,15 +990,35 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
                     }
                     else {
+                        //模糊态的处理
+                        var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
+                        //var zoneCoord = [[[113.09600830078125,28.23760986328125],[113.10699462890625,28.23760986328125],[113.10699462890625,28.245849609375],[113.09600830078125,28.245849609375],[113.09600830078125,28.23760986328125]]];
+                        // var zoneCoord = [[[],[]]];
+                        // var boundGeo = turf.polygon(boundCoord),
+                        //     zoneGeo = turf.polygon(zoneCoord);
+                        // var modalJson = turf.difference(boundGeo, zoneGeo);
+                        // var myStyle = {
+                        //     color: 'rgba(0, 0, 0, 0.5)',
+                        //     "weight": 5,
+                        //     "opacity": 0.65
+                        // };
+                        // L.geoJson(modalJson, {
+                        //     style: myStyle
+                        // }).addTo(map);
+                        //
+                        // console.log(modalJson);
+
+                        
+
+
                         testSanYiLayer.addTo(map);
-                        //设置中心点
-                        map.panTo([center[1],center[0]])
-                        map.setZoom(17);
+                        // //设置中心点
+                        // map.panTo([center[1],center[0]])
+                        // map.setZoom(17);
 
 
                     }
                 }
-
             }
             else {
                 if (map.hasLayer(testSanYiLayer)) {
@@ -1031,9 +1026,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 }
                 else {
                 }
-
             }
-
         });
 
         /**
@@ -1256,37 +1249,39 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
 
+
+
         /**
          *导航条初始化
          */
-        var topbar = $('#sui_nav').SuiNav({});
-        var navbar = topbar.create('nav_second', {}, {});
-        $('.MenuToggle').click(function () {
-            console.log("toggle");
-            topbar.toggle();
-        });
-        $('.MenuOpen').click(function () {
-            console.log("open");
-            topbar.show();
-        });
+        // var topbar = $('#sui_nav').SuiNav({});
+        // var navbar = topbar.create('nav_second', {}, {});
+        // $('.MenuToggle').click(function () {
+        //     console.log("toggle");
+        //     topbar.toggle();
+        // });
+        // $('.MenuOpen').click(function () {
+        //     console.log("open");
+        //     topbar.show();
+        // });
         /**
          * index-panel初始化
          */
 
         // mock 模拟 添加
-        Mock.mock('http://123.123.123.123:8080/mock/alarm', {
-            "data|20": [
-                {
-                    'id': '@integer(1, 100)',
-                    'name': '@name',
-                    'age': '@integer(1, 100)',
-                    'time': '@datetime',
-                    'email': '@email',
-                    'ip': '@ip'
-
-                }
-            ]
-        });
+        // Mock.mock('http://123.123.123.123:8080/mock/alarm', {
+        //     "data|20": [
+        //         {
+        //             'id': '@integer(1, 100)',
+        //             'name': '@name',
+        //             'age': '@integer(1, 100)',
+        //             'time': '@datetime',
+        //             'email': '@email',
+        //             'ip': '@ip'
+        //
+        //         }
+        //     ]
+        // });
 
         $('#workOrder-table').bootstrapTable({
             method: 'get',
@@ -1373,56 +1368,56 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
         //使用layx作为工单和告警中心的弹窗
-        layx.group('group-nomerge', [
-            {
-                id: 'device-info',
-                title: '工单管理',
-                content: document.getElementById('workOrder-panel'),
-                cloneElementContent: false,
-            },
-            {
-                id: 'device-current',
-                title: '告警信息',
-                content: document.getElementById('alarm-panel'),
-                cloneElementContent: false,
-            },
-            {
-                id: 'device-history',
-                title: '实时监测',
-                content: '3',
-                // cloneElementContent:false,
-                statusBar: true,
-                buttons: [
-                    {
-                        label: '确定',
-                        callback: function (id, button, event) {
-                            layx.destroy(id);
-                        },
-                        style: 'color:#f00;font-size:16px;'
-                    }
-                ]
-
-            }
-        ], 0, {
-                id: 'layx-group',
-                position: 'lb',
-                minHeight: '250',
-                height: '250',
-                width: '100%',
-                storeStatus: 'true',
-
-                closeMenu: false,
-                closable: false,
-                shadow: true,
-                icon: '<i class="fa fa-tasks"></i>',
-
-                // 加载事件
-                onload: {
-                    after: function (layxWindow, winform) {
-                        layx.min('layx-group');
-                    }
-                },
-            });
+        // layx.group('group-nomerge', [
+        //     {
+        //         id: 'device-info',
+        //         title: '工单管理',
+        //         content: document.getElementById('workOrder-panel'),
+        //         cloneElementContent: false,
+        //     },
+        //     {
+        //         id: 'device-current',
+        //         title: '告警信息',
+        //         content: document.getElementById('alarm-panel'),
+        //         cloneElementContent: false,
+        //     },
+        //     {
+        //         id: 'device-history',
+        //         title: '实时监测',
+        //         content: '3',
+        //         // cloneElementContent:false,
+        //         statusBar: true,
+        //         buttons: [
+        //             {
+        //                 label: '确定',
+        //                 callback: function (id, button, event) {
+        //                     layx.destroy(id);
+        //                 },
+        //                 style: 'color:#f00;font-size:16px;'
+        //             }
+        //         ]
+        //
+        //     }
+        // ], 0, {
+        //         id: 'layx-group',
+        //         position: 'lb',
+        //         minHeight: '250',
+        //         height: '250',
+        //         width: '100%',
+        //         storeStatus: 'true',
+        //
+        //         closeMenu: false,
+        //         closable: false,
+        //         shadow: true,
+        //         icon: '<i class="fa fa-tasks"></i>',
+        //
+        //         // 加载事件
+        //         onload: {
+        //             after: function (layxWindow, winform) {
+        //                 layx.min('layx-group');
+        //             }
+        //         },
+        //     });
 
 
 
