@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>要素配置</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+
+    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+
+    <!--本页-->
+    <link rel="stylesheet" href="../css/feature.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/feature"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content feature">
+            <div class="feature-center feature-border">
+                <div class="left feature-border">
+                    <div class="tree-head">
+                        <a id="addParent" href="#" title="增加父节点" onclick="return false;"><i class="fa fa-plus-circle"></i>增加</a>
+                        <a id="edit" href="#" title="编辑名称" onclick="return false;"><i class="fa fa-edit"></i>位置关联</a>
+                        <a id="remove" href="#" title="删除节点" onclick="return false;"><i class="fa fa-remove"></i>
+                            删除节点</a>
+                    </div>
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+                <div class="right" id="map">
+                </div>
+            </div>
+
+            <div class="feature-foot feature-border">
+                <div class="container-fluid">
+                    <ul id="featureTab" class="nav nav-tabs">
+                        <li class="active">
+                            <a href="#home" data-toggle="tab">
+                                位置关联
+                            </a>
+                        </li>
+                        <li><a href="#ios" data-toggle="tab">位图查看</a></li>
+                    </ul>
+                    <div class="tab-content featureTabContent">
+                        <div class="tab-pane fade in active" id="home">
+                            <form class="form-horizontal feature-edit">
+                                <!--要素名称-->
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">要素名称:</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control" id="feature-name" placeholder="要素名称">
+                                    </div>
+                                </div>
+
+                                <!--要素类型-->
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">要素类型:</label>
+                                    <div class="col-md-9">
+                                    <span class="col-md-6">
+                                        <select class="form-control" id="feature-level1">
+                                            <option value="">请选择</option>
+                                            <option value="feature-point">点要素</option>
+                                            <option value="feature-line">线要素</option>
+                                            <option value="feature-polygon">面要素</option>
+                                        </select>
+                                    </span>
+                                        <span class="col-md-6">
+                                        <select class="form-control" id="feature-level2">
+                                            <option value="">请选择</option>
+                                            <option value="">建筑</option>
+                                            <option value="">设备</option>
+                                            <option value="">道路</option>
+                                            <option value="">轨迹</option>
+                                             <option value="">地图</option>
+                                        </select>
+                                    </span>
+                                    </div>
+                                </div>
+
+                                <!--要素描述-->
+                                <!--<div class="form-group">-->
+                                    <!--<label class="col-md-2 control-label">要素描述:</label>-->
+                                    <!--<div class="col-md-9">-->
+                                        <!--<textarea class="form-control" rows="3"></textarea>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+
+                                <!--图片选择-->
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">上传图片:</label>
+                                    <div class="col-md-9">
+                                        <input type="file" class="form-control" id="upload-img">
+                                    </div>
+                                </div>
+
+                                <!--位置设置-->
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">位置关联:</label>
+                                    <div class="col-md-9">
+                                        <button type="button" class="btn btn-primary" id="setPosition">添加位置</button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="button" class="btn btn-default">确认</button>
+                                        <button type="button" class="btn btn-default">取消</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="ios">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+</script>
+</body>
+</html>
