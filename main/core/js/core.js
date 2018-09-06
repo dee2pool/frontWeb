@@ -775,10 +775,12 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 });
 
 
-                buildMapTest.on("zoomend", function (evt) {
-                    console.log(123);
+                buildMapTest.on("zoom", function (evt) {
+                    // console.log(123);
+                    // console.log(evt);
                     //回到map视角
-                    if (evt.sourceTarget._animateToZoom === 1) {
+                    if (evt.target._animateToZoom === 1) {
+                        console.log()
                         $("#map").css('display', 'block');
                         $(".img-map").css('display', 'none');
                         buildMapTest.remove();
