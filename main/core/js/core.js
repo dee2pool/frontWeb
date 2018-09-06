@@ -131,8 +131,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var map = L.map('map', {
             center: [28.25152980300004, 113.08251277400007],
             maxZoom: 17,
-            minZoom: 15,
-            zoom: 15,
+            minZoom: 14,
+            zoom: 14,
+            maxBounds:[[28.230743408203125,113.06167602539062],[28.271942138671875,113.11935424804688]],
             crs: L.CRS.EPSG4326,
             attributionControl: false,//版权控件
             zoomControl: false,//放大缩小的控件,关闭这个是为了打开zoomhome
@@ -170,8 +171,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var xsTileLayer = L.tileLayer(host + '/geoserver/gwc/service/tms/1.0.0/cite:xstd17@EPSG:4326@png/{z}/{x}/{y}.png', {
             tms: true,
             maxZoom: 17,
-            minZoom: 15,
-            reuseTiles: true
+            minZoom: 14,
+            reuseTiles: true,
+            bounds:[[28.230743408203125,113.06167602539062],[28.271942138671875,113.11935424804688]]
         }).addTo(map);//添加tms
 
         //测试工厂地图加载
@@ -181,6 +183,44 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             minZoom: 15,
             reuseTiles: true
         });//添加tms
+
+        /**
+         * 对于模糊层的制作
+         */
+        var modalGroup = new L.FeatureGroup();
+
+        //模糊态工厂地图图层加载
+        var modalFactoryLayer = L.tileLayer(host + '/geoserver/gwc/service/tms/1.0.0/cite:xs_factory@EPSG:4326@png/{z}/{x}/{y}.png', {
+            tms: true,
+            maxZoom: 17,
+            minZoom: 17,
+            reuseTiles: true,
+            bounds:[[28.24859619140625,113.07952880859375],[28.25408935546875,113.08502197265625]]
+        });//添加tms
+
+        //模糊层图层
+        var smallModal = null,bigModal = null;//这两项分别指大地图和工厂图的边界，用于生成模糊层
+        smallModal = [[113.07952880859375,28.24859619140625],[113.07952880859375,28.25408935546875],[113.08502197265625,28.25408935546875],[113.08502197265625,28.24859619140625],[113.07952880859375,28.24859619140625]];
+        bigModal = [[113.06167602539062,28.230743408203125],[113.06167602539062,28.271942138671875],[113.11935424804688,28.271942138671875],[113.11935424804688,28.230743408203125],[113.06167602539062,28.230743408203125]];
+        var multiGeometry = turf.multiPolygon([
+            [smallModal,bigModal]
+        ]);
+        var modalData = turf.flatten(multiGeometry);
+        var modal = L.geoJSON(modalData, {
+            //"color": "#5d6ca3",
+        });
+
+        //用turf来计算中心点
+        //modalCenter.geometry.coordinates
+        var modalCenter = turf.center( turf.featureCollection([
+            turf.point([28.24859619140625,113.07952880859375]),
+            turf.point([28.25408935546875,113.08502197265625]),
+        ]));
+        //console.log(modalCenter);
+
+        //把上面的两个图层添加到modalgroup中
+        modalGroup.addLayer(modal);
+        modalGroup.addLayer(modalFactoryLayer);
 
         /**
          * 鹰眼控件
@@ -194,7 +234,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         });
         L.control.minimap(xsTileLayer2, { mapOptions: { logoControl: true }, toggleDisplay: true, minimized: true }).addTo(map);
 
-        //比例尺
+        /**
+         * 比例尺
+         */
         L.control.scale({ imperial: false }).addTo(map);
 
 
@@ -347,7 +389,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
          */
         //点测试图层
         var xsLayerGroup = L.layerGroup();
-        //xsLayerGroup.addTo(map);
 
         var pointOption = common.wmsDefaultOption;
         pointOption.typeName = 'cite:xspoint';
@@ -488,15 +529,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         statusBar: true,
                         icon: '<i class="fa fa-search"></i>',
                         event: {
-                            // ondestroy:{
-                            //     before:function(layxWindow,winform,inside,escKey){
-                            //         //alert("关闭之前");
-                            //         drawGroup.clearLayers();
-                            //     },
-                            //     after: function () {
-                            //         //alert("关闭之后");
-                            //     }
-                            // }
+
                         },
                         buttons: [
                             {
@@ -530,22 +563,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             //执行添加的方法
             device.addDevice(name, geom);
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         /**
          * 查询相关，精确模糊查询，缓冲区查询，范围查询
@@ -651,6 +668,132 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         });
 
         /**
+         * 大楼测试点 双击大楼，进入建筑内部
+         * 双击事件进入大楼内部
+         */
+        var build = L.marker([28.250715136528015,113.08228611946106]).addTo(map);
+        build.on("dblclick",function () {
+            //mapTestInit('../asset/img/indoor.jpg');
+            var buildMapTest = null;//进入建筑结构内部的map对象
+            loadIndoorMap();
+            function loadIndoorMap() {
+                buildMapTest = L.map('img-map', {
+                    minZoom: 0,
+                    maxZoom: 4,
+                    center: [0, 0],
+                    zoom: 4,
+                    crs: L.CRS.Simple
+                });
+
+                // 隐藏map，显示img-map
+                $("#map").css('display', 'none');
+                $(".img-map").css('display', 'block');
+
+                //室内地图初始化 这里实际上是核心图片算法的处理
+                var w = 1024,
+                    h = 650;
+                    //url = imageUrl;
+                var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                var bounds = new L.LatLngBounds(southWest, northEast);
+
+                var indoor1 = L.imageOverlay('../asset/img/indoor1.jpg', bounds).addTo(buildMapTest);
+                var indoor2 = L.imageOverlay('../asset/img/indoor2.jpg', bounds);
+                var indoor3 = L.imageOverlay('../asset/img/indoor3.jpg', bounds);
+
+                /**
+                 * 图层控制器
+                 */
+                var baseMaps = {
+                    "1楼": indoor1,
+                    "2楼": indoor2,
+                    "3楼": indoor3
+                };
+                var overlayMaps = {
+
+                };
+
+                //设置图层控制器
+                var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+
+                var markerGroup = new L.FeatureGroup();
+                indoor2.on("add",function () {
+                    //unproject是将像素点向坐标点进行转换，然后再添加到地图上
+                    var marker1 = L.marker(buildMapTest.unproject([90, 600], buildMapTest.getMaxZoom() - 1));
+                    marker1.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            area:['400px','400px'],
+                            content: '信息查看',
+                        });
+                    });
+                    var marker2 = L.marker(buildMapTest.unproject([400, 400], buildMapTest.getMaxZoom() - 1));
+                    marker2.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    var marker3 = L.marker(buildMapTest.unproject([300, 500], buildMapTest.getMaxZoom() - 1));
+                    marker3.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    var marker4 = L.marker(buildMapTest.unproject([100, 380], buildMapTest.getMaxZoom() - 1));
+                    marker4.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    markerGroup.addLayer(marker1);
+                    markerGroup.addLayer(marker2);
+                    markerGroup.addLayer(marker3);
+                    markerGroup.addLayer(marker4);
+                    markerGroup.addTo(buildMapTest);
+                });
+
+                indoor2.on("remove",function () {
+                    buildMapTest.removeLayer(markerGroup);
+                });
+
+
+                buildMapTest.on("zoom", function (evt) {
+                    // console.log(123);
+                    // console.log(evt);
+                    //回到map视角
+                    if (evt.target._animateToZoom === 1) {
+                        console.log()
+                        $("#map").css('display', 'block');
+                        $(".img-map").css('display', 'none');
+                        buildMapTest.remove();
+                        buildMapTest = null;
+                    }
+                });
+            }
+
+
+        });
+
+
+        /**
          * 图层控制器
          */
         var baseMaps = {
@@ -659,8 +802,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var overlayMaps = {
             "轨迹": routeLayerGroup,
             "设备点": xsLayerGroup,
-
+            "建筑": build
         };
+
         //设置图层控制器
         var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
         //更改控制器容器
@@ -703,34 +847,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 //.layer-open-content
                 content: $('#coordinate'),
             });
-        });
-
-        //layx.html('str','字符串文本','Hello Layx!');
-
-        $("#add-test").on("click", function () {
-            layx.group('group-nomerge', [
-                {
-                    id: 'group1',
-                    title: '文本窗口',
-                    content: document.getElementById('add-device-div')
-                },
-                {
-                    id: 'group2',
-                    title: '网页窗口',
-                    type: 'url',
-                    url: './iframe.html'
-                },
-                {
-                    id: 'taobao',
-                    title: '百度官网',
-                    type: 'url',
-                    url: 'https://www.baidu.com'
-                }
-            ], 1, {
-                    id: '1',
-                    mergeTitle: false,
-                    title: '我是不合并的标题'
-                });
         });
 
         //先执行生成，作为测试
@@ -918,7 +1034,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var maptest = null;
 
         /**
-         * 初始化加载工厂楼内地图和相关的右侧控件 内部 室内
+         * 使用indoor 进行内部地图的加载
          */
         var indoorLayer = new L.Indoor(common.indoorJson, {
             getLevel: function (feature) {
@@ -966,32 +1082,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         /**
          * 地图分级
          */
-        //mask所用到的geojson
-        // var a = {
-        //         "type": "FeatureCollection",
-        //     "features": [
-        //         {
-        //             "id":"1",
-        //             "type": "Feature",
-        //             "geometry": {
-        //                 "type": "Polygon",
-        //                 "coordinates":[
-        //                     [
-        //                         [28.25219321,113.08259818],
-        //                         [28.25380815,113.08434188],
-        //                         [28.25433718,113.08051083],
-        //                         [28.25219321,113.08259818],
-        //                     ]
-        //                 ]
-        //             }
-        //         }
-        //     ]
-        // };
-        //
-        // $(function () {
-        //     L.geoJson(a, {invert: true}).addTo(map);
-        // });
-
         map.on("zoomend", function (evt) {
             //对于楼层的操作
             if (evt.sourceTarget._animateToZoom === 17) {
@@ -1007,23 +1097,16 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
             //三一工厂是否应该出现的判断
             if (evt.sourceTarget._animateToZoom >= 16) {
-                // 113.10121178627014,28.24112355709076
                 var center=[113.10121178627014,28.24112355709076];
-
                 if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
                     if (map.hasLayer(testSanYiLayer)) {
-
                     }
                     else {
+                        //模糊态的处理
+                        var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
                         testSanYiLayer.addTo(map);
-                        //设置中心点
-                        map.panTo([center[1],center[0]])
-                        map.setZoom(17);
-
-
                     }
                 }
-
             }
             else {
                 if (map.hasLayer(testSanYiLayer)) {
@@ -1031,13 +1114,77 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 }
                 else {
                 }
-
             }
 
+            //对于测试工程图和模糊层的设置
+            if (evt.sourceTarget._animateToZoom == 17) {
+                // console.log(map.getBounds());
+                //使用turf来判断中心点是否处于当前缩放视图内部
+                var pt = turf.point([modalCenter.geometry.coordinates[1], modalCenter.geometry.coordinates[0]]);
+                var poly = turf.polygon([[
+                    [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat],
+                    [map.getBounds()._northEast.lng, map.getBounds()._southWest.lat],
+                    [map.getBounds()._southWest.lng,  map.getBounds()._southWest.lat],
+                    [map.getBounds()._southWest.lng, map.getBounds()._northEast.lat],
+                    [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat]
+                ]]);
+
+                var result = turf.booleanPointInPolygon(pt, poly);
+                if(result){
+                    if(map.hasLayer(modalGroup)){
+
+                    }else{
+                        modalGroup.addTo(map);
+                    }
+                }
+                else{
+                    if(map.hasLayer(modalGroup)){
+                        map.removeLayer(modalGroup)
+                    }else{
+
+                    }
+                }
+
+                //当缩放到17级的时候，对移动状态进行相应的判断
+                map.on("move",function (evt) {
+                    var pt1 = turf.point([modalCenter.geometry.coordinates[1], modalCenter.geometry.coordinates[0]]);
+                    var poly1 = turf.polygon([[
+                        [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat],
+                        [map.getBounds()._northEast.lng, map.getBounds()._southWest.lat],
+                        [map.getBounds()._southWest.lng,  map.getBounds()._southWest.lat],
+                        [map.getBounds()._southWest.lng, map.getBounds()._northEast.lat],
+                        [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat]
+                    ]]);
+
+                    var result1 = turf.booleanPointInPolygon(pt1, poly1);
+                    //如果中心点在范围内，而且没有加载图层，那么对图层进行加载
+                    if(result1){
+                        if(map.hasLayer(modalGroup)){
+
+                        }else{
+                            if(map.getZoom() == 17){
+                                modalGroup.addTo(map);
+                            }
+                        }
+                    }
+                    //如果不在范围内，而且加载了图层，那么对图层进行移除
+                    else{
+                        if(map.hasLayer(modalGroup)){
+                                map.removeLayer(modalGroup)
+                        }else{
+
+                        }
+                    }
+                });
+            }else{
+                if(map.hasLayer(modalGroup)){
+                    map.removeLayer(modalGroup);
+                }
+            }
         });
 
         /**
-         * 用于对建筑内部结构图的初始化
+         * 进入建筑内部结构的方法
          * @param {*} imageUrl 
          */
         function mapTestInit(imageUrl) {
@@ -1060,6 +1207,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             var southWest = maptest.unproject([0, h], maptest.getMaxZoom() - 1);
             var northEast = maptest.unproject([w, 0], maptest.getMaxZoom() - 1);
             var bounds = new L.LatLngBounds(southWest, northEast);
+
             L.imageOverlay(url, bounds).addTo(maptest);
 
             //unproject是将像素点向坐标点进行转换，然后再添加到地图上
@@ -1256,37 +1404,39 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
 
+
+
         /**
          *导航条初始化
          */
-        var topbar = $('#sui_nav').SuiNav({});
-        var navbar = topbar.create('nav_second', {}, {});
-        $('.MenuToggle').click(function () {
-            console.log("toggle");
-            topbar.toggle();
-        });
-        $('.MenuOpen').click(function () {
-            console.log("open");
-            topbar.show();
-        });
+        // var topbar = $('#sui_nav').SuiNav({});
+        // var navbar = topbar.create('nav_second', {}, {});
+        // $('.MenuToggle').click(function () {
+        //     console.log("toggle");
+        //     topbar.toggle();
+        // });
+        // $('.MenuOpen').click(function () {
+        //     console.log("open");
+        //     topbar.show();
+        // });
         /**
          * index-panel初始化
          */
 
         // mock 模拟 添加
-        Mock.mock('http://123.123.123.123:8080/mock/alarm', {
-            "data|20": [
-                {
-                    'id': '@integer(1, 100)',
-                    'name': '@name',
-                    'age': '@integer(1, 100)',
-                    'time': '@datetime',
-                    'email': '@email',
-                    'ip': '@ip'
-
-                }
-            ]
-        });
+        // Mock.mock('http://123.123.123.123:8080/mock/alarm', {
+        //     "data|20": [
+        //         {
+        //             'id': '@integer(1, 100)',
+        //             'name': '@name',
+        //             'age': '@integer(1, 100)',
+        //             'time': '@datetime',
+        //             'email': '@email',
+        //             'ip': '@ip'
+        //
+        //         }
+        //     ]
+        // });
 
         $('#workOrder-table').bootstrapTable({
             method: 'get',
@@ -1373,56 +1523,56 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
         //使用layx作为工单和告警中心的弹窗
-        layx.group('group-nomerge', [
-            {
-                id: 'device-info',
-                title: '工单管理',
-                content: document.getElementById('workOrder-panel'),
-                cloneElementContent: false,
-            },
-            {
-                id: 'device-current',
-                title: '告警信息',
-                content: document.getElementById('alarm-panel'),
-                cloneElementContent: false,
-            },
-            {
-                id: 'device-history',
-                title: '实时监测',
-                content: '3',
-                // cloneElementContent:false,
-                statusBar: true,
-                buttons: [
-                    {
-                        label: '确定',
-                        callback: function (id, button, event) {
-                            layx.destroy(id);
-                        },
-                        style: 'color:#f00;font-size:16px;'
-                    }
-                ]
-
-            }
-        ], 0, {
-                id: 'layx-group',
-                position: 'lb',
-                minHeight: '250',
-                height: '250',
-                width: '100%',
-                storeStatus: 'true',
-
-                closeMenu: false,
-                closable: false,
-                shadow: true,
-                icon: '<i class="fa fa-tasks"></i>',
-
-                // 加载事件
-                onload: {
-                    after: function (layxWindow, winform) {
-                        layx.min('layx-group');
-                    }
-                },
-            });
+        // layx.group('group-nomerge', [
+        //     {
+        //         id: 'device-info',
+        //         title: '工单管理',
+        //         content: document.getElementById('workOrder-panel'),
+        //         cloneElementContent: false,
+        //     },
+        //     {
+        //         id: 'device-current',
+        //         title: '告警信息',
+        //         content: document.getElementById('alarm-panel'),
+        //         cloneElementContent: false,
+        //     },
+        //     {
+        //         id: 'device-history',
+        //         title: '实时监测',
+        //         content: '3',
+        //         // cloneElementContent:false,
+        //         statusBar: true,
+        //         buttons: [
+        //             {
+        //                 label: '确定',
+        //                 callback: function (id, button, event) {
+        //                     layx.destroy(id);
+        //                 },
+        //                 style: 'color:#f00;font-size:16px;'
+        //             }
+        //         ]
+        //
+        //     }
+        // ], 0, {
+        //         id: 'layx-group',
+        //         position: 'lb',
+        //         minHeight: '250',
+        //         height: '250',
+        //         width: '100%',
+        //         storeStatus: 'true',
+        //
+        //         closeMenu: false,
+        //         closable: false,
+        //         shadow: true,
+        //         icon: '<i class="fa fa-tasks"></i>',
+        //
+        //         // 加载事件
+        //         onload: {
+        //             after: function (layxWindow, winform) {
+        //                 layx.min('layx-group');
+        //             }
+        //         },
+        //     });
 
 
 
