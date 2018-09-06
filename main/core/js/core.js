@@ -131,8 +131,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var map = L.map('map', {
             center: [28.25152980300004, 113.08251277400007],
             maxZoom: 17,
-            minZoom: 1,
+            minZoom: 14,
             zoom: 14,
+            maxBounds:[[28.230743408203125,113.06167602539062],[28.271942138671875,113.11935424804688]],
             crs: L.CRS.EPSG4326,
             attributionControl: false,//版权控件
             zoomControl: false,//放大缩小的控件,关闭这个是为了打开zoomhome
@@ -208,6 +209,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         ]);
         var modalData = turf.flatten(multiGeometry);
         var modal = L.geoJSON(modalData, {
+            //"color": "#5d6ca3",
         });
 
         //用turf来计算中心点
@@ -1034,13 +1036,15 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         if(map.hasLayer(modalGroup)){
 
                         }else{
-                            modalGroup.addTo(map);
+                            if(map.getZoom() == 17){
+                                modalGroup.addTo(map);
+                            }
                         }
                     }
                     //如果不在范围内，而且加载了图层，那么对图层进行移除
                     else{
                         if(map.hasLayer(modalGroup)){
-                            map.removeLayer(modalGroup)
+                                map.removeLayer(modalGroup)
                         }else{
 
                         }

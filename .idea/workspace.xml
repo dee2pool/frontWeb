@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b027253b-faab-4a50-997c-86e669bcf76e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/main/common/js/util/gisutil.js" afterPath="$PROJECT_DIR$/main/common/js/util/gisutil.js" />
       <change beforePath="$PROJECT_DIR$/main/core/js/core.js" afterPath="$PROJECT_DIR$/main/core/js/core.js" />
-      <change beforePath="$PROJECT_DIR$/main/depot/view/device.html" afterPath="$PROJECT_DIR$/main/depot/view/device.html" />
-      <change beforePath="$PROJECT_DIR$/main/depot/view/head.html" afterPath="$PROJECT_DIR$/main/depot/view/head.html" />
-      <change beforePath="$PROJECT_DIR$/main/depot/view/map.html" afterPath="$PROJECT_DIR$/main/depot/view/map.html" />
-      <change beforePath="$PROJECT_DIR$/main/depot/view/static.html" afterPath="$PROJECT_DIR$/main/depot/view/static.html" />
-      <change beforePath="$PROJECT_DIR$/main/index.html" afterPath="$PROJECT_DIR$/main/index.html" />
-      <change beforePath="$PROJECT_DIR$/main/monitor/environment/views/environment.html" afterPath="$PROJECT_DIR$/main/monitor/environment/views/environment.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -29,8 +21,8 @@
           <file leaf-file-name="core.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="412">
-                  <caret line="210" column="11" lean-forward="true" selection-start-line="210" selection-start-column="11" selection-end-line="210" selection-end-column="11" />
+                <state relative-caret-position="385">
+                  <caret line="131" column="60" lean-forward="true" selection-start-line="131" selection-start-column="60" selection-end-line="131" selection-end-column="60" />
                   <folding />
                 </state>
               </provider>
@@ -53,8 +45,8 @@
           <file leaf-file-name="core.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="499">
-                  <caret line="1048" column="0" lean-forward="false" selection-start-line="1048" selection-start-column="0" selection-end-line="1048" selection-end-column="0" />
+                <state relative-caret-position="634">
+                  <caret line="1049" column="25" lean-forward="true" selection-start-line="1049" selection-start-column="25" selection-end-line="1049" selection-end-column="25" />
                   <folding />
                 </state>
               </provider>
@@ -209,12 +201,12 @@
       <updated>1536059314958</updated>
       <workItem from="1536059317312" duration="6444000" />
       <workItem from="1536105916149" duration="25845000" />
-      <workItem from="1536191889193" duration="8031000" />
+      <workItem from="1536191889193" duration="9404000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40320000" />
+    <option name="totallyTimeSpent" value="41693000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
@@ -512,8 +504,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="412">
-          <caret line="210" column="11" lean-forward="true" selection-start-line="210" selection-start-column="11" selection-end-line="210" selection-end-column="11" />
+        <state relative-caret-position="385">
+          <caret line="131" column="60" lean-forward="true" selection-start-line="131" selection-start-column="60" selection-end-line="131" selection-end-column="60" />
           <folding />
         </state>
       </provider>
