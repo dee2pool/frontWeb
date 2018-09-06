@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b027253b-faab-4a50-997c-86e669bcf76e" name="Default" comment="" />
+    <list default="true" id="b027253b-faab-4a50-997c-86e669bcf76e" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/main/core/js/core.js" afterPath="$PROJECT_DIR$/main/core/js/core.js" />
+    </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -19,8 +21,8 @@
           <file leaf-file-name="core.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="121">
-                  <caret line="689" column="46" lean-forward="false" selection-start-line="689" selection-start-column="46" selection-end-line="689" selection-end-column="46" />
+                <state relative-caret-position="337">
+                  <caret line="739" column="40" lean-forward="false" selection-start-line="739" selection-start-column="40" selection-end-line="739" selection-end-column="40" />
                   <folding />
                 </state>
               </provider>
@@ -29,8 +31,8 @@
           <file leaf-file-name="core.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/main/core/view/core.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="108">
-                  <caret line="100" column="18" lean-forward="true" selection-start-line="100" selection-start-column="18" selection-end-line="100" selection-end-column="18" />
+                <state relative-caret-position="-4806">
+                  <caret line="104" column="7" lean-forward="true" selection-start-line="104" selection-start-column="7" selection-end-line="104" selection-end-column="7" />
                   <folding />
                 </state>
               </provider>
@@ -43,8 +45,8 @@
           <file leaf-file-name="core.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="342">
-                  <caret line="258" column="28" lean-forward="true" selection-start-line="258" selection-start-column="28" selection-end-line="258" selection-end-column="28" />
+                <state relative-caret-position="-26593">
+                  <caret line="257" column="0" lean-forward="true" selection-start-line="257" selection-start-column="0" selection-end-line="257" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -185,8 +187,18 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Node.js.core.js">
     <configuration name="rolemanage.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:8090/hnvmns-frontWEB/config/role/view/rolemanage.html" />
+    <configuration name="core.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-js-file="core.js" working-dir="$PROJECT_DIR$/main/core/js" />
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="JavaScript Debug.rolemanage.html" />
+      <item index="1" class="java.lang.String" itemvalue="Node.js.core.js" />
+    </list>
+    <recent_temporary>
+      <list size="1">
+        <item index="0" class="java.lang.String" itemvalue="Node.js.core.js" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false">
     <option name="remove_strategy" value="false" />
@@ -203,12 +215,12 @@
       <updated>1536059314958</updated>
       <workItem from="1536059317312" duration="6444000" />
       <workItem from="1536105916149" duration="25845000" />
-      <workItem from="1536191889193" duration="15074000" />
+      <workItem from="1536191889193" duration="16845000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47363000" />
+    <option name="totallyTimeSpent" value="49134000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -503,16 +515,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main/core/view/core.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="100" column="18" lean-forward="true" selection-start-line="100" selection-start-column="18" selection-end-line="100" selection-end-column="18" />
+        <state relative-caret-position="-4806">
+          <caret line="104" column="7" lean-forward="true" selection-start-line="104" selection-start-column="7" selection-end-line="104" selection-end-column="7" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="689" column="46" lean-forward="false" selection-start-line="689" selection-start-column="46" selection-end-line="689" selection-end-column="46" />
+        <state relative-caret-position="337">
+          <caret line="739" column="40" lean-forward="false" selection-start-line="739" selection-start-column="40" selection-end-line="739" selection-end-column="40" />
           <folding />
         </state>
       </provider>

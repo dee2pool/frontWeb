@@ -714,7 +714,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 };
 
                 //设置图层控制器
-                var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(buildMapTest);
+                var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
 
                 var markerGroup = new L.FeatureGroup();
                 indoor2.on("add",function () {
@@ -776,6 +776,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
                 buildMapTest.on("zoomend", function (evt) {
+                    console.log(123);
                     //回到map视角
                     if (evt.sourceTarget._animateToZoom === 1) {
                         $("#map").css('display', 'block');
