@@ -73,6 +73,11 @@ define(['jquery','turf','common','leaflet'],function ($,turf,common,leaflet) {
         }
     };
 
+    //将latlng转换为lnglat格式
+    gisutil.yxToxy = function (coors) {
+        return [coors[1],coors[0]];
+    };
+
 
 
     return gisutil;

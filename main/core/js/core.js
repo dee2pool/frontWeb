@@ -131,8 +131,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var map = L.map('map', {
             center: [28.25152980300004, 113.08251277400007],
             maxZoom: 17,
-            minZoom: 15,
-            zoom: 15,
+            minZoom: 1,
+            zoom: 14,
             crs: L.CRS.EPSG4326,
             attributionControl: false,//版权控件
             zoomControl: false,//放大缩小的控件,关闭这个是为了打开zoomhome
@@ -170,8 +170,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var xsTileLayer = L.tileLayer(host + '/geoserver/gwc/service/tms/1.0.0/cite:xstd17@EPSG:4326@png/{z}/{x}/{y}.png', {
             tms: true,
             maxZoom: 17,
-            minZoom: 15,
-            reuseTiles: true
+            minZoom: 14,
+            reuseTiles: true,
+            bounds:[[28.230743408203125,113.06167602539062],[28.271942138671875,113.11935424804688]]
         }).addTo(map);//添加tms
 
         //测试工厂地图加载
@@ -181,6 +182,45 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             minZoom: 15,
             reuseTiles: true
         });//添加tms
+
+
+
+        /**
+         * 对于模糊层的制作
+         */
+        var modalGroup = new L.FeatureGroup();
+
+        //模糊态工厂地图图层加载
+        var modalFactoryLayer = L.tileLayer(host + '/geoserver/gwc/service/tms/1.0.0/cite:xs_factory@EPSG:4326@png/{z}/{x}/{y}.png', {
+            tms: true,
+            maxZoom: 17,
+            minZoom: 17,
+            reuseTiles: true,
+            bounds:[[28.24859619140625,113.07952880859375],[28.25408935546875,113.08502197265625]]
+        });//添加tms
+
+        //模糊层图层
+        var smallModal = null,bigModal = null;//这两项分别指大地图和工厂图的边界，用于生成模糊层
+        smallModal = [[113.07952880859375,28.24859619140625],[113.07952880859375,28.25408935546875],[113.08502197265625,28.25408935546875],[113.08502197265625,28.24859619140625],[113.07952880859375,28.24859619140625]];
+        bigModal = [[113.06167602539062,28.230743408203125],[113.06167602539062,28.271942138671875],[113.11935424804688,28.271942138671875],[113.11935424804688,28.230743408203125],[113.06167602539062,28.230743408203125]];
+        var multiGeometry = turf.multiPolygon([
+            [smallModal,bigModal]
+        ]);
+        var modalData = turf.flatten(multiGeometry);
+        var modal = L.geoJSON(modalData, {
+        });
+
+        //用turf来计算中心点
+        //modalCenter.geometry.coordinates
+        var modalCenter = turf.center( turf.featureCollection([
+            turf.point([28.24859619140625,113.07952880859375]),
+            turf.point([28.25408935546875,113.08502197265625]),
+        ]));
+        //console.log(modalCenter);
+
+        //把上面的两个图层添加到modalgroup中
+        modalGroup.addLayer(modal);
+        modalGroup.addLayer(modalFactoryLayer);
 
         /**
          * 鹰眼控件
@@ -488,15 +528,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         statusBar: true,
                         icon: '<i class="fa fa-search"></i>',
                         event: {
-                            // ondestroy:{
-                            //     before:function(layxWindow,winform,inside,escKey){
-                            //         //alert("关闭之前");
-                            //         drawGroup.clearLayers();
-                            //     },
-                            //     after: function () {
-                            //         //alert("关闭之后");
-                            //     }
-                            // }
+
                         },
                         buttons: [
                             {
@@ -530,22 +562,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             //执行添加的方法
             device.addDevice(name, geom);
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         /**
          * 查询相关，精确模糊查询，缓冲区查询，范围查询
@@ -703,34 +719,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 //.layer-open-content
                 content: $('#coordinate'),
             });
-        });
-
-        //layx.html('str','字符串文本','Hello Layx!');
-
-        $("#add-test").on("click", function () {
-            layx.group('group-nomerge', [
-                {
-                    id: 'group1',
-                    title: '文本窗口',
-                    content: document.getElementById('add-device-div')
-                },
-                {
-                    id: 'group2',
-                    title: '网页窗口',
-                    type: 'url',
-                    url: './iframe.html'
-                },
-                {
-                    id: 'taobao',
-                    title: '百度官网',
-                    type: 'url',
-                    url: 'https://www.baidu.com'
-                }
-            ], 1, {
-                    id: '1',
-                    mergeTitle: false,
-                    title: '我是不合并的标题'
-                });
         });
 
         //先执行生成，作为测试
@@ -968,63 +956,99 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
          */
         map.on("zoomend", function (evt) {
             //对于楼层的操作
-            if (evt.sourceTarget._animateToZoom === 17) {
-                // $.getJSON("../asset/json/indoor.json", function(geoJSON) {
-                indoorLayer.addTo(map);
-                levelControl.addTo(map);
-                // });
-            }
-            else {
-                map.removeLayer(indoorLayer);
-                map.removeControl(levelControl);
-            }
+            // if (evt.sourceTarget._animateToZoom === 17) {
+            //     // $.getJSON("../asset/json/indoor.json", function(geoJSON) {
+            //     indoorLayer.addTo(map);
+            //     levelControl.addTo(map);
+            //     // });
+            // }
+            // else {
+            //     map.removeLayer(indoorLayer);
+            //     map.removeControl(levelControl);
+            // }
 
             //三一工厂是否应该出现的判断
-            if (evt.sourceTarget._animateToZoom >= 16) {
-                //min 113.09600830078125 28.23760986328125
-                //max 113.10699462890625 28.245849609375
-                var center=[113.10121178627014,28.24112355709076];
+            // if (evt.sourceTarget._animateToZoom >= 16) {
+            //     var center=[113.10121178627014,28.24112355709076];
+            //     if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
+            //         if (map.hasLayer(testSanYiLayer)) {
+            //         }
+            //         else {
+            //             //模糊态的处理
+            //             var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
+            //             testSanYiLayer.addTo(map);
+            //         }
+            //     }
+            // }
+            // else {
+            //     if (map.hasLayer(testSanYiLayer)) {
+            //         map.removeLayer(testSanYiLayer);
+            //     }
+            //     else {
+            //     }
+            // }
 
-                if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
-                    if (map.hasLayer(testSanYiLayer)) {
+            //对于测试工程图和模糊层的设置
+            if (evt.sourceTarget._animateToZoom == 17) {
+                // console.log(map.getBounds());
+                //使用turf来判断中心点是否处于当前缩放视图内部
+                var pt = turf.point([modalCenter.geometry.coordinates[1], modalCenter.geometry.coordinates[0]]);
+                var poly = turf.polygon([[
+                    [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat],
+                    [map.getBounds()._northEast.lng, map.getBounds()._southWest.lat],
+                    [map.getBounds()._southWest.lng,  map.getBounds()._southWest.lat],
+                    [map.getBounds()._southWest.lng, map.getBounds()._northEast.lat],
+                    [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat]
+                ]]);
 
+                var result = turf.booleanPointInPolygon(pt, poly);
+                if(result){
+                    if(map.hasLayer(modalGroup)){
+
+                    }else{
+                        modalGroup.addTo(map);
                     }
-                    else {
-                        //模糊态的处理
-                        var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
-                        //var zoneCoord = [[[113.09600830078125,28.23760986328125],[113.10699462890625,28.23760986328125],[113.10699462890625,28.245849609375],[113.09600830078125,28.245849609375],[113.09600830078125,28.23760986328125]]];
-                        // var zoneCoord = [[[],[]]];
-                        // var boundGeo = turf.polygon(boundCoord),
-                        //     zoneGeo = turf.polygon(zoneCoord);
-                        // var modalJson = turf.difference(boundGeo, zoneGeo);
-                        // var myStyle = {
-                        //     color: 'rgba(0, 0, 0, 0.5)',
-                        //     "weight": 5,
-                        //     "opacity": 0.65
-                        // };
-                        // L.geoJson(modalJson, {
-                        //     style: myStyle
-                        // }).addTo(map);
-                        //
-                        // console.log(modalJson);
-
-                        
-
-
-                        testSanYiLayer.addTo(map);
-                        // //设置中心点
-                        // map.panTo([center[1],center[0]])
-                        // map.setZoom(17);
-
+                }
+                else{
+                    if(map.hasLayer(modalGroup)){
+                        map.removeLayer(modalGroup)
+                    }else{
 
                     }
                 }
-            }
-            else {
-                if (map.hasLayer(testSanYiLayer)) {
-                    map.removeLayer(testSanYiLayer);
-                }
-                else {
+
+                //当缩放到17级的时候，对移动状态进行相应的判断
+                map.on("move",function (evt) {
+                    var pt1 = turf.point([modalCenter.geometry.coordinates[1], modalCenter.geometry.coordinates[0]]);
+                    var poly1 = turf.polygon([[
+                        [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat],
+                        [map.getBounds()._northEast.lng, map.getBounds()._southWest.lat],
+                        [map.getBounds()._southWest.lng,  map.getBounds()._southWest.lat],
+                        [map.getBounds()._southWest.lng, map.getBounds()._northEast.lat],
+                        [map.getBounds()._northEast.lng, map.getBounds()._northEast.lat]
+                    ]]);
+
+                    var result1 = turf.booleanPointInPolygon(pt1, poly1);
+                    //如果中心点在范围内，而且没有加载图层，那么对图层进行加载
+                    if(result1){
+                        if(map.hasLayer(modalGroup)){
+
+                        }else{
+                            modalGroup.addTo(map);
+                        }
+                    }
+                    //如果不在范围内，而且加载了图层，那么对图层进行移除
+                    else{
+                        if(map.hasLayer(modalGroup)){
+                            map.removeLayer(modalGroup)
+                        }else{
+
+                        }
+                    }
+                });
+            }else{
+                if(map.hasLayer(modalGroup)){
+                    map.removeLayer(modalGroup);
                 }
             }
         });
