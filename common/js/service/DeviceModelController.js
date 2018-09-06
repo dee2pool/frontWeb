@@ -1,12 +1,12 @@
-function DeviceModelController(){
-    var service=new Object();
-    service.url=host+"/mgc"+"/deviceModelService";
+define(['common'],function DeviceModelController(common){
+    var deviceModelService=new Object();
+    deviceModelService.url=common.host+"/mgc"+"/deviceModelService";
     /**
       *添加设备型号 
       *@param deviceModel  设备型号信息 
       *@param deviceManuId  设备厂商ID 
       */
-     service.addDeviceModel=function(deviceModel,deviceManuId,onSuccess){
+     deviceModelService.addDeviceModel=function(deviceModel,deviceManuId,onSuccess){
 	     var deviceModelStr=JSON.stringify(deviceModel);
 	     var deviceManuIdStr=deviceManuId;
 		 var requestUrl=this.url+"/addDeviceModel";
@@ -27,7 +27,7 @@ function DeviceModelController(){
       *修改设备型号信息 
       *@param deviceModel deviceModel 
       */
-     service.updateDeviceModel=function(deviceModel,onSuccess){
+     deviceModelService.updateDeviceModel=function(deviceModel,onSuccess){
 	     var deviceModelStr=JSON.stringify(deviceModel);
 		 var requestUrl=this.url+"/updateDeviceModel";
          $.ajax({
@@ -46,7 +46,7 @@ function DeviceModelController(){
       *删除设备型号 
       *@param ids  设备型号集 
       */
-     service.deleteDeviceModel=function(ids,onSuccess){
+     deviceModelService.deleteDeviceModel=function(ids,onSuccess){
 	     var idsStr=JSON.stringify(ids);
 		 var requestUrl=this.url+"/deleteDeviceModel";
          $.ajax({
@@ -65,7 +65,7 @@ function DeviceModelController(){
       *判断型号名称是否存在 
       *@param modelName modelName 
       */
-     service.existModelName=function(modelName,onSuccess){
+     deviceModelService.existModelName=function(modelName,onSuccess){
 	     var modelNameStr=modelName;
 		 var requestUrl=this.url+"/existModelName";
          $.ajax({
@@ -84,21 +84,25 @@ function DeviceModelController(){
       * 
       *@param page page 
       */
-     service.getModelList=function(tableId){
+     deviceModelService.getModelList=function(page,onSuccess){
 		 var requestUrl=this.url+"/getModelList";
-		 common.loadTableData(requestUrl,tableId,function (params) {
-             var page=JSON.stringify({"pageNumber":params.offset/params.limit+1,"pageSize":params.limit,"parameters":{}});
-             var temp={
-                 page:page
-             };
-             return temp;
+         var pageStr=JSON.stringify(page);
+         $.ajax({
+             url:requestUrl,
+             type:"get",
+             data:{
+                 page:pageStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
          })
     };
            
     /**
       *导出模版 
       */
-     service.downloadExcelTemplate=function(onSuccess){
+     deviceModelService.downloadExcelTemplate=function(onSuccess){
 		 var requestUrl=this.url+"/downloadExcelTemplate";
          $.ajax({
              url:requestUrl,
@@ -115,7 +119,7 @@ function DeviceModelController(){
       *导入数据 
       *@param file file 
       */
-     service.importExcel=function(file,onSuccess){
+     deviceModelService.importExcel=function(file,onSuccess){
 	     var fileStr=JSON.stringify(file);
 		 var requestUrl=this.url+"/importExcel";
          $.ajax({
@@ -130,5 +134,5 @@ function DeviceModelController(){
              });
     };
            
-    return service;
-}
+    return deviceModelService;
+})

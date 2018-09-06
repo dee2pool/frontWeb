@@ -1,4 +1,4 @@
-define(['common'],function DeviceManufacturerController(){
+define(['common'],function DeviceManufacturerController(common){
     var manufacturerService=new Object();
     manufacturerService.url=common.host+"/mgc"+"/deviceManufacturerService";
     /**
@@ -81,14 +81,18 @@ define(['common'],function DeviceManufacturerController(){
       *分页查询设备厂商 
       *@param page page 
       */
-     manufacturerService.getManuList=function(tableId){
+     manufacturerService.getManuList=function(page,onSuccess){
 		 var requestUrl=this.url+"/getManuList";
-		 common.loadTableData(requestUrl,tableId,function (params) {
-             var page=JSON.stringify({"pageNumber":params.offset/params.limit+1,"pageSize":params.limit,"parameters":{}});
-             var temp={
-                 page:page
-             };
-             return temp;
+         var pageStr=JSON.stringify(page);
+         $.ajax({
+             url:requestUrl,
+             type:"get",
+             data:{
+                 page:pageStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
          })
     };
            

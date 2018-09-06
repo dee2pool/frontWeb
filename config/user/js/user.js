@@ -23,6 +23,10 @@ require.config({
             deps: ['jquery'],
             exports: "treeview"
         },
+        'bootstrapValidator': {
+            deps: ['bootstrap', 'jquery'],
+            exports: "bootstrapValidator"
+        },
         'bootstrap-switch': {
             deps: ['jquery'],
             exports: "bootstrapSwitch"
@@ -33,6 +37,10 @@ require.config({
         },
         'bootstrap-datetimepicker.zh-CN': {
             deps: ['bootstrap-datetimepicker', 'jquery']
+        },
+        'ugroupService':{
+            deps:['common'],
+            exports:"ugroupService"
         }
     },
     paths: {
@@ -41,18 +49,20 @@ require.config({
         "common": "../../common/js/util",
         "layer": "../../common/libs/layer/layer",
         "frame": "../../sidebar/js/wframe",
-        "topBar":"../../../common/component/head/js/topbar",
+        "topBar": "../../../common/component/head/js/topbar",
         "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
         "bootstrap-treeview": "../../common/libs/bootstrap-treeview/js/bootstrap-treeview",
+        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
         "bootstrap-datetimepicker": "../../common/libs/bootstrap-datetimepicker/js/bootstrap-datetimepicker",
         "bootstrap-switch": "../../common/libs/bootstrap-switch/js/bootstrap-switch",
-        "bootstrap-datetimepicker.zh-CN": "../../common/libs/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN"
+        "bootstrap-datetimepicker.zh-CN": "../../common/libs/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN",
+        "ugroupService":"../../../common/js/service/UserGroupController"
     }
 });
-require(['jquery','frame','bootstrap-table','bootstrap','bootstrap-treeview','bootstrap-datetimepicker','bootstrap-datetimepicker.zh-CN','bootstrap-switch','topBar'],
-    function (jquery, frame, bootstrapTable, bootstrap, treeview, datetimepicker,datetimepickerzhCN,bootstrapSwitch,topBar) {
+require(['jquery', 'frame', 'bootstrap-table', 'bootstrap','bootstrap-treeview', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar','ugroupService'],
+    function (jquery, frame, bootstrapTable, bootstrap, treeview, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar,ugroupService) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -63,26 +73,40 @@ require(['jquery','frame','bootstrap-table','bootstrap','bootstrap-treeview','bo
         layer.config({
             path: '../../common/libs/layer/'
         });
-
-        //组织树
-        function getTree() {
-            var tree = [{
-                text: '默认用户组',
-                nodes: [
-                    {
-                        text: '用户组1'
-                    }, {
-                        text: '用户组2'
+        //获得所有用户组信息
+        var tree=[];
+        var temp={};
+        ugroupService.listAllUserGroup(function (data) {
+            if(data.result){
+                //将节点封装成树形结构
+                for(var i=0;i<data.data.length;i++){
+                    //向下拉框中添加
+                    $('select[name="ugroupPre"]').append('<option value="'+data.data[i].id+'">'+
+                        data.data[i].name
+                        +'</option>')
+                    temp[data.data[i].id]=data.data[i];
+                }
+                for(i=0,l=data.data.length;i<l;i++){
+                    var key=temp[data.data[i].parentId];
+                    if(key){
+                        if(!key["nodes"]){
+                            key["nodes"]=[];
+                            key["nodes"].push({id:data.data[i].id,text:data.data[i].name});
+                        }else{
+                            key["nodes"].push({id:data.data[i].id,text:data.data[i].name});
+                        }
+                    }else{
+                        tree.push({id:data.data[i].id,text:data.data[i].name});
                     }
-                ]
-            }]
-            return tree;
-        }
+                }
+            }
+        })
+        console.log(JSON.stringify(tree))
         var nodeIsSel = false;
         $('#ugrouptree').treeview({
             showBorder: false,
             nodeIcon: 'glyphicon glyphicon-user',
-            data: getTree(),
+            data: tree,
             onNodeSelected: function (event, data) {
                 nodeIsSel = true;
                 //TODO 获得节点信息
@@ -180,8 +204,37 @@ require(['jquery','frame','bootstrap-table','bootstrap','bootstrap-treeview','bo
             forceParse: 0,
             pickerPosition: 'bottom-left'
         });
+        //点击取消
+        $('.btn-cancel').click(function () {
+            layer.closeAll();
+        })
         //添加用户组
+        $('#uGroup').bootstrapValidator({
+            excluded: [':disabled'],
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                ugroupname: {
+                    validators: {
+                        notEmpty: {
+                            message: '用户组名称不能为空'
+                        },
+                        stringLength: {
+                            min: 3,
+                            max: 14,
+                            message: '用户组名称必须3-14个字'
+                        }
+                    }
+                }
+            }
+        })
         $('#addUgroup').click(function () {
+            //得到当前时间戳
+            var timestamp = new Date().getTime();
+            $('input[name="ugroupid"]').val(timestamp);
             layer.open({
                 type: 1,
                 title: '添加用户组',
@@ -191,11 +244,14 @@ require(['jquery','frame','bootstrap-table','bootstrap','bootstrap-treeview','bo
                 content: $('#add_ugroup')
             })
         })
+        //点击下一步
+        $('.btn-next').click(function () {
+            $('#ugroup_tab a:last').tab('show')
+        })
         //角色表格
+        var role_ids = new Array();
         $('.role_table').bootstrapTable({
             columns: [{
-                checkbox: true
-            }, {
                 field: 'name',
                 title: '角色名称',
                 align: 'center'
@@ -205,14 +261,64 @@ require(['jquery','frame','bootstrap-table','bootstrap','bootstrap-treeview','bo
                 align: 'center'
             }],
             data: [{
-                name: '系统管理员',
+                id: '888',
+                name: '系统管理员1',
+                remark: '系统管理员'
+            }, {
+                id: '999',
+                name: '系统管理员2',
                 remark: '系统管理员'
             }],
-            onClickRow: function (row, $element, field) {
-                console.log("row" + row)
-                console.log("$element" + $element)
-                console.log("field" + field)
+            onClickRow: function (row, $elem, field) {
+                //判断表单提交是否被禁用
+                if($("button[type='submit']").attr('disabled')=='disabled'){
+                    $("button[type='submit']").removeAttr('disabled')
+                }
+                //判断元素是否被点击过
+                if ('rgb(211, 211, 211)' == $elem.css('background-color')) {
+                    $elem.css('background-color', 'rgb(245, 245, 245)')
+                    for (var i = 0; i < role_ids.length; i++) {
+                        if (role_ids[i] == row.id) {
+                            role_ids.splice(i, 1);
+                            break;
+                        }
+                    }
+                } else {
+                    $elem.css('background-color', 'lightgrey');
+                    role_ids.push(row.id);
+                }
             }
+        })
+        //表单提交
+        $('#uGroup').submit(function () {
+            if (role_ids.length == 0) {
+                layer.msg('请选择用户组角色');
+                return false;
+            }else{
+                //添加用户组
+                var ug={};
+                ug.id=$("input[name='ugroupid']").val();
+                ug.name=$("input[name='ugroupname']").val();
+                ug.parentId=$("select[name='ugroupPre']").val();
+                ug.remark=$("textarea[name='ugroupRem']").val();
+                ugroupService.addUserGroup(ug,function (data) {
+                    if(data.result){
+                        //为用户组添加权限
+                        ugroupService.assignRoleToUserGroup(ug.id,role_ids,function (data) {
+                            if(data.result){
+                                layer.msg('添加成功')
+                                layer.closeAll();
+                            }else{
+                                layer.msg(data.description);
+                            }
+                        })
+                    }else{
+                        layer.msg(data.description);
+                    }
+                })
+            }
+            $("button[type='submit']").removeAttr('disabled')
+            return false
         })
         //区域树
         $('#areatree').treeview({

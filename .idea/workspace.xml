@@ -3,7 +3,21 @@
   <component name="ChangeListManager">
     <list default="true" id="5925381e-cb71-4ebe-8b64-8f462d3d3aad" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/component/head/js/topbar.js" beforeDir="false" afterPath="$PROJECT_DIR$/common/component/head/js/topbar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/js/service/DeviceManufacturerController.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/js/service/DeviceModelController.js" beforeDir="false" afterPath="$PROJECT_DIR$/common/js/service/DeviceModelController.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/common/css/common.css" beforeDir="false" afterPath="$PROJECT_DIR$/config/common/css/common.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/common/js/service/DeviceManufacturerController.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/hn_med_deviceInfo/js/device.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/hn_med_deviceInfo/js/device.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/hn_med_deviceMode/js/deviceMode.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/hn_med_deviceMode/js/deviceMode.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/hn_med_deviceMode/view/hm_med_deviceMode.html" beforeDir="false" afterPath="$PROJECT_DIR$/config/hn_med_deviceMode/view/hm_med_deviceMode.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/hn_med_manufacturer/js/manufacturer.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/hn_med_manufacturer/js/manufacturer.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/hn_med_manufacturer/views/hn_med_manufacturer.html" beforeDir="false" afterPath="$PROJECT_DIR$/config/hn_med_manufacturer/views/hn_med_manufacturer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/hn_sys_deviceType/views/hn_sys_deviceType.html" beforeDir="false" afterPath="$PROJECT_DIR$/config/hn_sys_deviceType/views/hn_sys_deviceType.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/sidebar/js/wframe.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/sidebar/js/wframe.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/sidebar/view/sidebar.html" beforeDir="false" afterPath="$PROJECT_DIR$/config/sidebar/view/sidebar.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/user/js/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/user/js/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/user/view/usermanage.html" beforeDir="false" afterPath="$PROJECT_DIR$/config/user/view/usermanage.html" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -17,38 +31,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="login.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/login.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="132">
-              <caret line="6" column="70" lean-forward="true" selection-start-line="6" selection-start-column="70" selection-end-line="6" selection-end-column="70" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hn_med_manufacturer.html" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/config/hn_med_manufacturer/views/hn_med_manufacturer.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="585">
-              <caret line="37" column="20" lean-forward="true" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="hn_med_deviceInfo.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/hn_med_deviceInfo/views/hn_med_deviceInfo.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2938">
-              <caret line="180" column="28" selection-start-line="180" selection-start-column="28" selection-end-line="180" selection-end-column="28" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="rolemanage.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/role/view/rolemanage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
-              <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+            <state relative-caret-position="616">
+              <caret line="252" selection-start-line="252" selection-end-line="275" selection-end-column="6" />
               <folding>
                 <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
                 <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
@@ -73,11 +60,63 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="manufacturer.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/hn_med_manufacturer/js/manufacturer.js">
+      <file leaf-file-name="usermanage.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/user/view/usermanage.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="717">
-              <caret line="66" selection-start-line="66" selection-end-line="66" />
+            <state relative-caret-position="79">
+              <caret line="108" column="23" selection-start-line="108" selection-start-column="23" selection-end-line="108" selection-end-column="23" />
+              <folding>
+                <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#1;n#ul#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#0;n#form#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#1;n#form#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#2;n#form#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#div#3;n#form#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#div#2;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#a#0;n#li#1;n#ul#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#form#0;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#style#0;n#div#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#1;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#2;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#4;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#5;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#form#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#form#1;n#body#0;n#html#0;n#!!top" />
+                <element signature="n#style#0;n#div#0;n#form#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+                <element signature="n#div#3;n#body#0;n#html#0;n#!!top" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="common.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/common/css/common.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="334">
+              <caret line="79" column="16" selection-start-line="79" selection-start-column="16" selection-end-line="79" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="user.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/config/user/js/user.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="102" column="8" selection-start-line="102" selection-start-column="8" selection-end-line="102" selection-end-column="8" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserGroupController.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common/js/service/UserGroupController.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="400">
+              <caret line="134" column="25" selection-start-line="134" selection-start-column="25" selection-end-line="134" selection-end-column="25" />
             </state>
           </provider>
         </entry>
@@ -85,26 +124,49 @@
       <file leaf-file-name="DeviceManufacturerController.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/common/js/service/DeviceManufacturerController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-9">
-              <caret line="62" column="32" lean-forward="true" selection-start-line="62" selection-start-column="32" selection-end-line="62" selection-end-column="32" />
+            <state relative-caret-position="1870">
+              <caret line="85" column="9" selection-start-line="85" selection-start-column="9" selection-end-line="95" selection-end-column="11" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DeviceInfoController.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/common/js/service/DeviceInfoController.js">
+      <file leaf-file-name="wframe.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/sidebar/js/wframe.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2970">
-              <caret line="135" selection-start-line="135" selection-end-line="135" />
+            <state relative-caret-position="-1474">
+              <caret line="23" column="28" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
+              <folding>
+                <element signature="n#style#0;n#i#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="device.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/hn_med_deviceInfo/js/device.js">
+      <file leaf-file-name="topbar.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/common/component/head/js/topbar.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="76" column="9" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="9" />
+            <state>
+              <caret column="112" selection-start-column="112" selection-end-column="112" />
+              <folding>
+                <element signature="e#90#96#0" expanded="true" />
+                <element signature="e#99#105#0" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Role.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/config/role/js/Role.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1342">
+              <caret line="61" column="15" lean-forward="true" selection-start-line="61" selection-start-column="15" selection-end-line="61" selection-end-column="15" />
+              <folding>
+                <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -124,11 +186,14 @@
       <find>4</find>
       <find>7</find>
       <find>service</find>
+      <find>temp</find>
     </findStrings>
     <replaceStrings>
       <replace>3</replace>
       <replace>6</replace>
       <replace>manufacturerService</replace>
+      <replace>deviceModelService</replace>
+      <replace>ugroupService</replace>
     </replaceStrings>
   </component>
   <component name="Git.Settings">
@@ -141,30 +206,37 @@
         <option value="$PROJECT_DIR$/config/head/js/topbar.js" />
         <option value="$PROJECT_DIR$/common/component/head/head.html" />
         <option value="$PROJECT_DIR$/config/basemanage/role/js/Role.js" />
-        <option value="$PROJECT_DIR$/config/user/view/usermanage.html" />
-        <option value="$PROJECT_DIR$/config/user/js/user.js" />
         <option value="$PROJECT_DIR$/config/login.html" />
         <option value="$PROJECT_DIR$/config/login/js/login.js" />
         <option value="$PROJECT_DIR$/main/index/views/index.html" />
         <option value="$PROJECT_DIR$/config/sidebar/js/sidebar.js" />
-        <option value="$PROJECT_DIR$/config/sidebar/view/sidebar.html" />
         <option value="$PROJECT_DIR$/common/js/service/MenuController.js" />
         <option value="$PROJECT_DIR$/config/sidebar/js/sidePopup.js" />
         <option value="$PROJECT_DIR$/config/role/js/role_add.js" />
         <option value="$PROJECT_DIR$/common/js/service/DeviceInfoController.js" />
         <option value="$PROJECT_DIR$/config/common/js/service/MenuController.js" />
         <option value="$PROJECT_DIR$/config/sidebar/js/menu.js" />
-        <option value="$PROJECT_DIR$/config/sidebar/js/wframe.js" />
-        <option value="$PROJECT_DIR$/config/role/view/rolemanage.html" />
-        <option value="$PROJECT_DIR$/common/component/head/js/topbar.js" />
         <option value="$PROJECT_DIR$/config/common/js/service/DeviceInfoController.js" />
         <option value="$PROJECT_DIR$/config/common/js/util.js" />
-        <option value="$PROJECT_DIR$/config/hn_med_manufacturer/views/hn_med_manufacturer.html" />
         <option value="$PROJECT_DIR$/config/role/js/Role.js" />
-        <option value="$PROJECT_DIR$/config/hn_med_deviceInfo/views/hn_med_deviceInfo.html" />
+        <option value="$PROJECT_DIR$/config/common/js/service/DeviceManufacturerController.js" />
         <option value="$PROJECT_DIR$/common/js/service/DeviceManufacturerController.js" />
-        <option value="$PROJECT_DIR$/config/hn_med_deviceInfo/js/device.js" />
         <option value="$PROJECT_DIR$/config/hn_med_manufacturer/js/manufacturer.js" />
+        <option value="$PROJECT_DIR$/config/hn_med_manufacturer/views/hn_med_manufacturer.html" />
+        <option value="$PROJECT_DIR$/common/js/service/DeviceModelController.js" />
+        <option value="$PROJECT_DIR$/config/hn_med_deviceMode/view/hm_med_deviceMode.html" />
+        <option value="$PROJECT_DIR$/config/hn_med_deviceMode/js/deviceMode.js" />
+        <option value="$PROJECT_DIR$/config/hn_sys_deviceType/views/hn_sys_deviceType.html" />
+        <option value="$PROJECT_DIR$/config/role/view/rolemanage.html" />
+        <option value="$PROJECT_DIR$/config/sidebar/view/sidebar.html" />
+        <option value="$PROJECT_DIR$/config/hn_med_deviceInfo/views/hn_med_deviceInfo.html" />
+        <option value="$PROJECT_DIR$/config/hn_med_deviceInfo/js/device.js" />
+        <option value="$PROJECT_DIR$/config/sidebar/js/wframe.js" />
+        <option value="$PROJECT_DIR$/config/common/css/common.css" />
+        <option value="$PROJECT_DIR$/common/component/head/js/topbar.js" />
+        <option value="$PROJECT_DIR$/common/js/service/UserGroupController.js" />
+        <option value="$PROJECT_DIR$/config/user/view/usermanage.html" />
+        <option value="$PROJECT_DIR$/config/user/js/user.js" />
       </list>
     </option>
   </component>
@@ -177,13 +249,13 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="111" />
-    <option name="y" value="40" />
-    <option name="width" value="1764" />
-    <option name="height" value="963" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="960" />
+    <option name="height" value="1040" />
   </component>
-  <component name="ProjectLevelVcsManager">
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectView">
@@ -191,6 +263,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -201,18 +274,25 @@
             <path>
               <item name="hnvmns-frontWEB" type="b2602c69:ProjectViewProjectNode" />
               <item name="hnvmns-frontWEB" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="hnvmns-frontWEB" type="b2602c69:ProjectViewProjectNode" />
               <item name="hnvmns-frontWEB" type="462c0819:PsiDirectoryNode" />
               <item name="config" type="462c0819:PsiDirectoryNode" />
+              <item name="hn_med_deviceInfo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="hnvmns-frontWEB" type="b2602c69:ProjectViewProjectNode" />
+              <item name="hnvmns-frontWEB" type="462c0819:PsiDirectoryNode" />
+              <item name="config" type="462c0819:PsiDirectoryNode" />
+              <item name="hn_med_deviceInfo" type="462c0819:PsiDirectoryNode" />
+              <item name="js" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -222,13 +302,15 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\hnvmns-frontweb\hnvmns-frontWEB\config" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\hnvmns-frontweb\hnvmns-frontWEB\common\js\service" />
+      <recent name="F:\hnvmns-frontweb\hnvmns-frontWEB\config\common\js\service" />
       <recent name="F:\workspace\HNVMNS\feature\hnvmns-frontWEB\common\component" />
       <recent name="F:\workspace\HNVMNS\feature\hnvmns-frontWEB\common\asset\img" />
       <recent name="F:\workspace\HNVMNS\feature\hnvmns-frontWEB\common\js" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="F:\hnvmns-frontweb\hnvmns-frontWEB\config" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -243,10 +325,16 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JavaScript Debug.usermanage.html">
     <configuration name="rolemanage.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:8090/hnvmns-frontWEB/config/role/view/rolemanage.html" />
+    <configuration name="usermanage.html" type="JavascriptDebugType" factoryName="JavaScript Debug" temporary="true" nameIsGenerated="true" uri="http://localhost:8090/hnvmns-frontWEB/config/user/view/usermanage.html" />
+    <list>
+      <item itemvalue="JavaScript Debug.rolemanage.html" />
+      <item itemvalue="JavaScript Debug.usermanage.html" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JavaScript Debug.usermanage.html" />
         <item itemvalue="JavaScript Debug.rolemanage.html" />
       </list>
     </recent_temporary>
@@ -264,18 +352,20 @@
       <workItem from="1536044250339" duration="1648000" />
       <workItem from="1536046398644" duration="737000" />
       <workItem from="1536047168002" duration="14298000" />
-      <workItem from="1536105789777" duration="28225000" />
+      <workItem from="1536105789777" duration="28528000" />
+      <workItem from="1536135890579" duration="4607000" />
+      <workItem from="1536192106317" duration="24371000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="44908000" />
+    <option name="totallyTimeSpent" value="74189000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.14646997" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.16106606" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
@@ -284,7 +374,7 @@
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39827773" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.39718616" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
@@ -302,79 +392,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="9" />
+      <option name="time" value="12" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/common/component/head/head.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="9" column="65" selection-start-line="9" selection-start-column="65" selection-end-line="9" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/component/head/js/topbar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" column="25" lean-forward="true" selection-start-line="13" selection-start-column="25" selection-end-line="13" selection-end-column="31" />
-          <folding>
-            <element signature="e#158#164#0" expanded="true" />
-            <element signature="e#155#161#0" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/role/view/rolemanage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" column="23" lean-forward="true" selection-start-line="4" selection-start-column="23" selection-end-line="4" selection-end-column="23" />
-          <folding>
-            <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#form#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#form#1;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#1;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#style#0;n#form#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#form#2;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#style#0;n#div#0;n#form#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#form#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#form#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#3;n#form#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#4;n#form#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#5;n#form#2;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#form#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#form#3;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#style#0;n#div#0;n#form#3;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#div#2;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#script#0;n#body#0;n#html#0;n#!!top" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/user/view/usermanage.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="9" column="54" lean-forward="true" selection-start-line="9" selection-start-column="54" selection-end-line="9" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/index/views/index.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/index/js/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="858">
-          <caret line="39" column="48" selection-start-line="39" selection-start-column="48" selection-end-line="39" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/head/js/topbar.js" />
-    <entry file="file://$PROJECT_DIR$/common/js/service/MenuController.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/role/js/Role.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -434,33 +455,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/common/css/common.css">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/resconnect/view/resconnect.html">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/config/person/view/personmanage.html">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/sidebar/view/sidebar.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="286">
-          <caret line="13" selection-start-line="13" selection-end-line="54" selection-end-column="7" />
-          <folding>
-            <element signature="n#form#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#style#0;n#div#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#2;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#a#0;n#div#0;n#div#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#4;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#5;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#button#0;n#div#5;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/role/js/role_add.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -495,31 +494,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/common/libs/jquery/jquery-1.11.3.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="1" column="385" selection-start-line="1" selection-start-column="385" selection-end-line="1" selection-end-column="385" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/common/js/service/MenuController.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="132">
           <caret line="48" column="2" selection-start-line="48" selection-start-column="2" selection-end-line="61" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/component/head/js/topbar.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="505">
-          <caret line="74" column="56" selection-start-line="74" selection-start-column="56" selection-end-line="74" selection-end-column="56" />
-          <folding>
-            <element signature="e#158#164#0" expanded="true" />
-            <element signature="e#155#161#0" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -537,9 +515,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/hn_med_deviceMode/js/deviceMode.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/common/js/service/DeviceInfoController.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -547,37 +522,36 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/sidebar/js/wframe.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4928">
-          <caret line="245" column="19" selection-start-line="245" selection-start-column="19" selection-end-line="245" selection-end-column="19" />
-          <folding>
-            <element signature="e#6823#7070#0" />
-            <element signature="e#7108#7364#0" />
-            <element signature="e#7410#7638#0" />
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/role/js/Role.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="543">
-          <caret line="61" column="15" lean-forward="true" selection-start-line="61" selection-start-column="15" selection-end-line="61" selection-end-column="15" />
-          <folding>
-            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/user/js/user.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="189" column="30" lean-forward="true" selection-start-line="189" selection-start-column="30" selection-end-line="189" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/js/service/DeviceTypeController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-198">
+          <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/gis/js/feature.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1716" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/gis/view/feature.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1387">
+          <caret line="24" column="21" lean-forward="true" selection-start-line="24" selection-start-column="21" selection-end-line="24" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/login.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="6" column="70" selection-start-line="6" selection-start-column="70" selection-end-line="6" selection-end-column="70" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/common/libs/require.js">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/config/common/js/util.js">
@@ -587,73 +561,148 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/user/view/usermanage.html">
+    <entry file="file://$PROJECT_DIR$/config/common/js/service/DeviceManufacturerController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-999">
-          <caret line="138" column="12" selection-start-line="138" selection-start-column="12" selection-end-line="141" selection-end-column="18" />
-          <folding>
-            <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
-            <element signature="n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
-          </folding>
+        <state>
+          <caret column="62" selection-start-column="62" selection-end-column="62" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/common/js/service/DeviceTypeController.js">
+    <entry file="file://$PROJECT_DIR$/config/hn_med_manufacturer/views/hn_med_manufacturer.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-198">
-          <caret line="18" column="4" selection-start-line="18" selection-start-column="4" selection-end-line="18" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/hn_med_deviceMode/view/hm_med_deviceMode.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/hn_med_deviceInfo/js/device.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="76" column="9" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/js/service/DeviceInfoController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2970">
-          <caret line="135" selection-start-line="135" selection-end-line="135" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/common/js/service/DeviceManufacturerController.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-9">
-          <caret line="62" column="32" lean-forward="true" selection-start-line="62" selection-start-column="32" selection-end-line="62" selection-end-column="32" />
+        <state relative-caret-position="255">
+          <caret line="12" column="4" lean-forward="true" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="106" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/hn_med_manufacturer/js/manufacturer.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="717">
-          <caret line="66" selection-start-line="66" selection-end-line="66" />
+        <state relative-caret-position="682">
+          <caret line="40" column="63" selection-start-line="40" selection-start-column="63" selection-end-line="40" selection-end-column="63" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/js/service/DeviceInfoController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="499">
+          <caret line="134" column="5" lean-forward="true" selection-start-line="134" selection-start-column="5" selection-end-line="134" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/js/service/DeviceModelController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="123">
+          <caret line="110" column="15" lean-forward="true" selection-start-line="110" selection-start-column="15" selection-end-line="110" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/hn_med_deviceMode/js/deviceMode.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="593">
+          <caret line="94" column="31" selection-start-line="94" selection-start-column="31" selection-end-line="94" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/hn_sys_deviceType/js/deviceType.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/hn_sys_deviceType/views/hn_sys_deviceType.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="17" column="11" lean-forward="true" selection-start-line="17" selection-start-column="11" selection-end-line="17" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/hn_med_deviceMode/view/hm_med_deviceMode.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="607">
+          <caret line="31" column="39" selection-start-line="31" selection-start-column="23" selection-end-line="31" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/sidebar/view/sidebar.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="264">
+          <caret line="67" column="12" selection-start-line="67" selection-start-column="12" selection-end-line="72" selection-end-column="17" />
+          <folding>
+            <element signature="n#form#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#div#0;n#div#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#5;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#button#0;n#div#5;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#i#0;n#a#0;n#p#0;n#div#0;n#nav#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/hn_med_deviceInfo/views/hn_med_deviceInfo.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2938">
-          <caret line="180" column="28" selection-start-line="180" selection-start-column="28" selection-end-line="180" selection-end-column="28" />
+        <state relative-caret-position="1606">
+          <caret line="73" column="48" selection-start-line="73" selection-start-column="48" selection-end-line="73" selection-end-column="48" />
+          <folding>
+            <element signature="n#form#0;n#body#0;n#html#0;n#!!top" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/login.html">
+    <entry file="file://$PROJECT_DIR$/config/hn_med_deviceInfo/js/device.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="6" column="70" lean-forward="true" selection-start-line="6" selection-start-column="70" selection-end-line="6" selection-end-column="70" />
+        <state relative-caret-position="-176">
+          <caret line="150" column="31" selection-start-line="150" selection-start-column="31" selection-end-line="150" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/role/js/Role.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1342">
+          <caret line="61" column="15" lean-forward="true" selection-start-line="61" selection-start-column="15" selection-end-line="61" selection-end-column="15" />
+          <folding>
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/component/head/js/topbar.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="112" selection-start-column="112" selection-end-column="112" />
+          <folding>
+            <element signature="e#90#96#0" expanded="true" />
+            <element signature="e#99#105#0" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/sidebar/js/wframe.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1474">
+          <caret line="23" column="28" selection-start-line="23" selection-start-column="28" selection-end-line="23" selection-end-column="28" />
+          <folding>
+            <element signature="n#style#0;n#i#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/js/service/DeviceManufacturerController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1870">
+          <caret line="85" column="9" selection-start-line="85" selection-start-column="9" selection-end-line="95" selection-end-column="11" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/config/role/view/rolemanage.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="15" column="7" lean-forward="true" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+        <state relative-caret-position="616">
+          <caret line="252" selection-start-line="252" selection-end-line="275" selection-end-column="6" />
           <folding>
             <element signature="n#div#0;n#body#0;n#html#0;n#!!top" />
             <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
@@ -677,10 +726,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/hn_med_manufacturer/views/hn_med_manufacturer.html">
+    <entry file="file://$PROJECT_DIR$/config/common/css/common.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="585">
-          <caret line="37" column="20" lean-forward="true" selection-start-line="37" selection-start-column="20" selection-end-line="37" selection-end-column="20" />
+        <state relative-caret-position="334">
+          <caret line="79" column="16" selection-start-line="79" selection-start-column="16" selection-end-line="79" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/common/js/service/UserGroupController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="134" column="25" selection-start-line="134" selection-start-column="25" selection-end-line="134" selection-end-column="25" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/user/view/usermanage.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="79">
+          <caret line="108" column="23" selection-start-line="108" selection-start-column="23" selection-end-line="108" selection-end-column="23" />
+          <folding>
+            <element signature="n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#div#0;n#div#2;n#div#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#1;n#ul#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#0;n#form#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#1;n#form#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#2;n#form#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#0;n#div#3;n#form#0;n#div#0;n#div#0;n#div#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#2;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#a#0;n#li#0;n#ul#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#li#1;n#ul#0;n#div#2;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#form#0;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#1;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#2;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#3;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#4;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#div#5;n#form#0;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#form#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#form#1;n#body#0;n#html#0;n#!!top" />
+            <element signature="n#style#0;n#div#0;n#form#1;n#body#0;n#html#0;n#!!top" expanded="true" />
+            <element signature="n#div#3;n#body#0;n#html#0;n#!!top" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/common/libs/jquery/jquery-1.11.3.min.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="158">
+          <caret line="4" column="22159" selection-start-line="4" selection-start-column="22159" selection-end-line="4" selection-end-column="22159" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/user/js/user.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="102" column="8" selection-start-line="102" selection-start-column="8" selection-end-line="102" selection-end-column="8" />
         </state>
       </provider>
     </entry>
