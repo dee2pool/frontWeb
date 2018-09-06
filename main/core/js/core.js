@@ -184,8 +184,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             reuseTiles: true
         });//添加tms
 
-
-
         /**
          * 对于模糊层的制作
          */
@@ -236,7 +234,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         });
         L.control.minimap(xsTileLayer2, { mapOptions: { logoControl: true }, toggleDisplay: true, minimized: true }).addTo(map);
 
-        //比例尺
+        /**
+         * 比例尺
+         */
         L.control.scale({ imperial: false }).addTo(map);
 
 
@@ -389,7 +389,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
          */
         //点测试图层
         var xsLayerGroup = L.layerGroup();
-        //xsLayerGroup.addTo(map);
 
         var pointOption = common.wmsDefaultOption;
         pointOption.typeName = 'cite:xspoint';
@@ -669,6 +668,129 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         });
 
         /**
+         * 大楼测试点 双击大楼，进入建筑内部
+         * 双击事件进入大楼内部
+         */
+        var build = L.marker([28.250715136528015,113.08228611946106]).addTo(map);
+        build.on("dblclick",function () {
+            //mapTestInit('../asset/img/indoor.jpg');
+            var buildMapTest = null;//进入建筑结构内部的map对象
+            loadIndoorMap();
+            function loadIndoorMap() {
+                buildMapTest = L.map('img-map', {
+                    minZoom: 0,
+                    maxZoom: 4,
+                    center: [0, 0],
+                    zoom: 4,
+                    crs: L.CRS.Simple
+                });
+
+                // 隐藏map，显示img-map
+                $("#map").css('display', 'none');
+                $(".img-map").css('display', 'block');
+
+                //室内地图初始化 这里实际上是核心图片算法的处理
+                var w = 1024,
+                    h = 650;
+                    //url = imageUrl;
+                var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                var bounds = new L.LatLngBounds(southWest, northEast);
+
+                var indoor1 = L.imageOverlay('../asset/img/indoor1.jpg', bounds).addTo(buildMapTest);
+                var indoor2 = L.imageOverlay('../asset/img/indoor2.jpg', bounds);
+                var indoor3 = L.imageOverlay('../asset/img/indoor3.jpg', bounds);
+
+                /**
+                 * 图层控制器
+                 */
+                var baseMaps = {
+                    "1楼": indoor1,
+                    "2楼": indoor2,
+                    "3楼": indoor3
+                };
+                var overlayMaps = {
+
+                };
+
+                //设置图层控制器
+                var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(buildMapTest);
+
+                var markerGroup = new L.FeatureGroup();
+                indoor2.on("add",function () {
+                    //unproject是将像素点向坐标点进行转换，然后再添加到地图上
+                    var marker1 = L.marker(buildMapTest.unproject([90, 600], buildMapTest.getMaxZoom() - 1));
+                    marker1.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            area:['400px','400px'],
+                            content: '信息查看',
+                        });
+                    });
+                    var marker2 = L.marker(buildMapTest.unproject([400, 400], buildMapTest.getMaxZoom() - 1));
+                    marker2.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    var marker3 = L.marker(buildMapTest.unproject([300, 500], buildMapTest.getMaxZoom() - 1));
+                    marker3.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    var marker4 = L.marker(buildMapTest.unproject([100, 380], buildMapTest.getMaxZoom() - 1));
+                    marker4.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    markerGroup.addLayer(marker1);
+                    markerGroup.addLayer(marker2);
+                    markerGroup.addLayer(marker3);
+                    markerGroup.addLayer(marker4);
+                    markerGroup.addTo(buildMapTest);
+                });
+
+                indoor2.on("remove",function () {
+                    buildMapTest.removeLayer(markerGroup);
+                });
+
+
+                buildMapTest.on("zoomend", function (evt) {
+                    //回到map视角
+                    if (evt.sourceTarget._animateToZoom === 1) {
+                        $("#map").css('display', 'block');
+                        $(".img-map").css('display', 'none');
+                        buildMapTest.remove();
+                        buildMapTest = null;
+                    }
+                });
+            }
+
+
+        });
+
+
+        /**
          * 图层控制器
          */
         var baseMaps = {
@@ -677,8 +799,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var overlayMaps = {
             "轨迹": routeLayerGroup,
             "设备点": xsLayerGroup,
-
+            "建筑": build
         };
+
         //设置图层控制器
         var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
         //更改控制器容器
@@ -908,7 +1031,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var maptest = null;
 
         /**
-         * 初始化加载工厂楼内地图和相关的右侧控件 内部 室内
+         * 使用indoor 进行内部地图的加载
          */
         var indoorLayer = new L.Indoor(common.indoorJson, {
             getLevel: function (feature) {
@@ -958,37 +1081,37 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
          */
         map.on("zoomend", function (evt) {
             //对于楼层的操作
-            // if (evt.sourceTarget._animateToZoom === 17) {
-            //     // $.getJSON("../asset/json/indoor.json", function(geoJSON) {
-            //     indoorLayer.addTo(map);
-            //     levelControl.addTo(map);
-            //     // });
-            // }
-            // else {
-            //     map.removeLayer(indoorLayer);
-            //     map.removeControl(levelControl);
-            // }
+            if (evt.sourceTarget._animateToZoom === 17) {
+                // $.getJSON("../asset/json/indoor.json", function(geoJSON) {
+                indoorLayer.addTo(map);
+                levelControl.addTo(map);
+                // });
+            }
+            else {
+                map.removeLayer(indoorLayer);
+                map.removeControl(levelControl);
+            }
 
             //三一工厂是否应该出现的判断
-            // if (evt.sourceTarget._animateToZoom >= 16) {
-            //     var center=[113.10121178627014,28.24112355709076];
-            //     if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
-            //         if (map.hasLayer(testSanYiLayer)) {
-            //         }
-            //         else {
-            //             //模糊态的处理
-            //             var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
-            //             testSanYiLayer.addTo(map);
-            //         }
-            //     }
-            // }
-            // else {
-            //     if (map.hasLayer(testSanYiLayer)) {
-            //         map.removeLayer(testSanYiLayer);
-            //     }
-            //     else {
-            //     }
-            // }
+            if (evt.sourceTarget._animateToZoom >= 16) {
+                var center=[113.10121178627014,28.24112355709076];
+                if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
+                    if (map.hasLayer(testSanYiLayer)) {
+                    }
+                    else {
+                        //模糊态的处理
+                        var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
+                        testSanYiLayer.addTo(map);
+                    }
+                }
+            }
+            else {
+                if (map.hasLayer(testSanYiLayer)) {
+                    map.removeLayer(testSanYiLayer);
+                }
+                else {
+                }
+            }
 
             //对于测试工程图和模糊层的设置
             if (evt.sourceTarget._animateToZoom == 17) {
@@ -1058,7 +1181,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         });
 
         /**
-         * 用于对建筑内部结构图的初始化
+         * 进入建筑内部结构的方法
          * @param {*} imageUrl 
          */
         function mapTestInit(imageUrl) {
@@ -1081,6 +1204,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             var southWest = maptest.unproject([0, h], maptest.getMaxZoom() - 1);
             var northEast = maptest.unproject([w, 0], maptest.getMaxZoom() - 1);
             var bounds = new L.LatLngBounds(southWest, northEast);
+
             L.imageOverlay(url, bounds).addTo(maptest);
 
             //unproject是将像素点向坐标点进行转换，然后再添加到地图上

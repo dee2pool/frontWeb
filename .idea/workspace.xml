@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b027253b-faab-4a50-997c-86e669bcf76e" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/main/core/js/core.js" afterPath="$PROJECT_DIR$/main/core/js/core.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -21,8 +22,8 @@
           <file leaf-file-name="core.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="385">
-                  <caret line="131" column="60" lean-forward="true" selection-start-line="131" selection-start-column="60" selection-end-line="131" selection-end-column="60" />
+                <state relative-caret-position="391">
+                  <caret line="765" column="44" lean-forward="false" selection-start-line="765" selection-start-column="44" selection-end-line="765" selection-end-column="44" />
                   <folding />
                 </state>
               </provider>
@@ -31,8 +32,8 @@
           <file leaf-file-name="core.html" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/main/core/view/core.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="81">
-                  <caret line="99" column="18" lean-forward="true" selection-start-line="99" selection-start-column="18" selection-end-line="99" selection-end-column="18" />
+                <state relative-caret-position="108">
+                  <caret line="100" column="18" lean-forward="true" selection-start-line="100" selection-start-column="18" selection-end-line="100" selection-end-column="18" />
                   <folding />
                 </state>
               </provider>
@@ -45,8 +46,8 @@
           <file leaf-file-name="core.js" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="634">
-                  <caret line="1049" column="25" lean-forward="true" selection-start-line="1049" selection-start-column="25" selection-end-line="1049" selection-end-column="25" />
+                <state relative-caret-position="315">
+                  <caret line="125" column="45" lean-forward="true" selection-start-line="125" selection-start-column="24" selection-end-line="125" selection-end-column="45" />
                   <folding />
                 </state>
               </provider>
@@ -60,6 +61,9 @@
     <findStrings>
       <find>设备</find>
       <find>分级</find>
+      <find>dblclick</find>
+      <find>mapTestInit</find>
+      <find>图层</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -93,7 +97,7 @@
   <component name="NodePackageJsonFileManager">
     <packageJsonPaths />
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
+  <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="111" />
     <option name="y" value="40" />
     <option name="width" value="1764" />
@@ -133,22 +137,22 @@
               <item name="hnvmns-frontWEB" type="b2602c69:ProjectViewProjectNode" />
               <item name="hnvmns-frontWEB" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="hnvmns-frontWEB" type="b2602c69:ProjectViewProjectNode" />
               <item name="hnvmns-frontWEB" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="asset" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="hnvmns-frontWEB" type="b2602c69:ProjectViewProjectNode" />
               <item name="hnvmns-frontWEB" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="common" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-              <item name="util" type="462c0819:PsiDirectoryNode" />
+              <item name="core" type="462c0819:PsiDirectoryNode" />
+              <item name="asset" type="462c0819:PsiDirectoryNode" />
+              <item name="img" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -165,6 +169,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="F:\workspace\front\hnvmns-frontWEB\main\core\asset\img" />
       <recent name="F:\workspace\front\hnvmns-frontWEB\config\gis\img" />
       <recent name="F:\workspace\front\hnvmns-frontWEB\common\lib\leaflet\lib" />
       <recent name="F:\workspace\front\hnvmns-frontWEB\common\lib" />
@@ -201,15 +206,15 @@
       <updated>1536059314958</updated>
       <workItem from="1536059317312" duration="6444000" />
       <workItem from="1536105916149" duration="25845000" />
-      <workItem from="1536191889193" duration="9404000" />
+      <workItem from="1536191889193" duration="14018000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41693000" />
+    <option name="totallyTimeSpent" value="46307000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.15677084" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -339,11 +344,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main/core/asset/img/indoor2.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main/core/asset/img/indoor.jpg">
       <provider selected="true" editor-type-id="images">
         <state />
       </provider>
@@ -478,14 +478,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main/core/view/core.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="81">
-          <caret line="99" column="18" lean-forward="true" selection-start-line="99" selection-start-column="18" selection-end-line="99" selection-end-column="18" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/common/js/util.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-416">
@@ -502,10 +494,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/main/core/asset/img/indoor.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/core/asset/img/indoor1.jpg">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/main/core/view/core.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="108">
+          <caret line="100" column="18" lean-forward="true" selection-start-line="100" selection-start-column="18" selection-end-line="100" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main/core/js/core.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="131" column="60" lean-forward="true" selection-start-line="131" selection-start-column="60" selection-end-line="131" selection-end-column="60" />
+        <state relative-caret-position="391">
+          <caret line="765" column="44" lean-forward="false" selection-start-line="765" selection-start-column="44" selection-end-line="765" selection-end-column="44" />
           <folding />
         </state>
       </provider>
