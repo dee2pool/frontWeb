@@ -148,7 +148,8 @@ require(['jquery','layer','frame', 'bootstrap-table','jquery-slimScroll','bootst
                         }
                     }],
                     data:data.data,
-                    pagination:true,
+                    height:655,
+                    pagnation:true,
                     pageList:[10,15,20]
                 })
             }
