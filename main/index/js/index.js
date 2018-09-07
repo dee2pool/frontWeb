@@ -24,7 +24,10 @@ require.config({
         'boards':{
             deps:['jquery','zui','bootstrap'],
             export:'boards'
-        }
+        },
+        'layx': {
+            exports: 'layx'
+        },
     },
 
     paths:{
@@ -37,27 +40,17 @@ require.config({
         "dashboard":"../../common/lib/zui/lib/dashboard/zui.dashboard",
         "boards":"../../common/lib/zui/lib/board/zui.board.min",
         "Mock":"../../common/lib/mock/mock",
-        "topBar":"../../../common/component/head/js/topbar"
+        "topBar":"../../../common/component/head/js/topbar",
+        "layx": "../../common/lib/layx/layx",
 
     }
 
 });
 
-require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards','Mock','topBar'],function ($,bootstrap,sui,common,lay,zui,dashboard,boards,Mock,topBar) {
+require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards','Mock','topBar', 'layx'],function ($,bootstrap,sui,common,lay,zui,dashboard,boards,Mock,topBar,layx) {
 
     $('#head').html(topBar.htm);
     topBar.init();
-
-    // var topbar = $('#sui_nav').SuiNav({});
-    // var navbar = topbar.create('nav_second', {}, {});
-    // $('.MenuToggle').click(function() {
-    //     console.log("toggle");
-    //     topbar.toggle();
-    // });
-    // $('.MenuOpen').click(function() {
-    //     console.log("open");
-    //     topbar.show();
-    // });
 
     var data = null;
 
@@ -77,6 +70,7 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
         height: 200,
         data:data,
         draggable: true,
+        panelRemovingTip:"确认移除面板吗？移除后不可恢复！",
         afterOrdered: function(newOrders) {
             var item;
             var temp = [];
@@ -126,7 +120,8 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
             }
             console.log(data);
             $.zui.store.set('data', data);
-        }
+        },
+
     };
 
     $('#dashboard').dashboard(options);
@@ -191,29 +186,41 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
     var layerHeight = height+'px';
 
 
-    layer.open({
-        type: 2,
-        title: '置顶窗口',
-        shadeClose: true,
-        shade: false,
-        offset: 'rb',
-        maxmin: true, //开启最大化最小化按钮
-        area: ['300px', layerHeight],
-        content: 'stick.html'
+    layx.html('stick','置顶窗口','置顶内容',{
+        stickMenu:true,
+        closeMenu:false,
+        storeStatus:false,
+        position:'lb',
+        width:'400',
+        height:'90%',
+        event:{
+            onload:{
+                before:function(layxWindow,winform){
+                    layx.min('stick');
+                    console.log(winform.layxWindowId);
+                },
+            }
+        }
+
     });
+    //
+
+
 
 
     $(function () {
 
         $("#open-panel").on("click",function () {
-            window.location.href = common.openurl+"/test-panel/view/panel.html";
+            window.location.href = common.openurl+"/main/test-panel/view/panel.html";
         });
         $("#open-map").on("click",function () {
-            window.location.href = common.openurl+"/core/view/core.html";
+            window.location.href = common.openurl+"/main/core/view/core.html";
         });
         $("#open-environment").on("click",function () {
-            window.location.href = common.openurl+"/monitor/environment/views/environment.html";
+            window.location.href = common.openurl+"/main/monitor/environment/views/environment.html";
         });
+
+
 
 
     })

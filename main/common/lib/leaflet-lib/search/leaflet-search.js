@@ -85,7 +85,7 @@ L.Control.Search = L.Control.extend({
 		textCancel: '取消',		    //title in cancel button
 		textPlaceholder: '搜索...',   //placeholder value
 		hideMarkerOnCollapse: false,    //remove circle and marker on search control collapsed		
-		position: 'topright',
+		position: 'topleft',
 		marker: {						//custom L.Marker or false for hide
 			icon: false,				//custom L.Icon for maker location or false for hide
 			animate: true,				//animate a circle over location found

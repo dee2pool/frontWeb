@@ -11,7 +11,8 @@
 .map{
     position: absolute;
     width: calc(100%);
-    height: 100%;
+    top:35px;
+    height: calc(100% - 35px);
 }
 
 .img-map{
@@ -24,7 +25,7 @@
 /*置顶在左上角的按钮组*/
 .map-container-btngroup{
     position: absolute;
-    top: 10px;
+    top: 40px;
     left: 10px;
     width: auto;
     height: 34px;
@@ -128,159 +129,204 @@
     display: inline!important;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*nav start*/
-
-nav {
-    border-bottom: solid 1px #efefef;
-    min-height: 60px;
-    background: #1c2531;
-}
-
-nav .wrap-core-nav-list,
-nav .nav-header {
-    background: #1c2531;
-}
-
-nav .brand {
-    display: block;
+/*start-地图按钮栏的相关样式*/
+.map-top{
+    display: none;
     position: relative;
-    width: 170px;
-    top: 20px;
-}
-.nav-header h3{
-    color: #fff!important;
-}
-
-nav .brand img {
+    top: 0px;
+    left: 0;
+    height: 35px;
     width: 100%;
+    border-bottom: 1px solid #4b8df8;
+    background-color: rgba(255, 255, 255, 0.84);
+    /*z-index: 9999;*/
 }
 
-nav .menu li a {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 18px;
-    display: block;
-    padding: 20px 25px;
-    text-decoration: none;
-    color: #fff;
-}
-
-nav .menu li a:hover {
-    color: ghostwhite;
-}
-
-
-/*
-DROPDOWN STYLE
-=========================== */
-nav .menu > li.dropdown  li.dropdown > a::before{
-    margin-left: 10px;
-    content: '';
-    border-top: solid 5px #6a6a6a;
-    border-left: solid 5px transparent;
-    border-right: solid 5px transparent;
+.map-top > ul{
+    list-style: none;
+    font-size: 14px;
     float: right;
-    position: relative;
-    top: 8px;
 }
 
-nav .menu li.dropdown.open > a{
-    color: ghostwhite;
+.map-top > ul > li {
+    display: inline-block;
+    line-height: 35px;
+    padding: 0 10px;
 }
 
-.sample-text{
-    padding: 30px;
-}
-/* =========================== */
-
-
-nav button {
-    background: transparent;
-    border: none;
-    outline: none;
+.map-top>ul .active, .map-top>ul>li .active {
+    color: #0D8BBD;
 }
 
-@media (max-width: 992px) {
-    nav .full-container,
-    nav .nav-container {
-        padding-left: 0;
-        padding-right: 0;
-    }
-
-    nav .nav-header {
-        min-height: 60px;
-    }
-
-    nav .nav-header .brand {
-        margin: 0 auto 5px;
-        float: none;
-    }
-
-    nav .nav-header .toggle-bar {
-        font-size: 18px;
-        position: absolute;
-        top: 17px;
-        left: 15px;
-    }
-
-    nav .menu li a {
-        padding: 10px 10px;
-        border-bottom: solid 1px #efefef;
-    }
-
-    nav .menu li:last-child a {
-        border-bottom: none;
-    }
+.map-top > ul > li > a {
+    color: #2E2D3C;
 }
-/*nav end*/
+
+.margin-right-5{
+    margin-right: 5px;
+}
+
+.topbar-dropdown-width{
+    min-width: 60px!important;
+
+}
+
+
+/*end-地图按钮栏的相关样式*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*!*nav start*!*/
+
+/*nav {*/
+    /*border-bottom: solid 1px #efefef;*/
+    /*min-height: 60px;*/
+    /*background: #1c2531;*/
+/*}*/
+
+/*nav .wrap-core-nav-list,*/
+/*nav .nav-header {*/
+    /*background: #1c2531;*/
+/*}*/
+
+/*nav .brand {*/
+    /*display: block;*/
+    /*position: relative;*/
+    /*width: 170px;*/
+    /*top: 20px;*/
+/*}*/
+/*.nav-header h3{*/
+    /*color: #fff!important;*/
+/*}*/
+
+/*nav .brand img {*/
+    /*width: 100%;*/
+/*}*/
+
+/*nav .menu li a {*/
+    /*font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;*/
+    /*font-size: 18px;*/
+    /*display: block;*/
+    /*padding: 20px 25px;*/
+    /*text-decoration: none;*/
+    /*color: #fff;*/
+/*}*/
+
+/*nav .menu li a:hover {*/
+    /*color: ghostwhite;*/
+/*}*/
+
+
+/*!**/
+/*DROPDOWN STYLE*/
+/*=========================== *!*/
+/*nav .menu > li.dropdown  li.dropdown > a::before{*/
+    /*margin-left: 10px;*/
+    /*content: '';*/
+    /*border-top: solid 5px #6a6a6a;*/
+    /*border-left: solid 5px transparent;*/
+    /*border-right: solid 5px transparent;*/
+    /*float: right;*/
+    /*position: relative;*/
+    /*top: 8px;*/
+/*}*/
+
+/*nav .menu li.dropdown.open > a{*/
+    /*color: ghostwhite;*/
+/*}*/
+
+/*.sample-text{*/
+    /*padding: 30px;*/
+/*}*/
+/*!* =========================== *!*/
+
+
+/*nav button {*/
+    /*background: transparent;*/
+    /*border: none;*/
+    /*outline: none;*/
+/*}*/
+
+/*@media (max-width: 992px) {*/
+    /*nav .full-container,*/
+    /*nav .nav-container {*/
+        /*padding-left: 0;*/
+        /*padding-right: 0;*/
+    /*}*/
+
+    /*nav .nav-header {*/
+        /*min-height: 60px;*/
+    /*}*/
+
+    /*nav .nav-header .brand {*/
+        /*margin: 0 auto 5px;*/
+        /*float: none;*/
+    /*}*/
+
+    /*nav .nav-header .toggle-bar {*/
+        /*font-size: 18px;*/
+        /*position: absolute;*/
+        /*top: 17px;*/
+        /*left: 15px;*/
+    /*}*/
+
+    /*nav .menu li a {*/
+        /*padding: 10px 10px;*/
+        /*border-bottom: solid 1px #efefef;*/
+    /*}*/
+
+    /*nav .menu li:last-child a {*/
+        /*border-bottom: none;*/
+    /*}*/
+/*}*/
+/*!*nav end*!*/
 
 
 
