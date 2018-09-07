@@ -52,17 +52,6 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
     $('#head').html(topBar.htm);
     topBar.init();
 
-    // var topbar = $('#sui_nav').SuiNav({});
-    // var navbar = topbar.create('nav_second', {}, {});
-    // $('.MenuToggle').click(function() {
-    //     console.log("toggle");
-    //     topbar.toggle();
-    // });
-    // $('.MenuOpen').click(function() {
-    //     console.log("open");
-    //     topbar.show();
-    // });
-
     var data = null;
 
     /**
@@ -81,6 +70,7 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
         height: 200,
         data:data,
         draggable: true,
+        panelRemovingTip:"确认移除面板吗？移除后不可恢复！",
         afterOrdered: function(newOrders) {
             var item;
             var temp = [];
@@ -130,7 +120,8 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
             }
             console.log(data);
             $.zui.store.set('data', data);
-        }
+        },
+
     };
 
     $('#dashboard').dashboard(options);
@@ -194,18 +185,6 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
     var height =$(window).height() - 70;
     var layerHeight = height+'px';
 
-
-    // layer.open({
-    //     type: 2,
-    //     title: '置顶窗口',
-    //     shadeClose: true,
-    //     shade: false,
-    //     offset: 'rb',
-    //     maxmin: true, //开启最大化最小化按钮
-    //     area: ['300px', layerHeight],
-    //     content: 'stick.html',
-    //     closeBtn: 0
-    // });
 
     layx.html('stick','置顶窗口','置顶内容',{
         stickMenu:true,
