@@ -147,7 +147,6 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
                 ]
             }],
             onNodeSelected: function (event, data) {
-
             }
         })
         //初始化表格
