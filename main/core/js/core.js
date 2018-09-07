@@ -232,7 +232,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             reuseTiles: true,
             noWrap: true
         });
-        L.control.minimap(xsTileLayer2, { mapOptions: { logoControl: true }, toggleDisplay: true, minimized: true }).addTo(map);
+        L.control.minimap(xsTileLayer2, { mapOptions: { logoControl: true }, toggleDisplay: true, minimized: false }).addTo(map);
 
         /**
          * 比例尺
@@ -296,7 +296,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 title: '<i class="fa fa-history"></i>历史视图',
                 skin: 'layui-layer-lan',
                 area: ['200px', '80px'],
-                offset: ['120px', '10px'],
+                offset: ['150px', '10px'],
                 //title: false, //不显示标题
                 //.layer-open-content
                 content: $('#history'),
@@ -315,7 +315,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 title: '<i class="fa fa-calculator"></i>&nbsp测量',
                 skin: 'layui-layer-lan',
                 area: ['325px', '100px'],
-                offset: ['120px', '10px'],
+                offset: ['150px', '10px'],
                 //title: false, //不显示标题
                 //.layer-open-content
                 content: $('#measure'),
@@ -575,7 +575,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 title: '<i class="fa fa-search"></i>&nbsp查询',
                 skin: 'layui-layer-lan',
                 area: ['280px', '250px'],
-                offset: ['120px', '10px'],
+                offset: ['150px', '10px'],
                 //title: false, //不显示标题
                 //.layer-open-content
                 content: $('#query'),
@@ -817,7 +817,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 title: '<i class="fa fa-search"></i>&nbsp查询',
                 skin: 'layui-layer-lan',
                 //area: ['280px', '250px'],
-                offset: ['120px', '10px'],
+                offset: ['150px', '10px'],
                 //title: false, //不显示标题
                 //.layer-open-content
                 content: $('#layerControlContainer'),
@@ -842,7 +842,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 title: '<i class="fa fa-map-pin"></i>&nbsp坐标查看',
                 skin: 'layui-layer-lan',
                 //area: ['280px', '250px'],
-                offset: ['120px', '10px'],
+                offset: ['150px', '10px'],
                 //title: false, //不显示标题
                 //.layer-open-content
                 content: $('#coordinate'),
@@ -1267,158 +1267,212 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             });
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        /**
+         * start-对于topbar的相关操作
+         */
+        //打开图层控制器
+        $("#topbar-control").on("click", function () {
+            lay.open({
+                type: 1,
+                shade: false,
+                title: '<i class="fa fa-tasks"></i>&nbsp图层选择',
+                skin: 'layui-layer-lan',
+                //area: ['280px', '250px'],
+                offset: ['150px', '10px'],
+                //title: false, //不显示标题
+                //.layer-open-content
+                content: $('#layerControlContainer'),
+            });
+        });
+
+        //地图放大
+        $("#topbar-zoomin").on("click", function () {
+            map.zoomIn();
+        });
+
+        //地图缩小
+        $("#topbar-zoomout").on("click", function () {
+            map.zoomOut();
+        });
+
+        //地图模糊搜索
+        $("#topbar-search").on("click", function () {
+            lay.open({
+                type: 1,
+                shade: false,
+                title: '<i class="fa fa-search"></i>&nbsp查询',
+                skin: 'layui-layer-lan',
+                area: ['280px', '250px'],
+                offset: ['150px', '10px'],
+                //title: false, //不显示标题
+                //.layer-open-content
+                content: $('#query'),
+            });
+        });
+
+        //地图历史视图
+        $("#topbar-history").on("click", function () {
+            lay.open({
+                type: 1,
+                shade: false,
+                title: '<i class="fa fa-history"></i>历史视图',
+                skin: 'layui-layer-lan',
+                area: ['200px', '80px'],
+                offset: ['150px', '10px'],
+                //title: false, //不显示标题
+                //.layer-open-content
+                content: $('#history'),
+            });
+        });
 
         /**
-         *导航条初始化
+         * end-对于topbar的相关操作
          */
-        // var topbar = $('#sui_nav').SuiNav({});
-        // var navbar = topbar.create('nav_second', {}, {});
-        // $('.MenuToggle').click(function () {
-        //     console.log("toggle");
-        //     topbar.toggle();
-        // });
-        // $('.MenuOpen').click(function () {
-        //     console.log("open");
-        //     topbar.show();
-        // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        $(function () {
+            mapBarActive();
+            //样式存在问题，所以地图导航条延后加载
+            $(".map-top").css("display","block");
+        });
+
+        /**
+         *地图工具栏导航条
+         */
+        //工具条点击效果
+        function mapBarActive() {
+            $(".map-top>ul>li").click(function () {
+                $(this).addClass("active").siblings().removeClass("active");
+                $(this).find("a").addClass("active");
+                $(this).find("a").parents("li").siblings().find("a").removeClass("active");
+            })
+        }
+
         /**
          * index-panel初始化
          */
@@ -1523,56 +1577,56 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
         //使用layx作为工单和告警中心的弹窗
-        // layx.group('group-nomerge', [
-        //     {
-        //         id: 'device-info',
-        //         title: '工单管理',
-        //         content: document.getElementById('workOrder-panel'),
-        //         cloneElementContent: false,
-        //     },
-        //     {
-        //         id: 'device-current',
-        //         title: '告警信息',
-        //         content: document.getElementById('alarm-panel'),
-        //         cloneElementContent: false,
-        //     },
-        //     {
-        //         id: 'device-history',
-        //         title: '实时监测',
-        //         content: '3',
-        //         // cloneElementContent:false,
-        //         statusBar: true,
-        //         buttons: [
-        //             {
-        //                 label: '确定',
-        //                 callback: function (id, button, event) {
-        //                     layx.destroy(id);
-        //                 },
-        //                 style: 'color:#f00;font-size:16px;'
-        //             }
-        //         ]
-        //
-        //     }
-        // ], 0, {
-        //         id: 'layx-group',
-        //         position: 'lb',
-        //         minHeight: '250',
-        //         height: '250',
-        //         width: '100%',
-        //         storeStatus: 'true',
-        //
-        //         closeMenu: false,
-        //         closable: false,
-        //         shadow: true,
-        //         icon: '<i class="fa fa-tasks"></i>',
-        //
-        //         // 加载事件
-        //         onload: {
-        //             after: function (layxWindow, winform) {
-        //                 layx.min('layx-group');
-        //             }
-        //         },
-        //     });
+        layx.group('group-nomerge', [
+            {
+                id: 'device-info',
+                title: '工单管理',
+                content: document.getElementById('workOrder-panel'),
+                cloneElementContent: false,
+            },
+            {
+                id: 'device-current',
+                title: '告警信息',
+                content: document.getElementById('alarm-panel'),
+                cloneElementContent: false,
+            },
+            {
+                id: 'device-history',
+                title: '实时监测',
+                content: '3',
+                // cloneElementContent:false,
+                statusBar: true,
+                buttons: [
+                    {
+                        label: '确定',
+                        callback: function (id, button, event) {
+                            layx.destroy(id);
+                        },
+                        style: 'color:#f00;font-size:16px;'
+                    }
+                ]
+
+            }
+        ], 0, {
+                id: 'alarm-order-group',
+                position: 'lb',
+                minHeight: '250',
+                height: '250',
+                width: '100%',
+                storeStatus: 'true',
+                closeMenu: false,
+                closable: false,
+                shadow: true,
+                icon: '<i class="fa fa-tasks"></i>',
+                event:{
+                    onload: {
+                        before: function (layxWindow, winform) {
+                            layx.min('alarm-order-group');
+                        }
+                    },
+                }
+
+            });
 
 
 

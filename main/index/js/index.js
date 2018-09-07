@@ -24,7 +24,10 @@ require.config({
         'boards':{
             deps:['jquery','zui','bootstrap'],
             export:'boards'
-        }
+        },
+        'layx': {
+            exports: 'layx'
+        },
     },
 
     paths:{
@@ -37,13 +40,14 @@ require.config({
         "dashboard":"../../common/lib/zui/lib/dashboard/zui.dashboard",
         "boards":"../../common/lib/zui/lib/board/zui.board.min",
         "Mock":"../../common/lib/mock/mock",
-        "topBar":"../../../common/component/head/js/topbar"
+        "topBar":"../../../common/component/head/js/topbar",
+        "layx": "../../common/lib/layx/layx",
 
     }
 
 });
 
-require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards','Mock','topBar'],function ($,bootstrap,sui,common,lay,zui,dashboard,boards,Mock,topBar) {
+require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards','Mock','topBar', 'layx'],function ($,bootstrap,sui,common,lay,zui,dashboard,boards,Mock,topBar,layx) {
 
     $('#head').html(topBar.htm);
     topBar.init();
@@ -191,16 +195,38 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
     var layerHeight = height+'px';
 
 
-    layer.open({
-        type: 2,
-        title: '置顶窗口',
-        shadeClose: true,
-        shade: false,
-        offset: 'rb',
-        maxmin: true, //开启最大化最小化按钮
-        area: ['300px', layerHeight],
-        content: 'stick.html'
+    // layer.open({
+    //     type: 2,
+    //     title: '置顶窗口',
+    //     shadeClose: true,
+    //     shade: false,
+    //     offset: 'rb',
+    //     maxmin: true, //开启最大化最小化按钮
+    //     area: ['300px', layerHeight],
+    //     content: 'stick.html',
+    //     closeBtn: 0
+    // });
+
+    layx.html('stick','置顶窗口','置顶内容',{
+        stickMenu:true,
+        closeMenu:false,
+        storeStatus:false,
+        position:'lb',
+        width:'400',
+        height:'90%',
+        event:{
+            onload:{
+                before:function(layxWindow,winform){
+                    layx.min('stick');
+                    console.log(winform.layxWindowId);
+                },
+            }
+        }
+
     });
+    //
+
+
 
 
     $(function () {
@@ -214,6 +240,8 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
         $("#open-environment").on("click",function () {
             window.location.href = common.openurl+"/monitor/environment/views/environment.html";
         });
+
+
 
 
     })

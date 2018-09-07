@@ -35,11 +35,31 @@
     <div id="head"></div>
 
     <main class="map-container">
+
+        <!--顶部地图按钮栏-->
+        <div class="map-top">
+            <ul>
+                <li><i class="fa fa-tasks margin-right-5"></i><a href="javascript:void (0)" id="topbar-control" class="active">图层选择</a></li>
+                <li><i class="fa fa-plus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomin">放大</a> </li>
+                <li><i class="fa fa-minus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomout">缩小</a> </li>
+                <li><i class="fa fa-history margin-right-5"></i><a href="javascript:void (0)" id="topbar-history">历史视图</a> </li>
+                <li><i class="fa fa-search margin-right-5"></i><a href="javascript:void (0)" id="topbar-search">搜索</a> </li>
+                <li class="dropdown"><i class="fa fa-cogs margin-right-5"></i><a href="javascript:void (0)" id="topbar-setting" data-toggle="dropdown">设置</a>
+                    <ul class="dropdown-menu dropdown-menu-right topbar-setting" aria-labelledby="topbar-setting">
+                        <li><a href="#">设置1</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">设置2</a></li>
+                    </ul>
+                </li>
+                <li><i class="fa fa-window-maximize margin-right-5"></i><a href="javascript:void (0)"  id="topbar-fullscreen">全屏</a> </li>
+            </ul>
+        </div>
+
+        <!--地图主视图-->
         <section class="map" id="map"></section>
 
-        <section class="img-map" id="img-map">
-            <!-- <img src="../asset/img/indoor.jpg" alt=""> -->
-        </section>
+        <!--内部结构图视图-->
+        <section class="img-map" id="img-map"></section>
 
 
         <!--置顶在地图上的按钮组-->
