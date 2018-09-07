@@ -211,13 +211,13 @@ require(['jquery','bootstrap','sui','common','layer','zui','dashboard','boards',
     $(function () {
 
         $("#open-panel").on("click",function () {
-            window.location.href = common.openurl+"/test-panel/view/panel.html";
+            window.location.href = common.openurl+"/main/test-panel/view/panel.html";
         });
         $("#open-map").on("click",function () {
-            window.location.href = common.openurl+"/core/view/core.html";
+            window.location.href = common.openurl+"/main/core/view/core.html";
         });
         $("#open-environment").on("click",function () {
-            window.location.href = common.openurl+"/monitor/environment/views/environment.html";
+            window.location.href = common.openurl+"/main/monitor/environment/views/environment.html";
         });
 
 

@@ -166,6 +166,11 @@
     margin-right: 5px;
 }
 
+.topbar-dropdown-width{
+    min-width: 60px!important;
+
+}
+
 
 /*end-地图按钮栏的相关样式*/
 

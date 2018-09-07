@@ -305,86 +305,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
         /**
-         * 测量工具相关
-         */
-        //打开测量窗口
-        $("#measure-open").on("click", function () {
-            lay.open({
-                type: 1,
-                shade: false,
-                title: '<i class="fa fa-calculator"></i>&nbsp测量',
-                skin: 'layui-layer-lan',
-                area: ['325px', '100px'],
-                offset: ['150px', '10px'],
-                //title: false, //不显示标题
-                //.layer-open-content
-                content: $('#measure'),
-            });
-        });
-        //距离测量
-        $("#measure-length").on("click", function () {
-            //用之前先清空一下图层，重新加载一下
-            drawGroup.clearLayers();
-            drawGroup.remove();
-            drawGroup.addTo(map);
-
-            //设置画线变量
-            var lineDrawer = new L.Draw.Polyline(map);
-            lineDrawer.enable();
-            map.on('draw:created',
-                function (e) {
-                    var type = e.layerType,
-                        layer = e.layer;
-                    if (type === 'polyline') {
-                        var res = gisutil.distance(layer.getLatLngs());
-                        //layer.alert(res)
-                        lay.msg('距离是：' + res + '公里');
-                    }
-                    drawGroup.addLayer(layer);
-                    //释放内存
-                    lineDrawer = null;
-                });
-        });
-        //距离测量
-        $("#measure-area").on("click", function () {
-            //用之前先清空一下图层，重新加载一下
-            drawGroup.clearLayers();
-            drawGroup.remove();
-            drawGroup.addTo(map);
-
-            //设置画线变量
-            var drawer = new L.Draw.Rectangle(map);
-            drawer.enable();
-
-            map.on('draw:created',
-                function (e) {
-                    var type = e.layerType,
-                        layer = e.layer;
-                    if (type === 'rectangle') {
-                        var res = gisutil.area(layer.getLatLngs());
-                        //layer.alert(res)
-                        lay.msg('面积是：' + res + '平方米');
-                    }
-                    drawGroup.addLayer(layer);
-                });
-            //释放内存
-            drawer = null;
-        });
-        //测量工具图层清除
-        $("#measure-clear").on("click", function () {
-            removeDrawGroup();
-        });
-
-        /**
-         * 打印工具相关
-         */
-
-        $("#print-open").on("click", function () {
-            //调用jquery工具实现打印机打印
-            $("#map").print(/*options*/);
-        });
-
-        /**
          * 设备点相关
          */
         //点测试图层
@@ -582,8 +502,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             });
         });
         //精确模糊查询容器更改
-        var query = document.getElementById('queryControl');
-        query.appendChild(queryControl.getContainer());
+        // var query = document.getElementById('queryControl');
+        // query.appendChild(queryControl.getContainer());
 
         //范围查询
         $("#open-query-range").on("click", function () {
@@ -1321,6 +1241,71 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 content: $('#history'),
             });
         });
+
+        //距离测量
+        $("#topbar-measure-length").on("click",function () {
+            //用之前先清空一下图层，重新加载一下
+            drawGroup.clearLayers();
+            drawGroup.remove();
+            drawGroup.addTo(map);
+
+            //设置画线变量
+            var lineDrawer = new L.Draw.Polyline(map);
+            lineDrawer.enable();
+            map.on('draw:created',
+                function (e) {
+                    var type = e.layerType,
+                        layer = e.layer;
+                    if (type === 'polyline') {
+                        var res = gisutil.distance(layer.getLatLngs());
+                        //layer.alert(res)
+                        lay.msg('距离是：' + res + '公里');
+                    }
+                    drawGroup.addLayer(layer);
+                    //释放内存
+                    lineDrawer = null;
+                });
+        });
+
+        //面积测量
+        $("#topbar-measure-area").on("click",function () {
+            //用之前先清空一下图层，重新加载一下
+            drawGroup.clearLayers();
+            drawGroup.remove();
+            drawGroup.addTo(map);
+
+            //设置画线变量
+            var drawer = new L.Draw.Rectangle(map);
+            drawer.enable();
+
+            map.on('draw:created',
+                function (e) {
+                    var type = e.layerType,
+                        layer = e.layer;
+                    if (type === 'rectangle') {
+                        var res = gisutil.area(layer.getLatLngs());
+                        //layer.alert(res)
+                        lay.msg('面积是：' + res + '平方米');
+                    }
+                    drawGroup.addLayer(layer);
+                });
+            //释放内存
+            drawer = null;
+        });
+
+        //测量工具图层清除
+        $("#topbar-measure-clear").on("click", function () {
+            removeDrawGroup();
+        });
+
+
+        //打印工具
+        $("#topbar-print").on("click", function () {
+            //调用jquery工具实现打印机打印
+            $("#map").print(/*options*/);
+        });
+
+
 
         /**
          * end-对于topbar的相关操作

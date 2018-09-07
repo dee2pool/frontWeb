@@ -39,11 +39,18 @@
         <!--顶部地图按钮栏-->
         <div class="map-top">
             <ul>
-                <li><i class="fa fa-tasks margin-right-5"></i><a href="javascript:void (0)" id="topbar-control" class="active">图层选择</a></li>
+                <li><i class="fa fa-reorder margin-right-5"></i><a href="javascript:void (0)" id="topbar-control" class="active">图层选择</a></li>
                 <li><i class="fa fa-plus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomin">放大</a> </li>
                 <li><i class="fa fa-minus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomout">缩小</a> </li>
                 <li><i class="fa fa-history margin-right-5"></i><a href="javascript:void (0)" id="topbar-history">历史视图</a> </li>
                 <li><i class="fa fa-search margin-right-5"></i><a href="javascript:void (0)" id="topbar-search">搜索</a> </li>
+                <li class="dropdown"><i class="fa fa-calculator margin-right-5"></i><a href="javascript:void (0)" id="topbar-measure" data-toggle="dropdown">测量</a>
+                    <ul class="dropdown-menu dropdown-menu-right topbar-dropdown-width" aria-labelledby="topbar-measure">
+                        <li><a href="javascript:void (0)" id="topbar-measure-length"><i class="fa fa-line-chart margin-right-5"></i>距离测量</a></li>
+                        <li><a href="javascript:void (0)" id="topbar-measure-area"><i class="fa fa-area-chart margin-right-5"></i>面积测量</a></li>
+                        <li><a href="javascript:void (0)" id="topbar-measure-clear"><i class="fa fa-trash margin-right-5"></i>清理</a></li>
+                    </ul>
+                </li>
                 <li class="dropdown"><i class="fa fa-cogs margin-right-5"></i><a href="javascript:void (0)" id="topbar-setting" data-toggle="dropdown">设置</a>
                     <ul class="dropdown-menu dropdown-menu-right topbar-setting" aria-labelledby="topbar-setting">
                         <li><a href="#">设置1</a></li>
@@ -51,7 +58,7 @@
                         <li><a href="#">设置2</a></li>
                     </ul>
                 </li>
-                <li><i class="fa fa-window-maximize margin-right-5"></i><a href="javascript:void (0)"  id="topbar-fullscreen">全屏</a> </li>
+                <li><i class="fa fa-print margin-right-5"></i><a href="javascript:void(0)"  id="topbar-print">打印</a></li>
             </ul>
         </div>
 
@@ -63,64 +70,63 @@
 
 
         <!--置顶在地图上的按钮组-->
-        <section class="map-container-btngroup">
-            <div class="btn-group" role="group" aria-label="...">
+        <!--<section class="map-container-btngroup">-->
+            <!--<div class="btn-group" role="group" aria-label="...">-->
 
-                <button type="button" class="btn btn-default" id="layer-open"><i class="fa fa-tasks"></i>&nbsp;图层</button>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-cubes"></i>&nbsp;工具
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right ">
-                        <li><a href="void:javascript:void(0);" id="history-open"><i class="fa fa-history"></i>&nbsp;&nbsp;历史视图</a></li>
-                        <li><a href="void:javascript:void(0);" id="measure-open"><i class="fa fa-calculator"></i>&nbsp;&nbsp;测量</a></li>
-                        <li><a href="void:javascript:void(0);" id="print-open"><i class="fa fa-print"></i>&nbsp;&nbsp;打印</a></li>
-                        <!--<li><a href="void:javascript:void(0);" id="query-open"><i class="fa fa-search"></i>&nbsp;查询</a></li>-->
-                        <li class="dropdown-submenu">
-                            <a tabindex="-1" href="#"><i class="fa fa-search"></i>&nbsp;&nbsp;查询<i class="fa fa-chevron-right pull-right"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a tabindex="-1" href="void:javascript:void(0);" id="query-open">精确查询</a></li>
-                                <li><a href="void:javascript:void(0);" id="open-query-range">范围查询</a></li>
-                                <li><a href="void:javascript:void(0);" id="open-query-buf">缓冲区查询</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="void:javascript:void(0);" id="coor-open"><i class="fa fa-map-pin"></i>&nbsp;&nbsp;坐标查看</a></li>
-                        <!-- 测试工具 -->
-                        <li class="dropdown-submenu">
-                            <a tabindex="-1" href="#"><i class="fa fa-television"></i>&nbsp;&nbsp;测试工具<i class="fa fa-chevron-right pull-right"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a tabindex="-1" href="void:javascript:void(0);" id="test-image">显示图片</a></li>
-                                <li><a href="void:javascript:void(0);" id="test-map">返回地图</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    </li> <!-- .dropdown -->
-                    </ul>
-                </div>
-                <div class="btn-group" role="group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa fa-globe"></i>模块
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu dropdown-menu-right ">
-                        <li class="dropdown-submenu">
-                            <a tabindex="-1" href="#"><i class="fa fa-search"></i>设备管理<i class="fa fa-chevron-right pull-right"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a tabindex="-1" href="void:javascript:void(0);">设备详情</a></li>
-                                <li><a tabindex="-1" href="void:javascript:void(0);" id="add-device">设备添加</a></li>
-                                <li><a tabindex="-1" href="void:javascript:void(0);" id="add-test">设备测试</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="void:javascript:void(0);"><i class="fa fa-history"></i>&nbsp;&nbsp;历史视图</a></li>
-                    </ul>
-                    </li> <!-- .dropdown -->
-                    </ul>
-                </div>
-            </div>
-        </section>
+                <!--<button type="button" class="btn btn-default" id="layer-open"><i class="fa fa-tasks"></i>&nbsp;图层</button>-->
+                <!--<div class="btn-group" role="group">-->
+                    <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                        <!--<i class="fa fa-cubes"></i>&nbsp;工具-->
+                        <!--<span class="caret"></span>-->
+                    <!--</button>-->
+                    <!--<ul class="dropdown-menu dropdown-menu-right ">-->
+                        <!--<li><a href="void:javascript:void(0);" id="history-open"><i class="fa fa-history"></i>&nbsp;&nbsp;历史视图</a></li>-->
+                        <!--<li><a href="void:javascript:void(0);" id="measure-open"><i class="fa fa-calculator"></i>&nbsp;&nbsp;测量</a></li>-->
+                        <!--<li><a href="void:javascript:void(0);" id="print-open"><i class="fa fa-print"></i>&nbsp;&nbsp;打印</a></li>-->
+                        <!--&lt;!&ndash;<li><a href="void:javascript:void(0);" id="query-open"><i class="fa fa-search"></i>&nbsp;查询</a></li>&ndash;&gt;-->
+                        <!--<li class="dropdown-submenu">-->
+                            <!--<a tabindex="-1" href="#"><i class="fa fa-search"></i>&nbsp;&nbsp;查询<i class="fa fa-chevron-right pull-right"></i></a>-->
+                            <!--<ul class="dropdown-menu">-->
+                                <!--<li><a tabindex="-1" href="void:javascript:void(0);" id="query-open">精确查询</a></li>-->
+                                <!--<li><a href="void:javascript:void(0);" id="open-query-range">范围查询</a></li>-->
+                                <!--<li><a href="void:javascript:void(0);" id="open-query-buf">缓冲区查询</a></li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                        <!--<li><a href="void:javascript:void(0);" id="coor-open"><i class="fa fa-map-pin"></i>&nbsp;&nbsp;坐标查看</a></li>-->
+                        <!--&lt;!&ndash; 测试工具 &ndash;&gt;-->
+                        <!--<li class="dropdown-submenu">-->
+                            <!--<a tabindex="-1" href="#"><i class="fa fa-television"></i>&nbsp;&nbsp;测试工具<i class="fa fa-chevron-right pull-right"></i></a>-->
+                            <!--<ul class="dropdown-menu">-->
+                                <!--<li><a tabindex="-1" href="void:javascript:void(0);" id="test-image">显示图片</a></li>-->
+                                <!--<li><a href="void:javascript:void(0);" id="test-map">返回地图</a></li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                    <!--</ul>-->
+                    <!--</li> &lt;!&ndash; .dropdown &ndash;&gt;-->
+                    <!--</ul>-->
+                <!--</div>-->
+                <!--<div class="btn-group" role="group">-->
+                    <!--<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                        <!--<i class="fa fa-globe"></i>模块-->
+                        <!--<span class="caret"></span>-->
+                    <!--</button>-->
+                    <!--<ul class="dropdown-menu dropdown-menu-right ">-->
+                        <!--<li class="dropdown-submenu">-->
+                            <!--<a tabindex="-1" href="#"><i class="fa fa-search"></i>设备管理<i class="fa fa-chevron-right pull-right"></i></a>-->
+                            <!--<ul class="dropdown-menu">-->
+                                <!--<li><a tabindex="-1" href="void:javascript:void(0);">设备详情</a></li>-->
+                                <!--<li><a tabindex="-1" href="void:javascript:void(0);" id="add-device">设备添加</a></li>-->
+                                <!--<li><a tabindex="-1" href="void:javascript:void(0);" id="add-test">设备测试</a></li>-->
+                            <!--</ul>-->
+                        <!--</li>-->
+                        <!--<li><a href="void:javascript:void(0);"><i class="fa fa-history"></i>&nbsp;&nbsp;历史视图</a></li>-->
+                    <!--</ul>-->
+                    <!--</li> &lt;!&ndash; .dropdown &ndash;&gt;-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</section>-->
 
-        <!--<aside class="side"></aside>-->
     </main>
 </body>
 <!--历史视图容器-->
