@@ -198,9 +198,9 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 return;
             }else{
                 //样式修改
-                $(".feature-center").css('height','60%');
-                $(".feature-foot").css('display','inline-block');
-                console.log(treeNode);
+                //隐藏和显示的设置
+                $(".showTreeData").css("display","none");
+                $(".editTreeData").css("display","block");
                 $("#feature-name").val(treeNode.name);
                 $("#feature-coors").val(treeNode.coors);
                 // $("#upload-img").val("");
@@ -231,21 +231,24 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 nodes = zTree.getSelectedNodes(),
                 treeNode = nodes[0];
 
+            //隐藏和显示的设置
+            $(".showTreeData").css("display","block");
+            $(".editTreeData").css("display","none");
+
             //图层的清除操作
             clickGroup.clearLayers();
             clickGroup.remove();
             clickGroup.addTo(map);
 
+            console.log(treeNode);
+            $("#name").html(treeNode.name);
+
             //点要素
             if(treeNode.category === 'feature-point'){
                 //当坐标存在时，才向地图上加点
                 //$.zui.store.get('coors');
-                var coors = $.zui.store.get(treeNode.id + 'coors');
+                var coors =  treeNode.coors;
                 if(coors != undefined){
-                    // if(clickTreePoint != null){
-                    //     map.removeLayer(clickTreePoint);
-                    //     clickTreePoint = null;
-                    // }
                     var layer = L.marker(coors).addTo(map);
                     clickGroup.addLayer(layer);
                     map.panTo(coors);
@@ -283,6 +286,7 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
         var imageoverlay = null;//面要素叠加的临时变量
         $("#setPosition").on("click",function () {
             var category = $('#feature-level1 option:selected').val();
+
 
             //如果没有上传图片，需要进行提示的操作
 
@@ -460,8 +464,10 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
 
             //样式恢复
-            $(".feature-center").css('height','100%');
-            $(".feature-foot").css('display','none');
+            // $(".feature-center").css('height','100%');
+            // $(".feature-foot").css('display','none');
+            $("#add-building-btn").css("display","none");
+
             alert('关联成功！');
 
             $("#upload-img").val("");
@@ -501,18 +507,77 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                     {id: 'csxian', pId: 'changsha', name: "长沙县",coors:null,img:null,category:null},
                     {id: 'kaifu', pId: 'changsha', name: "开福区",coors:null,img:null,category:null},
                     {id: 'tianxin', pId: 'changsha', name: "天心区",coors:null,img:null,category:null},
-                    // {id: 'hngd', pId: 'csxian', name: "华南光电",coors:[28.25219321,113.08259818],img:null,category:'feature-point'},
-                    // {id: 'fhc', pId: 'csxian', name: "凤凰城",coors:[28.25380815,113.08434188],img:null,category:'feature-point'},
-                    // {id: 'wxh', pId: 'csxian', name: "万象汇",coors:[28.25433718,113.08051083],img:null,category:'feature-point'},
-                    {id: 'hngd', pId: 'csxian', name: "华南光电",coors:null,img:null,category:'feature-point'},
-                    {id: 'fhc', pId: 'csxian', name: "凤凰城",coors:null,img:null,category:'feature-point'},
-                    {id: 'wxh', pId: 'csxian', name: "万象汇",coors:null,img:null,category:'feature-point'},
+                    {id: 'hngd', pId: 'csxian', name: "华南光电",coors:[28.25219321,113.08259818],img:null,category:'feature-point'},
+                    {id: 'fhc', pId: 'csxian', name: "凤凰城",coors:[28.25380815,113.08434188],img:null,category:'feature-point'},
+                    {id: 'wxh', pId: 'csxian', name: "万象汇",coors:[28.25433718,113.08051083],img:null,category:'feature-point'},
                 ];
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             $("#addParent").bind("click", {isParent: true}, add);
             $("#edit").bind("click", edit);
             $("#remove").bind("click", remove);
-            console.log($.zui.store.get('test'));
+
+            $("#feature-level1").bind("change",function (obj) {
+                //目标value，根据不同的目标value，显示不同的子分类
+                console.log(obj.target.value)
+
+                //点要素的二级联动
+                if(obj.target.value === 'feature-point'){
+                    $("#add-building-btn").css("display","block");
+                    //清空option
+                    $("#feature-level2").find("option").remove();
+                    var dataList = [
+                        "请选择","建筑", "摄像头", "传感器"
+                    ];
+                    for (var i = 0; i < dataList.length; i++) {
+                        //先创建好select里面的option元素
+                        var option = document.createElement("option");
+                        //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                        $(option).val(dataList[i]);
+                        //给option的text赋值,这就是你点开下拉框能够看到的东西
+                        $(option).text(dataList[i]);
+                        //获取select 下拉框对象,并将option添加进select
+                        $('#feature-level2').append(option);
+                    }
+                }
+
+                if(obj.target.value === 'feature-line'){
+                    $("#add-building-btn").css("display","none");
+                    //清空option
+                    $("#feature-level2").find("option").remove();
+                    var dataList = [
+                        "请选择","铁路", "国道", "高速公路"
+                    ];
+                    for (var i = 0; i < dataList.length; i++) {
+                        //先创建好select里面的option元素
+                        var option = document.createElement("option");
+                        //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                        $(option).val(dataList[i]);
+                        //给option的text赋值,这就是你点开下拉框能够看到的东西
+                        $(option).text(dataList[i]);
+                        //获取select 下拉框对象,并将option添加进select
+                        $('#feature-level2').append(option);
+                    }
+                }
+
+                if(obj.target.value === 'feature-polygon'){
+                    $("#add-building-btn").css("display","none");
+                    //清空option
+                    $("#feature-level2").find("option").remove();
+                    var dataList = [
+                        "请选择","区域地图", "工厂地图", "房间地图"
+                    ];
+                    for (var i = 0; i < dataList.length; i++) {
+                        //先创建好select里面的option元素
+                        var option = document.createElement("option");
+                        //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
+                        $(option).val(dataList[i]);
+                        //给option的text赋值,这就是你点开下拉框能够看到的东西
+                        $(option).text(dataList[i]);
+                        //获取select 下拉框对象,并将option添加进select
+                        $('#feature-level2').append(option);
+                    }
+                }
+            });
         });
 
 
