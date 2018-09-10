@@ -205,4 +205,9 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             layx.html('str','字符串文本','Hello Layx!');
         })
 
+        // //change事件测试
+        // $("#testSelect").bind("change",function (obj) {
+        //     console.log(obj.target.value)
+        // });
+
     });
