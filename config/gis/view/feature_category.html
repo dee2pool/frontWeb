@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>要素分类</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+
+    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+
+    <!--本页-->
+    <link rel="stylesheet" href="../css/feature.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/lib/draw/Leaflet.Draw.css">
+
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/feature_category"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content feature">
+            <div class="feature-center feature-border">
+                <div class="left feature-border">
+                    <div class="tree-head">
+                        <a id="addParent" href="#" title="增加父节点" onclick="return false;"><i class="fa fa-plus-circle"></i>增加</a>
+                        <a id="edit" href="#" title="编辑名称" onclick="return false;"><i class="fa fa-edit"></i>位置关联</a>
+                        <a id="remove" href="#" title="删除节点" onclick="return false;"><i class="fa fa-remove"></i>
+                            删除节点</a>
+                    </div>
+                    <ul id="treeDemo" class="ztree"></ul>
+                </div>
+                <div class="right" id="map">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+</script>
+</body>
+</html>

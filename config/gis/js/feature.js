@@ -76,30 +76,6 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
         //全局通用变量，用于所有的绘图图层
         var drawGroup = new L.FeatureGroup();
 
-        //用localStorage进行相应的位置信息的处理
-        //localStorage.setItem('myCat', 'Tom');
-        //console.log(localStorage.getItem('myCat'))
-
-        // var level1 = ["请选择","点类型", "线类型", "面类型"];
-        // var level2 = ["请选择","建筑","设备", "道路","轨迹", "房间结构","区域地图"];
-
-        // $(function () {
-        //     var f1 = document.getElementById('feature-level1');
-        //     f1.length = level1.length;
-        //     for (var i = 0; i < level1.length; i++) {
-        //         f1.options[i].text = level1[i];
-        //         f1.options[i].value = level1[i];
-        //     };
-        //
-        //     var f2 = document.getElementById('feature-level2');
-        //     f2.length = level2.length;
-        //     for (var j = 0; j < level2.length; j++) {
-        //         f2.options[j].text = level2[j];
-        //         f2.options[j].value = level2[j];
-        //     };
-        // });
-
-
         //地图的加载
         var host = "http://192.168.0.142:8060"
         /**
@@ -125,32 +101,6 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
          * 树的加载
          */
 
-        //ztree
-        //localStorage.setItem('myCat', 'Tom');
-        //console.log(localStorage.getItem('myCat'))
-        // var zNodes = $.zui.store.get('zNodes');
-        // console.log(zNodes);
-        // if(zNodes === undefined){
-        //     zNodes = [
-        //         {id: 'china', pId: 0, name: "中国", open: true,coors:null,img:null},
-        //         {id: 'hunan', pId: 'china', name: "湖南",coors:null,img:null},
-        //         {id: 'changsha', pId: 'hunan', name: "长沙市",coors:null,img:null},
-        //         {id: 'changde', pId: 'hunan', name: "常德市",coors:null,img:null},
-        //         {id: 'xiangtan', pId: 'hunan', name: "湘潭市",coors:null,img:null},
-        //         {id: 'csxian', pId: 'changsha', name: "长沙县",coors:null,img:null},
-        //         {id: 'kaifu', pId: 'changsha', name: "开福区",coors:null,img:null},
-        //         {id: 'tianxin', pId: 'changsha', name: "天心区",coors:null,img:null},
-        //         {id: 'hngd', pId: 'csxian', name: "华南光电",coors:[28.25219321,113.08259818],img:null},
-        //         {id: 'fhc', pId: 'csxian', name: "凤凰城",coors:[28.25380815,113.08434188],img:null},
-        //         {id: 'wxh', pId: 'csxian', name: "万象汇",coors:[28.25433718,113.08051083],img:null},
-        //
-        //     ];
-        //     $.zui.store.set('zNodes', zNodes);
-        // }
-        // else
-        // {
-        //     console.log(zNodes);
-        // }
         var setting = {
             view: {
                 selectedMulti: false

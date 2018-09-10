@@ -4,6 +4,7 @@
     height: calc(100vh - 70px);
 }
 
+/*阴影边框*/
 .feature-border{
     -webkit-border-radius: 2px;
     border-radius: 2px;
@@ -15,21 +16,47 @@
 .feature-center{
     height: 100%;
     width: 100%;
+    padding-top: 20px;
+    overflow-y: auto;
 }
 
 .left{
-    height: 100%;
+    height: 800px;
     width: 20%;
     display: inline-block;
 }
 .right{
-    height: 100%;
+    height: 800px;
     width: 80%;
     float: right;
     display: inline-block;
 }
 
+.right-content{
+    width: 100%;
+    height: 100%;
+    /*background-color: grey;*/
+    display: none;
+}
 
+/*tab层内部的padding*/
+.featureTabContent{
+    padding-top: 15px;
+}
+
+.big-title{
+    color: darkgray;
+}
+
+.little-title{
+    text-align: right;
+    line-height: 33px;
+    font-size: 20px
+}
+
+.form-control{
+    margin-bottom: 25px;
+}
 
 .tree-head{
     border-bottom: grey solid 1px;
@@ -57,20 +84,18 @@
     text-decoration: underline;
 }
 
-.featureTabContent{
-    padding-top: 15px;
+
+a:hover {
+    color: #23527c;
+    text-decoration: underline;
 }
 
-
-
-.feature-foot{
-    display:none;
-    position: relative;
-    margin-top: 10px;
-    height: calc(40% - 10px);
-    width: 100%;
-    padding:15px;
-    overflow:auto;
+a:active {
+    color: #23527c;
+    text-decoration: underline;
 }
 
-
+a:focus{
+    color: black!important;
+    text-decoration: underline;
+}
