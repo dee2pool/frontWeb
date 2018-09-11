@@ -69,6 +69,11 @@
     padding-top: 3px;
     height: 100%;
 }
+.opera-group{
+    display: inline-block;
+    font-size: 18px;
+    word-spacing: 8px;
+}
 /*弹出层*/
 .tab-footer{
     background-color: lightgrey;

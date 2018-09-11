@@ -88,28 +88,6 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
 
             }
         })
-        //区域树
-        $('#areatree').treeview({
-            showBorder: false,
-            showCheckbox:true,
-            data: [{
-                text: '测试区域1',
-                nodes: [
-                    {
-                        text: '测试区域11'
-                    }, {
-                        text: '测试区域12'
-                    }, {
-                        text: '测试区域13'
-                    }, {
-                        text: '测试区域14'
-                    }
-                ]
-            }],
-            onNodeSelected: function (event, data) {
-
-            }
-        })
         //中心树
         $('#centertree').treeview({
             showBorder: false,

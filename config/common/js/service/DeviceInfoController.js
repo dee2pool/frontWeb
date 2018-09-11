@@ -122,6 +122,7 @@ define(['common'],function DeviceInfoController(common) {
             url:temp,
             type:"get",
             cache:false,
+            async:false,
             data:{
                 page:pageStr,
                 ip:ip,

@@ -36,21 +36,21 @@
 </div>
 <!--添加角色弹窗-->
 <form id="add_role" class="form-horizontal" style="display: none">
-    <div class="form-group" style="margin: 15px 0px">
+    <div class="form-item form-group-sm">
         <label class="control-label col-sm-4"><i class="required">*</i>角色名称</label>
         <div class="col-sm-7">
             <input name="name" type="text" class="form-control">
         </div>
     </div>
-    <div class="form-group" style="margin: 15px 0px">
+    <div class="form-item form-group-sm">
         <label class="control-label col-sm-4"><i class="required">*</i>角色描述</label>
         <div class="col-sm-7">
             <input name="remark" type="text" class="form-control">
         </div>
     </div>
-    <div class="form-group" style="padding-left: 120px;margin: 15px 0px">
-        <button name="doAdd" type="submit" class="btn btn-danger" style="margin-right: 30px">提交</button>
-        <button name="doCancel" type="button" class="btn btn-default">取消</button>
+    <div class="tab-footer">
+        <button type="submit" class="btn btn-danger">完成</button>
+        <button type="button" class="btn btn-default btn-cancel">取消</button>
     </div>
 </form>
 <!--修改角色弹窗-->
@@ -76,27 +76,27 @@
 <div id="auth_config" style="display: none;">
     <ul class="nav nav-tabs">
         <li class="active">
-            <a href="#tab-menu" data-toggle="tab">
+            <a href="#tab-menu" style="color: black" data-toggle="tab">
                 菜单权限
             </a>
         </li>
         <li>
-            <a href="#tab-res" data-toggle="tab">
+            <a href="#tab-res" style="color: black" data-toggle="tab">
                 资源权限
             </a>
         </li>
         <li>
-            <a href="#tab-center" data-toggle="tab">
+            <a href="#tab-center" style="color: black" data-toggle="tab">
                 中心权限
             </a>
         </li>
         <li>
-            <a href="#tab-dept" data-toggle="tab">
+            <a href="#tab-dept" style="color: black" data-toggle="tab">
                 部门权限
             </a>
         </li>
         <li>
-            <a href="#tab-sys" data-toggle="tab">
+            <a href="#tab-sys" style="color: black" data-toggle="tab">
                 子系统功能
             </a>
         </li>
@@ -187,56 +187,6 @@
         </div>
     </div>
 </div>
-<!--添加菜单弹窗-->
-<form id="addMpanel" class="form-horizontal" style="display: none">
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4"><i class="required">*</i>菜单名称</label>
-        <div class="col-sm-7">
-            <input name="Menuname" type="text" class="form-control">
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4"><i class="required">*</i>上级菜单</label>
-        <div class="col-sm-7">
-            <select name="MenuparentId" class="form-control">
-                <option value="-1">无</option>
-                <option value="b5237a7380fb45e98f7c03b31c3855f0">用户管理</option>
-                <option value="66849c6eb94f4a7a90577805e439ad25">测试菜单1</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4">页面路径</label>
-        <div class="col-sm-7">
-            <input name="Menuurl" type="text" class="form-control">
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4"><i class="required">*</i>菜单展示序号</label>
-        <div class="col-sm-7">
-            <input name="MenuorderNo" type="text" class="form-control">
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4">菜单图标</label>
-        <div class="col-md-3">
-            <div class="menuIcon" style="width: 55px;height: 55px;border: 1px solid lightgray;text-align: center;vertical-align: center;padding-top: 8px">
-                <i class="fa fa-user-o fa-2x"></i>
-                <a onclick="editIcon()" href="javascript:;" style="display: block;font-size: 12px;background-color: lightgray">修改图标</a>
-            </div>
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4">备注</label>
-        <div class="col-sm-7">
-            <textarea name="Menuremark" class="form-control"></textarea>
-        </div>
-    </div>
-    <div class="form-group" style="padding-left: 120px;margin: 15px 0px">
-        <button id="doAdd" type="submit" class="btn btn-danger" style="margin-right: 30px">提交</button>
-        <button id="doCancel" type="button" class="btn btn-default">取消</button>
-    </div>
-</form>
 <!--修改菜单弹窗-->
 <form id="editMpanel" class="form-horizontal" style="display: none">
     <div class="form-group form-group-sm" style="margin: 15px 0px">
