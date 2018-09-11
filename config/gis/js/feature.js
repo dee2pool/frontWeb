@@ -338,7 +338,8 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                         var type = e.layerType,
                             drawlayer = e.layer;
                         drawGroup.addLayer(drawlayer);
-                        console.log(drawlayer);
+                        console.log(drawlayer._map);
+                        $("#feature-zoom").val(drawlayer._map._zoom);
                         $("#feature-coors").val(drawlayer._latlng);
                     }
                 );
@@ -499,6 +500,9 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             drawGroup.remove();
         });
 
+        /**
+         * 楼层操作相关
+         */
         //楼层点击按钮事件
         $("#add-building").on("click",function () {
             layx.html('indoor', '添加楼层', document.getElementById('indoor'), {
@@ -538,6 +542,32 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                     }
                 ]
             });
+        });
+
+        //根据楼层数，动态生成表格
+        $("#export-building").on("click",function () {
+            console.log(123);
+            var total = parseInt($("#indoor-total").val());
+            var start = parseInt($("#indoor-start").val());
+            console.log(typeof  $("#indoor-total").val());
+            if(total === null||start === null || total < start){
+                alert('楼层信息输入有误！请重新输入');
+                return;
+            }
+
+            for( var i = start; i < total; i++ ) {
+                var t=i;
+                if(t>=0){
+                    t+=1;
+                }
+                //动态创建一个tr行标签,并且转换成jQuery对象
+                var $trTemp = $("<tr></tr>");
+                //往行里面追加 td单元格
+                $trTemp.append("<td>"+ t +"</td>");
+                $trTemp.append("<td>"+ t+"楼" +"</td>");
+                $trTemp.append("<td>"+ "<input class='form-control' type='file'></input>" +"</td>");
+                $trTemp.appendTo("#indoor-table");
+            }
         });
 
 
