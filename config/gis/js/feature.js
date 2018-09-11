@@ -43,6 +43,9 @@ require.config({
             deps:['jquery'],
             export:'zui'
         },
+        'layx': {
+            exports: 'layx'
+        },
     },
     paths: {
         "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
@@ -63,10 +66,11 @@ require.config({
         "ztree": "../../../common/lib/ztree/js/jquery.ztree.all",
         "draw": "../../../common/lib/leaflet/lib/draw/Leaflet.Draw",
         "zui":"../../../main/common/lib/zui/js/zui",
+        "layx": "../../../common/lib/layx/layx"
     }
 });
-require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','leaflet','ztree', 'draw', 'zui'],
-    function (jquery, frame, bootstrapTable,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,leaflet,ztree,draw,zui) {
+require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','leaflet','ztree', 'draw', 'zui', 'layx'],
+    function (jquery, frame, bootstrapTable,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,leaflet,ztree,draw,zui,layx) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -495,6 +499,47 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             drawGroup.remove();
         });
 
+        //楼层点击按钮事件
+        $("#add-building").on("click",function () {
+            layx.html('indoor', '添加楼层', document.getElementById('indoor'), {
+                //取用模式，而不是拷贝模式，不然的话拿不到值
+                cloneElementContent: false,
+                //上边中间打开
+                //position: 'c',
+                maxMenu: false,
+                minMenu: false,
+                closeMenu: false,
+                width: 750,
+                height: 500,
+                statusBar: true,
+                storeStatus:false,
+                icon: '<i class="fa fa-plus-circle"></i>',
+                event: {
+
+                },
+                buttons: [
+                    {
+                        label: '保存',
+                        callback: function (id, button, event) {
+                            // // 获取 iframe 页面 window对象
+                            // var name = $("#device-name").val();
+                            // var geom = $("#device-coors").val();
+                            // //执行添加的方法
+                            // device.addDevice(name, geom, id);
+                        }
+                    },
+                    {
+                        label: '关闭',
+                        callback: function (id, button, event) {
+                            // drawGroup.clearLayers();
+                            // // $("#add-device-form").css('display','none');
+                            layx.destroy(id);
+                        }
+                    }
+                ]
+            });
+        });
+
 
 
         $(document).ready(function () {
@@ -516,13 +561,12 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             $("#edit").bind("click", edit);
             $("#remove").bind("click", remove);
 
+            //一级下拉菜单联动
             $("#feature-level1").bind("change",function (obj) {
                 //目标value，根据不同的目标value，显示不同的子分类
-                console.log(obj.target.value)
-
                 //点要素的二级联动
                 if(obj.target.value === 'feature-point'){
-                    $("#add-building-btn").css("display","block");
+                    //$("#add-building-btn").css("display","block");
                     //清空option
                     $("#feature-level2").find("option").remove();
                     var dataList = [
@@ -577,6 +621,19 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                         $('#feature-level2').append(option);
                     }
                 }
+            });
+
+            //二级下拉菜单联动
+            $("#feature-level2").bind("change",function (obj) {
+                //对于是否显示楼层的控制显示
+                if(obj.target.value === '建筑'){
+                    $("#add-building-btn").css("display","block");
+                }
+
+                if(obj.target.value != '建筑'){
+                    $("#add-building-btn").css("display","none");
+                }
+
             });
         });
 

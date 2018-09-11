@@ -45,7 +45,6 @@ require.config({
     },
     paths: {
         "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
-        // "jquery17": '../../../common/lib/jquery/jquery-1.7.min',
         "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
         "common": "../../common/js/util",
         "layer": "../../common/libs/layer/layer",
@@ -181,17 +180,26 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 alert("请先选择一个节点");
                 return;
             };
+            // if(treeNode.pId != '11' || treeNode.pId != '12' || treeNode.pId != '13')
+            // {
+            //     alert("该节点不可编辑");
+            //     return;
+            // }
 
             //点要素的显示
             if(treeNode.pId === '11'){
+                //将所有表单项先全部隐藏
                 $("#name").css("display","none");
                 $("#icon").css("display","none");
                 $("#icon-preview").css("display","none");
                 $("#style").css("display","none");
 
+                //把适当需要的显示出来
                 $("#name").css("display","block");
                 $("#icon").css("display","block");
                 $("#icon-preview").css("display","block");
+
+                $("#category-name").val(treeNode.name);
             }
 
             //线要素的显示
@@ -211,6 +219,8 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                     fillcolor:true
                 });
 
+                $("#category-name").val(treeNode.name);
+
             }
             //面要素的显示
             if(treeNode.pId === '13'){
@@ -220,6 +230,8 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 $("#style").css("display","none");
 
                 $("#name").css("display","block");
+
+                $("#category-name").val(treeNode.name);
             }
         }
 

@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="../../../common/lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="../../../common/lib/ztree/css/metroStyle/metroStyle.css">
     <link rel="stylesheet" href="../../../common/lib/leaflet/lib/draw/Leaflet.Draw.css">
+    <link rel="stylesheet" href="../../../common/lib/layx/layx.css">
 
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/feature"></script>
 </head>
@@ -82,16 +83,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!--1.3添加楼层-->
-                                <div class="form-group form-hidden" id="add-building-btn">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">添加楼层:</label>
-                                        <div class="col-sm-3">
-                                            <button class="btn btn-danger btn-magbtm">添加楼层</button>
-                                            <!--<span for="">星沙</span>-->
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <!--1.4要素图标-->
                                 <div class="form-group">
                                     <div class="col-sm-12">
@@ -107,6 +99,16 @@
                                         <label class="col-sm-2 col-sm-offset-2 little-title">位置关联:</label>
                                         <div class="col-sm-3">
                                             <button class="btn btn-danger btn-magbtm" id="setPosition">位置关联</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--1.3添加楼层-->
+                                <div class="form-group form-hidden" id="add-building-btn">
+                                    <div class="col-sm-12">
+                                        <label class="col-sm-2 col-sm-offset-2 little-title">添加楼层:</label>
+                                        <div class="col-sm-3">
+                                            <button class="btn btn-danger btn-magbtm" id="add-building">添加楼层</button>
+                                            <!--<span for="">星沙</span>-->
                                         </div>
                                     </div>
                                 </div>
@@ -179,7 +181,7 @@
                                 <!--1.6坐标和缩放-->
                                 <div class="form-group">
                                     <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">地理信息:</label>
+                                        <label class="col-sm-2 col-sm-offset-2 little-title">坐标信息:</label>
                                         <div class="col-sm-3">
                                             <span class="little-title" id="coors">456</span>
                                         </div>
@@ -292,7 +294,68 @@
         </div>
     </div>
 </div>
-<script>
-</script>
+<section style="display: none">
+    <div id="indoor">
+        <div class="container-fluid editTreeData">
+            <div class="row">
+                <!--1.1楼层信息-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-2 col-sm-offset-2 little-title">楼层信息:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" placeholder="楼层总数">
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" placeholder="起始楼层">
+                        </div>
+                    </div>
+                </div>
+
+                <!--1.2导入楼层地图-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <a href="#" class="black-a"><i class="fa fa-hand-o-up"></i>添加楼层信息</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-10 col-sm-offset-1">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>楼层号</th>
+                                <th>楼层名称</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>-1</td>
+                                <td>地下室</td>
+                                <td>
+                                    <a class="black-a" href="javascript:void(0)">导入图片</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>一楼</td>
+                                <td><a class="black-a" href="javascript:void(0)">导入图片</a></td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>二楼</td>
+                                <td><a class="black-a" href="javascript:void(0)">导入图片</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</section>
 </body>
 </html>

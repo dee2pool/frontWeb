@@ -107,4 +107,16 @@
     display: none;
 }
 
+.black-a{
+    color: #000;
+}
+
+.black-a:hover{
+    color: #000;
+}
+
+.black-a:focus{
+    color: #000;
+}
+
 
