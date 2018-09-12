@@ -77,6 +77,10 @@ require.config({
             deps: ['leaflet'],
             exports: 'snogylop'
         },
+        "BetterWMS":{
+            deps: ['leaflet'],
+            exports: 'BetterWMS'
+        }
 
 
     },
@@ -108,12 +112,13 @@ require.config({
         "mock": "../../common/lib/mock/mock",
         "indoor": "../../common/lib/leaflet-lib/indoor/leaflet-indoor",
         "snogylop":"../../common/lib/leaflet-lib/mask/leaflet.snogylop",
-        "topBar":"../../../common/component/head/js/topbar"
+        "topBar":"../../../common/component/head/js/topbar",
+        "BetterWMS":"../../common/lib/leaflet-lib/BetterWMS/BetterWMS"
 
     }
 });
-require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar'],
-    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar) {
+require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS'],
+    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS) {
 
         //加载公用头部导航栏标签
         //$("#head").html(common.head);
@@ -709,6 +714,30 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
         });
 
+        //用于专题图的测试行政区域
+        var chinaWMS=L.tileLayer.betterWms('http://192.168.0.142:8060/geoserver/cite/wms', {
+            layers: 'cite:chartmap',
+            transparent: true,
+            format: 'image/png'
+        });
+        //饼状图测试
+        var pie = L.marker([28.239986815235163,113.06989024028218], {
+            icon: L.divIcon({
+                className: 'leaflet-echart-icon',
+                iconSize: [160, 160],
+                html: '<div id="marker' + 1 + '" style="width: 160px; height: 160px; position: relative; background-color: transparent;">asd</div>'
+            })
+        }).addTo(map);
+        //柱状图测试
+        var chart = L.marker([28.238828360437484,113.08478097085977], {
+            icon: L.divIcon({
+                className: 'leaflet-echart-icon',
+                iconSize: [160, 160],
+                html: '<div id="marker' + 2 + '" style="width: 160px; height: 160px; position: relative; background-color: transparent;">asd</div>'
+            })
+        }).addTo(map);
+
+
 
         /**
          * 图层控制器
@@ -719,7 +748,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var overlayMaps = {
             "轨迹": routeLayerGroup,
             "设备点": xsLayerGroup,
-            "建筑": build
+            "建筑": build,
+            "行政区":chinaWMS,
+            "饼状图":pie,
+            "柱状图":chart
         };
 
         //设置图层控制器
@@ -1202,14 +1234,91 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             });
         });
 
-        //地图放大
+        //地图放大——改为拉框放大
         $("#topbar-zoomin").on("click", function () {
-            map.zoomIn();
+            //map.zoomIn();
+
+            drawGroup.clearLayers();
+            drawGroup.remove();
+            drawGroup.addTo(map);
+
+            //设置画线变量
+            var drawer = new L.Draw.Rectangle(map);
+            drawer.enable();
+
+            map.on('draw:created',
+                function (e) {
+                    var type = e.layerType,
+                        layer = e.layer;
+                    if (type === 'rectangle') {
+                        //1.判断当前缩放等级，如果达到最大级别，提示不能放大了；
+                        //2.若不是最大级别，获取当前rectangle的中心点，以此点为中心，放大一个级别
+
+                        var curZoom = map.getZoom();
+                        if(curZoom != map.getMaxZoom()){
+                            console.log(layer);
+                            //layer._bounds._northEast
+                            //layer._bounds._southWest
+                            var features = turf.featureCollection([
+                                turf.point( [layer._bounds._northEast.lng, layer._bounds._northEast.lat]),
+                                turf.point( [layer._bounds._southWest.lng, layer._bounds._southWest.lat]),
+                            ]);
+                            var center = turf.center(features);
+                            //center.geometry.coordinates[0]
+                            map.setZoomAround([center.geometry.coordinates[1],center.geometry.coordinates[0]],curZoom+1);
+
+                        }
+                        else{
+                            lay.msg('已经缩放到最大等级，无法继续放大了！')
+                        }
+
+                    }
+                });
+            //释放内存
+            drawer = null;
         });
 
         //地图缩小
         $("#topbar-zoomout").on("click", function () {
-            map.zoomOut();
+            // map.zoomOut();
+
+            drawGroup.clearLayers();
+            drawGroup.remove();
+            drawGroup.addTo(map);
+
+            //设置画线变量
+            var drawer = new L.Draw.Rectangle(map);
+            drawer.enable();
+
+            map.on('draw:created',
+                function (e) {
+                    var type = e.layerType,
+                        layer = e.layer;
+                    if (type === 'rectangle') {
+                        //1.判断当前缩放等级，如果达到最大级别，提示不能放大了；
+                        //2.若不是最大级别，获取当前rectangle的中心点，以此点为中心，放大一个级别
+
+                        var curZoom = map.getZoom();
+                        if(curZoom != map.getMinZoom()){
+                            console.log(layer);
+                            //layer._bounds._northEast
+                            //layer._bounds._southWest
+                            var features = turf.featureCollection([
+                                turf.point( [layer._bounds._northEast.lng, layer._bounds._northEast.lat]),
+                                turf.point( [layer._bounds._southWest.lng, layer._bounds._southWest.lat]),
+                            ]);
+                            var center = turf.center(features);
+                            //center.geometry.coordinates[0]
+                            map.setZoomAround([center.geometry.coordinates[1],center.geometry.coordinates[0]],curZoom-1);
+                        }
+                        else{
+                            lay.msg('已经缩放到最小等级，无法继续缩小了！')
+                        }
+
+                    }
+                });
+            //释放内存
+            drawer = null;
         });
 
         //地图模糊搜索
@@ -1310,6 +1419,122 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         /**
          * end-对于topbar的相关操作
          */
+
+
+        /**
+         * start-专题图的配置
+         * 专题图目前只能以动态的方式进行添加，无法进行图层控制
+         */
+
+        // var wmsLayer = L.tileLayer.wms('http://192.168.0.144:8060/geoserver/cite/wms', {layers:'cite:chartmap'});
+        // //添加图层到地图
+        //饼状图测试
+        var myChart = echarts.init(document.getElementById('marker' + 1));
+        // 指定图表的配置项和数据
+        option = {
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b}: {c} ({d}%)"
+            },
+            series: [{
+                name: '访问来源',
+                type: 'pie',
+                radius: ['20', '50'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '18',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [{
+                    value: 50,
+                    name: '直接访问'
+                }, {
+                    value: 100,
+                    name: '邮件营销'
+                }, {
+                    value: 200,
+                    name: '联盟广告'
+                }, {
+                    value: 300,
+                    name: '视频广告'
+                }, {
+                    value: 20,
+                    name: '搜索引擎'
+                }]
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+        //柱状图测试
+        // 基于准备好的dom，初始化echarts实例
+        var myChart2 = echarts.init(document.getElementById('marker' + 2));
+        // 指定图表的配置项和数据
+        var option2 ={
+            tooltip: {
+                trigger: 'axis'
+            },
+            xAxis: [{
+                type: 'category',
+                data: ['1月', '2月', '3月', '4月']
+            }],
+            yAxis: [{
+                type: 'value',
+                name: '水量',
+                min: 0,
+                max: 50,
+                interval: 50,
+                axisLabel: {
+                    formatter: '{value} ml'
+                }
+            }, {
+                type: 'value',
+                name: '温度',
+                min: 0,
+                max: 10,
+                interval: 5,
+                axisLabel: {
+                    formatter: '{value} °C'
+                }
+            }],
+            series: [{
+                name: '蒸发量',
+                type: 'bar',
+                data: [2.0, 4.9, 7.0, 23.2]
+            }, {
+                name: '降水量',
+                type: 'bar',
+                data: [2.6, 5.9, 9.0, 26.4]
+            }, {
+                name: '平均温度',
+                type: 'line',
+                yAxisIndex: 1,
+                data: [2.0, 2.2, 3.3, 4.5]
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        myChart2.setOption(option2);
+
+
+        /**
+         * end-专题图的配置
+         */
+
+
 
 
 
