@@ -37,14 +37,14 @@ require.config({
         }
     },
     paths: {
-        "jquery": '../../common/libs/jquery/jquery-1.11.3.min',
+        "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
         "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
         "common": "../../common/js/util",
         "layer": "../../common/libs/layer/layer",
         "frame": "../../sidebar/js/wframe",
-        "topBar":"../../../common/component/head/js/topbar",
-        "roleAdd":"role_add",
-        "editRole":"role_edit",
+        "topBar": "../../../common/component/head/js/topbar",
+        "roleAdd": "role_add",
+        "editRole": "role_edit",
         "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
         "bootstrap-treeview": "../../common/libs/bootstrap-treeview/js/bootstrap-treeview",
         "menu": "../../sidebar/js/menu",
@@ -54,8 +54,8 @@ require.config({
         "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
     }
 });
-require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','roleAdd','editRole'],
-    function (jquery,layer,frame,bootstrapTable, RoleService,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,roleAdd,editRole) {
+require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstrapValidator', 'bootstrap', 'bootstrap-switch', 'bootstrap-treeview', 'topBar', 'roleAdd', 'editRole'],
+    function (jquery, layer, frame, bootstrapTable, RoleService, bootstrapValidator, bootstrap, bootstrapSwitch, treeview, topBar, roleAdd, editRole) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -66,32 +66,63 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
         layer.config({
             path: '../../common/libs/layer/'
         });
+        //点击取消
+        $('.btn-cancel').click(function () {
+            layer.closeAll();
+        })
         //菜单树
         $('#menutree').treeview({
             showBorder: false,
-            showCheckbox:true,
-            data: [{
-                text: '用户管理',
-                nodes: [
-                    {
-                        text: '菜单管理'
-                    }, {
-                        text: '角色管理'
-                    }, {
-                        text: '用户管理'
-                    }, {
-                        text: '域管理'
+            showCheckbox: true,
+            data: frame.menuTree,
+            onNodeChecked: function (event, node) {
+                var nodeId = [];
+                if (node.nodes) {
+                    for (var i = 0; i < node.nodes.length; i++) {
+                        nodeId.push(node.nodes[i].nodeId);
                     }
-                ]
-            }],
-            onNodeSelected: function (event, data) {
-
+                    $("#menutree").treeview("checkNode", [nodeId, {silent: true}]);
+                } else {
+                    var pId = node.parentId;
+                    var parentNode = $('#menutree').treeview("getNode", pId);
+                    var checkNum = 0;
+                    for (var i = 0; i < parentNode.nodes.length; i++) {
+                        if (parentNode.nodes[i].state.checked) {
+                            checkNum++;
+                        }
+                    }
+                    if (checkNum == parentNode.nodes.length) {
+                        $("#menutree").treeview("checkNode", parentNode.nodeId);
+                    }
+                }
+            },
+            onNodeUnchecked: function (event, node) {
+                var nodeId = [];
+                if (node.nodes) {
+                    for (var i = 0; i < node.nodes.length; i++) {
+                        nodeId.push(node.nodes[i].nodeId);
+                    }
+                    $("#menutree").treeview("uncheckNode", [nodeId, {silent: true}]);
+                } else {
+                    var pId = node.parentId;
+                    var parentNode = $('#menutree').treeview("getNode", pId);
+                    var checkNum = 0;
+                    for (var i = 0; i < parentNode.nodes.length; i++) {
+                        if (!parentNode.nodes[i].state.checked) {
+                            checkNum++;
+                        }
+                    }
+                    if (checkNum == parentNode.nodes.length) {
+                        $("#menutree").treeview("uncheckNode", parentNode.nodeId);
+                    }
+                }
             }
         })
+        $('#menutree').treeview('collapseAll');
         //中心树
         $('#centertree').treeview({
             showBorder: false,
-            showCheckbox:true,
+            showCheckbox: true,
             data: [{
                 text: '默认控制中心',
                 nodes: [
@@ -106,14 +137,13 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
                     }
                 ]
             }],
-            onNodeSelected: function (event, data) {
-
+            onNodeChecked: function (event, node) {
             }
         })
         //部门树
         $('#depttree').treeview({
             showBorder: false,
-            showCheckbox:true,
+            showCheckbox: true,
             data: [{
                 text: '研发部门',
                 nodes: [
@@ -147,7 +177,7 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
                         align: 'center'
                     }, {
                         field: 'inbuiltFlag',
-                        visible:false
+                        visible: false
                     }, {
                         field: 'permit',
                         title: '状态',
@@ -163,16 +193,18 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
                     }, {
                         title: '权限配置',
                         align: 'center',
-                        events:{
-                            "click #rolecfig":function (e,value,row,index) {
+                        events: {
+                            "click #rolecfig": function (e, value, row, index) {
+                                //角色分配权限
                                 layer.open({
                                     type: 1,
                                     title: '权限配置',
                                     offset: '100px',
-                                    area:'600px',
+                                    area: '600px',
                                     resize: false,
                                     content: $('#auth_config')
                                 })
+                                permission.menu(row.id)
                             }
                         },
                         formatter: function () {
@@ -184,7 +216,7 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
                         events: {
                             "click #edit_role": function (e, value, row, index) {
                                 //点击编辑按钮
-                                editRole.openWin(row.name,row.remark);
+                                editRole.openWin(row.name, row.remark);
                                 editRole.formVali();
                             },
                             "click #del_role": function (e, value, row, index) {
@@ -193,13 +225,13 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
                                     btn: ['确定', '取消'] //按钮
                                 }, function () {
                                     //删除操作
-                                    if(row.inbuiltFlag==1){
+                                    if (row.inbuiltFlag == 1) {
                                         layer.msg('系统内置角色不能删除!')
-                                    }else{
-                                        RoleService.deleteRole(row.id,function (data) {
-                                            if(data.result){
-                                                $('#role_table').bootstrapTable('removeByUniqueId',index)
-                                            }else{
+                                    } else {
+                                        RoleService.deleteRole(row.id, function (data) {
+                                            if (data.result) {
+                                                $('#role_table').bootstrapTable('removeByUniqueId', index)
+                                            } else {
                                                 layer.msg('删除失败!')
                                             }
                                         })
@@ -234,12 +266,20 @@ require(['jquery','layer','frame','bootstrap-table', 'RoleService','bootstrapVal
         })
         //添加角色
         roleAdd.init();
-        //表单提交
-        $('[name="doAdd"]').click(function () {
-
-        })
-        //取消
-        $('[name="doCancel"]').click(function () {
-            layer.closeAll();
-        })
+        var permission={};
+        permission.menu=function (roleId) {
+            $('#menuPerSave').click(function () {
+                var menuChecked=$('#menutree').treeview('getChecked');
+                var menuIds=new Array();
+                for(var i=0;i<menuChecked.length;i++){
+                    menuIds.push(menuChecked[i].id);
+                }
+                RoleService.grantMenu(roleId,menuIds,function (data) {
+                    if(data.result){
+                        layer.msg('分配权限成功!');
+                        layer.closeAll();
+                    }
+                })
+            })
+        }
     })

@@ -45,7 +45,7 @@
                     </div>
                 </form>
                 <div class="slimscrollleft">
-                <div id="ugrouptree"></div>
+                    <div id="ugrouptree"></div>
                 </div>
             </div>
             <div class="content-panel col-md-9">
@@ -205,6 +205,12 @@
             <div class="tab-pane tab-form fade in active" id="tab-base-user">
                 <div class="tab-main">
                     <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label"><i class="required">*</i>用户组：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="ugroup" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label"><i class="required">*</i>用户名：</label>
                         <div class="col-sm-6" style="padding: 0px">
                             <input name="uname" type="text" class="form-control">
@@ -228,6 +234,15 @@
                         <div class="col-sm-6" style="padding: 0px">
                             <input type="password" name="repwd" data-bv-identical="true" data-bv-identical-field="upwd"
                                    data-bv-identical-message="两次输入密码不一致" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label" style="padding-left: 5px">管理范围：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <select name="domain" class="form-control">
+                                <option value="1001">厂区1</option>
+                                <option value="1002">厂区2</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
@@ -277,7 +292,9 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-roles-user">
-                <table class="role_table"></table>
+                <div class="tab-main">
+                    <table class="role_table"></table>
+                </div>
                 <div class="tab-footer">
                     <button type="submit" class="btn btn-danger">完成</button>
                     <button type="button" class="btn btn-default btn-cancel">取消</button>

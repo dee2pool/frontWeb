@@ -181,7 +181,7 @@ require(['jquery', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstra
                                                     //删除操作
                                                     MenuService.deleteMenuById(row.id, function (data) {
                                                         if (data.result) {
-
+                                                            layer.msg('删除成功!')
                                                         }
                                                     })
                                                 }, function () {

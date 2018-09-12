@@ -42,8 +42,8 @@ require.config({
             deps: ['common'],
             exports: "ugroupService"
         },
-        'jquery-slimScroll':{
-            deps:['jquery']
+        'jquery-slimScroll': {
+            deps: ['jquery']
         }
     },
     paths: {
@@ -62,13 +62,13 @@ require.config({
         "bootstrap-switch": "../../common/libs/bootstrap-switch/js/bootstrap-switch",
         "bootstrap-datetimepicker.zh-CN": "../../common/libs/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN",
         "ugroupService": "../../../common/js/service/UserGroupController",
-        "userService":"../../../common/js/service/UserController",
+        "userService": "../../../common/js/service/UserController",
         "RoleService": "../../common/js/service/RoleController",
-        "jquery-slimScroll":"../../common/libs/jquery-slimScroll/jquery.slimscroll.min"
+        "jquery-slimScroll": "../../common/libs/jquery-slimScroll/jquery.slimscroll.min"
     }
 });
-require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','bootstrap', 'bootstrap-treeview', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar', 'ugroupService','userService','RoleService'],
-    function (jquery,common,frame, bootstrapTable,slimScroll,bootstrap, treeview, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar, ugroupService,userService,RoleService) {
+require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'bootstrap', 'bootstrap-treeview', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar', 'ugroupService', 'userService', 'RoleService'],
+    function (jquery, common, frame, bootstrapTable, slimScroll, bootstrap, treeview, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar, ugroupService, userService, RoleService) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -81,9 +81,9 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
         });
         //用户组滚动条
         $('.slimscrollleft').slimScroll({
-            height:'655px',
-            size:'5px',
-            opacity:.3
+            height: '655px',
+            size: '5px',
+            opacity: .3
         })
         //获得所有用户组信息
         var tree = [];
@@ -125,53 +125,77 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
             showBorder: false,
             nodeIcon: 'glyphicon glyphicon-user',
             data: tree,
+            onhoverColor: 'lightgrey',
+            selectedBackColor: 'lightgrey',
+            selectedColor: 'black',
             onNodeSelected: function (event, data) {
                 isNodeSelected = true;
                 nodeSelected = data;
-                console.log(isNodeSelected)
             },
             onNodeUnselected: function (event, data) {
                 isNodeSelected = false;
             }
         })
         //用户表格
-        var pageNo=1;
-        var pageSize=10;
+        var pageNo = 1;
+        var pageSize = 10;
         var userName;
-        userService.getUserList(pageNo,pageSize,userName,function (data) {
-            if(data.result){
+        userService.getUserList(pageNo, pageSize, userName, function (data) {
+            if (data.result) {
                 $('#user_table').bootstrapTable({
                     columns: [{
                         checkbox: true
                     }, {
                         field: 'id',
-                        title: '序号',
+                        visible: false
+                    }, {
+                        field: 'loginName',
+                        title: '账号名',
                         align: "center"
                     }, {
-                        field: 'uname',
-                        title: '用户名',
-                        align: "center"
-                    }, {
-                        field: 'name',
+                        field: 'realName',
                         title: '姓名',
                         align: "center"
                     }, {
-                        field: 'role',
-                        title: '角色',
+                        field: 'gender',
+                        title: '性别',
+                        align: "center",
+                        formatter: function (value, row, index) {
+                            if (value == 1) {
+                                return '男'
+                            } else {
+                                return '女'
+                            }
+                        }
+                    }, {
+                        field: 'employeeNo',
+                        title: '员工卡号',
+                        align: "center"
+                    }, {
+                        field: 'photo',
+                        title: '头像',
                         align: "center"
                     }, {
                         field: 'date',
                         title: '到期时间',
                         align: "center"
                     }, {
-                        field: 'online',
-                        title: '在线状态',
+                        field: 'email',
+                        title: '电子邮件',
+                        align: "center"
+                    }, {
+                        field: 'domainCode',
+                        title: '区域',
+                        align: "center"
+                    }, {
+                        field: 'state',
+                        title: '账号状态',
                         align: "center",
                         formatter: function (value, row, index) {
                             if (value == 1) {
-                                var statusIcon = "<input type='checkbox' name='status' checked>";
+                                var statusIcon = "<input type='checkbox' name='state' checked>";
                             } else {
-                                var statusIcon = "<input type='checkbox' name='status'>";
+                                var statusIcon = "<input type='checkbox' name='state'>";
                             }
                             return statusIcon;
                         }
@@ -181,15 +205,30 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
                         events: {
                             "click #edit_role": function (e, value, row, index) {
                                 //点击编辑按钮
-
                             },
                             "click #del_role": function (e, value, row, index) {
                                 //点击删除按钮
-                                layer.confirm('确定删除 ' + row.uname + ' ?', {
+                                layer.confirm('确定删除 ' + row.loginName + ' ?', {
                                     btn: ['确定', '取消'] //按钮
                                 }, function () {
                                     //删除操作
+                                    userService.delete(row.id, function (data) {
+                                        if (data.result) {
+                                            layer.msg("删除成功!")
+                                            $('#user_table').bootstrapTable('remove', {field: 'id', values: [row.id]})
+                                            $("[name='state']").bootstrapSwitch({
+                                                size: 'small',
+                                                onText: '启用',
+                                                offText: '禁用',
+                                                onColor: 'primary',
+                                                offColor: 'danger',
+                                                labelWidth: 10,
+                                                onSwitchChange: function (event, state) {
 
+                                                }
+                                            })
+                                        }
+                                    })
                                 }, function () {
                                     layer.closeAll();
                                 });
@@ -201,10 +240,22 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
                             return icons;
                         }
                     }],
-                    data:data.data,
-                    height:655
+                    data: data.data,
+                    height: 655
                 })
-                common.pageInit(pageNo,pageSize,data.extra)
+                common.pageInit(pageNo, pageSize, data.extra)
+                //初始化switch开关
+                $("[name='state']").bootstrapSwitch({
+                    size: 'small',
+                    onText: '启用',
+                    offText: '禁用',
+                    onColor: 'primary',
+                    offColor: 'danger',
+                    labelWidth: 10,
+                    onSwitchChange: function (event, state) {
+
+                    }
+                })
             }
         })
         //初始化switch开关
@@ -256,12 +307,12 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
         //角色表格
         var role_ids = new Array();
         RoleService.getRoleList(function (data) {
-            if(data.result){
+            if (data.result) {
                 $('.role_table').bootstrapTable({
                     columns: [{
                         field: 'id',
-                        visible:false
-                    },{
+                        visible: false
+                    }, {
                         field: 'name',
                         title: '角色名称',
                         align: 'center'
@@ -270,7 +321,7 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
                         title: '描述信息',
                         align: 'center'
                     }],
-                    data:data.data,
+                    data: data.data,
                     onClickRow: function (row, $elem, field) {
                         //判断表单提交是否被禁用
                         if ($("button[type='submit']").attr('disabled') == 'disabled') {
@@ -315,7 +366,7 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
                     }
                 }
             }
-        }).on('success.form.bv',function () {
+        }).on('success.form.bv', function () {
             if (role_ids.length == 0) {
                 layer.msg('请选择用户组角色');
                 return false;
@@ -370,19 +421,12 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
                 layer.msg("请选择要删除的用户组")
             } else {
                 if (nodeSelected) {
-                    var delIds = new Array();
-                    if (nodeSelected.nodes) {
-                        for (var i = 0; i < nodeSelected.nodes.length; i++) {
-                            delIds.push(nodeSelected.nodes[i].id);
+                    ugroupService.deleteUserGroupByIds(nodeSelected.id, function (data) {
+                        if (data.result) {
+                            layer.msg('删除成功')
                         }
-                    }
-                    delIds.push(nodeSelected.id);
+                    })
                 }
-                ugroupService.deleteUserGroupByIds(delIds, function (data) {
-                    if (data.result) {
-                        layer.msg('删除成功')
-                    }
-                })
             }
         })
         /*----------------------------------------添加用户---------------------------------------*/
@@ -409,6 +453,12 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
         //添加用戶弹窗
         $('#addUser').click(function () {
             $('.form_datetime').datetimepicker('setStartDate', new Date());
+            if(nodeSelected){
+                console.log(nodeSelected)
+                $('input[name="ugroup"]').val(nodeSelected.text);
+            }else {
+                $('input[name="ugroup"]').val('无');
+            }
             layer.open({
                 type: 1,
                 title: '添加用户',
@@ -467,7 +517,7 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
                     }
                 }
             }
-        }).on('success.form.bv',function (){
+        }).on('success.form.bv', function () {
             if (role_ids.length == 0) {
                 layer.msg('请选择用户所属角色');
                 return false;
@@ -476,22 +526,31 @@ require(['jquery','common','frame', 'bootstrap-table','jquery-slimScroll','boots
                 var user = {};
                 user.loginName = $("input[name='uname']").val();
                 user.loginPassword = hex_md5($("input[name='upwd']").val());
-                user.salt='1001';
-                user.gender=$("select[name='gender']").val();
-                user.employeeNo=$("input[name='employeeNo']").val();
-                user.photo=$("input[name='photo']").val();
-                user.realName=$("input[name='username']").val();
-                user.state='1';
-                user.email=$("input[name='email']").val();
-                user.domainCode='10010';
-                user.inbuiltFlag='0';
-                userService.add(user,function (data) {
-                    if(data.result){
-                        var uid=data.data;
+                user.gender = $("select[name='gender']").val();
+                user.employeeNo = $("input[name='employeeNo']").val();
+                user.photo = $("input[name='photo']").val();
+                user.realName = $("input[name='username']").val();
+                user.state = '1';
+                user.email = $("input[name='email']").val();
+                user.domainCode = $("select[name='domain']").val();
+                user.inbuiltFlag = '0';
+                userService.add(user, function (data) {
+                    if (data.result) {
+                        var uid = data.data;
+                        //修改用户与用户组关联
+                        if(nodeSelected){
+                            userService.updateGroupIdByUserId(uid,nodeSelected.id,function (data) {
+                                if(data.result){
+
+                                }
+                            })
+                        }
                         //为用户赋予角色
-                        userService.grantRole(uid,role_ids,function (data) {
-                            if(data.result){
+                        userService.grantRole(uid, role_ids, function (data) {
+                            if (data.result) {
                                 layer.msg("添加用户成功")
+                            } else {
+                                layer.msg(data.description)
                             }
                         })
                     }

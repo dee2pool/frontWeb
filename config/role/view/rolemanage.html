@@ -69,7 +69,7 @@
     </div>
     <div class="form-group" style="padding-left: 120px;margin: 15px 0px">
         <button name="doAdd" type="submit" class="btn btn-info" style="margin-right: 30px">提交</button>
-        <button name="doCancel" type="button" class="btn btn-default">取消</button>
+        <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
     </div>
 </form>
 <!--权限配置弹窗-->
@@ -105,8 +105,9 @@
         <!--菜单-->
         <div class="tab-pane tab-form fade in active" id="tab-menu">
             <div id="menutree"></div>
-            <div class="tab-footer" style="text-align: right">
-                <button type="button" class="btn btn-danger">保存</button>
+            <div class="tab-footer">
+                <button id="menuPerSave" type="button" class="btn btn-danger">保存</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
             </div>
         </div>
         <!--资源-->
@@ -149,6 +150,7 @@
                 <div class="tab-footer" style="text-align: right">
                     <button type="button" class="btn btn-default">自定义配置</button>
                     <button type="button" class="btn btn-danger">保存</button>
+                    <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </div>
             <!--<div class="custom">
@@ -169,6 +171,7 @@
             <div id="centertree"></div>
             <div class="tab-footer" style="text-align: right">
                 <button type="button" class="btn btn-danger">保存</button>
+                <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
             </div>
         </div>
         <!--部门-->
@@ -176,6 +179,7 @@
             <div id="depttree"></div>
             <div class="tab-footer" style="text-align: right">
                 <button type="button" class="btn btn-danger">保存</button>
+                <button name="doCancel" type="button" class="btn btn-default btn-cancel ">取消</button>
             </div>
         </div>
         <!--子系统-->
@@ -183,6 +187,7 @@
 
             <div class="tab-footer" style="text-align: right">
                 <button type="button" class="btn btn-danger">保存</button>
+                <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
             </div>
         </div>
     </div>

@@ -24,12 +24,17 @@ define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
         '    <span class="ham-top"></span>',
         '    <span class="ham-bottom"></span>',
         '</button>'].join("");
-
+    frame.menuTree=[];
     //创建菜单
     function displayMenu() {
         MenuService.getMenuListByParentId(-1, function (data) {
             if (data.result) {
                 for (var i = 0; i < data.dataSize; i++) {
+                    //生成菜单树节点
+                    var treeNode={};
+                    treeNode.id=data.data[i].id;
+                    treeNode.text=data.data[i].name;
+                    treeNode.parentId=data.data[i].parentId;
                     //一级菜单
                     var firsthtml = "<li id='" + data.data[i].id + "'><a class='menu-elem' href='" + data.data[i].url + "'><span>" + data.data[i].name + "</span>" +
                         "</a></li>";
@@ -39,15 +44,27 @@ define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
                     MenuService.getMenuListByParentId(data.data[i].id, function (data2) {
                         if (data2.result) {
                             if (data2.dataSize > 0) {
-                                $('.second-menu-list').append('<div name="' + data.data[i].id + '" class="second-menu">' + menu.createMenu(data2.data, menu.secondIcons) + '</div>');
+                                treeNode.nodes=[];
+                                var html = "<ul class='menu'>"
+                                for (var j = 0; j < data2.dataSize; j++) {
+                                    var node2={};
+                                    node2.id=data2.data[j].id;
+                                    node2.text=data2.data[j].name;
+                                    node2.parentId=data2.data[j].parentId;
+                                    treeNode.nodes.push(node2);
+                                    html += "<li>" +
+                                        "<a href='" + data2.data[j].url + "'><span>" + data2.data[j].name + "</span></a></li>";
+                                }
+                                html += "</ul>";
+                                $('.second-menu-list').append('<div name="' + data.data[i].id + '" class="second-menu">' + html + '</div>');
                             }
                         }
                     })
+                    frame.menuTree.push(treeNode);
                 }
             }
         })
     }
-
     //显示侧边栏
     function showSide() {
         $('.hambuger').click(function () {
