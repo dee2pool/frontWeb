@@ -57,8 +57,8 @@ require.config({
         "jquery-slimScroll":"../../common/libs/jquery-slimScroll/jquery.slimscroll.min"
     }
 });
-require(['jquery','layer','frame', 'bootstrap-table','jquery-slimScroll','bootstrapValidator', 'bootstrap-treeview', 'deviceInfoService', 'deviceTypeService', 'common','topBar'],
-    function (jquery,layer,frame, bootstrapTable,slimScroll,bootstrapValidator, bootstrapTreeView, deviceInfoService, deviceTypeService, common,topBar) {
+require(['jquery','common','layer','frame', 'bootstrap-table','jquery-slimScroll','bootstrapValidator', 'bootstrap-treeview', 'deviceInfoService', 'deviceTypeService', 'common','topBar'],
+    function (jquery,common,layer,frame, bootstrapTable,slimScroll,bootstrapValidator, bootstrapTreeView, deviceInfoService, deviceTypeService, common,topBar) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -72,7 +72,7 @@ require(['jquery','layer','frame', 'bootstrap-table','jquery-slimScroll','bootst
         //初始化表格
         var init_page = {
             pageNumber: 1,
-            pageSize: 50,
+            pageSize: 10,
             parameter: {}
         }
         deviceInfoService.getDeviceInfoList(init_page, function (data) {
@@ -148,9 +148,43 @@ require(['jquery','layer','frame', 'bootstrap-table','jquery-slimScroll','bootst
                         }
                     }],
                     data:data.data,
-                    height:655,
-                    pagnation:true,
-                    pageList:[10,15,20]
+                    height:622
+                })
+                common.pageInit(init_page.pageNumber,init_page.pageSize,data.extra)
+            }
+        })
+        //改变页面展示数据条数
+        $('li[data-url="menuitem"]>a').click(function () {
+            init_page.pageSize=$(this).html();
+            $('.page-size').html($(this).html());
+            $(this).parent().addClass('active');
+            $(this).parent().siblings().removeClass('active');
+            deviceInfoService.getDeviceInfoList(init_page,function (data) {
+                if(data.result){
+                    $('#device_table').bootstrapTable('load',data.data)
+                }
+            })
+        })
+        //点击上一页
+        $('.page-pre>a').click(function () {
+            if(init_page.pageNumber>1){
+                init_page.pageNumber--;
+                deviceInfoService.getDeviceInfoList(init_page,function (data) {
+                    if(data.result){
+                        $('#device_table').bootstrapTable('load',data.data);
+                    }
+                })
+            }
+        })
+        //点击下一页
+        $('.page-next>a').click(function () {
+            var pageNum=$('.page-next').prev().children().html();
+            if(init_page.pageNumber<pageNum){
+                init_page.pageNumber++;
+                deviceInfoService.getDeviceInfoList(init_page,function (data) {
+                    if(data.result){
+                        $('#device_table').bootstrapTable('load',data.data);
+                    }
                 })
             }
         })

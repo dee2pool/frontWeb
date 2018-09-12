@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
     <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+    <script type="text/javascript" src="../../common/js/md5.js"></script>
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/user"></script>
 </head>
 <body>
@@ -28,12 +29,12 @@
             <div class="content-panel col-md-2" style="margin-right: 50px">
                 <div class="head head-tree">
                     <div class="head-left-tree">
-                        <span>用户组</span>
-                        <span class="opera-group">
-                        <a id="addUgroup" href="javascript:;"><i class="fa fa-plus"></i></a>
-                        <a id="editUgroup" href="javascript:;"><i class="fa fa-edit"></i></a>
-                        <a id="delUgroup" class="remove_ugroup" href="javascript:;"><i class="fa fa-remove"></i></a>
-                    </span>
+                        <span style="margin-right: 15px">用户组</span>
+                        <div class="opera-group">
+                            <a id="addUgroup" href="javascript:;"><i class="fa fa-plus"></i></a>
+                            <a id="editUgroup" href="javascript:;"><i class="fa fa-pencil"></i></a>
+                            <a id="delUgroup" class="remove_ugroup" href="javascript:;"><i class="fa fa-remove"></i></a>
+                        </div>
                     </div>
                 </div>
                 <form role="form" style="margin-bottom: 10px">
@@ -43,7 +44,9 @@
                         </div>
                     </div>
                 </form>
+                <div class="slimscrollleft">
                 <div id="ugrouptree"></div>
+                </div>
             </div>
             <div class="content-panel col-md-9">
                 <div class="main-right">
@@ -234,15 +237,30 @@
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
-                        <label class="col-sm-2 control-label">手机：</label>
+                        <label class="col-sm-2 control-label">性别：</label>
                         <div class="col-sm-6" style="padding: 0px">
-                            <input type="text" class="form-control">
+                            <select name="gender" class="form-control">
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">Email：</label>
                         <div class="col-sm-6" style="padding: 0px">
-                            <input type="text" class="form-control">
+                            <input name="email" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label">员工ID：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="employeeNo" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label">头像：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="photo" type="file">
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
@@ -252,93 +270,22 @@
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>
-                    <div class="form-item">
-                        <label class="col-sm-2 control-label">备注：</label>
-                        <div class="col-sm-6" style="padding: 0px">
-                            <textarea rows="3" cols="44"></textarea>
-                        </div>
-                    </div>
                 </div>
                 <div class="tab-footer">
                     <button type="button" class="btn btn-danger btn-next">下一步</button>
-                    <button type="button" class="btn btn-default">取消</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </div>
             <div class="tab-pane fade" id="tab-roles-user">
                 <table class="role_table"></table>
                 <div class="tab-footer">
-                    <button type="button" class="btn btn-danger">完成</button>
-                    <button type="button" class="btn btn-default">取消</button>
+                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
-<!--添加菜单弹窗-->
-<form id="addMpanel" class="form-horizontal" style="display: none">
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4"><i class="required">*</i>菜单名称</label>
-        <div class="col-sm-7">
-            <input name="Menuname" type="text" class="form-control">
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4"><i class="required">*</i>上级菜单</label>
-        <div class="col-sm-7">
-            <select name="MenuparentId" class="form-control">
-                <option value="-1">无</option>
-                <option value="b5237a7380fb45e98f7c03b31c3855f0">用户管理</option>
-                <option value="66849c6eb94f4a7a90577805e439ad25">测试菜单1</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4">页面路径</label>
-        <div class="col-sm-7">
-            <input name="Menuurl" type="text" class="form-control">
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4"><i class="required">*</i>菜单展示序号</label>
-        <div class="col-sm-7">
-            <input name="MenuorderNo" type="text" class="form-control">
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4">菜单图标</label>
-        <div class="col-md-3">
-            <div class="menuIcon"
-                 style="width: 55px;height: 55px;border: 1px solid lightgray;text-align: center;vertical-align: center;padding-top: 8px">
-                <i class="fa fa-user-o fa-2x"></i>
-                <a onclick="editIcon()" href="javascript:;"
-                   style="display: block;font-size: 12px;background-color: lightgray">修改图标</a>
-            </div>
-        </div>
-    </div>
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4">备注</label>
-        <div class="col-sm-7">
-            <textarea name="Menuremark" class="form-control"></textarea>
-        </div>
-    </div>
-    <div class="form-group" style="padding-left: 120px;margin: 15px 0px">
-        <button id="doAdd" type="submit" class="btn btn-danger" style="margin-right: 30px">提交</button>
-        <button id="doCancel" type="button" class="btn btn-default">取消</button>
-    </div>
-</form>
-<!--修改菜单弹窗-->
-<form id="editMpanel" class="form-horizontal" style="display: none">
-    <div class="form-group form-group-sm" style="margin: 15px 0px">
-        <label class="control-label col-sm-4"><i class="required">*</i>菜单名称</label>
-        <div class="col-sm-7">
-            <input name="Menuname" type="text" class="form-control">
-        </div>
-    </div>
-    <div class="form-group" style="padding-left: 120px;margin: 15px 0px">
-        <button type="submit" class="btn btn-danger" style="margin-right: 30px">提交</button>
-        <button type="button" class="btn btn-default">取消</button>
-    </div>
-</form>
 <!--菜单图标展示弹窗-->
 <div class="iconPanel" style="display: none">
     <ul>

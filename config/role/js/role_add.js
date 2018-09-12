@@ -50,8 +50,8 @@ define(['bootstrapValidator','RoleService'], function (bootstrapValidator,RoleSe
                 if(data.result){
                     sub_data.inbuiltFlag=0;
                     sub_data.permit=1;
-                    $('#role_table').bootstrapTable('append',sub_data);
                     layer.closeAll();
+                    $('#role_table').bootstrapTable('append',sub_data);
                 }
             })
             return false;

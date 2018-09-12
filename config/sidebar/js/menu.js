@@ -12,7 +12,12 @@ define(function () {
     }
     menu.secondMenuShow = function () {
         $('.side-menu li').hover(function () {
-            $('.second-menu-list>.second-menu').stop().removeClass('on').eq($(this).index()).addClass('on')
+            var id = $(this).attr('id');
+            var $showMenu = $('.second-menu-list>.second-menu[name="' + id + '"]');
+            /*$('.second-menu-list>.second-menu[name="'+id+'"]').stop().removeClass('on').eq($(this).index()).addClass('on')*/
+            $showMenu.addClass('on');
+            $showMenu.siblings().removeClass('on');
+
         })
     };
     menu.secondMenuLeave = function () {
