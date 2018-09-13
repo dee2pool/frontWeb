@@ -23,43 +23,31 @@
     <div class="contentpage">
         <div class="content row">
             <div class="content-panel col-md-2" style="margin-right: 50px">
-                <div class="dropdown org-head">
-                    <h3>默认控制中心</h3>
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a href="#"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>默认控制中心</a>
-                        </li>
-                        <li><a href="#"><span class="glyphicon glyphicon-tasks" aria-hidden="true"></span>门禁</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="opera-icon">
-                    <a href="javascript:;" onclick="addOrg()"><img src="../img/add-center.png" width="25px"
-                                                                   height="25px"
-                                                                   title="添加控制中心"></a>
-                    <a href="javascript:;"><img src="../img/add-area.png" width="25px" height="23px"
-                                                title="添加区域"></a>
-                    <a href="javascript:;"><img src="../img/del.png" width="25px" height="25px"
-                                                title="删除区域或中心"></a>
+                <div class="head head-tree">
+                    <div class="head-left-tree">
+                        <span style="margin-right: 15px">管理域</span>
+                        <div class="opera-group">
+                            <a href="javascript:;"><i class="fa fa-map"></i></a>
+                            <a href="javascript:;"><i class="fa fa-institution"></i></a>
+                            <a class="remove_ugroup" href="javascript:;"><i class="fa fa-remove"></i></a>
+                        </div>
+                    </div>
                 </div>
                 <form role="form">
                     <div class="row">
-                        <div class="col-md-9">
-                            <input type="text" class="form-control" placeholder="区域或中心名称"
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" placeholder="区域或组织名称"
                                    style="display: inline-block">
-                        </div>
-                        <div class="col-md-3">
-                            <button type="button" class="btn btn-default">搜索</button>
                         </div>
                     </div>
                 </form>
                 <div id="tree"></div>
             </div>
             <div class="content-panel col-md-9">
-                <div class="org-head">
-                    <h3>详细信息</h3>
+                <div class="head">
+                    <div class="head-left-tree">
+                        <span>详细信息</span>
+                    </div>
                 </div>
                 <form id="alt-org" class="form-horizontal" style="padding-left: 210px">
                     <div class="form-group">
@@ -115,9 +103,9 @@
                 </form>
                 <div class="clearfix"></div>
             </div>
-            </div>
         </div>
     </div>
+</div>
 </div>
 </body>
 </html>

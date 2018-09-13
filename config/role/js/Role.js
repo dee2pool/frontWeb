@@ -19,10 +19,6 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
-        'bootstrap-switch': {
-            deps: ['jquery'],
-            exports: "bootstrapSwitch"
-        },
         'RoleService': {
             deps: ['common'],
             exports: "RoleService"
@@ -50,12 +46,11 @@ require.config({
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
         "RoleService": "../../common/js/service/RoleController",
-        "bootstrap-switch": "../../common/libs/bootstrap-switch/js/bootstrap-switch",
         "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
     }
 });
-require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstrapValidator', 'bootstrap', 'bootstrap-switch', 'bootstrap-treeview', 'topBar', 'roleAdd', 'editRole'],
-    function (jquery, layer, frame, bootstrapTable, RoleService, bootstrapValidator, bootstrap, bootstrapSwitch, treeview, topBar, roleAdd, editRole) {
+require(['jquery', 'layer', 'frame', 'bootstrap-table', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap','bootstrap-treeview', 'topBar', 'roleAdd', 'editRole'],
+    function (jquery, layer, frame, bootstrapTable, MenuService, RoleService, bootstrapValidator, bootstrap, treeview, topBar, roleAdd, editRole) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -70,13 +65,41 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstra
         $('.btn-cancel').click(function () {
             layer.closeAll();
         })
+        var treeData = [];
+        MenuService.getMenuListByParentId(-1, function (data) {
+            if (data.result) {
+                for (var i = 0; i < data.dataSize; i++) {
+                    //生成菜单树节点
+                    var treeNode = {};
+                    treeNode.id = data.data[i].id;
+                    treeNode.text = data.data[i].name;
+                    treeNode.parentId = data.data[i].parentId;
+                    MenuService.getMenuListByParentId(data.data[i].id, function (data2) {
+                        if (data2.result) {
+                            if (data2.dataSize > 0) {
+                                treeNode.nodes = [];
+                                for (var j = 0; j < data2.dataSize; j++) {
+                                    var node2 = {};
+                                    node2.id = data2.data[j].id;
+                                    node2.text = data2.data[j].name;
+                                    node2.parentId = data2.data[j].parentId;
+                                    treeNode.nodes.push(node2);
+                                }
+                            }
+                        }
+                    })
+                    treeData.push(treeNode);
+                }
+            }
+        })
         //菜单树
         $('#menutree').treeview({
             showBorder: false,
             showCheckbox: true,
-            data: frame.menuTree,
+            data: treeData,
             onNodeChecked: function (event, node) {
                 var nodeId = [];
+                //如果有子节点
                 if (node.nodes) {
                     for (var i = 0; i < node.nodes.length; i++) {
                         nodeId.push(node.nodes[i].nodeId);
@@ -84,15 +107,17 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstra
                     $("#menutree").treeview("checkNode", [nodeId, {silent: true}]);
                 } else {
                     var pId = node.parentId;
-                    var parentNode = $('#menutree').treeview("getNode", pId);
-                    var checkNum = 0;
-                    for (var i = 0; i < parentNode.nodes.length; i++) {
-                        if (parentNode.nodes[i].state.checked) {
-                            checkNum++;
+                    if (pId) {
+                        var parentNode = $('#menutree').treeview("getNode", pId);
+                        var checkNum = 0;
+                        for (var i = 0; i < parentNode.nodes.length; i++) {
+                            if (parentNode.nodes[i].state.checked) {
+                                checkNum++;
+                            }
                         }
-                    }
-                    if (checkNum == parentNode.nodes.length) {
-                        $("#menutree").treeview("checkNode", parentNode.nodeId);
+                        if (checkNum == parentNode.nodes.length) {
+                            $("#menutree").treeview("checkNode", parentNode.nodeId);
+                        }
                     }
                 }
             },
@@ -105,15 +130,17 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstra
                     $("#menutree").treeview("uncheckNode", [nodeId, {silent: true}]);
                 } else {
                     var pId = node.parentId;
-                    var parentNode = $('#menutree').treeview("getNode", pId);
-                    var checkNum = 0;
-                    for (var i = 0; i < parentNode.nodes.length; i++) {
-                        if (!parentNode.nodes[i].state.checked) {
-                            checkNum++;
+                    if (pId) {
+                        var parentNode = $('#menutree').treeview("getNode", pId);
+                        var checkNum = 0;
+                        for (var i = 0; i < parentNode.nodes.length; i++) {
+                            if (!parentNode.nodes[i].state.checked) {
+                                checkNum++;
+                            }
                         }
-                    }
-                    if (checkNum == parentNode.nodes.length) {
-                        $("#menutree").treeview("uncheckNode", parentNode.nodeId);
+                        if (checkNum == parentNode.nodes.length) {
+                            $("#menutree").treeview("uncheckNode", parentNode.nodeId);
+                        }
                     }
                 }
             }
@@ -163,8 +190,6 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstra
                 //初始化表格
                 $('#role_table').bootstrapTable({
                     columns: [{
-                        checkbox: true
-                    }, {
                         field: 'id',
                         visible: false
                     }, {
@@ -179,22 +204,11 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstra
                         field: 'inbuiltFlag',
                         visible: false
                     }, {
-                        field: 'permit',
-                        title: '状态',
-                        align: 'center',
-                        formatter: function (value, row, index) {
-                            if (value == 1) {
-                                var switchIcon = "<input type='checkbox' name='permit' checked>";
-                            } else {
-                                var switchIcon = "<input type='checkbox' name='permit'>";
-                            }
-                            return switchIcon;
-                        }
-                    }, {
                         title: '权限配置',
                         align: 'center',
                         events: {
                             "click #rolecfig": function (e, value, row, index) {
+                                console.log(row.id)
                                 //角色分配权限
                                 layer.open({
                                     type: 1,
@@ -216,8 +230,7 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstra
                         events: {
                             "click #edit_role": function (e, value, row, index) {
                                 //点击编辑按钮
-                                editRole.openWin(row.name, row.remark);
-                                editRole.formVali();
+
                             },
                             "click #del_role": function (e, value, row, index) {
                                 //点击删除按钮
@@ -230,7 +243,11 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstra
                                     } else {
                                         RoleService.deleteRole(row.id, function (data) {
                                             if (data.result) {
-                                                $('#role_table').bootstrapTable('removeByUniqueId', index)
+                                                layer.msg('删除成功!')
+                                                $('#role_table').bootstrapTable('remove', {
+                                                    field: 'id',
+                                                    values: [row.id]
+                                                })
                                             } else {
                                                 layer.msg('删除失败!')
                                             }
@@ -250,32 +267,20 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'RoleService', 'bootstra
                     }],
                     data: data.data
                 })
-                //初始化switch开关
-                $("[name='permit']").bootstrapSwitch({
-                    size: 'small',
-                    onText: '启用',
-                    offText: '禁用',
-                    onColor: 'primary',
-                    offColor: 'danger',
-                    labelWidth: 10,
-                    onSwitchChange: function (event, state) {
-
-                    }
-                })
             }
         })
         //添加角色
         roleAdd.init();
-        var permission={};
-        permission.menu=function (roleId) {
+        var permission = {};
+        permission.menu = function (roleId) {
             $('#menuPerSave').click(function () {
-                var menuChecked=$('#menutree').treeview('getChecked');
-                var menuIds=new Array();
-                for(var i=0;i<menuChecked.length;i++){
+                var menuChecked = $('#menutree').treeview('getChecked');
+                var menuIds = new Array();
+                for (var i = 0; i < menuChecked.length; i++) {
                     menuIds.push(menuChecked[i].id);
                 }
-                RoleService.grantMenu(roleId,menuIds,function (data) {
-                    if(data.result){
+                RoleService.grantMenu(roleId, menuIds, function (data) {
+                    if (data.result) {
                         layer.msg('分配权限成功!');
                         layer.closeAll();
                     }

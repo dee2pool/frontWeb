@@ -53,7 +53,6 @@ define(['common'], function MenuController(common) {
             url: requestUrl,
             type: 'Post',
             data: {
-                _method: 'DELETE',
                 menuId: menuIdStr
             },
             cache: false,
@@ -94,6 +93,7 @@ define(['common'], function MenuController(common) {
         $.ajax({
             url: requestUrl,
             type: 'Get',
+            async: false,
             data: {
                 parentMenuId: parentMenuIdStr,
                 roleId: roleIdStr,
@@ -114,6 +114,7 @@ define(['common'], function MenuController(common) {
         $.ajax({
             url: requestUrl,
             type: 'Get',
+            async: false,
             data: {
                 parentMenuId: parentMenuIdStr,
             },

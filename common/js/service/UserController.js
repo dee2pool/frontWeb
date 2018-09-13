@@ -218,7 +218,7 @@ define(['common'], function UserController(common) {
     UserService.updateGroupIdByUserId = function (userIds, groupId, onSuccess) {
         var userIdsStr = JSON.stringify(userIds);
         var groupIdStr = groupId;
-        var requestUrl = this.url + "/update/groupIds";
+        var requestUrl = this.url + "/update/groupId";
         $.ajax({
             url: requestUrl,
             type: 'Post',

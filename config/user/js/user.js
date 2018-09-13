@@ -380,12 +380,12 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'b
                 ugroupService.addUserGroup(ug, function (data) {
                     if (data.result) {
                         //为用户组添加权限
-                        ugroupService.assignRoleToUserGroup(ug.id, role_ids, function (data) {
+                        ugroupService.assignRoleToUserGroup(ug.id,role_ids,function (data) {
                             if (data.result) {
-                                layer.msg('添加成功');
+                                layer.msg('添加成功!');
                                 layer.closeAll();
                             } else {
-                                layer.msg(data.description);
+                                layer.msg("添加失败!");
                             }
                         })
                     } else {
@@ -537,18 +537,20 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'b
                 userService.add(user, function (data) {
                     if (data.result) {
                         var uid = data.data;
+                        //判断所有操作是否都成功
+                        var count=0;
                         //修改用户与用户组关联
                         if(nodeSelected){
                             userService.updateGroupIdByUserId(uid,nodeSelected.id,function (data) {
                                 if(data.result){
-
+                                    count++;
                                 }
                             })
                         }
                         //为用户赋予角色
-                        userService.grantRole(uid, role_ids, function (data) {
+                        userService.grantRole(uid,role_ids,function (data) {
                             if (data.result) {
-                                layer.msg("添加用户成功")
+                                count++;
                             } else {
                                 layer.msg(data.description)
                             }

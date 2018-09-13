@@ -48,6 +48,7 @@ define(['bootstrapValidator','RoleService'], function (bootstrapValidator,RoleSe
             sub_data.remark=$("input[name='remark']").val();
             RoleService.addRole(sub_data,function (data) {
                 if(data.result){
+                    sub_data.id=data.data;
                     sub_data.inbuiltFlag=0;
                     sub_data.permit=1;
                     layer.closeAll();

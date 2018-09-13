@@ -66,13 +66,12 @@ define(['common'], function UserGroupController(common) {
      *@param ids ids
      */
     ugroupService.deleteUserGroupByIds = function (ids, onSuccess) {
-        var idsStr = JSON.stringify(ids);
         var requestUrl = this.url + "/delete";
         $.ajax({
             url: requestUrl,
-            type: 'DELETE',
+            type: 'Post',
             data: {
-                ids: idsStr
+                ids: ids
             },
             cache: false,
             success: onSuccess,
