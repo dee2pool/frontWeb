@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" href="../css/user.css">
+    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+    <script type="text/javascript" src="../../common/js/md5.js"></script>
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/user"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content">
+            <div class="content-panel panel-left">
+                <div class="head head-tree">
+                    <div class="head-left-tree">
+                        <span style="margin-right: 15px">用户组</span>
+                        <div class="opera-group">
+                            <a id="addUgroup" href="javascript:;"><i class="fa fa-plus">添加</i></a>
+                            <a id="editUgroup" href="javascript:;"><i class="fa fa-pencil">修改</i></a>
+                            <a id="delUgroup" class="remove_ugroup" href="javascript:;"><i class="fa fa-remove">删除</i></a>
+                        </div>
+                    </div>
+                </div>
+                <!--<form role="form" style="margin-bottom: 10px">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" class="form-control" placeholder="请输入用户组名称">
+                        </div>
+                    </div>
+                </form>-->
+                <div class="slimscrollleft">
+                    <div id="ugrouptree"></div>
+                </div>
+            </div>
+            <div class="content-panel panel-right">
+                <div class="main-right">
+                    <div class="head">
+                        <div class="head-left" style="width: 480px">
+                            <a id="addUser" href="#"><span class="glyphicon glyphicon-plus"
+                                                           aria-hidden="true">添加</span></a>
+                            <a href="javascript:;"><span class="glyphicon glyphicon-log-in"
+                                                         aria-hidden="true">导入用户</span></a>
+                            <a href="javascript:;"><span class="glyphicon glyphicon-log-out"
+                                                         aria-hidden="true">导出用户</span></a>
+                        </div>
+                        <div class="head-right">
+                            <form role="form" style="width: 300px;display: inline-block">
+                                <input type="text" class="form-control" placeholder="请输入姓名"
+                                       style="width: 230px;display: inline-block">
+                                <button type="button" class="btn btn-default">搜索</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-nowrap" id="user_table"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--添加用户组弹窗-->
+<div id="add_ugroup" style="display: none">
+    <ul id="ugroup_tab" class="nav nav-tabs">
+        <li class="active">
+            <a href="#tab-base" data-toggle="tab" style="color: black">
+                基本信息
+            </a>
+        </li>
+        <li>
+            <a href="#tab-roles" data-toggle="tab" style="color: black">
+                角色列表
+            </a>
+        </li>
+    </ul>
+    <form id="uGroup" class="form-horizontal">
+        <div class="tab-content">
+            <div class="tab-pane tab-form fade in active" id="tab-base">
+                <div class="tab-main">
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-3 control-label"><i class="required">*</i>用户组编号：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="ugroupid" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-3 control-label"><i class="required">*</i>用户组姓名：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="ugroupname" type="text" class="form-control">
+                        </div>
+                        <span class="form-msg">3-14个字,请使用数字、字母、下划线组合</span>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-3 control-label">上级用户组：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <select name="ugroupPre" class="form-control">
+                                <option value="-1">默认用户组</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-3 control-label">备注：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <textarea name="ugroupRem" rows="3" cols="44"></textarea>
+                            <input name="res" type="reset" style="display:none;"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    <button type="button" class="btn btn-danger btn-next">下一步</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab-roles">
+                <div class="tab-main">
+                    <table class="role_table"></table>
+                </div>
+                <div class="tab-footer">
+                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--修改用户组弹窗-->
+<div id="edit_ugroup" style="display: none">
+    <ul id="edit_ugroup_tab" class="nav nav-tabs">
+        <li class="active">
+            <a href="#edit-tab-base" data-toggle="tab" style="color: black">
+                基本信息
+            </a>
+        </li>
+        <li>
+            <a href="#eidt-tab-roles" data-toggle="tab" style="color: black">
+                角色列表
+            </a>
+        </li>
+    </ul>
+    <form id="editform" class="form-horizontal">
+        <div class="tab-content">
+            <div class="tab-pane tab-form fade in active" id="edit-tab-base">
+                <div class="tab-main">
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-3 control-label"><i class="required">*</i>用户组姓名：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="editugname" type="text" class="form-control">
+                            <input name="editugid" type="hidden">
+                        </div>
+                        <span class="form-msg">3-14个字,请使用数字、字母、下划线组合</span>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-3 control-label">备注：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <textarea name="editugrem" rows="3" cols="44"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    <button type="button" class="btn btn-danger btn-next">下一步</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="eidt-tab-roles">
+                <div class="tab-main">
+                    <table class="role_table"></table>
+                </div>
+                <div class="tab-footer">
+                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--添加用户弹出层-->
+<div id="add_user" style="display: none">
+    <ul id="u_tab" class="nav nav-tabs">
+        <li class="active">
+            <a href="#tab-base-user" data-toggle="tab" style="color: black">
+                基本信息
+            </a>
+        </li>
+        <li>
+            <a href="#tab-roles-user" data-toggle="tab" style="color: black">
+                角色列表
+            </a>
+        </li>
+    </ul>
+    <form id="user" class="form-horizontal">
+        <div class="tab-content">
+            <div class="tab-pane tab-form fade in active" id="tab-base-user">
+                <div class="tab-main">
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label"><i class="required">*</i>用户组：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="ugroup" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label"><i class="required">*</i>用户名：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="uname" type="text" class="form-control">
+                        </div>
+                        <span class="form-msg">3-14个字,请使用数字、字母、下划线组合</span>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label"><i class="required">*</i>密码：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="upwd" type="password" class="form-control">
+                        </div>
+                        <div class="col-md-4 progress-bar_wrap" style="padding: 20px 0 0 0">
+                            <span class="progress-bar_item progress-bar_item-1"></span>
+                            <span class="progress-bar_item progress-bar_item-2"></span>
+                            <span class="progress-bar_item progress-bar_item-3"></span>
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label" style="padding-left: 5px"><i
+                                class="required">*</i>密码确认：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input type="password" name="repwd" data-bv-identical="true" data-bv-identical-field="upwd"
+                                   data-bv-identical-message="两次输入密码不一致" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label" style="padding-left: 5px">管理范围：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <select name="domain" class="form-control">
+                                <option value="1001">厂区1</option>
+                                <option value="1002">厂区2</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label"><i class="required">*</i>姓名：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="username" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label">性别：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <select name="gender" class="form-control">
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label">Email：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="email" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label">员工ID：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="employeeNo" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <!--<div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label">头像：</label>
+                        <div class="col-sm-6" style="padding: 0px">
+                            <input name="photo" type="file">
+                        </div>
+                    </div>
+                    <div class="form-item form-group-sm">
+                        <label class="col-sm-2 control-label">到期时间：</label>
+                        <div class="input-group  date form_datetime col-sm-6" style="padding: 0px">
+                            <input type="text" value="2050-12-31" class="form-control" readonly>
+                            <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                    </div>-->
+                </div>
+                <div class="tab-footer">
+                    <button type="button" class="btn btn-danger btn-next">下一步</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="tab-roles-user">
+                <div class="tab-main">
+                    <table class="role_table"></table>
+                </div>
+                <div class="tab-footer">
+                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!--菜单图标展示弹窗-->
+<div class="iconPanel" style="display: none">
+    <ul>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bars fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bell fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+    </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+.panel-left{
+    display: inline-block;
+    width: 450px;
+    height: 680px;
+    border: 1px solid lightgrey;
+}
+.panel-right{
+    display: inline-block;
+    width: 540px;
+    height: 680px;
+    float: right;
+    border: 1px solid lightgrey;
+}

@@ -1,0 +1,45 @@
+.add_ugroup{
+    width: auto;
+    height: auto;
+    padding-left: 20px;
+}
+.left-tab{
+    width: 180px;
+    height: 420px;
+    position: relative;
+    display: inline-block;
+    border: 1px solid lightgrey;
+}
+.left-tab dd{
+    height: 35px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: 700;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    border-bottom: 1px solid lightgrey;
+}
+.left-tab dd:hover{
+    background-color: gray;
+    color: white;
+    cursor:pointer;
+    border-left: 4px solid red;
+}
+.left-tab dd:active{
+    background-color: gray;
+    color: white;
+    border-left: 4px solid red;
+}
+.right-content{
+    display: inline-block;
+    width: 470px;
+    height: 420px;
+    vertical-align: top;
+    position: relative;
+    padding-left: 40px;
+}
+.right-content form label{
+    padding: 0;
+    width: 90px;
+}

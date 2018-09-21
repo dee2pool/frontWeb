@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色管理</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" href="../css/role.css">
+    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/Role"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content">
+            <div class="content-panel">
+                <div class="head">
+                    <div class="head-left" style="width: 280px">
+                        <a id="addRole" href="javascript:;"><span class="glyphicon glyphicon-plus" aria-hidden="true">添加角色</span></a>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="role_table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--添加角色弹窗-->
+<form id="add_role" class="form-horizontal" style="display: none">
+    <div class="form-item form-group-sm">
+        <label class="control-label col-sm-4"><i class="required">*</i>角色名称</label>
+        <div class="col-sm-7" style="padding: 0px">
+            <input name="name" type="text" class="form-control">
+        </div>
+    </div>
+    <div class="form-item form-group-sm">
+        <label class="control-label col-sm-4"><i class="required">*</i>角色描述</label>
+        <div class="col-sm-7" style="padding: 0px">
+            <input name="remark" type="text" class="form-control">
+            <input  name="res" type="reset" style="display:none;" />
+        </div>
+    </div>
+    <div class="tab-footer">
+        <button type="submit" class="btn btn-danger">完成</button>
+        <button type="button" class="btn btn-default btn-cancel">取消</button>
+    </div>
+</form>
+<!--权限配置弹窗-->
+<div id="auth_config" style="display: none;">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a href="#tab-menu" style="color: black" data-toggle="tab">
+                菜单权限
+            </a>
+        </li>
+        <li>
+            <a href="#tab-res" style="color: black" data-toggle="tab">
+                资源权限
+            </a>
+        </li>
+        <li>
+            <a href="#tab-dept" style="color: black" data-toggle="tab">
+                部门权限
+            </a>
+        </li>
+        <li>
+            <a href="#tab-sys" style="color: black" data-toggle="tab">
+                域权限
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <!--菜单-->
+        <div class="tab-pane tab-form fade in active" id="tab-menu">
+            <div id="menutree"></div>
+            <div class="tab-footer">
+                <button id="menuPerSave" type="button" class="btn btn-danger">保存</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </div>
+        <!--资源-->
+        <div class="tab-pane fade" id="tab-res">
+            <div class="basecfg">
+                <div class="row">
+                    <div class="tab-left col-md-8">
+                        <h5>配置资源权限</h5>
+                        <dl>
+                            <dt><input type="checkbox">监控点<i></i></dt>
+                            <dd><input type="checkbox">视频预览</dd>
+                            <dd><input type="checkbox">参数调节</dd>
+                            <dd><input type="checkbox">本地录像</dd>
+                            <dd><input type="checkbox">云镜控制</dd>
+                            <dd><input type="checkbox">云镜配置</dd>
+                            <dd><input type="checkbox">录像回放</dd>
+                            <dd><input type="checkbox">录像备份</dd>
+                            <dd><input type="checkbox">接收事件</dd>
+                        </dl>
+                        <dl>
+                            <dt><input type="checkbox">编码设备<i></i></dt>
+                            <dd><input type="checkbox">设备对讲</dd>
+                            <dd><input type="checkbox">接收事件</dd>
+                        </dl>
+                        <dl>
+                            <dt><input type="checkbox">解码设备<i></i></dt>
+                            <dd><input type="checkbox">上墙控制</dd>
+                        </dl>
+                        <dl>
+                            <dt><input type="checkbox">视频综合平台<i style="width: 75%"></i></dt>
+                            <dd><input type="checkbox">上墙控制</dd>
+                        </dl>
+                    </div>
+                    <div class="tab-right col-md-4">
+                        <!--<div class="detailIcon"><a href="#">详细配置</a></div>-->
+                        <h5>配置区域权限</h5>
+                        <div id="areatree"></div>
+                    </div>
+                </div>
+                <div class="tab-footer" style="text-align: right">
+                    <button type="button" class="btn btn-default">自定义配置</button>
+                    <button type="button" class="btn btn-danger">保存</button>
+                    <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </div>
+            <!--<div class="custom">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class=""></div>
+                    </div>
+                    <div class="col-md-8"></div>
+                </div>
+                <div class="tab-footer" style="text-align: right">
+                    <button type="button" class="btn btn-default">返回</button>
+                    <button type="button" class="btn btn-danger">保存</button>
+                </div>
+            </div>-->
+        </div>
+        <!--中心-->
+        <div class="tab-pane fade" id="tab-center">
+            <div id="centertree"></div>
+            <div class="tab-footer" style="text-align: right">
+                <button type="button" class="btn btn-danger">保存</button>
+                <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </div>
+        <!--部门-->
+        <div class="tab-pane fade" id="tab-dept">
+            <div id="depttree"></div>
+            <div class="tab-footer" style="text-align: right">
+                <button type="button" class="btn btn-danger">保存</button>
+                <button name="doCancel" type="button" class="btn btn-default btn-cancel ">取消</button>
+            </div>
+        </div>
+        <!--子系统-->
+        <div class="tab-pane fade" id="tab-sys">
+
+            <div class="tab-footer" style="text-align: right">
+                <button type="button" class="btn btn-danger">保存</button>
+                <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--菜单图标展示弹窗-->
+<div class="iconPanel" style="display: none">
+    <ul>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bars fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bell fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+        <li class="icon"><a href="#"><i class="fa fa-bar-chart fa-2x"></i></a></li>
+    </ul>
+</div>
+<script>
+    function editIcon() {
+        layer.open({
+            type: 1,
+            area: ['520px','418px'],
+            scrollbar: false,
+            offset: '200px',
+            title: '系统图标',
+            content: $('.iconPanel')
+        })
+    }
+</script>
+</body>
+</html>

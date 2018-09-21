@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>组织管理</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" href="../../../common/lib/ztree/css/metroStyle/metroStyle.css">
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/org"></script>
+</head>
+<body>
+    <div class="wrapper">
+        <!--头部-->
+        <div id="head"></div>
+        <!--侧边栏-->
+        <div id="sidebar"></div>
+        <!--主体内容-->
+        <div class="contentpage">
+            <div class="content">
+                <!-- <div class="panel-head">
+                     <ul class="breadcrumb">
+                         <li>
+                             <a href="#">Home</a>
+                         </li>
+                         <li>
+                             <a href="#">Tutorials</a>
+                         </li>
+                         <li class="active">HTML5</li>
+                     </ul>
+                 </div>-->
+                <div class="content-panel panel-left">
+                    <div class="head head-tree">
+                        <div class="head-left-tree">
+                            <span>组织机构树</span>
+                            <div class="opera-group">
+                                <a id="addOrg" href="javascript:;"><i class="fa fa-plus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<form role="form">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" placeholder="区域或组织名称"
+                                       style="display: inline-block">
+                            </div>
+                        </div>
+                    </form>-->
+                    <div id="orgtree"></div>
+                </div>
+                <div class="content-panel panel-right">
+                    <div class="head">
+                        <div class="head-left-tree">
+                            <span>子组织列表</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table text-nowrap" id="org_table"></table>
+                    </div>
+                    <!--分页-->
+                    <div class="fixed-table-pagination">
+                        <div class="pull-left">
+                            <span class="pagination-info"></span>
+                            <span class="page-list">
+                            <span class="btn-group dropup">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="page-size">10</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="menuitem" class="active"><a href="#">10</a></li>
+                                    <li role="menuitem"><a href="#">20</a></li>
+                                    <li role="menuitem"><a href="#">30</a></li>
+                                </ul>
+                            </span>
+                            条每页
+                        </span>
+                        </div>
+                        <div class="pull-right pagination">
+                            <ul class="pagination">
+                                <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
+                                <li class="page-item pNo active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--添加组织弹窗-->
+        <div id="add_org" style="display: none">
+            <form id="orgForm" class="form-horizontal">
+                <div class="form-item form-group-sm">
+                    <label class="col-sm-4 control-label"><i class="required">*</i>组织名称：</label>
+                    <div class="col-sm-6" style="padding: 0px">
+                        <input name="orgName" class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="form-item form-group-sm">
+                    <label class="col-sm-4 control-label"><i class="required">*</i>区域编码：</label>
+                    <div class="col-sm-6" style="padding: 0px">
+                        <input name="areaCode" class="form-control" type="text" readonly>
+                    </div>
+                    <a id="choseArea" href="#"style="display: inline-block;margin-top: 5px;margin-left: 10px"><span class="badge">选择</span></a>
+                </div>
+                <div class="form-item form-group-sm">
+                    <label class="col-sm-4 control-label">上级组织：</label>
+                    <div class="col-sm-6" style="padding: 0px">
+                        <input name="orgOrderName" class="form-control" type="text">
+                        <input name="orgOrderNo" type="hidden">
+                    </div>
+                </div>
+                <div class="form-item form-group-sm">
+                    <label class="col-sm-4 control-label"><i class="required">*</i>同级排序：</label>
+                    <div class="col-sm-6" style="padding: 0px">
+                        <input name="orderNo" class="form-control" type="text" readonly>
+                    </div>
+                </div>
+                <div class="form-item form-group-sm">
+                    <label class="col-sm-4 control-label">备注：</label>
+                    <div class="col-sm-6" style="padding: 0px">
+                        <textarea name="orgRemark" cols="40" rows="2"></textarea>
+                        <input name="res" type="reset" style="display:none;"/>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </form>
+        </div>
+        <!--区域树-->
+        <ul id="areatree" class="ztree" style="display: none;"></ul>
+    </div>
+</body>
+</html>
