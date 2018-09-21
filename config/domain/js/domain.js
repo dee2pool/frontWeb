@@ -65,8 +65,8 @@ require.config({
         "orgService": "../../../common/js/service/OrgController"
     }
 });
-require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-table','bootstrap', 'bootstrap-treeview', 'topBar', 'domainService', 'jquerySession', 'orgService'],
-    function (jquery, common, layer, frame, bootstrapValidator,bootstrapTable,bootstrap, treeview, topBar, domainService, jquerySession, orgService) {
+require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-table','bootstrap', 'bootstrap-treeview', 'topBar', 'domainService', 'orgService'],
+    function (jquery, common, layer, frame, bootstrapValidator,bootstrapTable,bootstrap, treeview, topBar, domainService, orgService) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
