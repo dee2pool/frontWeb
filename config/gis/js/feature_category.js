@@ -251,6 +251,19 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             //增加
             $("#add").bind("click", {isParent:true}, add);
 
+            initHeight();
+
+
+
         });
+
+        //通过获取class=content的高度，从而对class=tab中的内容进行高度赋值
+        function initHeight() {
+            console.log($(".content").height());
+            var height = 'height:'+$(".content").height()+'px !important';
+            //$("div.test").css("cssText", "width:650px !important;");
+            $(".left").css('cssText',height)
+            $(".right").css('cssText',height)
+        }
 
     });

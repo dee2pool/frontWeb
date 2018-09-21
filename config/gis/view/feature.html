@@ -31,273 +31,193 @@
     <!--主体内容-->
     <div class="contentpage">
         <div class="content feature">
-            <div class="feature-center feature-border">
-                <div class="left feature-border">
-                    <div class="tree-head">
-                        <a id="addParent" href="#"  onclick="return false;"><i class="fa fa-plus-circle"></i>增加</a>
-                        <a id="edit" href="#" onclick="return false;"><i class="fa fa-edit"></i>位置关联</a>
-                        <a id="remove" href="#" onclick="return false;"><i class="fa fa-remove"></i>删除</a>
 
-                        <select class="pull-right" name="" id="">
-                            <option value="">请选择类型</option>
-                            <option value="">设备</option>
-                            <option value="">人</option>
-                            <option value="">路</option>
-                        </select>
-                    </div>
-                    <ul id="treeDemo" class="ztree"></ul>
+            <div class="panel panel-default" style="height: 100%" id="pan">
+                <div class="panel-heading" id="pan-head">
+                    <h3 class="panel-title">要素配置</h3>
                 </div>
-                <div class="right" >
-                    <div class="information feature-border">
-                        <!--位置关联，编辑数据-->
-                        <div class="container-fluid editTreeData form-hidden">
-                            <div class="row">
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <h3 class="big-title">要素信息</h3>
-                                    </div>
-                                </div>
-                                <!--1.1要素名称-->
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">要素名称:</label>
-                                        <div class="col-sm-3">
-                                            <input type="text" class="form-control" placeholder="要素名称" id="feature-name">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--1.2要素类型-->
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">要素类型:</label>
-                                        <div class="col-sm-3">
-                                            <select class="form-control" id="feature-level1">
-                                                <option value="none">请选择</option>
-                                                <option value="feature-point">点要素</option>
-                                                <option value="feature-line">线要素</option>
-                                                <option value="feature-polygon">面要素</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <select class="form-control" id="feature-level2">
-                                                <option value="">请选择</option>
-                                                <option value="">建筑</option>
-                                                <option value="">设备</option>
-                                                <option value="">道路</option>
-                                                <option value="">轨迹</option>
-                                                <option value="">地图</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
+                <div class="panel-body" id="pan-body" style="height:calc(100% - 30px)">
+                    <!--核心内容-->
+                    <div class="feature-center feature-border">
+                        <div class="left feature-border">
+                            <div class="tree-head">
+                                <a id="addParent" href="#"  onclick="return false;"><i class="fa fa-plus-circle"></i>增加</a>
+                                <a id="edit" href="#" onclick="return false;"><i class="fa fa-edit"></i>位置关联</a>
+                                <a id="remove" href="#" onclick="return false;"><i class="fa fa-remove"></i>删除</a>
 
-                                <!--1.4要素图标-->
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">要素图标:</label>
-                                        <div class="col-sm-3">
-                                            <input type="file" class="form-control" placeholder="要素图标" id="upload-img">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--1.5位置关联-->
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">位置关联:</label>
-                                        <div class="col-sm-3">
-                                            <button class="btn btn-danger btn-magbtm" id="setPosition">位置关联</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--1.3添加楼层-->
-                                <div class="form-group form-hidden" id="add-building-btn">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">添加楼层:</label>
-                                        <div class="col-sm-3">
-                                            <button class="btn btn-danger btn-magbtm" id="add-building">添加楼层</button>
-                                            <!--<span for="">星沙</span>-->
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--1.6坐标和缩放-->
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">地理信息:</label>
-                                        <div class="col-sm-3">
-                                            <input type="text" class="form-control" placeholder="坐标范围" id="feature-coors">
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <input type="text" class="form-control" placeholder="缩放等级" id="feature-zoom" >
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title"></label>
-                                        <div class="col-sm-3">
-                                            <button class="btn btn-primary btn-lg">提交关联</button>
-                                        </div>
-                                    </div>
-                                </div>
+                                <select class="marg-5" name="" id="">
+                                    <option value="">请选择加载类型</option>
+                                    <option value="">设备</option>
+                                    <option value="">人</option>
+                                    <option value="">路</option>
+                                </select>
                             </div>
+                            <ul id="treeDemo" class="ztree"></ul>
                         </div>
+                        <div class="right feature-border" >
+                            <div class="map feature-border" id="map" style=""></div>
+                            <div class="information feature-border">
+                                <!--位置关联，编辑数据-->
+                                <div class="container-fluid editTreeData form-hidden">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <h3 class="big-title">要素信息</h3>
+                                            </div>
+                                        </div>
+                                        <!--1.1要素名称-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素名称:</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" placeholder="要素名称" id="feature-name">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--1.2要素类型-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素类型:</label>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="feature-level1">
+                                                        <option value="none">请选择</option>
+                                                        <option value="feature-point">点要素</option>
+                                                        <option value="feature-line">线要素</option>
+                                                        <option value="feature-polygon">面要素</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="feature-level2">
+                                                        <option value="">请选择</option>
+                                                        <option value="">建筑</option>
+                                                        <option value="">设备</option>
+                                                        <option value="">道路</option>
+                                                        <option value="">轨迹</option>
+                                                        <option value="">地图</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                        <!--查看数据-->
-                        <div class="container-fluid showTreeData form-hidden">
-                            <div class="row">
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <h3 class="big-title">要素信息</h3>
-                                    </div>
-                                </div>
-                                <!--1.1要素名称-->
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">要素名称:</label>
-                                        <div class="col-sm-3">
-                                            <span class="little-title" id="name"></span>
+                                        <!--1.4要素图标-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素图标:</label>
+                                                <div class="col-sm-3">
+                                                    <input type="file" class="form-control" placeholder="要素图标" id="upload-img">
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <!--1.2要素类型-->
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">要素类型:</label>
-                                        <div class="col-sm-3">
-                                            <select class="form-control" id="level1">
-                                                <option value="none">请选择</option>
-                                                <option value="feature-point">点要素</option>
-                                                <option value="feature-line">线要素</option>
-                                                <option value="feature-polygon">面要素</option>
-                                            </select>
+                                        <!--1.5位置关联-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">位置关联:</label>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-danger btn-magbtm" id="setPosition">位置关联</button>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-3">
-                                            <select class="form-control" id="level2">
-                                                <option value="">请选择</option>
-                                                <option value="">建筑</option>
-                                                <option value="">设备</option>
-                                                <option value="">道路</option>
-                                                <option value="">轨迹</option>
-                                                <option value="">地图</option>
-                                            </select>
+                                        <!--1.3添加楼层-->
+                                        <div class="form-group form-hidden" id="add-building-btn">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">添加楼层:</label>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-danger btn-magbtm" id="add-building">添加楼层</button>
+                                                    <!--<span for="">星沙</span>-->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--1.6坐标和缩放-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">地理信息:</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" placeholder="坐标范围" id="feature-coors">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" placeholder="缩放等级" id="feature-zoom" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title"></label>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-primary btn-lg">提交关联</button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!--1.6坐标和缩放-->
-                                <div class="form-group">
-                                    <div class="col-sm-12">
-                                        <label class="col-sm-2 col-sm-offset-2 little-title">坐标信息:</label>
-                                        <div class="col-sm-3">
-                                            <span class="little-title" id="coors">90</span>
+                                <!--查看数据-->
+                                <div class="container-fluid showTreeData form-hidden">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <h3 class="big-title">要素信息</h3>
+                                            </div>
                                         </div>
-                                        <div class="col-sm-3">
-                                            <span class="little-title" id="zoom">90</span>
+                                        <!--1.1要素名称-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素名称:</label>
+                                                <div class="col-sm-3">
+                                                    <span class="little-title" id="name"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--1.2要素类型-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素类型:</label>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="level1">
+                                                        <option value="none">请选择</option>
+                                                        <option value="feature-point">点要素</option>
+                                                        <option value="feature-line">线要素</option>
+                                                        <option value="feature-polygon">面要素</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="level2">
+                                                        <option value="">请选择</option>
+                                                        <option value="">建筑</option>
+                                                        <option value="">设备</option>
+                                                        <option value="">道路</option>
+                                                        <option value="">轨迹</option>
+                                                        <option value="">地图</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--1.6坐标和缩放-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">坐标信息:</label>
+                                                <div class="col-sm-3">
+                                                    <span class="little-title" id="coors">90</span>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <span class="little-title" id="zoom">90</span>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
-                        </div>
 
+
+                        </div>
                     </div>
-
-                    <div class="map feature-border" id="map" style=""></div>
                 </div>
             </div>
 
-            <div class="feature-foot feature-border">
-                <!--<div class="container-fluid">
-                    <!--<ul id="featureTab" class="nav nav-tabs">-->
-                        <!--<li class="active">-->
-                            <!--<a href="#home" data-toggle="tab">-->
-                                <!--位置关联-->
-                            <!--</a>-->
-                        <!--</li>-->
-                        <!--<li><a href="#ios" data-toggle="tab">位图查看</a></li>-->
-                    <!--</ul>-->
-                    <!--<div class="tab-content featureTabContent">-->
-                        <!--<div class="tab-pane fade in active" id="home">-->
-                            <!--<form class="form-horizontal feature-edit">-->
-                                <!--&lt;!&ndash;要素名称&ndash;&gt;-->
-                                <!--<div class="form-group">-->
-                                    <!--<label class="col-md-2 control-label">要素名称:</label>-->
-                                    <!--<div class="col-md-9">-->
-                                        <!--<input type="text" class="form-control" id="feature-name" placeholder="要素名称">-->
-                                    <!--</div>-->
-                                <!--</div>-->
 
-                                <!--&lt;!&ndash;要素类型&ndash;&gt;-->
-                                <!--<div class="form-group">-->
-                                    <!--<label class="col-md-2 control-label">要素类型:</label>-->
-                                    <!--<div class="col-md-9">-->
-                                    <!--<span class="col-md-6">-->
-                                        <!--<select class="form-control" id="feature-level1">-->
-                                            <!--<option value="none">请选择</option>-->
-                                            <!--<option value="feature-point">点要素</option>-->
-                                            <!--<option value="feature-line">线要素</option>-->
-                                            <!--<option value="feature-polygon">面要素</option>-->
-                                        <!--</select>-->
-                                    <!--</span>-->
-                                        <!--<span class="col-md-6">-->
-                                        <!--<select class="form-control" id="feature-level2">-->
-                                            <!--<option value="">请选择</option>-->
-                                            <!--<option value="">建筑</option>-->
-                                            <!--<option value="">设备</option>-->
-                                            <!--<option value="">道路</option>-->
-                                            <!--<option value="">轨迹</option>-->
-                                             <!--<option value="">地图</option>-->
-                                        <!--</select>-->
-                                    <!--</span>-->
-                                    <!--</div>-->
-                                <!--</div>-->
 
-                                <!--&lt;!&ndash;要素描述&ndash;&gt;-->
-                                <!--&lt;!&ndash;<div class="form-group">&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<label class="col-md-2 control-label">要素描述:</label>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;<div class="col-md-9">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;<textarea class="form-control" rows="3"></textarea>&ndash;&gt;-->
-                                    <!--&lt;!&ndash;</div>&ndash;&gt;-->
-                                <!--&lt;!&ndash;</div>&ndash;&gt;-->
-
-                                <!--&lt;!&ndash;图片选择&ndash;&gt;-->
-                                <!--<div class="form-group">-->
-                                    <!--<label class="col-md-2 control-label">上传图片:</label>-->
-                                    <!--<div class="col-md-9">-->
-                                        <!--<input type="file" class="form-control" id="upload-img">-->
-                                    <!--</div>-->
-                                <!--</div>-->
-
-                                <!--&lt;!&ndash;位置设置&ndash;&gt;-->
-                                <!--<div class="form-group">-->
-                                    <!--<label class="col-md-2 control-label">位置关联:</label>-->
-                                    <!--<div class="col-md-9">-->
-                                        <!--<button type="button" class="btn btn-primary" id="setPosition">添加位置</button>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-
-                                <!--&lt;!&ndash;坐标or范围&ndash;&gt;-->
-                                <!--<div class="form-group">-->
-                                    <!--<label class="col-md-2 control-label">坐标（范围）:</label>-->
-                                    <!--<div class="col-md-9">-->
-                                        <!--<input type="text" class="form-control" id="feature-coors" placeholder="坐标（范围）" readonly="readonly">-->
-                                    <!--</div>-->
-                                <!--</div>-->
-
-                                <!--<div class="form-group">-->
-                                    <!--<div class="col-sm-offset-2 col-sm-10">-->
-                                        <!--<button type="button" class="btn btn-default" id="feature-submit">确认</button>-->
-                                        <!--<button type="button" class="btn btn-default" id="feature-cancel">取消</button>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</form>-->
-                        <!--</div>-->
-                        <!--<div class="tab-pane fade" id="ios">-->
-
-                        <!--</div>-->
-                    <!--</div>-->
-                <!--</div>-->
-            </div>
         </div>
     </div>
 </div>

@@ -665,6 +665,10 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 }
 
             });
+
+            //动态高度设置
+            // var height = $("#pan").height() - $("#pan-head").height() - 15;
+            // $("#pan-body").css('height',height+'px');
         });
 
 
