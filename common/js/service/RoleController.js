@@ -1,4 +1,4 @@
-define(['common'],function RoleController(common){
+define(['./../../../config/common/js/util'],function RoleController(common){
     var RoleService=new Object();
     RoleService.url=common.host+"/auth"+"/role";
     /**

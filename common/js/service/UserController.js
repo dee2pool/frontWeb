@@ -1,4 +1,4 @@
-define(['common'], function UserController(common) {
+define(['./../../../config/common/js/util'], function UserController(common) {
     var UserService = new Object();
     UserService.url = common.host + "/auth" + "/user";
     /**
