@@ -100,6 +100,7 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             { id:'101', pId:11, name:"建筑"},
             { id:'102', pId:11, name:"摄像头"},
             { id:'103', pId:11, name:"传感器"},
+            { id:'104', pId:11, name:"信息"},
             { id:'104', pId:'12', name:"铁路"},
             { id:'105', pId:'12', name:"国道"},
             { id:'106', pId:'13', name:"区域地图"},
@@ -193,11 +194,16 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 $("#icon").css("display","none");
                 $("#icon-preview").css("display","none");
                 $("#style").css("display","none");
+                $("#style-preview").css("display","none");
+                $("#contain-feature").css("display","none");
+                $("#contain-feature-add").css("display","none");
 
                 //把适当需要的显示出来
                 $("#name").css("display","block");
                 $("#icon").css("display","block");
                 $("#icon-preview").css("display","block");
+                $("#contain-feature").css("display","block");
+                $("#contain-feature-add").css("display","block");
 
                 $("#category-name").val(treeNode.name);
             }
@@ -209,9 +215,13 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 $("#icon-preview").css("display","none");
                 $("#style").css("display","none");
                 $("#style-preview").css("display","none");
+                $("#contain-feature").css("display","none");
+                $("#contain-feature-add").css("display","none");
 
                 $("#name").css("display","block");
                 $("#style").css("display","block");
+                $("#contain-feature").css("display","block");
+                $("#contain-feature-add").css("display","block");
 
                 $("#color").val("");
 
@@ -228,8 +238,13 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 $("#icon").css("display","none");
                 $("#icon-preview").css("display","none");
                 $("#style").css("display","none");
+                $("#style-preview").css("display","none");
+                $("#contain-feature").css("display","none");
+                $("#contain-feature-add").css("display","none");
 
                 $("#name").css("display","block");
+                $("#contain-feature").css("display","block");
+                $("#contain-feature-add").css("display","block");
 
                 $("#category-name").val(treeNode.name);
             }
@@ -238,28 +253,20 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
         $(document).ready(function(){
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-
             //移除节点
             $("#remove").bind("click", remove);
-
             //查看地图
             $("#show-map").bind("click", showMap);
-
             //编辑
             $("#edit").bind("click",edit);
-
             //增加
             $("#add").bind("click", {isParent:true}, add);
-
             initHeight();
-
-
-
         });
 
         //通过获取class=content的高度，从而对class=tab中的内容进行高度赋值
         function initHeight() {
-            console.log($(".content").height());
+            //console.log($(".content").height());
             var height = 'height:'+$(".content").height()+'px !important';
             //$("div.test").css("cssText", "width:650px !important;");
             $(".left").css('cssText',height)
