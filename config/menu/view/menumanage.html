@@ -35,13 +35,13 @@
 <form id="addMpanel" class="form-horizontal" style="display: none">
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4"><i class="required">*</i>菜单名称：</label>
-        <div class="col-sm-7">
+        <div class="col-sm-7" style="padding: 0px">
             <input name="Menuname" type="text" class="form-control">
         </div>
     </div>
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4"><i class="required">*</i>上级菜单：</label>
-        <div class="col-sm-7">
+        <div class="col-sm-7" style="padding: 0px">
             <select name="MenuparentId" class="form-control">
                 <option value="-1">无</option>
             </select>
@@ -49,17 +49,17 @@
     </div>
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">页面路径：</label>
-        <div class="col-sm-7">
+        <div class="col-sm-7" style="padding: 0px">
             <input name="Menuurl" type="text" class="form-control">
         </div>
     </div>
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4"><i class="required">*</i>菜单展示序号：</label>
-        <div class="col-sm-7">
+        <div class="col-sm-7" style="padding: 0px">
             <input name="MenuorderNo" type="text" class="form-control">
         </div>
     </div>
-    <div class="form-item form-group-sm">
+<!--    <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">菜单图标：</label>
         <div class="col-md-3">
             <div class="menuIcon" style="width: 55px;height: 55px;border: 1px solid lightgray;text-align: center;vertical-align: center;padding-top: 8px">
@@ -67,11 +67,12 @@
                 <a href="javascript:;" style="display: block;font-size: 12px;background-color: lightgray">修改图标</a>
             </div>
         </div>
-    </div>
+    </div>-->
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">备注：</label>
-        <div class="col-sm-7">
+        <div class="col-sm-7" style="padding: 0px">
             <textarea name="Menuremark" class="form-control"></textarea>
+            <input  name="res" type="reset" style="display:none;" />
         </div>
     </div>
     <div class="tab-footer">
@@ -83,27 +84,28 @@
 <form id="editMpanel" class="form-horizontal" style="display: none">
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">菜单名称：</label>
-        <div class="col-sm-7">
-            <input id="edit_Mname" type="text" class="form-control">
-            <input id="edit_Mid" type="hidden">
+        <div class="col-sm-7" style="padding: 0px">
+            <input name="edit_Mname" type="text" class="form-control">
+            <input name="edit_Mid" type="hidden">
         </div>
     </div>
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">页面路径：</label>
-        <div class="col-sm-7">
-            <input id="edit_Murl" type="text" class="form-control">
+        <div class="col-sm-7" style="padding: 0px">
+            <input name="edit_Murl" type="text" class="form-control">
         </div>
     </div>
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">菜单展示序号：</label>
-        <div class="col-sm-7">
-            <input id="edit_Mno" type="text" class="form-control">
+        <div class="col-sm-7" style="padding: 0px">
+            <input name="edit_Mno" type="text" class="form-control">
         </div>
     </div>
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">备注：</label>
-        <div class="col-sm-7">
-            <textarea id="edit_Mremark" class="form-control"></textarea>
+        <div class="col-sm-7" style="padding: 0px">
+            <textarea name="edit_Mremark" class="form-control"></textarea>
+            <input  name="res" type="reset" style="display:none;" />
         </div>
     </div>
     <div class="tab-footer">

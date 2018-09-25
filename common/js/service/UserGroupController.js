@@ -1,4 +1,4 @@
-define(['common'], function UserGroupController(common) {
+define(['./../../../config/common/js/util'], function UserGroupController(common) {
     var ugroupService = new Object();
     ugroupService.url = common.host + "/auth" + "/userGroup";
     /**

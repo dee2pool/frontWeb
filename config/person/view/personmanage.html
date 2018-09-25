@@ -28,23 +28,23 @@
                 <div class="head head-tree">
                     <div class="head-left-tree">
                         <span style="margin-right: 15px">部门</span>
-                        <div class="opera-group">
-                            <a id="addDept" href="javascript:;"><i class="fa fa-plus"></i></a>
-                            <a href="javascript:;"><i class="fa fa-pencil"></i></a>
-                            <a href="javascript:;"><i class="fa fa-remove"></i></a>
-                            <a href="javascript:;"><i class="fa fa-sign-in"></i></a>
-                            <a href="javascript:;"><i class="fa fa-sign-out"></i></a>
-                        </div>
                     </div>
+                </div>
+                <div class="opera-group">
+                    <a id="addDept" href="javascript:;"><i class="fa fa-plus">添加</i></a>
+                    <a id="editDept" href="javascript:;"><i class="fa fa-pencil">修改</i></a>
+                    <a id="delDept" href="javascript:;"><i class="fa fa-remove">删除</i></a>
+                    <a href="javascript:;"><i class="fa fa-sign-in">导入</i></a>
+                    <a href="javascript:;"><i class="fa fa-sign-out">导出</i></a>
                 </div>
                 <form role="form">
                     <div class="row">
                         <div class="col-md-12">
-                            <input type="text" class="form-control" placeholder="请输入部门名称">
+                            <input type="text" class="form-control input-sm" placeholder="请输入部门名称">
                         </div>
                     </div>
                 </form>
-                <div id="depttree"></div>
+                <div id="departmentTree"></div>
             </div>
             <div class="content-panel col-md-9">
                 <div class="head">
@@ -71,31 +71,59 @@
 </div>
 <!--添加部门弹出层-->
 <div class="add_dept" style="display: none">
-    <form class="form-horizontal">
+    <form id="addDeptForm" class="form-horizontal">
         <div class="form-item form-group-sm">
             <label class="col-sm-4 control-label"><i class="required">*</i>部门名称：</label>
             <div class="col-sm-6" style="padding: 0px">
-                <input class="form-control" type="text">
+                <input name="deptName" class="form-control" type="text">
             </div>
         </div>
         <div class="form-item form-group-sm">
             <label class="col-sm-4 control-label">上级部门：</label>
             <div class="col-sm-6" style="padding: 0px">
-                <select class="form-control">
-                    <option>默认部门</option>
-                    <option>研发中心</option>
-                    <option>测试中心</option>
+                <select name="parentDept" class="form-control">
+                    <option value="-1">无</option>
                 </select>
             </div>
         </div>
         <div class="form-item form-group-sm">
             <label class="col-sm-4 control-label">备注：</label>
             <div class="col-sm-6" style="padding: 0px">
-                <textarea cols="40" rows="2"></textarea>
+                <textarea name="deptRemark" cols="40" rows="2"></textarea>
+                <input  name="res" type="reset" style="display:none;" />
             </div>
         </div>
         <div class="tab-footer">
-            <button type="button" class="btn btn-danger">完成</button>
+            <button type="submit" class="btn btn-danger">完成</button>
+            <button type="button" class="btn btn-default btn-cancel">取消</button>
+        </div>
+    </form>
+</div>
+<!--修改部门弹窗-->
+<div id="edit_dept" style="display: none">
+    <form id="editDeptForm" class="form-horizontal">
+        <div class="form-item form-group-sm">
+            <label class="col-sm-4 control-label"><i class="required">*</i>部门名称：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="eidtDeptName" class="form-control" type="text">
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-4 control-label">上级部门：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <select name="parentDept" class="form-control">
+                    <option value="-1">无</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-4 control-label">备注：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <textarea name="eidtDeptRemark" cols="40" rows="2"></textarea>
+            </div>
+        </div>
+        <div class="tab-footer">
+            <button type="submit" class="btn btn-danger">完成</button>
             <button type="button" class="btn btn-default btn-cancel">取消</button>
         </div>
     </form>

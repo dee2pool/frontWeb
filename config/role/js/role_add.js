@@ -3,6 +3,7 @@ define(['bootstrapValidator','RoleService'], function (bootstrapValidator,RoleSe
     //添加角色弹窗
     function openWin() {
         $('#addRole').click(function () {
+            validator();
             layer.open({
                 type: 1,
                 area: '380px',
@@ -11,6 +12,7 @@ define(['bootstrapValidator','RoleService'], function (bootstrapValidator,RoleSe
                 title: '添加角色',
                 content: $('#add_role')
             })
+            formSubmit();
         })
     }
     //表单验证
@@ -53,6 +55,9 @@ define(['bootstrapValidator','RoleService'], function (bootstrapValidator,RoleSe
                     sub_data.permit=1;
                     layer.closeAll();
                     $('#role_table').bootstrapTable('append',sub_data);
+                    //表单清空
+                    $("input[name='res']").click();
+                    $("#add_role").data('bootstrapValidator').destroy();
                 }
             })
             return false;
@@ -60,8 +65,6 @@ define(['bootstrapValidator','RoleService'], function (bootstrapValidator,RoleSe
     }
     roleAdd.init = function () {
         openWin();
-        validator();
-        formSubmit();
     }
     return roleAdd;
 })

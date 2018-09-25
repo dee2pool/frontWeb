@@ -25,30 +25,30 @@
     <div id="sidebar"></div>
     <!--主体内容-->
     <div class="contentpage">
-        <div class="content row">
-            <div class="content-panel col-md-2" style="margin-right: 50px">
+        <div class="content">
+            <div class="content-panel panel-left">
                 <div class="head head-tree">
                     <div class="head-left-tree">
                         <span style="margin-right: 15px">用户组</span>
                         <div class="opera-group">
-                            <a id="addUgroup" href="javascript:;"><i class="fa fa-plus"></i></a>
-                            <a id="editUgroup" href="javascript:;"><i class="fa fa-pencil"></i></a>
-                            <a id="delUgroup" class="remove_ugroup" href="javascript:;"><i class="fa fa-remove"></i></a>
+                            <a id="addUgroup" href="javascript:;"><i class="fa fa-plus">添加</i></a>
+                            <a id="editUgroup" href="javascript:;"><i class="fa fa-pencil">修改</i></a>
+                            <a id="delUgroup" class="remove_ugroup" href="javascript:;"><i class="fa fa-remove">删除</i></a>
                         </div>
                     </div>
                 </div>
-                <form role="form" style="margin-bottom: 10px">
+                <!--<form role="form" style="margin-bottom: 10px">
                     <div class="row">
                         <div class="col-md-12">
                             <input type="text" class="form-control" placeholder="请输入用户组名称">
                         </div>
                     </div>
-                </form>
+                </form>-->
                 <div class="slimscrollleft">
                     <div id="ugrouptree"></div>
                 </div>
             </div>
-            <div class="content-panel col-md-9">
+            <div class="content-panel panel-right">
                 <div class="main-right">
                     <div class="head">
                         <div class="head-left" style="width: 480px">
@@ -67,7 +67,9 @@
                             </form>
                         </div>
                     </div>
-                    <table id="user_table"></table>
+                    <div class="table-responsive">
+                        <table class="table text-nowrap" id="user_table"></table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -116,6 +118,7 @@
                         <label class="col-sm-3 control-label">备注：</label>
                         <div class="col-sm-6" style="padding: 0px">
                             <textarea name="ugroupRem" rows="3" cols="44"></textarea>
+                            <input name="res" type="reset" style="display:none;"/>
                         </div>
                     </div>
                 </div>
@@ -150,7 +153,7 @@
             </a>
         </li>
     </ul>
-    <form class="form-horizontal">
+    <form id="editform" class="form-horizontal">
         <div class="tab-content">
             <div class="tab-pane tab-form fade in active" id="edit-tab-base">
                 <div class="tab-main">
@@ -272,7 +275,7 @@
                             <input name="employeeNo" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="form-item form-group-sm">
+                    <!--<div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">头像：</label>
                         <div class="col-sm-6" style="padding: 0px">
                             <input name="photo" type="file">
@@ -284,7 +287,7 @@
                             <input type="text" value="2050-12-31" class="form-control" readonly>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="tab-footer">
                     <button type="button" class="btn btn-danger btn-next">下一步</button>

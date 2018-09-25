@@ -38,6 +38,26 @@ require(['jquery', 'bootstrap', 'layer', 'loginservice', 'common'], function (jq
     layer.config({
         path: 'common/libs/layer/'
     });
+    // 页面宽度小于1366px
+    if(document.body.clientWidth <= 1366) {
+        $('body').addClass('resizeWin');
+        $('form>div').addClass('input-group-sm');
+        $('#login-btn').addClass('btn-sm');
+    }
+    // 浏览器窗口变化
+    $(window).resize(function() {
+        if(document.body.clientWidth <= 1366) {
+            $('body').addClass('resizeWin');
+            $('form>div').addClass('input-group-sm');
+            $('#login-btn').removeClass('btn-lg');
+            $('#login-btn').addClass('btn-sm');
+        } else {
+            $('body').removeClass('resizeWin');
+            $('form>div').removeClass('input-group-sm');
+            $('#login-btn').removeClass('btn-sm');
+            $('#login-btn').addClass('btn-lg');
+        }
+    });
     //页面初始化时判断ip是否被锁定，如果没有被锁定判断是否需要验证码
     isIpBlock(function (data) {
         if (!data) {

@@ -1,4 +1,4 @@
-define(['common'],function(common){
+define(['./../../../config/common/js/util'],function LoginController(common){
     var loginservice=new Object();
     loginservice.url=common.host+"/auth"+"/";
     /**

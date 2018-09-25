@@ -8,12 +8,6 @@ define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
         '            <p class="side-collapse"><a id="hideSide" href="#">',
         '                <i class="fa fa-angle-left"style="font-size: 25px"></i></a></p>',
         '            <ul class="config-menu">',
-        '                <li>',
-        '                    <a href="javascript:;">',
-        '                        <i class="fa fa-plus-circle"></i>',
-        '                        <span>添加菜单</span>',
-        '                    </a>',
-        '                </li>',
         '            </ul>',
         '        </div>',
         '    </nav>',
@@ -55,20 +49,22 @@ define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
     //显示侧边栏
     function showSide() {
         $('.hambuger').click(function () {
-            $('.sidebar').addClass('tog-side');
-            $('.second-menu').addClass('tog-side');
-            $('.contentpage').addClass('tog-cont');
-            $('.hambuger').hide()
+            $('.sidebar').removeClass('tog-side');
+            $('.second-menu').removeClass('tog-side');
+            $('.contentpage').removeClass('tog-cont');
+            $('.contentpage .panel-right').width($('.contentpage .panel-right').width()-180)
+            $('.hambuger').hide();
         })
     }
 
     //隐藏侧边栏
     function hideSide() {
         $('#hideSide').click(function () {
-            $('.sidebar').removeClass('tog-side');
-            $('.second-menu').removeClass('tog-side');
-            $('.contentpage').removeClass('tog-cont');
-            $('.hambuger').show()
+            $('.sidebar').addClass('tog-side');
+            $('.second-menu').addClass('tog-side');
+            $('.contentpage').addClass('tog-cont');
+            $('.contentpage .panel-right').width($('.contentpage .panel-right').width()+180)
+            $('.hambuger').show();
         })
     }
 

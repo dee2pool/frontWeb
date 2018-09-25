@@ -29,7 +29,9 @@
                         <a id="addRole" href="javascript:;"><span class="glyphicon glyphicon-plus" aria-hidden="true">添加角色</span></a>
                     </div>
                 </div>
-                <table id="role_table"></table>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="role_table"></table>
+                </div>
             </div>
         </div>
     </div>
@@ -38,14 +40,15 @@
 <form id="add_role" class="form-horizontal" style="display: none">
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4"><i class="required">*</i>角色名称</label>
-        <div class="col-sm-7">
+        <div class="col-sm-7" style="padding: 0px">
             <input name="name" type="text" class="form-control">
         </div>
     </div>
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4"><i class="required">*</i>角色描述</label>
-        <div class="col-sm-7">
+        <div class="col-sm-7" style="padding: 0px">
             <input name="remark" type="text" class="form-control">
+            <input  name="res" type="reset" style="display:none;" />
         </div>
     </div>
     <div class="tab-footer">
@@ -67,18 +70,13 @@
             </a>
         </li>
         <li>
-            <a href="#tab-center" style="color: black" data-toggle="tab">
-                中心权限
-            </a>
-        </li>
-        <li>
             <a href="#tab-dept" style="color: black" data-toggle="tab">
                 部门权限
             </a>
         </li>
         <li>
             <a href="#tab-sys" style="color: black" data-toggle="tab">
-                子系统功能
+                域权限
             </a>
         </li>
     </ul>

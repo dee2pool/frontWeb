@@ -2,3 +2,11 @@
    margin-left: 0px;
     margin-right: 0px;
 }
+.table-pagination{
+    height: 50px;
+    border: 1px solid lightgrey;
+}
+.fix-table{
+    width: 100%;
+    height: 550px;
+}

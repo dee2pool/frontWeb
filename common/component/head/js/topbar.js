@@ -1,4 +1,4 @@
-define(["../../../config/common/libs/nav/js/nav.min","../../../common/js/service/LoginController"],function (nav,loginservice) {
+define(["./../../../lib/nav/js/nav.min","./../../../js/service/LoginController"],function (nav,loginservice) {
     var topBar={};
     //logo图片路径
     topBar.imgSrc='../../../common/component/head/img/logo.png';

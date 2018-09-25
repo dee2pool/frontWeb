@@ -49,8 +49,8 @@ require.config({
         "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
     }
 });
-require(['jquery', 'layer', 'frame', 'bootstrap-table', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap','bootstrap-treeview', 'topBar', 'roleAdd', 'editRole'],
-    function (jquery, layer, frame, bootstrapTable, MenuService, RoleService, bootstrapValidator, bootstrap, treeview, topBar, roleAdd, editRole) {
+require(['jquery', 'layer', 'frame','common','bootstrap-table', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap','bootstrap-treeview', 'topBar', 'roleAdd', 'editRole'],
+    function (jquery, layer, frame,common,bootstrapTable, MenuService, RoleService, bootstrapValidator, bootstrap, treeview, topBar, roleAdd, editRole) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -259,7 +259,7 @@ require(['jquery', 'layer', 'frame', 'bootstrap-table', 'MenuService', 'RoleServ
                             }
                         },
                         formatter: function () {
-                            var icons = "<div class='btn-group'><button id='edit_role' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
+                            var icons = "<div class='btn-group'>" +
                                 "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
                                 "</div>"
                             return icons;

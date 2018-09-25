@@ -147,21 +147,29 @@ require(['jquery','common','layer','frame', 'bootstrap-table','jquery-slimScroll
                             return icons;
                         }
                     }],
-                    data:data.data,
-                    height:622
+                    data:data.data
                 })
+                //初始化分页组件
                 common.pageInit(init_page.pageNumber,init_page.pageSize,data.extra)
             }
         })
         //改变页面展示数据条数
-        $('li[data-url="menuitem"]>a').click(function () {
+        $('li[role="menuitem"]>a').click(function () {
             init_page.pageSize=$(this).html();
             $('.page-size').html($(this).html());
             $(this).parent().addClass('active');
             $(this).parent().siblings().removeClass('active');
             deviceInfoService.getDeviceInfoList(init_page,function (data) {
                 if(data.result){
-                    $('#device_table').bootstrapTable('load',data.data)
+                    $('#device_table').bootstrapTable('load',data.data);
+                    //清除
+                    $('.pagination>li').each(function () {
+                        if($(this).children().html()>1){
+                            $(this).remove();
+                        }
+                    })
+                    //初始化分页组件
+                    common.pageInit(init_page.pageNumber,init_page.pageSize,data.extra)
                 }
             })
         })
@@ -187,6 +195,20 @@ require(['jquery','common','layer','frame', 'bootstrap-table','jquery-slimScroll
                     }
                 })
             }
+        })
+        //跳转到指定的页面
+        $('.pNo>a').click(function () {
+            alert("aa")
+            //得到跳转的页码
+            var pnum=$(this).html();
+            alert(pnum)
+            init_page.pageNumber=pnum;
+            //跳转到指定的页面
+            deviceInfoService.getDeviceInfoList(init_page,function (data) {
+                if(data.result){
+                    $('#device_table').bootstrapTable('load',data.data);
+                }
+            })
         })
         //初始化设备树
         var page_temp_type = {
@@ -225,9 +247,9 @@ require(['jquery','common','layer','frame', 'bootstrap-table','jquery-slimScroll
             }
         })
         //设备树滚动条
-        $('.slimscrollleft').slimScroll({
-            height:'655px'
-        })
+        /*$('.slimscrollleft').slimScroll({
+            height:common.height
+        })*/
         //表单验证
         $('#add_dev_form').bootstrapValidator({
             message: 'This value is not valid',

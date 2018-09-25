@@ -22,21 +22,15 @@
     <div id="sidebar"></div>
     <!--主体内容-->
     <div class="contentpage">
-        <button type="button" class="hambuger is-closed">
-            <span class="ham-top"></span>
-            <span class="ham-bottom"></span>
-        </button>
         <div class="content">
-            <div class="content-panel">
-                <div class="row">
-                    <div class="col-md-2">
-                        <div class="slimscrollleft">
+            <div class="content-panel panel-left">
+
                             <div id="device_tree"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-10">
-                        <div class="head">
-                            <div class="head-left" style="width: 100%">
+
+                </div>
+            <div class="content-panel panel-right">
+                <div class="head">
+                    <div class="head-left" style="width: 100%">
                                 <a href="javascript:;" id="add_device"><span class="glyphicon glyphicon-plus"
                                                                                     aria-hidden="true">添加</span></a>
                                 <a href="#"><span class="glyphicon glyphicon-download-alt"
@@ -50,29 +44,54 @@
                                                   aria-hidden="true">单条添加到媒体源</span></a>
                                 <a href="#"><span class="glyphicon glyphicon-registration-mark" aria-hidden="true">发布到GB28181</span></a>
                             </div>
+                </div>
+                <div style="margin: 10px 0px">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label>设备名称</label>
+                            <input type="text" class="form-control"/>
                         </div>
-                        <div style="margin: 10px 0px">
-                            <form class="form-inline">
-                                <div class="form-group">
-                                    <label>设备名称</label>
-                                    <input type="text" class="form-control"/>
-                                </div>
-                                <div class="form-group">
-                                    <label>IP地址</label>
-                                    <input type="text" class="form-control"/>
-                                </div>
-                                <div class="form-group">
-                                    <label>生产商</label>
-                                    <select class="form-control">
-                                        <option>请选择</option>
-                                    </select>
-                                </div>
-                                <button class="btn btn-primary">查询</button>
-                                <button class="btn btn-default">重置</button>
-                            </form>
+                        <div class="form-group">
+                            <label>IP地址</label>
+                            <input type="text" class="form-control"/>
                         </div>
-                        <table id="device_table"></table>
-                        <div class="fixed-table-pagination"></div>
+                        <div class="form-group">
+                            <label>生产商</label>
+                            <select class="form-control">
+                                <option>请选择</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary">查询</button>
+                        <button class="btn btn-default">重置</button>
+                    </form>
+                </div>
+                <div class="table-responsive">
+                    <table id="device_table" class="table text-nowrap"></table>
+                </div>
+                <div class="fixed-table-pagination">
+                    <div class="pull-left">
+                        <span class="pagination-info"></span>
+                        <span class="page-list">
+                            <span class="btn-group dropup">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="page-size">10</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="menuitem" class="active"><a href="#">10</a></li>
+                                    <li role="menuitem"><a href="#">20</a></li>
+                                    <li role="menuitem"><a href="#">30</a></li>
+                                </ul>
+                            </span>
+                            条每页
+                        </span>
+                    </div>
+                    <div class="pull-right pagination">
+                        <ul class="pagination">
+                            <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
+                            <li class="page-item pNo active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
+                        </ul>
                     </div>
                 </div>
             </div>
