@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-    <title>区域管理</title>
+    <title>部门管理</title>
     <link rel="stylesheet" href="../../common/css/common.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
@@ -11,7 +10,7 @@
     <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
     <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
-    <script src="../../common/libs/require.js" defer async="true" data-main="../js/domain"></script>
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/dept"></script>
 </head>
 <body>
 <div class="wrapper">
@@ -22,23 +21,23 @@
     <!--主体内容-->
     <div class="contentpage">
         <div class="content">
-           <!-- <div class="panel-head">
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="#">Home</a>
-                    </li>
-                    <li>
-                        <a href="#">Tutorials</a>
-                    </li>
-                    <li class="active">HTML5</li>
-                </ul>
-            </div>-->
+            <!-- <div class="panel-head">
+                 <ul class="breadcrumb">
+                     <li>
+                         <a href="#">Home</a>
+                     </li>
+                     <li>
+                         <a href="#">Tutorials</a>
+                     </li>
+                     <li class="active">HTML5</li>
+                 </ul>
+             </div>-->
             <div class="content-panel panel-left">
                 <div class="head head-tree">
                     <div class="head-left-tree">
-                        <span>管理域</span>
+                        <span>部门</span>
                         <div class="opera-group">
-                            <a id="addDomain" href="javascript:;"><i class="fa fa-plus"></i></a>
+                            <a id="addDept" href="javascript:;"><i class="fa fa-plus"></i></a>
                         </div>
                     </div>
                 </div>
@@ -50,16 +49,16 @@
                         </div>
                     </div>
                 </form>-->
-                <div id="domaintree"></div>
+                <div id="depttree"></div>
             </div>
             <div class="content-panel panel-right">
                 <div class="head">
                     <div class="head-left-tree">
-                        <span>子域列表</span>
+                        <span>子部门列表</span>
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table text-nowrap" id="area_table"></table>
+                    <table class="table text-nowrap" id="dept_table"></table>
                 </div>
                 <!--分页-->
                 <div class="fixed-table-pagination">
@@ -91,33 +90,27 @@
             </div>
         </div>
     </div>
-    <!--添加管理域-->
-    <div id="add_Domain" style="display: none">
-        <form id="domainForm" class="form-horizontal">
+    <!--添加部门弹出层-->
+    <div class="add_dept" style="display: none">
+        <form id="addDeptForm" class="form-horizontal">
             <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label"><i class="required">*</i>域名称：</label>
+                <label class="col-sm-4 control-label"><i class="required">*</i>部门名称：</label>
                 <div class="col-sm-6" style="padding: 0px">
-                    <input name="domainName" class="form-control" type="text">
+                    <input name="deptName" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label">上级域：</label>
+                <label class="col-sm-4 control-label">上级部门：</label>
                 <div class="col-sm-6" style="padding: 0px">
-                    <input type="text" class="form-control" name="parentDoamin" readonly>
-                    <input type="hidden" name="parentDoaminCode">
-                </div>
-            </div>
-            <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label"><i class="required">*</i>同级排序：</label>
-                <div class="col-sm-6" style="padding: 0px">
-                    <input name="orderNo" class="form-control" type="text">
+                    <input type="text" class="form-control" name="parentDept" readonly>
+                    <input type="hidden" name="parentDeptCode">
                 </div>
             </div>
             <div class="form-item form-group-sm">
                 <label class="col-sm-4 control-label">备注：</label>
                 <div class="col-sm-6" style="padding: 0px">
-                    <textarea name="domainRemark" cols="40" rows="2"></textarea>
-                    <input name="res" type="reset" style="display:none;"/>
+                    <textarea name="deptRemark" cols="40" rows="2"></textarea>
+                    <input  name="res" type="reset" style="display:none;" />
                 </div>
             </div>
             <div class="tab-footer">
@@ -126,26 +119,19 @@
             </div>
         </form>
     </div>
-    <!--修改管理域-->
-    <div id="alt_Domain" style="display: none">
-        <form id="altDomainForm" class="form-horizontal">
+    <!--修改部门弹窗-->
+    <div id="edit_dept" style="display: none">
+        <form id="editDeptForm" class="form-horizontal">
             <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label"><i class="required">*</i>域名称：</label>
+                <label class="col-sm-4 control-label"><i class="required">*</i>部门名称：</label>
                 <div class="col-sm-6" style="padding: 0px">
-                    <input name="dName" class="form-control" type="text">
-                </div>
-            </div>
-            <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label"><i class="required">*</i>同级排序：</label>
-                <div class="col-sm-6" style="padding: 0px">
-                    <input name="dNo" class="form-control" type="text">
+                    <input name="eidtDeptName" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-item form-group-sm">
                 <label class="col-sm-4 control-label">备注：</label>
                 <div class="col-sm-6" style="padding: 0px">
-                    <textarea name="dRemark" cols="40" rows="2"></textarea>
-                    <input name="res" type="reset" style="display:none;"/>
+                    <textarea name="eidtDeptRemark" cols="40" rows="2"></textarea>
                 </div>
             </div>
             <div class="tab-footer">
@@ -154,15 +140,6 @@
             </div>
         </form>
     </div>
-    <!--添加组织-->
-    <div id="add_org" style="display: none">
-        <div id="orgtree"></div>
-        <div class="tab-footer">
-            <button id="assignOrg" type="button" class="btn btn-danger">完成</button>
-            <button type="button" class="btn btn-default btn-cancel">取消</button>
-        </div>
-    </div>
-</div>
 </div>
 </body>
 </html>

@@ -59,16 +59,44 @@
                             <a href="javascript:;"><span class="glyphicon glyphicon-log-out"
                                                          aria-hidden="true">导出用户</span></a>
                         </div>
+                        <!--
                         <div class="head-right">
                             <form role="form" style="width: 300px;display: inline-block">
                                 <input type="text" class="form-control" placeholder="请输入姓名"
                                        style="width: 230px;display: inline-block">
                                 <button type="button" class="btn btn-default">搜索</button>
                             </form>
-                        </div>
+                        </div>-->
                     </div>
                     <div class="table-responsive">
                         <table class="table text-nowrap" id="user_table"></table>
+                    </div>
+                    <!--分页-->
+                    <div class="fixed-table-pagination">
+                        <div class="pull-left">
+                            <span class="pagination-info"></span>
+                            <span class="page-list">
+                            <span class="btn-group dropup">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="page-size">10</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="menuitem" class="active"><a href="#">10</a></li>
+                                    <li role="menuitem"><a href="#">20</a></li>
+                                    <li role="menuitem"><a href="#">30</a></li>
+                                </ul>
+                            </span>
+                            条每页
+                        </span>
+                        </div>
+                        <div class="pull-right pagination">
+                            <ul class="pagination">
+                                <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
+                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -243,8 +271,7 @@
                         <label class="col-sm-2 control-label" style="padding-left: 5px">管理范围：</label>
                         <div class="col-sm-6" style="padding: 0px">
                             <select name="domain" class="form-control">
-                                <option value="1001">厂区1</option>
-                                <option value="1002">厂区2</option>
+
                             </select>
                         </div>
                     </div>

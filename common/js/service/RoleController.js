@@ -1,4 +1,4 @@
-define(['./../../../config/common/js/util'],function RoleController(common){
+define(['common'],function RoleController(common){
     var RoleService=new Object();
     RoleService.url=common.host+"/auth"+"/role";
     /**
@@ -19,6 +19,7 @@ define(['./../../../config/common/js/util'],function RoleController(common){
              error:common.onError
              });
     };
+           
     /**
       *删除角色  
       *@param roleId roleId 待删除角色的Id 
@@ -28,7 +29,7 @@ define(['./../../../config/common/js/util'],function RoleController(common){
 		 var requestUrl=this.url+"/delete";
          $.ajax({
              url:requestUrl,
-             type:'Delete',
+             type:'Post',
              data:{
                    roleId:roleIdStr,
              },
@@ -53,6 +54,7 @@ define(['./../../../config/common/js/util'],function RoleController(common){
              error:common.onError
              });
     };
+           
     /**
       *no comment for this interface
       */
@@ -194,6 +196,210 @@ define(['./../../../config/common/js/util'],function RoleController(common){
              data:{
                    roleId:roleIdStr,
                    menuIds:menuIdsStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *授予角色的部门权限 
+      *@param roleId roleId 
+      *@param depIds depIds 
+      */
+     RoleService.grantDepartment=function(roleId,depIds,onSuccess){
+	     var roleIdStr=roleId;
+	     var depIdsStr=JSON.stringify(depIds);
+		 var requestUrl=this.url+"/department/grant";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   depIds:depIdsStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *重新授予角色的部门权限，之前的将会被覆盖 
+      *@param roleId roleId 
+      *@param depIds depIds 
+      */
+     RoleService.restDepartment=function(roleId,depIds,onSuccess){
+	     var roleIdStr=roleId;
+	     var depIdsStr=JSON.stringify(depIds);
+		 var requestUrl=this.url+"/department/rest";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   depIds:depIdsStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *剥夺角色的部门权限 
+      *@param roleId roleId 
+      *@param depIds depIds 
+      */
+     RoleService.depriveDepartment=function(roleId,depIds,onSuccess){
+	     var roleIdStr=roleId;
+	     var depIdsStr=JSON.stringify(depIds);
+		 var requestUrl=this.url+"/department/deprive";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   depIds:depIdsStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *授予角色的资源权限 
+      *@param roleId roleId 
+      *@param deviceCodes deviceCodes 
+      *@param deviceType deviceType 
+      */
+     RoleService.grantResource=function(roleId,deviceCodes,deviceType,onSuccess){
+	     var roleIdStr=roleId;
+	     var deviceCodesStr=JSON.stringify(deviceCodes);
+	     var deviceTypeStr=deviceType;
+		 var requestUrl=this.url+"/resource/grant";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   deviceCodes:deviceCodesStr,
+                   deviceType:deviceTypeStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *重新授予角色的资源权限，之前的将会被覆盖 
+      *@param roleId roleId 
+      *@param deviceCodes deviceCodes 
+      *@param deviceType deviceType 
+      */
+     RoleService.restResource=function(roleId,deviceCodes,deviceType,onSuccess){
+	     var roleIdStr=roleId;
+	     var deviceCodesStr=JSON.stringify(deviceCodes);
+	     var deviceTypeStr=deviceType;
+		 var requestUrl=this.url+"/resource/rest";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   deviceCodes:deviceCodesStr,
+                   deviceType:deviceTypeStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *剥夺角色的资源权限 
+      *@param roleId roleId 
+      *@param deviceCodes deviceCodes 
+      */
+     RoleService.depriveResource=function(roleId,deviceCodes,onSuccess){
+	     var roleIdStr=roleId;
+	     var deviceCodesStr=JSON.stringify(deviceCodes);
+		 var requestUrl=this.url+"/resource/deprive";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   deviceCodes:deviceCodesStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *授予角色的域权限 
+      *@param roleId roleId 
+      *@param domainCodes domainCodes 
+      */
+     RoleService.grantDomain=function(roleId,domainCodes,onSuccess){
+	     var roleIdStr=roleId;
+	     var domainCodesStr=JSON.stringify(domainCodes);
+		 var requestUrl=this.url+"/domain/grant";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   domainCodes:domainCodesStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *重新授予角色的域权限，清除以前授予的权限 
+      *@param roleId roleId 
+      *@param domainCodes domainCodes 
+      */
+     RoleService.restDomain=function(roleId,domainCodes,onSuccess){
+	     var roleIdStr=roleId;
+	     var domainCodesStr=JSON.stringify(domainCodes);
+		 var requestUrl=this.url+"/domain/rest";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   domainCodes:domainCodesStr,
+             },
+             cache:false,
+             success:onSuccess,
+             error:common.onError
+             });
+    };
+           
+    /**
+      *剥夺角色的域权限 
+      *@param roleId roleId 
+      *@param domainCodes domainCodes 
+      */
+     RoleService.depriveDomain=function(roleId,domainCodes,onSuccess){
+	     var roleIdStr=roleId;
+	     var domainCodesStr=JSON.stringify(domainCodes);
+		 var requestUrl=this.url+"/domain/deprive";
+         $.ajax({
+             url:requestUrl,
+             type:'Post',
+             data:{
+                   roleId:roleIdStr,
+                   domainCodes:domainCodesStr,
              },
              cache:false,
              success:onSuccess,

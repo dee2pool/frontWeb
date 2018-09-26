@@ -1,8 +1,8 @@
-define(["./../../../lib/nav/js/nav.min","./../../../js/service/LoginController"],function (nav,loginservice) {
+define(["../../../common/lib/nav/js/nav.min","../../../common/js/service/LoginController"],function (nav,loginservice) {
     var topBar={};
     //logo图片路径
     topBar.imgSrc='../../../common/component/head/img/logo.png';
-    topBar.userManage='../../../config/user/view/usermanage.html';
+    topBar.menuManage='../../../config/menu/view/menumanage.html';
     topBar.deviceManage='../../../config/hn_med_deviceInfo/views/hn_med_deviceInfo.html';
     topBar.url = "/hnvmns-frontweb"
     topBar.htm=['<div id="sui_nav" class="sui-nav horizontal">',
@@ -23,9 +23,8 @@ define(["./../../../lib/nav/js/nav.min","./../../../js/service/LoginController"]
         '                <div class="navpanel">',
         '                    <div class="row" style="height: 100%">',
         '                        <div class="col-md-3 funcMenu" style="background-color: #90B4E7"><i',
-        '                                class="fa fa-user fa-2x"></i><a href="'+topBar.userManage+'"><p>用户管理</p></a></div>',
-        '                        <div class="col-md-3 funcMenu" style="background-color: #acb0cc"><i',
-        '                                class="fa fa-tasks fa-2x"></i><a href="'+topBar.deviceManage+'"><p>设备管理</p></a></div>',
+        '                                class="fa fa-cog fa-2x"></i><a href="'+topBar.menuManage+'"><p>基础配置</p></a></div>',
+        '                        <div class="col-md-3 funcMenu"></div>',
         '                        <div class="col-md-3 funcMenu"></div>',
         '                        <div class="col-md-3 funcMenu"></div>',
         '                        <div class="col-md-3 funcMenu"></div>',

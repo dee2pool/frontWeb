@@ -48,7 +48,7 @@
         <label class="control-label col-sm-4"><i class="required">*</i>角色描述</label>
         <div class="col-sm-7" style="padding: 0px">
             <input name="remark" type="text" class="form-control">
-            <input  name="res" type="reset" style="display:none;" />
+            <input name="res" type="reset" style="display:none;"/>
         </div>
     </div>
     <div class="tab-footer">
@@ -64,11 +64,11 @@
                 菜单权限
             </a>
         </li>
-        <li>
+        <!--<li>
             <a href="#tab-res" style="color: black" data-toggle="tab">
                 资源权限
             </a>
-        </li>
+        </li>-->
         <li>
             <a href="#tab-dept" style="color: black" data-toggle="tab">
                 部门权限
@@ -76,7 +76,7 @@
         </li>
         <li>
             <a href="#tab-sys" style="color: black" data-toggle="tab">
-                域权限
+                管理域权限
             </a>
         </li>
     </ul>
@@ -132,40 +132,20 @@
                     <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </div>
-            <!--<div class="custom">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class=""></div>
-                    </div>
-                    <div class="col-md-8"></div>
-                </div>
-                <div class="tab-footer" style="text-align: right">
-                    <button type="button" class="btn btn-default">返回</button>
-                    <button type="button" class="btn btn-danger">保存</button>
-                </div>
-            </div>-->
-        </div>
-        <!--中心-->
-        <div class="tab-pane fade" id="tab-center">
-            <div id="centertree"></div>
-            <div class="tab-footer" style="text-align: right">
-                <button type="button" class="btn btn-danger">保存</button>
-                <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
-            </div>
         </div>
         <!--部门-->
         <div class="tab-pane fade" id="tab-dept">
             <div id="depttree"></div>
-            <div class="tab-footer" style="text-align: right">
-                <button type="button" class="btn btn-danger">保存</button>
+            <div class="tab-footer">
+                <button id="orgPerSave" type="button" class="btn btn-danger">保存</button>
                 <button name="doCancel" type="button" class="btn btn-default btn-cancel ">取消</button>
             </div>
         </div>
-        <!--子系统-->
+        <!--域-->
         <div class="tab-pane fade" id="tab-sys">
-
-            <div class="tab-footer" style="text-align: right">
-                <button type="button" class="btn btn-danger">保存</button>
+            <div id="domaintree"></div>
+            <div class="tab-footer">
+                <button id="domainPerSave" type="button" class="btn btn-danger">保存</button>
                 <button name="doCancel" type="button" class="btn btn-default btn-cancel">取消</button>
             </div>
         </div>
@@ -199,7 +179,7 @@
     function editIcon() {
         layer.open({
             type: 1,
-            area: ['520px','418px'],
+            area: ['520px', '418px'],
             scrollbar: false,
             offset: '200px',
             title: '系统图标',

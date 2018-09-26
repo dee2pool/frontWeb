@@ -110,20 +110,42 @@
                 <div class="form-item form-group-sm">
                     <label class="col-sm-4 control-label">上级组织：</label>
                     <div class="col-sm-6" style="padding: 0px">
-                        <input name="orgOrderName" class="form-control" type="text">
-                        <input name="orgOrderNo" type="hidden">
+                        <input name="orgParentName" class="form-control" type="text">
+                        <input name="orgParentCode" type="hidden">
                     </div>
                 </div>
                 <div class="form-item form-group-sm">
                     <label class="col-sm-4 control-label"><i class="required">*</i>同级排序：</label>
                     <div class="col-sm-6" style="padding: 0px">
-                        <input name="orderNo" class="form-control" type="text" readonly>
+                        <input name="orgOrderNo" class="form-control" type="text">
                     </div>
                 </div>
                 <div class="form-item form-group-sm">
                     <label class="col-sm-4 control-label">备注：</label>
                     <div class="col-sm-6" style="padding: 0px">
                         <textarea name="orgRemark" cols="40" rows="2"></textarea>
+                        <input name="res" type="reset" style="display:none;"/>
+                    </div>
+                </div>
+                <div class="tab-footer">
+                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="button" class="btn btn-default btn-cancel">取消</button>
+                </div>
+            </form>
+        </div>
+        <!--修改组织弹窗-->
+        <div id="alt_org" style="display: none">
+            <form id="altorgForm" class="form-horizontal">
+                <div class="form-item form-group-sm">
+                    <label class="col-sm-4 control-label"><i class="required">*</i>组织名称：</label>
+                    <div class="col-sm-6" style="padding: 0px">
+                        <input name="altorgName" class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="form-item form-group-sm">
+                    <label class="col-sm-4 control-label">备注：</label>
+                    <div class="col-sm-6" style="padding: 0px">
+                        <textarea name="altorgRemark" cols="40" rows="2"></textarea>
                         <input name="res" type="reset" style="display:none;"/>
                     </div>
                 </div>

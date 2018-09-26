@@ -75,7 +75,100 @@ require(['jquery','common','layer','frame', 'bootstrap-table','jquery-slimScroll
             pageSize: 10,
             parameter: {}
         }
-        deviceInfoService.getDeviceInfoList(init_page, function (data) {
+        $('#device_table').bootstrapTable({
+            url:common.host+"/mgc"+"/deviceInfoService"+"/getDeivceInfoList",
+            method:'get',
+            pagination:true,
+            pageNumber:1,
+            pageSize:10,
+            sidePagination:'server',
+            pageList: [10, 25, 50, 100],
+            responseHandler:function(res){
+                var rows=res.data;
+                var total=res.extra;
+                return{
+                    "rows":rows,
+                    "total":total
+                }
+            },
+            queryParams : function (params) {
+                //这里的键的名字和控制器的变量名必须一直，这边改动，控制器也需要改成一样的
+                var temp = {
+                    page:JSON.stringify(init_page)
+                };
+                return temp;
+            },
+            columns: [{
+                checkbox: true
+            }, {
+                field: 'id',
+                title: '编码设备序号',
+                visible:false,
+                align: 'center'
+            }, {
+                field: 'deviceName',
+                title: '设备名称',
+                align: 'center'
+            }, {
+                field: 'devTypeName',
+                title: '设备类型',
+                align: 'center'
+            }, {
+                field: 'deviceAddress',
+                title: '安装地址',
+                align: 'center'
+            }, {
+                field: 'deviceOnlineStatus',
+                title: '在线状态',
+                align: 'center'
+            }, {
+                field: 'deviceIp',
+                title: '设备IP地址',
+                align: 'center'
+            }, {
+                field: 'amgPort',
+                title: '拉流服务端口',
+                align: 'center'
+            }, {
+                field: 'amgProto',
+                title: '拉流协议',
+                align: 'center'
+            }, {
+                field: 'adgPort',
+                title: '运维端口',
+                align: 'center'
+            }, {
+                field: 'adgProto',
+                title: '运维设备协议',
+                align: 'center'
+            }, {
+                field: 'deviceChaNum',
+                title: '设备通道数',
+                align: 'center'
+            }, {
+                field: 'deviceUser',
+                title: '设备登录用户名',
+                align: 'center'
+            }, {
+                field: 'modelIdentity',
+                title: '设备型号',
+                align: 'center'
+            }, {
+                field: 'manuIdentity',
+                title: '设备厂商',
+                align: 'center'
+            },{
+                title: '操作',
+                align: 'center',
+                formatter: function () {
+                    var icons = "<div class='btn-group-sm'><button id='edit_role' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
+                        "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
+                        "</div>"
+                    return icons;
+                }
+            }]
+        })
+        /*deviceInfoService.getDeviceInfoList(init_page, function (data) {
             if (data.result) {
                 $('#device_table').bootstrapTable({
                     columns: [{
@@ -152,7 +245,7 @@ require(['jquery','common','layer','frame', 'bootstrap-table','jquery-slimScroll
                 //初始化分页组件
                 common.pageInit(init_page.pageNumber,init_page.pageSize,data.extra)
             }
-        })
+        })*/
         //改变页面展示数据条数
         $('li[role="menuitem"]>a').click(function () {
             init_page.pageSize=$(this).html();

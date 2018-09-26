@@ -45,12 +45,14 @@ require.config({
         "bootstrap-treeview": "../../common/libs/bootstrap-treeview/js/bootstrap-treeview",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
-        "RoleService": "../../common/js/service/RoleController",
+        "RoleService": "../../../common/js/service/RoleController",
+        "domainService": "../../../common/js/service/DomainController",
         "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
+        "departMentService": "../../../common/js/service/DepartmentController"
     }
 });
-require(['jquery', 'layer', 'frame','common','bootstrap-table', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap','bootstrap-treeview', 'topBar', 'roleAdd', 'editRole'],
-    function (jquery, layer, frame,common,bootstrapTable, MenuService, RoleService, bootstrapValidator, bootstrap, treeview, topBar, roleAdd, editRole) {
+require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap', 'bootstrap-treeview', 'topBar', 'roleAdd', 'editRole', 'departMentService','domainService'],
+    function (jquery, layer, frame, common, bootstrapTable, MenuService, RoleService, bootstrapValidator, bootstrap, treeview, topBar, roleAdd, editRole, departMentService,domainService) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -146,42 +148,177 @@ require(['jquery', 'layer', 'frame','common','bootstrap-table', 'MenuService', '
             }
         })
         $('#menutree').treeview('collapseAll');
-        //中心树
-        $('#centertree').treeview({
-            showBorder: false,
-            showCheckbox: true,
-            data: [{
-                text: '默认控制中心',
-                nodes: [
-                    {
-                        text: '研发中心'
-                    }, {
-                        text: '测试中心'
-                    }, {
-                        text: '产品中心'
-                    }, {
-                        text: '后勤中心'
-                    }
-                ]
-            }],
-            onNodeChecked: function (event, node) {
-            }
-        })
         //部门树
+        var deptTree = {};
+        deptTree.getTreeList = function () {
+            var tree = [];
+            var temp = {};
+            departMentService.listAll(function (data) {
+                if (data.result) {
+                    //将节点封装成树形结构
+                    for (var i = 0; i < data.data.length; i++) {
+                        temp[data.data[i].id] = {
+                            id: data.data[i].id,
+                            text: data.data[i].name,
+                            pId: data.data[i].parentId,
+                            remark: data.data[i].remark
+                        };
+                    }
+                    for (i = 0; i < data.data.length; i++) {
+                        var key = temp[data.data[i].parentId];
+                        if (key) {
+                            if (key.nodes == null) {
+                                key.nodes = [];
+                                key.nodes.push(temp[data.data[i].id]);
+                            } else {
+                                key.nodes.push(temp[data.data[i].id]);
+                            }
+                        } else {
+                            tree.push(temp[data.data[i].id]);
+                        }
+                    }
+                }
+            })
+            return tree;
+        }
         $('#depttree').treeview({
             showBorder: false,
             showCheckbox: true,
-            data: [{
-                text: '研发部门',
-                nodes: [
-                    {
-                        text: '测试部门'
-                    }, {
-                        text: '产品部门'
+            data: deptTree.getTreeList(),
+            onNodeChecked: function (event, node) {
+                var nodeId = [];
+                //如果有子节点
+                if (node.nodes) {
+                    for (var i = 0; i < node.nodes.length; i++) {
+                        nodeId.push(node.nodes[i].nodeId);
                     }
-                ]
-            }],
-            onNodeSelected: function (event, data) {
+                    $("#depttree").treeview("checkNode", [nodeId, {silent: true}]);
+                } else {
+                    var pId = node.parentId;
+                    if (pId) {
+                        var parentNode = $('#depttree').treeview("getNode", pId);
+                        var checkNum = 0;
+                        for (var i = 0; i < parentNode.nodes.length; i++) {
+                            if (parentNode.nodes[i].state.checked) {
+                                checkNum++;
+                            }
+                        }
+                        if (checkNum == parentNode.nodes.length) {
+                            $("#depttree").treeview("checkNode", parentNode.nodeId);
+                        }
+                    }
+                }
+            },
+            onNodeUnchecked: function (event, node) {
+                var nodeId = [];
+                if (node.nodes) {
+                    for (var i = 0; i < node.nodes.length; i++) {
+                        nodeId.push(node.nodes[i].nodeId);
+                    }
+                    $("#depttree").treeview("uncheckNode", [nodeId, {silent: true}]);
+                } else {
+                    var pId = node.parentId;
+                    if (pId) {
+                        var parentNode = $('#depttree').treeview("getNode", pId);
+                        var checkNum = 0;
+                        for (var i = 0; i < parentNode.nodes.length; i++) {
+                            if (!parentNode.nodes[i].state.checked) {
+                                checkNum++;
+                            }
+                        }
+                        if (checkNum == parentNode.nodes.length) {
+                            $("#depttree").treeview("uncheckNode", parentNode.nodeId);
+                        }
+                    }
+                }
+            }
+        })
+        //管理域树
+        var domainTree={};
+        domainTree.getTree = function () {
+            var tree = [];
+            var temp = {};
+            domainService.listAllDomain(function (data) {
+                if (data.result) {
+                    //将节点封装成树形结构
+                    for (var i = 0; i < data.data.length; i++) {
+                        temp[data.data[i].code] = {
+                            code: data.data[i].code,
+                            text: data.data[i].name,
+                            parentCode: data.data[i].parentCode,
+                            createTime: data.data[i].createTime,
+                            creatorId: data.data[i].creatorId,
+                            description: data.data[i].description,
+                            orderNo: data.data[i].orderNo
+                        };
+                    }
+                    for (i = 0; i < data.data.length; i++) {
+                        var key = temp[data.data[i].parentCode];
+                        if (key) {
+                            if (key.nodes == null) {
+                                key.nodes = [];
+                                key.nodes.push(temp[data.data[i].code]);
+                            } else {
+                                key.nodes.push(temp[data.data[i].code]);
+                            }
+                        } else {
+                            tree.push(temp[data.data[i].code]);
+                        }
+                    }
+                }
+            })
+            return tree;
+        }
+        $('#domaintree').treeview({
+            showBorder: false,
+            showCheckbox: true,
+            data: domainTree.getTree(),
+            onNodeChecked: function (event, node) {
+                var nodeId = [];
+                //如果有子节点
+                if (node.nodes) {
+                    for (var i = 0; i < node.nodes.length; i++) {
+                        nodeId.push(node.nodes[i].nodeId);
+                    }
+                    $("#domaintree").treeview("checkNode", [nodeId, {silent: true}]);
+                } else {
+                    var pId = node.parentId;
+                    if (pId) {
+                        var parentNode = $('#domaintree').treeview("getNode", pId);
+                        var checkNum = 0;
+                        for (var i = 0; i < parentNode.nodes.length; i++) {
+                            if (parentNode.nodes[i].state.checked) {
+                                checkNum++;
+                            }
+                        }
+                        if (checkNum == parentNode.nodes.length) {
+                            $("#domaintree").treeview("checkNode", parentNode.nodeId);
+                        }
+                    }
+                }
+            },
+            onNodeUnchecked: function (event, node) {
+                var nodeId = [];
+                if (node.nodes) {
+                    for (var i = 0; i < node.nodes.length; i++) {
+                        nodeId.push(node.nodes[i].nodeId);
+                    }
+                    $("#domaintree").treeview("uncheckNode", [nodeId, {silent: true}]);
+                } else {
+                    var pId = node.parentId;
+                    if (pId) {
+                        var parentNode = $('#domaintree').treeview("getNode", pId);
+                        var checkNum = 0;
+                        for (var i = 0; i < parentNode.nodes.length; i++) {
+                            if (!parentNode.nodes[i].state.checked) {
+                                checkNum++;
+                            }
+                        }
+                        if (checkNum == parentNode.nodes.length) {
+                            $("#domaintree").treeview("uncheckNode", parentNode.nodeId);
+                        }
+                    }
+                }
             }
         })
         //初始化表格
@@ -208,7 +345,6 @@ require(['jquery', 'layer', 'frame','common','bootstrap-table', 'MenuService', '
                         align: 'center',
                         events: {
                             "click #rolecfig": function (e, value, row, index) {
-                                console.log(row.id)
                                 //角色分配权限
                                 layer.open({
                                     type: 1,
@@ -218,7 +354,24 @@ require(['jquery', 'layer', 'frame','common','bootstrap-table', 'MenuService', '
                                     resize: false,
                                     content: $('#auth_config')
                                 })
-                                permission.menu(row.id)
+                                $('#menuPerSave').click(function () {
+                                    permission.grantMenu(row.id);
+                                })
+                                $('#orgPerSave').click(function () {
+                                    if(permission.ids("menutree").length!=0){
+                                        permission.grantMenu(row.id);
+                                    }
+                                    permission.org(row.id);
+                                })
+                                $('#domainPerSave').click(function () {
+                                    if(permission.ids("menutree").length!=0){
+                                        permission.grantMenu(row.id);
+                                    }
+                                    if(permission.ids("depttree").length!=0){
+                                        permission.org(row.id);
+                                    }
+                                    permission.domain(row.id);
+                                })
                             }
                         },
                         formatter: function () {
@@ -272,19 +425,64 @@ require(['jquery', 'layer', 'frame','common','bootstrap-table', 'MenuService', '
         //添加角色
         roleAdd.init();
         var permission = {};
-        permission.menu = function (roleId) {
-            $('#menuPerSave').click(function () {
-                var menuChecked = $('#menutree').treeview('getChecked');
-                var menuIds = new Array();
-                for (var i = 0; i < menuChecked.length; i++) {
-                    menuIds.push(menuChecked[i].id);
-                }
+        permission.ids=function(treeId){
+            var checked = $('#'+treeId).treeview('getChecked');
+            console.log(checked)
+            var ids=new Array();
+            for (var i = 0; i < checked.length; i++) {
+                ids.push(checked[i].id);
+            }
+            return ids;
+        }
+        permission.grantMenu = function (roleId) {
+            //得到选择的节点id
+            var menuIds=permission.ids("menutree");
+            if(menuIds.length==0){
+                layer.msg('请选择节点')
+            }else{
+                //分配权限
                 RoleService.grantMenu(roleId, menuIds, function (data) {
                     if (data.result) {
                         layer.msg('分配权限成功!');
                         layer.closeAll();
+                    }else{
+                        layer.msg(data.description);
                     }
                 })
-            })
+            }
+        }
+        permission.org=function (roleId) {
+            //得到选择的id
+            var orgIds=permission.ids("depttree");
+            if(orgIds.length==0){
+                layer.msg('请选择节点')
+            }else {
+                //分配权限
+                RoleService.grantDepartment(roleId,orgIds,function (data) {
+                    if (data.result) {
+                        layer.msg('分配权限成功!');
+                        layer.closeAll();
+                    }else{
+                        layer.msg(data.description);
+                    }
+                })
+            }
+        }
+        permission.domain=function (roleId) {
+            //得到选择的id
+            var domainIds=permission.ids("domaintree");
+            if(domainIds.length==0){
+                layer.msg('请选择节点')
+            }else {
+                //分配权限
+                RoleService.grantDomain(roleId,domainIds,function (data) {
+                    if(data.result){
+                        layer.msg('分配权限成功!');
+                        layer.closeAll();
+                    }else{
+                        layer.msg(data.description);
+                    }
+                })
+            }
         }
     })

@@ -34,12 +34,11 @@ require.config({
         "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
-        "RoleService": "../../common/js/service/RoleController",
-        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
+        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min"
     }
 });
-require(['jquery', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstrapValidator', 'bootstrap', 'topBar'],
-    function (jquery, layer, frame, MenuService, bootstrapTable, bootstrapValidator, bootstrap, topBar) {
+require(['jquery', 'common', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstrapValidator', 'bootstrap', 'topBar'],
+    function (jquery, common, layer, frame, MenuService, bootstrapTable, bootstrapValidator, bootstrap, topBar) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -50,150 +49,10 @@ require(['jquery', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstra
         layer.config({
             path: '../../common/libs/layer/'
         });
-        var parentMenu;
-        MenuService.getMenuListByParentId('-1', function (data) {
-            if (data.result) {
-                parentMenu = data.data;
-                $('#menu_table').bootstrapTable({
-                    columns: [{
-                        field: 'id',
-                        visible: false
-                    }, {
-                        field: 'name',
-                        title: '菜单名称',
-                        align: 'center'
-                    }, {
-                        field: 'url',
-                        title: '菜单URL',
-                        align: 'center'
-                    }, {
-                        field: 'parentId',
-                        title: '上级菜单编号',
-                        align: 'center'
-                    }, {
-                        field: 'orderNo',
-                        title: '菜单展示序号',
-                        align: 'center'
-                    }, {
-                        field: 'remark',
-                        title: '备注',
-                        align: 'center'
-                    }, {
-                        title: '操作',
-                        align: 'center',
-                        events: {
-                            "click #edit_role": function (e, value, row, index) {
-                                //点击编辑按钮
-                                menuOpera.editMenu(row);
-                                menuOpera.formValia();
-                                menuOpera.formSub(index);
-                            },
-                            "click #del_role": function (e, value, row, index) {
-                                //点击删除按钮
-                                layer.confirm('确定删除 ' + row.name + ' ?', {
-                                    btn: ['确定', '取消'] //按钮
-                                }, function () {
-                                    MenuService.deleteMenuById(row.id, function (data) {
-                                        if (data.result) {
-                                            $('#menu_table').bootstrapTable('remove', {
-                                                field: 'id',
-                                                values: [row.id]
-                                            })
-                                            layer.closeAll();
-                                        } else {
-                                            layer.msg(data.description)
-                                        }
-                                    })
-                                    //删除操作
-                                }, function () {
-                                    layer.closeAll();
-                                });
-                            }
-                        },
-                        formatter: function () {
-                            var icons = "<div class='btn-group'><button id='edit_role' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
-                                "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
-                                "</div>"
-                            return icons;
-                        }
-                    }],
-                    data: data.data,
-                    detailView: true,
-                    onExpandRow: function (index, row, $detail) {
-                        var t = $detail.html('<table></table>').find('table');
-                        MenuService.getMenuListByParentId(row.id, function (data) {
-                            if (data.result) {
-                                $(t).bootstrapTable({
-                                    columns: [{
-                                        field: 'id',
-                                        visible: false
-                                    }, {
-                                        field: 'name',
-                                        title: '菜单名称',
-                                        align: 'center'
-                                    }, {
-                                        field: 'url',
-                                        title: '菜单URL',
-                                        align: 'center'
-                                    },{
-                                        field: 'parentId',
-                                        title: '上级菜单编号',
-                                        align: 'center'
-                                    }, {
-                                        field: 'orderNo',
-                                        title: '菜单展示序号',
-                                        align: 'center'
-                                    }, {
-                                        field: 'remark',
-                                        title: '备注',
-                                        align: 'center'
-                                    }, {
-                                        title: '操作',
-                                        align: 'center',
-                                        events: {
-                                            "click #edit_role": function (e, value, row, index) {
-                                                //点击编辑按钮
-                                                menuOpera.editMenu(row);
-                                                menuOpera.formValia();
-                                                menuOpera.formSub(index);
-                                            },
-                                            "click #del_role": function (e, value, row, index) {
-                                                //点击删除按钮
-                                                layer.confirm('确定删除 ' + row.name + ' ?', {
-                                                    btn: ['确定', '取消'] //按钮
-                                                }, function () {
-                                                    //删除操作
-                                                    MenuService.deleteMenuById(row.id, function (data) {
-                                                        if (data.result) {
-                                                            layer.msg('删除成功!');
-                                                            layer.closeAll();
-                                                        } else {
-                                                            layer.msg(data.description)
-                                                        }
-                                                    })
-                                                }, function () {
-                                                    layer.closeAll();
-                                                });
-                                            }
-                                        },
-                                        formatter: function () {
-                                            var icons = "<div class='btn-group'><button id='edit_role' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
-                                                "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
-                                                "</div>"
-                                            return icons;
-                                        }
-                                    }],
-                                    data: data.data
-                                })
-                            }
-                        })
-                    }
-                })
-            }
-        })
-        //菜单表单验证
-        var menuValia={};
-        menuValia.addValia=function(){
+        /********************************* 添加菜单 ***************************************/
+        var menuAdd = {};
+        //验证
+        menuAdd.valia = function () {
             $('#addMpanel').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -220,23 +79,19 @@ require(['jquery', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstra
                 }
             })
         }
-        //添加菜单弹窗
-        $('#addMenu').click(function () {
-            //启用验证
-            menuValia.addValia();
+        //下拉框
+        menuAdd.initSele = function () {
             $('select[name="MenuparentId"]>option[value!="-1"]').remove();
-            for (var i = 0; i < parentMenu.length; i++) {
-                $('select[name="MenuparentId"]').append('<option value="' + parentMenu[i].id + '">' + parentMenu[i].name + '</option>')
-            }
-            layer.open({
-                type: 1,
-                area: '380px',
-                scrollbar: false,
-                offset: '100px',
-                title: '添加菜单',
-                content: $('#addMpanel')
+            MenuService.getMenuListByParentId('-1', function (data) {
+                if (data.result) {
+                    for (var i = 0; i < data.data.length; i++) {
+                        $('select[name="MenuparentId"]').append('<option value="' + data.data[i].id + '">' + data.data[i].name + '</option>')
+                    }
+                }
             })
-            //添加菜单表单提交
+        }
+        //提交
+        menuAdd.submit = function (layerId) {
             $('#addMpanel').on('success.form.bv', function () {
                 var menu = {};
                 menu.name = $("input[name='Menuname']").val();
@@ -247,41 +102,41 @@ require(['jquery', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstra
                 MenuService.addMenu(menu, function (data) {
                     if (data.result) {
                         menu.id = data.data;
-                        if(menu.parentId=='-1'){
+                        if (menu.parentId == '-1') {
                             $('#menu_table').bootstrapTable('append', menu);
                         }
                         layer.closeAll();
-                        //表单清空
-                        $("input[name='res']").click();
-                        //清空验证
-                        $("#addMpanel").data('bootstrapValidator').destroy();
-                        //重新启用验证
-                        menuValia.addValia();
-                    }else{
+                        layer.msg('添加成功');
+                        common.clearForm("addMpanel");
+                    } else {
                         layer.msg('添加失败')
                     }
                 })
                 return false;
             })
-        })
-        //修改菜单提交
-        var menuOpera = {};
-        menuOpera.editMenu = function (row) {
-            $("input[name='edit_Mid']").val(row.id);
-            $("input[name='edit_Mname']").val(row.name);
-            $("input[name='edit_Murl']").val(row.url);
-            $("input[name='edit_Mno']").val(row.orderNo);
-            $("textarea[name='edit_Mremark']").val(row.remark);
-            layer.open({
-                type: 1,
-                area: '380px',
-                scrollbar: false,
-                offset: '100px',
-                title: '修改菜单',
-                content: $('#editMpanel')
+        }
+        menuAdd.init = function () {
+            $('#addMenu').click(function () {
+                //启用验证
+                menuAdd.valia();
+                menuAdd.initSele();
+                //开启弹窗
+                var layerId = layer.open({
+                    type: 1,
+                    area: '380px',
+                    scrollbar: false,
+                    offset: '100px',
+                    title: '添加菜单',
+                    content: $('#addMpanel')
+                })
+                //表单提交
+                menuAdd.submit(layerId);
             })
         }
-        menuOpera.formValia = function () {
+        menuAdd.init();
+        /********************************* 修改菜单 ***************************************/
+        var menuEdit = {};
+        menuEdit.valia = function () {
             $('#editMpanel').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -308,19 +163,24 @@ require(['jquery', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstra
                 }
             })
         }
-        menuOpera.menu={};
-        menuOpera.formSub = function (index) {
+        menuEdit.submit = function (row, index, layerId) {
             $('#editMpanel').on('success.form.bv', function () {
-                menuOpera.menu.name = $("input[name='edit_Mname']").val();
-                menuOpera.menu.url = $("input[name='edit_Murl']").val();
-                menuOpera.menu.orderNo = $("input[name='edit_Mno']").val();
-                menuOpera.menu.remark = $("textarea[name='edit_Mremark']").val();
-                menuOpera.menu.id = $("input[name='edit_Mid']").val();
-                MenuService.updateMenuById(menuOpera.menu.id,menuOpera.menu, function (data) {
+                var menu = {};
+                menu.name = $("input[name='edit_Mname']").val();
+                menu.url = $("input[name='edit_Murl']").val();
+                menu.orderNo = $("input[name='edit_Mno']").val();
+                menu.remark = $("textarea[name='edit_Mremark']").val();
+                menu.id = $("input[name='edit_Mid']").val();
+                MenuService.updateMenuById(menu.id, menu, function (data) {
                     if (data.result) {
                         layer.closeAll();
-                        $('#menu_table').bootstrapTable('updateRow', {index:index,row: menuOpera.menu})
+                        layer.msg('修改菜单成功')
+                        if (row.parentId == '-1') {
+                            $('#menu_table').bootstrapTable('updateRow', {index: index, row: menu});
+                        }
                         $("button[type='submit']").removeAttr('disabled');
+                        //清空验证
+                        $("#editMpanel").data('bootstrapValidator').destroy();
                     } else {
                         layer.msg(data.description);
                     }
@@ -328,4 +188,103 @@ require(['jquery', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstra
                 return false;
             })
         }
+        menuEdit.init = function (row, index) {
+            menuEdit.valia();
+            $("input[name='edit_Mid']").val(row.id);
+            $("input[name='edit_Mname']").val(row.name);
+            $("input[name='edit_Murl']").val(row.url);
+            $("input[name='edit_Mno']").val(row.orderNo);
+            $("textarea[name='edit_Mremark']").val(row.remark);
+            var layerId = layer.open({
+                type: 1,
+                area: '380px',
+                scrollbar: false,
+                offset: '100px',
+                title: '修改菜单',
+                content: $('#editMpanel')
+            })
+            menuEdit.submit(row, index, layerId);
+        }
+        /********************************* 删除菜单 ***************************************/
+        var menuDel = {};
+        menuDel.init = function (row) {
+            layer.confirm('确定删除 ' + row.name + ' ?', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                MenuService.deleteMenuById(row.id, function (data) {
+                    if (data.result) {
+                        $('#menu_table').bootstrapTable('remove', {
+                            field: 'id',
+                            values: [row.id]
+                        })
+                        layer.closeAll();
+                    } else {
+                        layer.msg(data.description)
+                    }
+                })
+                //删除操作
+            }, function () {
+                layer.closeAll();
+            });
+        }
+        /********************************* 菜单表格 ***************************************/
+        var menuTable = {};
+        menuTable.init = function (pId, tableId) {
+            MenuService.getMenuListByParentId(pId, function (data) {
+                if (data.result) {
+                    $(tableId).bootstrapTable({
+                        columns: [{
+                            field: 'id',
+                            visible: false
+                        }, {
+                            field: 'name',
+                            title: '菜单名称',
+                            align: 'center'
+                        }, {
+                            field: 'url',
+                            title: '菜单URL',
+                            align: 'center'
+                        }, {
+                            field: 'parentId',
+                            title: '上级菜单编号',
+                            align: 'center'
+                        }, {
+                            field: 'orderNo',
+                            title: '菜单展示序号',
+                            align: 'center'
+                        }, {
+                            field: 'remark',
+                            title: '备注',
+                            align: 'center'
+                        }, {
+                            title: '操作',
+                            align: 'center',
+                            events: {
+                                "click #edit_btn": function (e, value, row, index) {
+                                    //点击编辑按钮
+                                    menuEdit.init(row, index);
+                                },
+                                "click #del_btn": function (e, value, row, index) {
+                                    //点击删除按钮
+                                    menuDel.init(row);
+                                }
+                            },
+                            formatter: function () {
+                                var icons = "<div class='btn-group'><button id='edit_btn' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
+                                    "<button id='del_btn' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
+                                    "</div>"
+                                return icons;
+                            }
+                        }],
+                        data: data.data,
+                        detailView: true,
+                        onExpandRow: function (index, row, $detail) {
+                            var t = $detail.html('<table></table>').find('table');
+                            menuTable.init(row.id, t);
+                        }
+                    })
+                }
+            })
+        }
+        menuTable.init('-1', '#menu_table');
     })

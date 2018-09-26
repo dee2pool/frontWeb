@@ -38,8 +38,8 @@ require.config({
         'bootstrap-datetimepicker.zh-CN': {
             deps: ['bootstrap-datetimepicker', 'jquery']
         },
-        'ztree':{
-            deps:['jquery']
+        'ztree': {
+            deps: ['jquery']
         }
     },
     paths: {
@@ -55,11 +55,11 @@ require.config({
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
         "orgService": "../../../common/js/service/OrgController",
-        "ztree":"../../../common/lib/ztree/js/jquery.ztree.core",
+        "ztree": "../../../common/lib/ztree/js/jquery.ztree.core",
     }
 });
-require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-table','bootstrap', 'bootstrap-treeview', 'topBar', 'orgService','ztree'],
-    function (jquery, common, layer, frame, bootstrapValidator,bootstrapTable,bootstrap, treeview, topBar, orgService,ztree) {
+require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table', 'bootstrap', 'bootstrap-treeview', 'topBar', 'orgService', 'ztree'],
+    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable, bootstrap, treeview, topBar, orgService, ztree) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -120,12 +120,12 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                     orgTree.isNodeSelected = true;
                     orgTree.nodeSelected = data;
                     //更新表格
-                    orgService.getChildList(data.code,function (data) {
-                        if(data.result){
-                            $('#org_table').bootstrapTable('load',data.data);
+                    orgService.getChildList(data.code, function (data) {
+                        if (data.result) {
+                            $('#org_table').bootstrapTable('load', data.data);
                             //更新分页
-                            common.pageInit(1,10,data.dataSize)
-                        }else{
+                            common.pageInit(1, 10, data.dataSize)
+                        } else {
                             layer.msg(data.description);
                         }
                     })
@@ -138,87 +138,85 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
         }
         orgTree.init();
         //表格
-        var init_page={
+        var init_page = {
             pageNumber: 1,
             pageSize: 10
         }
-        orgService.getOrgList(init_page.pageNumber,init_page.pageSize,init_page.orgName,function (data) {
-            if(data.result){
+        orgService.getOrgList(init_page.pageNumber, init_page.pageSize, init_page.orgName, function (data) {
+            if (data.result) {
                 $('#org_table').bootstrapTable({
-                    columns:[{
+                    columns: [{
                         checkbox: true
-                    },{
+                    }, {
                         field: 'name',
                         title: '组织名称',
                         align: 'center'
-                    },{
+                    }, {
                         field: 'code',
                         title: '组织ID',
                         align: 'center'
-                    },{
+                    }, {
                         field: 'orderNo',
-                        visible:false
-                    },{
+                        visible: false
+                    }, {
                         field: 'parentCode',
-                        visible:false
-                    },{
+                        visible: false
+                    }, {
                         field: 'createTime',
-                        visible:false
-                    },{
+                        visible: false
+                    }, {
                         field: 'creatorId',
-                        visible:false
-                    },{
+                        visible: false
+                    }, {
                         field: 'areaCode',
-                        visible:false
-                    },{
+                        visible: false
+                    }, {
                         field: 'description',
                         title: '组织描述',
                         align: 'center'
-                    },{
+                    }, {
                         title: '操作',
                         align: 'center',
                         events: {
                             "click #edit_role": function (e, value, row, index) {
-                                /*$('input[name="dName"]').val(row.name);
-                                $('input[name="dNo"]').val(row.orderNo);
-                                $('textarea[name="dRemark"]').val(row.description);
-                                domain.editValidator();
+                                $('input[name="altorgName"]').val(row.name);
+                                $('textarea[name="altorgRemark"]').val(row.description);
+                                orgvalia.editValidator();
                                 layer.open({
                                     type: 1,
-                                    title: '修改域',
+                                    title: '修改组织',
                                     offset: '100px',
                                     area: '600px',
                                     resize: false,
-                                    content: $('#alt_Domain')
+                                    content: $('#alt_org')
                                 })
                                 //表单提交
-                                $('#altDomainForm').on('success.form.bv', function () {
-                                    var domain = {};
-                                    domain.code = row.code
-                                    domain.name = $('input[name="dName"]').val();
-                                    domain.description = $('textarea[name="dRemark"]').val();
-                                    domain.parentCode = row.parentCode
-                                    domain.orderNo = $('input[name="dNo"]').val();
-                                    domain.createTime = row.createTime
-                                    domain.creatorId = row.creatorId
-                                    domainService.updateDomain(domain.code,domain, function (data) {
+                                $('#altorgForm').on('success.form.bv', function () {
+                                    var org = {};
+                                    org.code = row.code
+                                    org.name = $('input[name="altorgName"]').val();
+                                    org.description = $('textarea[name="altorgRemark"]').val();
+                                    org.parentCode = row.parentCode
+                                    org.orderNo = row.orderNo
+                                    org.createTime = new Date(row.createTime).valueOf();
+                                    org.creatorId = row.creatorId
+                                    orgService.updateOrg(org.code, org, function (data) {
                                         if (data.result) {
-                                            layer.msg('更新成功')
                                             //清除校验
-                                            $("#altDomainForm").data('bootstrapValidator').destroy();
+                                            $("#altorgForm").data('bootstrapValidator').destroy();
                                             //更新树
-                                            domainTree.getTree();
-                                            domainTree.init();
+                                            orgTree.getTree();
+                                            orgTree.init();
                                             layer.closeAll();
                                             //更新表格
-                                            $('#area_table').bootstrapTable('updateRow',{index:index,row:domain})
+                                            $('#org_table').bootstrapTable('updateRow', {index: index, row: org})
                                         } else {
                                             layer.msg(data.description)
                                             $("button[type='submit']").removeAttr('disabled');
                                         }
                                     })
                                     return false;
-                                })*/
+                                })
                             },
                             "click #del_role": function (e, value, row, index) {
                                 //点击删除按钮
@@ -226,14 +224,17 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                                     btn: ['确定', '取消'] //按钮
                                 }, function () {
                                     //删除操作
-                                    domainService.deleteDomainByCode(row.code, function (data) {
+                                    orgService.deleteOrgByCode(row.code, function (data) {
                                         if (data.result) {
                                             layer.closeAll();
                                             //更新树
-                                            domainTree.getTree();
-                                            domainTree.init();
+                                            orgTree.getTree();
+                                            orgTree.init();
                                             //更新表格
-                                            $('#area_table').bootstrapTable('remove', {field: 'code', values: [row.code]})
+                                            $('#org_table').bootstrapTable('remove', {
+                                                field: 'code',
+                                                values: [row.code]
+                                            })
                                         } else {
                                             layer.msg(data.description);
                                         }
@@ -250,10 +251,10 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                             return icons;
                         }
                     }],
-                    data:data.data
+                    data: data.data
                 })
                 //初始化分页组件
-                common.pageInit(init_page.pageNumber,init_page.pageSize,data.extra)
+                common.pageInit(init_page.pageNumber, init_page.pageSize, data.extra)
             }
         })
         var orgvalia = {};
@@ -292,43 +293,33 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                 }
             })
         }
-        /*orgvalia.editValidator = function () {
-            $('#altDomainForm').bootstrapValidator({
+        orgvalia.editValidator = function () {
+            $('#altorgForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
                     invalid: 'glyphicon glyphicon-remove',
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {
-                    dName: {
+                    altorgName: {
                         validators: {
                             notEmpty: {
-                                message: '域名称不能为空'
+                                message: '组织名称不能为空'
                             }
                         }
-                    }, dNo: {
-                        validators: {
-                            notEmpty: {
-                                message: '展示序号不能为空'
-                            },
-                            numeric: {
-                                message: '展示序号只能为数字'
-                            }
-                        }
-
                     }
                 }
             })
-        }*/
+        }
         //添加组织
         $('#addOrg').click(function () {
-            if(!orgTree.isNodeSelected){
+            if (!orgTree.isNodeSelected) {
                 layer.msg('请选择上级组织')
-            }else{
+            } else {
                 //开启验证
                 orgvalia.addValidator();
-                $('input[name="orgOrderName"]').val(orgTree.nodeSelected.text);
-                $('input[name="orgOrderNo"]').val(orgTree.nodeSelected.code);
+                $('input[name="orgParentName"]').val(orgTree.nodeSelected.text);
+                $('input[name="orgParentCode"]').val(orgTree.nodeSelected.code);
                 layer.open({
                     type: 1,
                     title: '添加组织',
@@ -340,23 +331,23 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                 //表单提交
                 $('#orgForm').on('success.form.bv', function () {
                     var org = {};
-                    org.name = $('input[name="domainName"]').val();
-                    org.parentCode = $('input[name="parentDoaminCode"]').val();
-                    org.orderNo = $('input[name="orderNo"]').val();
-                    org.description = $('textarea[name="domainRemark"]').val();
-                    areaCode=$('input[name="areaCode"]').val();
-                    orgService.addOrg(org,areaCode,function (data) {
+                    org.name = $('input[name="orgName"]').val();
+                    org.parentCode = $('input[name="orgParentCode"]').val();
+                    org.orderNo = $('input[name="orgOrderNo"]').val();
+                    org.description = $('textarea[name="orgRemark"]').val();
+                    areaCode = $('input[name="areaCode"]').val();
+                    orgService.addOrg(org, areaCode, function (data) {
                         if (data.result) {
                             layer.msg('添加组织成功');
                             orgTree.getTree();
                             orgTree.init();
                             //向表格中添加
-                            org.code=data.data
-                            $('#org_table').bootstrapTable('append',org);
+                            org.code = data.data
+                            $('#org_table').bootstrapTable('append', org);
                             layer.closeAll();
                             //清空表单
-                            $('input[name="orgOrderName"]').val('无');
-                            $('input[name="orgOrderNo"]').val('-1');
+                            $('input[name="orgParentName"]').val('无');
+                            $('input[name="orgParentCode"]').val('-1');
                             $("input[name='res']").click();
                             //清空验证
                             $("#orgForm").data('bootstrapValidator').destroy();
@@ -368,37 +359,23 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                 })
             }
         })
-        var setting={
-            data:{
-                simpleData:{
-                    enable:true,
-                    idKey:"code",
-                    pIdKey:"parentCode"
-                },
-                key:{
-                    name:"name"
-                },
-                keep:{
-                    parent:true
-                }
-            }
-        }
+
         //初始化区域树
         var treeNode;
-        orgService.getChildArea('000000',function (data) {
-            if(data.result){
-                for(var i=0;i<data.dataSize;i++){
-                    data.data[i].isParent=true;
+        orgService.getChildArea('000000', function (data) {
+            if (data.result) {
+                for (var i = 0; i < data.dataSize; i++) {
+                    data.data[i].isParent = true;
                 }
-                treeNode=data.data;
-            }else{
+                treeNode = data.data;
+            } else {
                 layer.msg(data.description);
             }
         })
-        $.fn.zTree.init($("#areatree"),setting,treeNode);
         //选择区域
+        var areaLayer;
         $('#choseArea').click(function () {
-            layer.open({
+            areaLayer = layer.open({
                 type: 1,
                 title: '区域编码树',
                 skin: 'layui-layer-rim',
@@ -408,4 +385,38 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                 content: $('#areatree')
             })
         })
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                },
+                key: {
+                    name: "name"
+                },
+                keep: {
+                    parent: true
+                }
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    $('input[name="areaCode"]').val(treeNode.code);
+                    layer.close(areaLayer)
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    orgService.getChildArea(treeNode.code, function (data) {
+                        if (data.result) {
+                            for (var i = 0; i < data.dataSize; i++) {
+                                data.data[i].isParent = true;
+                            }
+                            var newNodes = data.data;
+                            //添加节点
+                            treeObj.addNodes(treeNode,newNodes);
+                        }
+                    })
+                }
+            }
+        }
+        var treeObj = $.fn.zTree.init($("#areatree"), setting, treeNode);
     })

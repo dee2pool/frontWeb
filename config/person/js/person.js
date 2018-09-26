@@ -68,202 +68,73 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap', 'bootstrap
         layer.config({
             path: '../../common/libs/layer/'
         });
-        //将部门信息封装成树节点
-        var deptTree = {};
-        deptTree.isNodeSelected = false;
-        deptTree.nodeSelected;
-        deptTree.getTreeList = function () {
-            var tree = [];
-            var temp = {};
-            departMentService.listAll(function (data) {
-                if (data.result) {
-                    //清空下拉框中的选项
-                    $('select[name="parentDept"]>option[value="-1"]').siblings().remove();
-                    //将节点封装成树形结构
-                    for (var i = 0; i < data.data.length; i++) {
-                        //向下拉框中添加
-                        $('select[name="parentDept"]').append('<option value="' +data.data[i].id+ '">' +
-                            data.data[i].name
-                            + '</option>')
-                        temp[data.data[i].id] = {
-                            id: data.data[i].id,
-                            text: data.data[i].name,
-                            pId: data.data[i].parentId,
-                            remark: data.data[i].remark
-                        };
-                    }
-                    for (i = 0; i < data.data.length; i++) {
-                        var key = temp[data.data[i].parentId];
-                        if (key) {
-                            if (key.nodes == null) {
-                                key.nodes = [];
-                                key.nodes.push(temp[data.data[i].id]);
-                            } else {
-                                key.nodes.push(temp[data.data[i].id]);
-                            }
-                        } else {
-                            tree.push(temp[data.data[i].id]);
-                        }
-                    }
+        /********************************* 添加人员 ***************************************/
+        //向下拉框中添加部门
+        departMentService.listAll(function (data) {
+            if(data.result){
+                for(var i=0;i<data.data.length;i++){
+                    $('select[name="dept"]').append('<option value="'+data.data[i].id+'">'+data.data[i].name+'</option>');
                 }
-            })
-            return tree;
-        }
-        console.log(deptTree.getTreeList())
-        deptTree.init = function () {
-            //滚动条
-            $('#departmentTree').treeview({
-                showBorder: false,
-                nodeIcon: 'glyphicon glyphicon-user',
-                data: deptTree.getTreeList(),
-                onhoverColor: 'lightgrey',
-                selectedBackColor: 'lightgrey',
-                selectedColor: 'black',
-                onNodeSelected: function (event, data) {
-                    deptTree.isNodeSelected = true;
-                    deptTree.nodeSelected = data;
-                },
-                onNodeUnselected: function (event, data) {
-                    deptTree.isNodeSelected = false;
-                    deptTree.nodeSelected = null;
-                }
-            })
-        }
-        deptTree.init();
-        //添加部门
-        //部门验证
-        var deptValida={};
-        deptValida.addValida=function(){
-            $('#addDeptForm').bootstrapValidator({
+            }
+        })
+        //选择文件
+        $('#uploadImg').click(function () {
+            $('input[type="file"]').click();
+        })
+        $('input[type="file"]').change(function (e) {
+            console.log(e.target.files[0])
+            common.convertImageToBase64(e.target.files[0])
+        })
+        var perAdd={};
+        perAdd.valia=function(){
+            $('#personForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
                     invalid: 'glyphicon glyphicon-remove',
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {
-                    deptName: {
+                    pNo: {
                         validators: {
                             notEmpty: {
-                                message: '部门名称不能为空'
+                                message: '人员编号不能为空'
+                            }
+                        }
+                    }, pName: {
+                        validators: {
+                            notEmpty: {
+                                message: '人员姓名不能为空'
                             }
                         }
                     }
                 }
             })
         }
-        $('#addDept').click(function () {
-            //启用验证
-            deptValida.addValida();
-            layer.open({
-                type: 1,
-                title: '添加部门',
-                offset: '100px',
-                area: '600px',
-                resize: false,
-                content: $('.add_dept')
+        perAdd.submit=function(){
+            $('#personForm').on('success.form.bv',function () {
+                var person={};
+                person.personnelNum=$('input[name="pNo"]').val();
+                person.name=$('input[name="pName"]').val();
+                person.depId=$('input[name="pDept"]').val();
+                person.sex=$('input[name="sex"]').val();
+                person.cardType=$('input[name="cardType"]').val();
+                person.papersNumber=$('input[name="papersNumber"]').val();
+                person.dataBirth=$('input[name="dataBirth"]').val();
+                person.pinyinCode=$('input[name="pinyinCode"]').val();
+                person.phone=$('input[name="phone"]').val();
+                person.constactAddress=$('input[name="constactAddress"]').val();
+                person.englishName=$('input[name="englishName"]').val();
+                person.email=$('input[name="email"]').val();
+                person.takeofficeDate=$('input[name="takeofficeDate"]').val();
+                person.departureDate=$('input[name="departureDate"]').val();
+                person.diploma=$('input[name="diploma"]').val();
+                person.nation=$('input[name="nation"]').val();
+                person.userName=$('input[name="userName"]').val();
+                person.usePwd=$('input[name="usePwd"]').val();
+                person.remark=$('input[name="remark"]').val();
+
             })
-            $('#addDeptForm').on('success.form.bv', function () {
-                var dept = {};
-                dept.name = $("input[name='deptName']").val();
-                dept.parentId = $("select[name='parentDept']").val();
-                dept.remark = $("textarea[name='deptRemark']").val();
-                departMentService.addDepartment(dept, function (data) {
-                    if (data.result) {
-                        layer.closeAll();
-                        //清空表单
-                        $("input[name='res']").click();
-                        //清空验证
-                        $("#addDeptForm").data('bootstrapValidator').destroy();
-                        //初始化
-                        deptTree.getTreeList();
-                        deptTree.init();
-                    } else {
-                        layer.msg(data.description);
-                    }
-                })
-                return false
-            })
-        })
-        //修改部门
-        $('#editDept').click(function () {
-            if (!deptTree.isNodeSelected) {
-                layer.msg('请选择要修改的部门')
-            } else {
-                $('input[name="editDeptId"]').val(deptTree.nodeSelected.id);
-                console.log(deptTree.nodeSelected)
-                $('select[name="parentDept"]').val(deptTree.nodeSelected.pId);
-                $('input[name="eidtDeptName"]').val(deptTree.nodeSelected.text);
-                $('textarea[name="eidtDeptRemark"]').val(deptTree.nodeSelected.remark);
-                layer.open({
-                    type: 1,
-                    title: '修改部门',
-                    offset: '100px',
-                    area: '600px',
-                    resize: false,
-                    content: $('#edit_dept')
-                })
-            }
-            //修改部门表单提交
-            $('#editDeptForm').bootstrapValidator({
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    eidtDeptName: {
-                        validators: {
-                            notEmpty: {
-                                message: '部门名称不能为空'
-                            }
-                        }
-                    }
-                }
-            }).on('success.form.bv', function () {
-                var dept = {};
-                dept.id = $('input[name="editDeptId"]').val();
-                dept.name = $('input[name="eidtDeptName"]').val();
-                dept.parentId = $("select[name='parentDept']").val();
-                dept.remark = $('textarea[name="eidtDeptRemark"]').val();
-                console.log(dept.parentId)
-                console.log(dept.id)
-                /*if(dept.parentId==dept.id){
-                    layer.msg('上级部门不能为要修改的部门')
-                }else{
-                    departMentService.updateDep(dept.id, dept, function (data) {
-                        if (data.result) {
-                            layer.closeAll();
-                            deptTree.getTreeList();
-                            deptTree.init();
-                        }
-                    })
-                }*/
-                return false;
-            })
-        })
-        //删除部门
-        $('#delDept').click(function () {
-            if(!deptTree.isNodeSelected){
-                layer.msg('请选择要删除的部门')
-            }else{
-                if(deptTree.nodeSelected){
-                    layer.confirm('确定删除部门 ' + deptTree.nodeSelected.text + ' ?', {
-                        btn: ['确定', '取消'] //按钮
-                    }, function () {
-                        //删除操作
-                        departMentService.deleteBydepId(deptTree.nodeSelected.id,function (data) {
-                            if(data.result){
-                                deptTree.getTreeList();
-                                deptTree.init();
-                                layer.closeAll();
-                            }
-                        })
-                    }, function () {
-                        layer.closeAll();
-                    });
-                }
-            }
-        })
+        }
         //添加人员弹窗
         $('#addPerson').click(function () {
             layer.open({

@@ -1,7 +1,7 @@
 define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
     var frame = {};
     frame.htm = ['<div class="side-left">',
-        '    <nav class="navbar sidebar" data-sidenav>',
+        '    <nav class="sidebar" data-sidenav>',
         '        <ul class="side-menu menu">',
         '        </ul>',
         '        <div class="add_menu">',

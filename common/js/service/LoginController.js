@@ -70,7 +70,7 @@ define(['./../../../config/common/js/util'],function LoginController(common){
 		 var requestUrl=this.url+"/logout";
          $.ajax({
              url:requestUrl,
-             type:'Get',
+             type:'Post',
              data:{
              },
              cache:false,

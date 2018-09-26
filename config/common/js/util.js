@@ -26,14 +26,15 @@ define(['layer'], function (layer) {
             }
         }
     })
-    //初始化分页组件
-    common.pageInit = function (pageNo, pageSize, count) {
+    //初始化表格高度
+    common.tableHeight=function(){
         $('.table-responsive').height($(window).height()-180)
         $(window).resize(function () {
             $('.table-responsive').height($(window).height()-180)
         })
-        //显示分页条
-        var $pagbar = $('.fixed-table-pagination');
+    }
+    //初始化分页条左侧
+    common.pageLeft=function(pageNo,pageSize,count){
         var begin = (pageNo - 1) * pageSize + 1;
         var end = pageNo * pageSize;
         if(end>count){
@@ -42,10 +43,21 @@ define(['layer'], function (layer) {
         var pageNum;
         count % pageSize == 0 ? pageNum = count / pageSize : pageNum = parseInt(count / pageSize) + 1;
         $('.pagination-info').html('当前显示 ' + begin + ' - ' + end + '条记录 共' + count + '条记录');
+    }
+    //初始化分页条右侧
+    common.pageRight=function(pageNo,pageSize,count){
+        var pageNum;
+        count % pageSize == 0 ? pageNum = count / pageSize : pageNum = parseInt(count / pageSize) + 1;
         for (var i = 0; i < pageNum - 1; i++) {
             var p = i + 2;
-            $('.page-next').before('<li class="page-item pNo"><a class="page-link" href="#">' + p + '</a></li>')
+            $('.page-next').before('<li class="page-item"><a class="page-link" href="#">' + p + '</a></li>')
         }
+    }
+    //分页组件
+    common.pageInit = function (pageNo, pageSize, count) {
+        common.tableHeight();
+        common.pageLeft(pageNo, pageSize, count);
+        common.pageRight(pageNo, pageSize, count);
     }
     //动态高度
     common.height=$(window).height();
@@ -60,6 +72,23 @@ define(['layer'], function (layer) {
         layer.closeAll();
         $("input[name='res']").click();
     })
+    //判断是否为数字
+    common.isRealNum=function(val){
+        var regPos = /^\d+(\.\d+)?$/; //非负浮点数
+        var regNeg = /^(-(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*)))$/; //负浮点数
+        if(regPos.test(val) || regNeg.test(val)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    //添加后清空表单和验证
+    common.clearForm=function(formId){
+        //表单清空
+        $("input[name='res']").click();
+        //清空验证
+        $("#"+formId).data('bootstrapValidator').destroy();
+    }
     //将时间戳转为日期
     common.add0=function(m){
         return m<10?'0'+m:m
@@ -73,6 +102,29 @@ define(['layer'], function (layer) {
         var mm = time.getMinutes()+1;
         var s = time.getSeconds()+1;
         return y+'-'+common.add0(m)+'-'+common.add0(d)+' '+common.add0(h)+':'+common.add0(mm)+':'+common.add0(s);
+    }
+    //将图片转换成canvas
+    common.convertImageToCanvas=function (image) {
+        //创建canvas dom元素，设置宽高与图片一样
+        var canvas=document.createElement("canvas");
+        canvas.width=image.width;
+        canvas.height=image.height;
+        canvas.getContext("2d").drawImage(image,0,0);
+        return canvas;
+    }
+    //将图片转换成base64
+    common.convertImageToBase64=function (image) {
+        var reader=new FileReader();
+        reader.onload=function (event) {
+            var i = document.getElementById('showImg');
+            i.src = event.target.result;
+            i.onload=function () {
+                var canvas=common.convertImageToCanvas(i);
+                var base64=canvas.toDataURL('image/jpeg');
+                $('input[name="picture"]').val(base64);
+            }
+        }
+        reader.readAsDataURL(image);
     }
     return common;
 })

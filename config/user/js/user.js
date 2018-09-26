@@ -63,12 +63,13 @@ require.config({
         "bootstrap-datetimepicker.zh-CN": "../../common/libs/bootstrap-datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN",
         "ugroupService": "../../../common/js/service/UserGroupController",
         "userService": "../../../common/js/service/UserController",
-        "RoleService": "../../common/js/service/RoleController",
+        "domainService": "../../../common/js/service/DomainController",
+        "RoleService": "../../../common/js/service/RoleController",
         "jquery-slimScroll": "../../common/libs/jquery-slimScroll/jquery.slimscroll.min"
     }
 });
-require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'bootstrap', 'bootstrap-treeview', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar', 'ugroupService', 'userService', 'RoleService'],
-    function (jquery, common, frame, bootstrapTable, slimScroll, bootstrap, treeview, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar, ugroupService, userService, RoleService) {
+require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'bootstrap', 'bootstrap-treeview', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar', 'ugroupService', 'userService','domainService','RoleService'],
+    function (jquery, common, frame, bootstrapTable, slimScroll, bootstrap, treeview, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar, ugroupService, userService,domainService,RoleService) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -170,11 +171,20 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'b
                 }
             })
         }
-        var userName;
+        //向下拉框中添加管理域
+        var domain={};
+        domainService.listAllDomain(function (data) {
+            if(data.result){
+                for(var i=0;i<data.data.length;i++){
+                    $('select[name="domain"]').append('<option value="'+data.data[i].code+'">'+data.data[i].name+'</option>');
+                    domain[data.data[i].code]=data.data[i].name;
+                }
+            }
+        })
         var page={};
         page.pageNo=1;
-        page.pageSize=30;
-        userService.getUserList(page.pageNo,page.pageSize, userName, function (data) {
+        page.pageSize=10;
+        userService.getUserList(page.pageNo,page.pageSize,page.userName, function (data) {
             if (data.result) {
                 $('#user_table').bootstrapTable({
                     columns: [{
@@ -218,7 +228,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'b
                     }, {
                         field: 'domainCode',
                         title: '区域',
-                        align: "center"
+                        align: "center",
+                        formatter:function (value,row,index) {
+                            return domain[value]
+                        }
                     }, {
                         field: 'state',
                         title: '账号状态',
@@ -263,9 +276,99 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'b
                     }],
                     data: data.data
                 })
-
                 //初始化switch开关
                 userState.switch();
+                //初始化分页组件
+                common.pageInit(page.pageNo,page.pageSize,data.extra)
+            }
+        })
+        //改变页面展示数据条数
+        $('li[role="menuitem"]>a').click(function () {
+            page.pageSize=$(this).html();
+            $('.page-size').html($(this).html());
+            $(this).parent().addClass('active');
+            $(this).parent().siblings().removeClass('active');
+            userService.getUserList(page.pageNo,page.pageSize,page.userName,function (data) {
+                if(data.result){
+                    $('#user_table').bootstrapTable('load',data.data);
+                    //清除
+                    $('.pagination>li').each(function () {
+                        if($(this).children().html()>1){
+                            $(this).remove();
+                        }
+                    })
+                    //初始化分页组件左侧
+                    common.pageLeft(page.pageNo,page.pageSize,data.extra)
+                }
+            })
+        })
+        //点击上一页
+        $('.page-pre>a').click(function () {
+            if(page.pageNo>1){
+                page.pageNo--;
+                userService.getUserList(page.pageNo,page.pageSize,page.userName,function (data) {
+                    if(data.result){
+                        $('#user_table').bootstrapTable('load',data.data);
+                        $.each($('.page-item'),function (i,n) {
+                            if($(n).children().html()==page.pageNo){
+                                $(n).addClass('active');
+                                $(n).siblings().removeClass('active')
+                            }
+                        })
+                        //重新加载switch
+                        userState.switch();
+                        //初始化分页组件左侧
+                        common.pageLeft(page.pageNo,page.pageSize,data.extra)
+                    }else {
+                        layer.msg(data.description);
+                    }
+                })
+            }
+        });
+        //点击下一页
+        $('.page-next>a').click(function () {
+            var pageNum=$('.page-next').prev().children().html();
+            if(page.pageNo<pageNum){
+                page.pageNo++;
+                userService.getUserList(page.pageNo,page.pageSize,page.userName,function (data) {
+                    if(data.result){
+                        $('#user_table').bootstrapTable('load',data.data);
+                        $.each($('.page-item'),function (i,n) {
+                            if($(n).children().html()==page.pageNo){
+                                $(n).addClass('active');
+                                $(n).siblings().removeClass('active')
+                            }
+                        })
+                        //重新加载switch()
+                        userState.switch();
+                        //初始化分页组件左侧
+                        common.pageLeft(page.pageNo,page.pageSize,data.extra)
+                    }else {
+                        layer.msg(data.description);
+                    }
+                })
+            }
+        });
+        //点击指定页面
+        $('.pagination').on('click','.page-link',function () {
+            //跳转到指定页面
+            if(common.isRealNum($(this).html())){
+                page.pageNo=$(this).html();
+                userService.getUserList(page.pageNo,page.pageSize,page.userName,function (data) {
+                    if(data.result){
+                        $('#user_table').bootstrapTable('load',data.data);
+                        $.each($('.page-item'),function (i,n) {
+                            if($(n).children().html()==page.pageNo){
+                                $(n).addClass('active');
+                                $(n).siblings().removeClass('active')
+                            }
+                        })
+                        //重新加载switch()
+                        userState.switch();
+                        //初始化分页组件左侧
+                        common.pageLeft(page.pageNo,page.pageSize,data.extra)
+                    }
+                })
             }
         })
         //日历控件
@@ -616,7 +719,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'b
                         //为用户赋予角色
                         userService.grantRole(uid, role_ids, function (data) {
                             if (data.result) {
-                                layer.msg(data.description)
+                                layer.msg("添加用户成功")
                             } else {
                                 layer.msg(data.description)
                             }

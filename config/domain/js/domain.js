@@ -26,25 +26,6 @@ require.config({
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapValidator"
-        },
-        'bootstrap-switch': {
-            deps: ['jquery'],
-            exports: "bootstrapSwitch"
-        },
-        'bootstrap-datetimepicker': {
-            deps: ['bootstrap', 'jquery'],
-            exports: "datetimepicker"
-        },
-        'bootstrap-datetimepicker.zh-CN': {
-            deps: ['bootstrap-datetimepicker', 'jquery']
-        },
-        'ugroupService': {
-            deps: ['common'],
-            exports: "ugroupService"
-        },
-        'jquerySession': {
-            deps: ['jquery'],
-            exports: "jquerySession"
         }
     },
     paths: {
@@ -59,9 +40,7 @@ require.config({
         "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
-        "ugroupService": "../../../common/js/service/UserGroupController",
         "domainService": "../../../common/js/service/DomainController",
-        "jquerySession": "../../../common/lib/jquery/jquerySession",
         "orgService": "../../../common/js/service/OrgController"
     }
 });
@@ -144,6 +123,98 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
             })
         }
         domainTree.init();
+        //组织树
+        var orgTree={};
+        orgTree.getData=function () {
+            var tree = [];
+            var temp = {};
+            orgService.listAllOrg(function (data) {
+                if (data.result) {
+                    //将节点封装成树形结构
+                    for (var i = 0; i < data.data.length; i++) {
+                        temp[data.data[i].code] = {
+                            code: data.data[i].code,
+                            text: data.data[i].name,
+                            parentCode: data.data[i].parentCode,
+                            createTime: data.data[i].createTime,
+                            creatorId: data.data[i].creatorId,
+                            description: data.data[i].description,
+                            orderNo: data.data[i].orderNo
+                        };
+                    }
+                    for (i = 0; i < data.data.length; i++) {
+                        var key = temp[data.data[i].parentCode];
+                        if (key) {
+                            if (key.nodes == null) {
+                                key.nodes = [];
+                                key.nodes.push(temp[data.data[i].code]);
+                            } else {
+                                key.nodes.push(temp[data.data[i].code]);
+                            }
+                        } else {
+                            tree.push(temp[data.data[i].code]);
+                        }
+                    }
+                }
+            })
+            return tree;
+        }
+        orgTree.init=function () {
+            $('#orgtree').treeview({
+                showBorder: false,
+                showCheckbox: true,
+                data: orgTree.getData(),
+                selectedBackColor: 'lightgrey',
+                selectedColor: 'black',
+                onNodeChecked: function (event,node) {
+                    var nodeId = [];
+                    //如果有子节点
+                    if (node.nodes) {
+                        for (var i = 0; i < node.nodes.length; i++) {
+                            nodeId.push(node.nodes[i].nodeId);
+                        }
+                        $("#orgtree").treeview("checkNode", [nodeId, {silent: true}]);
+                    } else {
+                        var pId = node.parentId;
+                        if (pId) {
+                            var parentNode = $('#orgtree').treeview("getNode", pId);
+                            var checkNum = 0;
+                            for (var i = 0; i < parentNode.nodes.length; i++) {
+                                if (parentNode.nodes[i].state.checked) {
+                                    checkNum++;
+                                }
+                            }
+                            if (checkNum == parentNode.nodes.length) {
+                                $("#orgtree").treeview("checkNode", parentNode.nodeId);
+                            }
+                        }
+                    }
+                },
+                onNodeUnchecked: function (event,node) {
+                    var nodeId = [];
+                    if (node.nodes) {
+                        for (var i = 0; i < node.nodes.length; i++) {
+                            nodeId.push(node.nodes[i].nodeId);
+                        }
+                        $("#orgtree").treeview("uncheckNode", [nodeId, {silent: true}]);
+                    } else {
+                        var pId = node.parentId;
+                        if (pId) {
+                            var parentNode = $('#orgtree').treeview("getNode", pId);
+                            var checkNum = 0;
+                            for (var i = 0; i < parentNode.nodes.length; i++) {
+                                if (!parentNode.nodes[i].state.checked) {
+                                    checkNum++;
+                                }
+                            }
+                            if (checkNum == parentNode.nodes.length) {
+                                $("#orgtree").treeview("uncheckNode", parentNode.nodeId);
+                            }
+                        }
+                    }
+                }
+            })
+        }
         //管理域表格
         var init_page={
             pageNumber: 1,
@@ -245,11 +316,39 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                                 }, function () {
                                     layer.closeAll();
                                 });
+                            },
+                            "click #cog_org":function (e,value,row,index) {
+                                orgTree.init();
+                                var orgTap=layer.open({
+                                    type: 1,
+                                    title: '分配组织',
+                                    offset: '100px',
+                                    area: '600px',
+                                    resize: false,
+                                    content: $('#add_org')
+                                })
+                                //为管理域分配组织
+                                $('#assignOrg').click(function () {
+                                    var orgIds=new Array();
+                                    var nodeSel=$('#orgtree').treeview('getChecked');
+                                    for (var i = 0; i < nodeSel.length; i++) {
+                                        orgIds.push(nodeSel[i].code);
+                                    }
+                                    domainService.assignOrgToDomain(row.code,orgIds,function (data) {
+                                        if(data.result){
+                                            layer.msg('分配组织成功');
+                                            layer.close(orgTap)
+                                        }else{
+                                            layer.msg(data.description)
+                                        }
+                                    })
+                                })
                             }
                         },
                         formatter: function () {
                             var icons = "<div class='btn-group-sm'><button id='edit_role' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
                                 "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
+                                "<button id='cog_org' class='btn btn-default'><i class='fa fa-cog'></i></button>" +
                                 "</div>"
                             return icons;
                         }
@@ -320,8 +419,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
         //添加域
         $('#addDomain').click(function () {
             if(!domainTree.isNodeSelected){
-                $('input[name="parentDoamin"]').val('无');
-                $('input[name="parentDoaminCode"]').val('-1');
+                $('input[name="parentDoamin"]').val('默认管理域');
+                $('input[name="parentDoaminCode"]').val('00000000000010000049');
             }else {
                 $('input[name="parentDoamin"]').val(domainTree.nodeSelected.text);
                 $('input[name="parentDoaminCode"]').val(domainTree.nodeSelected.code);
