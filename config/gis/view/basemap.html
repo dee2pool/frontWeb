@@ -131,24 +131,24 @@
                                 <div class="col-sm-12">
                                     <label class="col-sm-2 col-sm-offset-2 little-title">文件夹名称:</label>
                                     <div class="col-sm-2">
-                                        <input type="text" class="form-control" placeholder="文件夹名称，若不填则为默认值" id="file">
+                                        <input type="text" class="form-control" placeholder="文件夹名称，若不填则为默认值" id="file" value="/root">
                                     </div>
                                 </div>
                             </div>
                             <!--2.2服务类型-->
-                            <div class="form-group">
-                                <div class="col-sm-12">
-                                    <label class="col-sm-2 col-sm-offset-2 little-title">服务类型:</label>
-                                    <div class="col-sm-2">
-                                        <select class="form-control" id="category">
-                                            <option>WMS</option>
-                                            <option>WMTS</option>
-                                            <option>WFS</option>
-                                            <option>TMS</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            <!--<div class="form-group">-->
+                                <!--<div class="col-sm-12">-->
+                                    <!--<label class="col-sm-2 col-sm-offset-2 little-title">服务类型:</label>-->
+                                    <!--<div class="col-sm-2">-->
+                                        <!--<select class="form-control" id="category">-->
+                                            <!--<option>WMS</option>-->
+                                            <!--<option>WMTS</option>-->
+                                            <!--<option>WFS</option>-->
+                                            <!--<option>TMS</option>-->
+                                        <!--</select>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
 
                             <!--3预览服务-->
                             <div class="form-group">
@@ -189,10 +189,9 @@
                         <div class="tab-pane fade" id="show">
                             <div class="left feature-border">
                                 <div class="tree-head">
-                                    <a id="show-map" href="#" title="查看地图" onclick="return false;"><i class="fa fa-map-o"></i>查看地图</a>
+                                    <a id="show-map" href="#" title="查看" onclick="return false;"><i class="fa fa-map-o"></i>查看</a>
                                     <a id="edit" href="#" title="编辑" onclick="return false;"><i class="fa fa-edit"></i>编辑</a>
-                                    <a id="remove" href="#" title="删除" onclick="return false;"><i class="fa fa-remove"></i>
-                                        删除节点</a>
+                                    <a id="remove" href="#" title="删除" onclick="return false;"><i class="fa fa-remove"></i>删除</a>
                                 </div>
                                 <ul id="treeDemo" class="ztree"></ul>
 
@@ -335,6 +334,8 @@
                                     </div>
                                 </div>
                             </div>
+
+
                         </div>
                     </div>
 
@@ -343,6 +344,124 @@
     </div>
 </div>
 </div>
+
+
+<div style="display: none">
+    <div id="layx-edit">
+        <div class="container-fluid">
+            <div class="row">
+                <!--1地图配置-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <h3 class="big-title">地图配置</h3>
+                    </div>
+                </div>
+                <!--1.1供应商-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 col-sm-offset-2 little-title" style="text-align: right;line-height: 33px;font-size: 20px">地图供应商:</label>
+                        <div class="col-sm-4">
+                            <select class="form-control" id="l_supplier">
+                                <option>天地图</option>
+                                <option>百度地图</option>
+                                <option>高德地图</option>
+                                <option>谷歌地图</option>
+                            </select>
+                        </div>
+                        <!--<div class="col-sm-1">-->
+                        <!--<a href="void:javascript:void(0);" id="supplier-config"><i class="fa fa-cog little-title"></i></a>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+                <!--1.2地图名称-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 col-sm-offset-2 little-title">地图名称:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="地图名称">
+                        </div>
+                    </div>
+                </div>
+                <!--1.3所属区域-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 col-sm-offset-2 little-title">所属区域:</label>
+                        <div class="col-sm-2">
+                            <select class="form-control">
+                                <option>湖南省</option>
+                                <option>湖北省</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="form-control">
+                                <option>长沙市</option>
+                                <option>常德市</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="form-control">
+                                <option>岳麓区</option>
+                                <option>开福区</option>
+                                <option>长沙县</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!--2服务配置-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <h3 class="big-title">GIS服务器配置</h3>
+                    </div>
+                </div>
+                <!--2.1端口设置-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 col-sm-offset-2 little-title">GIS服务器地址:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="GIS服务器地址" id="l_address">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 col-sm-offset-2 little-title">端口设置:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="端口设置" id="l_port">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 col-sm-offset-2 little-title">文件夹名称:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="文件夹名称，若不填则为默认值" id="l_file" value="/root">
+                        </div>
+                    </div>
+                </div>
+
+                <!--4发布服务-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <h3 class="big-title">发布服务</h3>
+                    </div>
+                </div>
+                <!--3.1预览查看服务-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 col-sm-offset-2 little-title">发布服务:</label>
+                        <div class="col-sm-4">
+                            <button class="btn btn-danger">确认修改</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
 
 </body>
 </html>

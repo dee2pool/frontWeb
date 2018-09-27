@@ -66,11 +66,12 @@ require.config({
         "ztree": "../../../common/lib/ztree/js/jquery.ztree.all",
         "draw": "../../../common/lib/leaflet/lib/draw/Leaflet.Draw",
         "zui":"../../../main/common/lib/zui/js/zui",
-        "layx": "../../../common/lib/layx/layx"
+        "layx": "../../../common/lib/layx/layx",
+        "table":"table"
     }
 });
-require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','leaflet','ztree', 'draw', 'zui', 'layx'],
-    function (jquery, frame, bootstrapTable,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,leaflet,ztree,draw,zui,layx) {
+require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','leaflet','ztree', 'draw', 'zui', 'layx','table'],
+    function (jquery, frame, bootstrapTable,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,leaflet,ztree,draw,zui,layx,table) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -124,12 +125,32 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 }
             },
             callback: {
-                beforeDrag: beforeDrag,
-                beforeRemove: beforeRemove,
-                beforeRename: beforeRename,
-                onRemove: onRemove,
-                onClick: onClick
+                // beforeDrag: beforeDrag,
+                // beforeRemove: beforeRemove,
+                // beforeRename: beforeRename,
+                // onRemove: onRemove,
+                // onClick: onClick
             }
+        };
+
+        var setting_category = {
+            view: {
+                selectedMulti: false
+            },
+            edit: {
+                enable: true,
+                showRemoveBtn: false,
+                showRenameBtn: false
+            },
+            data: {
+                keep: {
+                    parent: true,
+                    leaf: true
+                },
+                simpleData: {
+                    enable: true
+                }
+            },
         };
 
 
@@ -546,7 +567,6 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
         //根据楼层数，动态生成表格
         $("#export-building").on("click",function () {
-            console.log(123);
             var total = parseInt($("#indoor-total").val());
             var start = parseInt($("#indoor-start").val());
             console.log(typeof  $("#indoor-total").val());
@@ -575,7 +595,7 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
         $(document).ready(function () {
                 var zNodes = [
                     {id: 'china', pId: '0', name: "中国", open: true,coors:null,img:null,category:null},
-                    {id: 'hunan', pId: 'china', name: "湖南",coors:null,img:null,category:null},
+                    {id: 'hunan', pId: 'china', name: "湖南",open: true,coors:null,img:null,category:null},
                     {id: 'changsha', pId: 'hunan', name: "长沙市",coors:null,img:null,category:null},
                     {id: 'changde', pId: 'hunan', name: "常德市",coors:null,img:null,category:null},
                     {id: 'xiangtan', pId: 'hunan', name: "湘潭市",coors:null,img:null,category:null},
@@ -586,7 +606,29 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                     {id: 'fhc', pId: 'csxian', name: "凤凰城",coors:[28.25380815,113.08434188],img:null,category:'feature-point'},
                     {id: 'wxh', pId: 'csxian', name: "万象汇",coors:[28.25433718,113.08051083],img:null,category:'feature-point'},
                 ];
+
+            var zNodes_category =[
+                { id:1, pId:0, name:"业务层资源", open:true},
+                { id:'11', pId:'1', name:"组织"},
+                { id:'12', pId:'1', name:"设备", open:true},
+                { id:'13', pId:'1', name:"人员"},
+                { id:'14', pId:'1', name:"建筑"},
+                { id:'15', pId:'1', name:"道路"},
+
+                { id:'16', pId:'12', name:"摄像机"},
+                { id:'17', pId:'12', name:"照相机"},
+                { id:'18', pId:'12', name:"传感器"},
+
+                { id:'19', pId:'16', name:"海康"},
+                { id:'20', pId:'16', name:"大华"}
+            ]
+
+
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            $.fn.zTree.init($("#treeDemo2"), setting_category, zNodes_category);
+            $.fn.zTree.init($("#treeDemo3"), setting_category, zNodes_category);
+
+
             $("#addParent").bind("click", {isParent: true}, add);
             $("#edit").bind("click", edit);
             $("#remove").bind("click", remove);
@@ -669,6 +711,80 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             //动态高度设置
             // var height = $("#pan").height() - $("#pan-head").height() - 15;
             // $("#pan-body").css('height',height+'px');
+
+
+            //打开要素分类选择界面
+            $("#category").on("click",function () {
+                layx.group('group-nomerge', [
+                    {
+                        id: 'map-edit',
+                        title: '要素分类选择',
+                        content: document.getElementById('chooseCategory'),
+                        cloneElementContent: false,
+                    }
+                ],0, {
+                    id: 'info',
+                    mergeTitle: false,
+                    title: '选择加载要素',
+                });
+            });
+
+            //确认要素分类选择
+            $("#chooseCategory-btn").on("click",function () {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo2"),
+                    nodes = zTree.getSelectedNodes(),
+                    treeNode = nodes[0];
+                if (nodes.length == 0) {
+                    alert("请先选择一个节点");
+                    return;
+                }else{
+                    $("#feature-content").css("display","none");
+                    $("#device").css("display","none");
+                    $("#build").css("display","none");
+                    $("#other").css("display","none");
+
+                    $("#feature-content").css("display","block");
+                    if(treeNode.id === '12'){
+                        //$("#feature-content").html(table.device);
+                        $("#device").css("display","block")
+                    }else if(treeNode.id === '14'){
+                        //$("#feature-content").html(table.build);
+                        $("#build").css("display","block");
+                    }else{
+                        //$("#feature-content").html(table.other);
+
+                        $("#other").css("display","block");
+                    }
+
+
+
+                   //关闭窗口
+                    layx.destroyAll();
+                }
+            });
+
+
+            //启动要素关联的界面
+            $(".btn-group-xs").on("click",function () {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                    nodes = zTree.getSelectedNodes(),
+                    treeNode = nodes[0];
+                if (nodes.length == 0) {
+                    alert("请先选择一个区域节点才能进行要素关联!");
+                    return;
+                }else{
+                    //将位置关联的css打开
+                        $(".showTreeData").css("display","none");
+                        $(".editTreeData").css("display","block");
+                        $("#feature-name").val($(this).closest('tr').find('td')[0].innerText);
+                }
+            });
+
+            //要素关联界面中，选择要素分类
+            $("#open-category-win").on("click",function () {
+                layx.html('dom-get','HTMLElement 窗口',document.getElementById('category-win'),{cloneElementContent:false});
+            });
+
         });
 
 

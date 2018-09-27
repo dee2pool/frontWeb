@@ -69,7 +69,7 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
         $('#head').html(topBar.htm);
         topBar.init();
         //地图的加载
-        var host = "http://192.168.0.142:8060"
+        var host = "http://192.168.0.142:8060";
 
         //树的加载
         var setting = {
@@ -124,26 +124,17 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
                 nodes = zTree.getSelectedNodes(),
                 treeNode = nodes[0];
-            if (nodes.length == 0) {
-                alert("请先选择一个节点");
-                return;
-            };
-
-        };
-
-        /**
-         * 查看地图
-         */
-        function showMap() {
-            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
-                nodes = zTree.getSelectedNodes(),
-                treeNode = nodes[0];
-            if (nodes.length == 0) {
-                alert("请先选择一个节点");
-                return;
-            };
             console.log(treeNode);
-            if(treeNode.id === 'tdt'){
+            if (nodes.length == 0) {
+                alert("请先选择一个节点");
+
+                return;
+            };
+
+            if(treeNode.id != 'tdt'){
+                alert('此节点暂未配置地图，请重新选择！');
+                $("#map").css("display","none");
+            }else{
                 $("#map").css("display","block");
                 $("#information").css("display","none");
                 /**
@@ -165,6 +156,45 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                     reuseTiles: true
                 }).addTo(map);//添加tms
             }
+
+        };
+
+        /**
+         * 查看地图
+         */
+        function showMap() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getSelectedNodes(),
+                treeNode = nodes[0];
+            if (nodes.length == 0) {
+                alert("请先选择一个节点");
+                return;
+            };
+            console.log(treeNode);
+            if(treeNode.id === 'tdt'){
+                $("#map").css("display","block");
+                $("#information").css("display","none");
+
+                /**
+                 * 核心地图变量
+                 */
+                var map = L.map('map', {
+                    center: [28.25152980300004, 113.08251277400007],
+                    maxZoom: 17,
+                    minZoom: 15,
+                    zoom: 15,
+                    crs: L.CRS.EPSG4326,
+                });
+
+                //天地图星沙瓦片地图加载
+                var xsTileLayer = L.tileLayer(host + '/geoserver/gwc/service/tms/1.0.0/cite:xstd17@EPSG:4326@png/{z}/{x}/{y}.png', {
+                    tms: true,
+                    maxZoom: 17,
+                    minZoom: 15,
+                    reuseTiles: true
+                }).addTo(map);//添加tms
+
+            }
         }
 
         /**
@@ -179,10 +209,19 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 return;
             };
 
-            if(treeNode.id === 'tdt'){
-                $("#map").css("display","none");
-                $("#information").css("display","block");
-            }
+            layx.group('group-nomerge', [
+                {
+                    id: 'map-edit',
+                    title: '信息修改',
+                    content: document.getElementById('layx-edit'),
+                    cloneElementContent: false,
+                }
+            ], 0, {
+                id: 'info',
+                mergeTitle: false,
+                title: '修改',
+            });
+
         }
 
 
@@ -197,6 +236,8 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
             //编辑
             $("#edit").bind("click",edit);
+
+
 
         });
 
