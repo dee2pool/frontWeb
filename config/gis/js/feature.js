@@ -454,7 +454,7 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             else{
                 loadIndoorMap();
                 function loadIndoorMap() {
-                    buildMapTest = L.map('img-map', {
+                    buildMapTest = L.map('map', {
                         minZoom: 0,
                         maxZoom: 4,
                         center: [0, 0],
@@ -530,7 +530,7 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                             });
                         });
                         var marker4 = L.marker(buildMapTest.unproject([100, 380], buildMapTest.getMaxZoom() - 1));
-                        marker4.on("click", function () {
+                        marker4.on("click", function(){
                             lay.open({
                                 type: 1,
                                 area:['400px','400px'],
@@ -657,6 +657,15 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 maxMenu: false,
                 minMenu: false,
                 closeMenu: false,
+                minMenu:false,
+                maxMenu:false,
+                controlStyle:'background-color: #1070e2; color:#fff;',
+                border:false,
+                style:layx.multiLine(function(){/*
+                        #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+                            background-color: #9953c0;
+                        }
+                    */}),
                 width: 750,
                 height: 500,
                 statusBar: true,
@@ -1009,6 +1018,16 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                     id: 'info',
                     mergeTitle: false,
                     title: '选择加载要素',
+                    icon:false,
+                    minMenu:false,
+                    maxMenu:false,
+                    controlStyle:'background-color: #1070e2; color:#fff;',
+                    border:false,
+                    style:layx.multiLine(function(){/*
+                        #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+                            background-color: #9953c0;
+                        }
+                    */})
                 });
             });
 
@@ -1065,7 +1084,20 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
             //要素关联界面中，打开选择要素分类的窗口
             $("#open-category-win").on("click",function () {
-                layx.html('dom-get','HTMLElement 窗口',document.getElementById('category-win'),{cloneElementContent:false});
+                layx.html('dom-get','要素分类选择',document.getElementById('category-win'),{
+                    cloneElementContent:false,
+                    //样式配置
+                    icon:false,
+                    minMenu:false,
+                    maxMenu:false,
+                    controlStyle:'background-color: #1070e2; color:#fff;',
+                    border:false,
+                    style:layx.multiLine(function(){/*
+                        #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+                            background-color: #9953c0;
+                        }
+                    */}),
+                });
             });
 
             //在要素分类所属的窗口中，选择所属的要素分类

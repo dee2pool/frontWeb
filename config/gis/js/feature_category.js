@@ -225,11 +225,6 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 alert("请先选择一个节点");
                 return;
             };
-            // $(‘input’).attr(“readonly”,true)//将input元素设置为readonly
-            // $(‘input’).attr(“readonly”,false)//去除input元素的readonly属性
-
-            // $("#btn").attr({"disabled":"disabled"});
-            // $("#btn").attr("disabled","disabled");
 
 
             $("#name").css("display","none");

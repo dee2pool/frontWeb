@@ -1825,6 +1825,17 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 closable: false,
                 shadow: true,
                 icon: '<i class="fa fa-tasks"></i>',
+                //样式配置
+                // icon:false,
+                // minMenu:false,
+                // maxMenu:false,
+                // controlStyle:'background-color: #1070e2; color:#fff;',
+                // border:false,
+                // style:layx.multiLine(function(){/*
+                //             #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+                //                 background-color: #9953c0;
+                //             }
+                //         */}),
                 event:{
                     onload: {
                         before: function (layxWindow, winform) {
