@@ -11,7 +11,7 @@
 
     L.Control.ZoomHome = L.Control.Zoom.extend({
         options: {
-            position: 'topright',
+            position: 'bottomright',
             zoomInText: '+',
             zoomInTitle: 'Zoom in',
             zoomOutText: '-',

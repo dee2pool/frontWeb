@@ -321,6 +321,7 @@ ul li{
     -o-transition: max-height 0.4s linear;
     transition: max-height 0.4s linear;
     display: none;
+
 }
 .navpanel .on{
     display: block;

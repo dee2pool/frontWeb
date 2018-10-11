@@ -80,7 +80,11 @@ require.config({
         "BetterWMS":{
             deps: ['leaflet'],
             exports: 'BetterWMS'
-        }
+        },
+        'ztree':{
+            deps:['jquery'],
+            export:'ztree'
+        },
 
 
     },
@@ -113,17 +117,20 @@ require.config({
         "indoor": "../../common/lib/leaflet-lib/indoor/leaflet-indoor",
         "snogylop":"../../common/lib/leaflet-lib/mask/leaflet.snogylop",
         "topBar":"../../../common/component/head/js/topbar",
-        "BetterWMS":"../../common/lib/leaflet-lib/BetterWMS/BetterWMS"
+        "BetterWMS":"../../common/lib/leaflet-lib/BetterWMS/BetterWMS",
+        "ztree":"../../common/lib/ztree/js/jquery.ztree.all.min",
 
     }
 });
-require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS'],
-    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS) {
+require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS','ztree'],
+    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree) {
 
         //加载公用头部导航栏标签
         //$("#head").html(common.head);
         $('#head').html(topBar.htm);
         topBar.init();
+        initHeight();
+
 
         //全局通用地址
         var host = common.host;
@@ -312,7 +319,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         /**
          * 设备点相关
          */
-        //点测试图层
+            //点测试图层
         var xsLayerGroup = L.layerGroup();
 
         var pointOption = common.wmsDefaultOption;
@@ -348,30 +355,30 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         id: 'device-info',
                         title: '设备信息',
                         content: '<div class="layx-div"><h3>设备信息</h3>\n' +
-                            '        <div class="input-group">\n' +
-                            '            <span class="input-group-addon">设备名称</span>\n' +
-                            '            <input id="device-info-name" type="text" class="form-control" value=" ' + feature.properties.name + ' " name="device-name" readonly>\n' +
-                            '        </div>\n' +
-                            '        <br>\n' +
-                            '        <div class="input-group">\n' +
-                            '            <span class="input-group-addon">坐标信息</span>\n' +
-                            '            <input id="device-info-coors" type="text" class="form-control" value=" ' + feature.geometry.coordinates + ' " name="device-coors" readonly>\n' +
-                            '        </div>\n' +
-                            '        <br>\n' +
-                            '        <div class="input-group">\n' +
-                            '            <span class="input-group-addon">设备类型</span>\n' +
-                            '            <select class="form-control" id="device-info-type" readonly>\n' +
-                            '                <option>A</option>\n' +
-                            '                <option>B</option>\n' +
-                            '                <option>C</option>\n' +
-                            '                <option>D</option>\n' +
-                            '            </select>\n' +
-                            '        </div>\n' +
-                            '        <br>\n' +
-                            '        <div class="input-group">\n' +
-                            '            <span class="input-group-addon">设备描述</span>\n' +
-                            '            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>\n' +
-                            '        </div> </div>',
+                        '        <div class="input-group">\n' +
+                        '            <span class="input-group-addon">设备名称</span>\n' +
+                        '            <input id="device-info-name" type="text" class="form-control" value=" ' + feature.properties.name + ' " name="device-name" readonly>\n' +
+                        '        </div>\n' +
+                        '        <br>\n' +
+                        '        <div class="input-group">\n' +
+                        '            <span class="input-group-addon">坐标信息</span>\n' +
+                        '            <input id="device-info-coors" type="text" class="form-control" value=" ' + feature.geometry.coordinates + ' " name="device-coors" readonly>\n' +
+                        '        </div>\n' +
+                        '        <br>\n' +
+                        '        <div class="input-group">\n' +
+                        '            <span class="input-group-addon">设备类型</span>\n' +
+                        '            <select class="form-control" id="device-info-type" readonly>\n' +
+                        '                <option>A</option>\n' +
+                        '                <option>B</option>\n' +
+                        '                <option>C</option>\n' +
+                        '                <option>D</option>\n' +
+                        '            </select>\n' +
+                        '        </div>\n' +
+                        '        <br>\n' +
+                        '        <div class="input-group">\n' +
+                        '            <span class="input-group-addon">设备描述</span>\n' +
+                        '            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>\n' +
+                        '        </div> </div>',
                         //cloneElementContent:false,
                     },
                     {
@@ -387,10 +394,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         cloneElementContent: false,
                     }
                 ], 0, {
-                        id: 'info',
-                        mergeTitle: false,
-                        title: '设备详情',
-                    });
+                    id: 'info',
+                    mergeTitle: false,
+                    title: '设备详情',
+                });
                 $("#device-info-name").val(feature.properties.name);
                 $("#device-info-desc").val("");
                 $("#device-info-coors").val(feature.geometry.coordinates);
@@ -612,12 +619,12 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
                 // 隐藏map，显示img-map
                 $("#map").css('display', 'none');
-                $(".img-map").css('display', 'block');
+                $("#img-map").css('display', 'block');
 
                 //室内地图初始化 这里实际上是核心图片算法的处理
                 var w = 1024,
                     h = 650;
-                    //url = imageUrl;
+                //url = imageUrl;
                 var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
                 var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
                 var bounds = new L.LatLngBounds(southWest, northEast);
@@ -978,7 +985,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         }
 
         /**
-         * img-map的初始化 室内结构地图 另一个视图 
+         * img-map的初始化 室内结构地图 另一个视图
          */
         var maptest = null;
 
@@ -1119,7 +1126,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     //如果不在范围内，而且加载了图层，那么对图层进行移除
                     else{
                         if(map.hasLayer(modalGroup)){
-                                map.removeLayer(modalGroup)
+                            map.removeLayer(modalGroup)
                         }else{
 
                         }
@@ -1134,7 +1141,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
         /**
          * 进入建筑内部结构的方法
-         * @param {*} imageUrl 
+         * @param {*} imageUrl
          */
         function mapTestInit(imageUrl) {
             maptest = L.map('img-map', {
@@ -1170,7 +1177,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     area:['400px','400px'],
                     content: '信息查看',
                 });
-            })
+            });
             var marker2 = L.marker(maptest.unproject([400, 400], maptest.getMaxZoom() - 1)).addTo(maptest);
             marker2.on("click", function () {
                 lay.open({
@@ -1661,12 +1668,29 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
 
-
+        //初始 加载 默认 函数
         $(function () {
             mapBarActive();
             //样式存在问题，所以地图导航条延后加载
             $(".map-top").css("display","block");
+
+            rightChange();
+            char1();
+            mapRestList();
+            back();
+
+            //给main高度
+
         });
+
+        /**
+         * main的初始化高度设定
+         */
+        function initHeight() {
+            var height = $("body").height() - 60 + 'px !important';
+            $("#core").css('cssText',height);
+            console.log(height);
+        }
 
         /**
          *地图工具栏导航条
@@ -1678,7 +1702,149 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 $(this).find("a").addClass("active");
                 $(this).find("a").parents("li").siblings().find("a").removeClass("active");
             })
+        };
+
+        //工具条点击效果
+        function mapActive() {
+            $(".map-top>ul>li").click(function () {
+                $(this).addClass("active").siblings().removeClass("active");
+                $(this).find("a").addClass("active");
+                $(this).find("a").parents("li").siblings().find("a").removeClass("active");
+            })
         }
+
+        //右侧功能界面切换
+        function rightChange(){
+            $(".map-right-top>ul>li").click(function(){
+                var ins=$(this).index();
+                $(this).addClass("li-active").siblings().removeClass("li-active");
+                $(".map-core .map-core-content").eq(ins).show().siblings().hide();
+            })
+        }
+
+        //服务点击查询
+        function mapRestList(){
+            $(".map-work>ul>li").click(function(){
+                $(".map-work>ul").hide();
+                $(".map-reslist").show();
+            })
+        }
+        //服务点击 查询结果返回
+        function back(){
+            $("#back").on("click",function(){
+                $(".map-work>ul").show();
+                $(".map-reslist").hide();
+            })
+        }
+
+        //统计分析图
+        function char1() {
+
+            var myChart = echarts.init(document.getElementById('char1'));
+
+            var option = {
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient : 'vertical',
+                    x : 'right',
+                    textStyle : {
+                        color : '#ffffff',
+
+                    },
+                    data:['A','B','C','D']
+                },
+
+                calculable : false,
+                series : [
+                    {
+                        name:'类型',
+                        type:'pie',
+                        radius : ['40%', '70%'],
+                        itemStyle : {
+                            normal : {
+                                label : {
+                                    show : false
+                                },
+                                labelLine : {
+                                    show : false
+                                }
+                            },
+                            emphasis : {
+                                label : {
+                                    show : true,
+                                    position : 'center',
+                                    textStyle : {
+                                        fontSize : '20',
+                                        fontWeight : 'bold'
+                                    }
+                                }
+                            }
+                        },
+                        data:[
+                            {value:335, name:'A'},
+                            {value:310, name:'B'},
+                            {value:234, name:'C'},
+                            {value:135, name:'D'}
+
+                        ]
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+            window.addEventListener('resize', function () {myChart.resize();})
+        }
+
+
+
+
+
+        // 右侧的树加载
+        var setting = {
+            view: {
+                dblClickExpand: false
+            },
+            check: {
+                enable: false
+            }
+
+        };
+        var zNodes =[
+            {"id":0,"name":"全国","open":true,icon:"../img/down1.png",children:[
+                    { "id":1,"pid":0, "name":"长沙","open":true, icon:"../img/page.png",
+                        children: [
+                            { "id":11,"pid":1, "name":"设备1"},
+                            { "id":12, "pid":1,"name":"设备2"},
+                            { "id":13,"pid":1, "name":"设备3"}
+                        ]
+                    },
+                    {"id":2,"pid":0,"name":"北京",icon:"../img/page.png",
+                        children: [
+                            { "id":21,"pid":2, "name":"设备4"},
+
+                            { "id":23,"pid":2, "name":"设备5"}
+                        ]
+                    },
+                    {"id":3,"pid":0,"name":"广州", icon:"../img/page.png",
+                        children: [
+                            { "id":31,"pid":3, "name":"设备6"},
+
+                            { "id":33,"pid":3, "name":"设备7"}
+                        ]}
+                ]}
+
+        ];
+
+        var zTree;
+        $(document).ready(function(){
+            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            $.fn.zTree.init($("#treeDemo1"), setting, zNodes);
+            $.fn.zTree.init($("#treeDemo2"), setting, zNodes);
+            zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        });
 
         /**
          * index-panel初始化
@@ -1791,60 +1957,60 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 content: document.getElementById('workOrder-panel'),
                 cloneElementContent: false,
             },
-            {
-                id: 'device-current',
-                title: '告警信息',
-                content: document.getElementById('alarm-panel'),
-                cloneElementContent: false,
-            },
-            {
-                id: 'device-history',
-                title: '实时监测',
-                content: '3',
-                // cloneElementContent:false,
-                statusBar: true,
-                buttons: [
-                    {
-                        label: '确定',
-                        callback: function (id, button, event) {
-                            layx.destroy(id);
-                        },
-                        style: 'color:#f00;font-size:16px;'
-                    }
-                ]
-
-            }
+            // {
+            //     id: 'device-current',
+            //     title: '告警信息',
+            //     content: document.getElementById('alarm-panel'),
+            //     cloneElementContent: false,
+            // },
+            // {
+            //     id: 'device-history',
+            //     title: '实时监测',
+            //     content: '3',
+            //     // cloneElementContent:false,
+            //     statusBar: true,
+            //     buttons: [
+            //         {
+            //             label: '确定',
+            //             callback: function (id, button, event) {
+            //                 layx.destroy(id);
+            //             },
+            //             style: 'color:#f00;font-size:16px;'
+            //         }
+            //     ]
+            //
+            // }
         ], 0, {
-                id: 'alarm-order-group',
-                position: 'lb',
-                minHeight: '250',
-                height: '250',
-                width: '100%',
-                storeStatus: 'true',
-                closeMenu: false,
-                closable: false,
-                shadow: true,
-                icon: '<i class="fa fa-tasks"></i>',
-                //样式配置
-                // icon:false,
-                // minMenu:false,
-                // maxMenu:false,
-                // controlStyle:'background-color: #1070e2; color:#fff;',
-                // border:false,
-                // style:layx.multiLine(function(){/*
-                //             #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
-                //                 background-color: #9953c0;
-                //             }
-                //         */}),
-                event:{
-                    onload: {
-                        before: function (layxWindow, winform) {
-                            layx.min('alarm-order-group');
-                        }
-                    },
-                }
+            id: 'alarm-order-group',
+            position: 'lb',
+            minHeight: '250',
+            height: '250',
+            width: '100%',
+            storeStatus: 'true',
+            closeMenu: false,
+            closable: false,
+            shadow: true,
+            icon: '<i class="fa fa-tasks"></i>',
+            //样式配置
+            // icon:false,
+            // minMenu:false,
+            // maxMenu:false,
+            // controlStyle:'background-color: #1070e2; color:#fff;',
+            // border:false,
+            // style:layx.multiLine(function(){/*
+            //             #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+            //                 background-color: #9953c0;
+            //             }
+            //         */}),
+            event:{
+                onload: {
+                    before: function (layxWindow, winform) {
+                        layx.min('alarm-order-group');
+                    }
+                },
+            }
 
-            });
+        });
 
 
 

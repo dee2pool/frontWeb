@@ -194,6 +194,7 @@ a:hover{
     font-weight: 600;
     padding-top: 5px;
     padding-bottom: 5px;
+    text-align: center !important;
 }
 
 .p-table-div-table tbody tr{
@@ -205,6 +206,10 @@ a:hover{
     background-color: #072951;
     box-shadow: -10px 0px 15px #034c6a inset,
     10px 0px 15px #034c6a inset;
+}
+
+th{
+    text-align: center!important;
 }
 
 /* end-通用的table样式 */

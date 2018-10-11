@@ -13,7 +13,7 @@ define(["../../../common/lib/nav/js/nav.min","../../../common/js/service/LoginCo
         '        </div>',
         '        <ul>',
         '            <li><a href="'+topBar.url+'/main/index.html\"><span class="fa fa-home"></span>&nbsp;主页</a></li>',
-        '            <li><a href="'+topBar.url+'/main/core/view/core.html\"><span class="fa fa-map"></span>&nbsp;一张图</a></li>',
+        '            <li><a href="'+topBar.url+'/main/core/view/core2.html\"><span class="fa fa-map"></span>&nbsp;一张图</a></li>',
         '            <li><a href="'+topBar.url+'/main/depot/view/index.html\"><span class="fa fa-plane"></span>驾驶舱</a>',
         '            </li>',
         '        </ul>',
