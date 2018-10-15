@@ -82,7 +82,10 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
         var drawGroup = new L.FeatureGroup();
 
         //地图的加载
-        var host = "http://192.168.0.142:8060"
+        var host = "http://192.168.0.142:8060";
+
+        //后台地址
+        var end = "http://localhost:8040";
         /**
          * 核心地图变量
          */
@@ -314,255 +317,269 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 nodes = zTree.getSelectedNodes(),
                 treeNode = nodes[0];
             var category = treeNode.cate;
-            console.log(treeNode);
+
+            $("#flag-category").val(category);
+            console.log();
 
             var mapcss = $("#map").css("display");
-            //var imgmapcss = "";
 
-            if(mapcss === 'none'){
-                //如果没有上传图片，需要进行提示的操作
+            //如果没有上传图片，需要进行提示的操作
+            if(category === 'feature-point' || category === 'feature-polygon'){
+                if($("#upload-img").val() == ''){
+                    alert('请先上传图像');
+                    return ;
+                }
+            }
+            if(treeNode.name === '建筑'){
+                $("#add-building-btn").css("display","block");
+            }else{
+                $("#add-building-btn").css("display","none");
+            }
+            /**
+             * 构造点要素
+             */
+            if(category === 'feature-point'){
+                var index = null;
+                //用之前先清空一下图层，重新加载一下
+                drawGroup.clearLayers();
+                drawGroup.remove();
+                drawGroup.addTo(map);
 
-                if(category === 'feature-point' || category === 'feature-polygon'){
-                    if($("#upload-img").val() == ''){
-                        alert('请先上传图像');
-                        return ;
+
+                var objUrl = getObjectURL(document.getElementById('upload-img').files[0]) ;
+                function getObjectURL(file) {
+                    var url = null;
+                    if (window.createObjectURL != undefined) { // basic
+                        url = window.createObjectURL(file);
+                    } else if (window.URL != undefined) { // mozilla(firefox)
+                        url = window.URL.createObjectURL(file);
+                    } else if (window.webkitURL != undefined) { // webkit or chrome
+                        url = window.webkitURL.createObjectURL(file);
                     }
+                    return url;
                 }
 
-                if(treeNode.name === '建筑'){
-                    $("#add-building-btn").css("display","block");
-                }else{
-                    $("#add-building-btn").css("display","none");
-                }
+                var drawer = new L.Draw.Marker(map, {
+                    icon: L.icon({
+                        iconUrl: objUrl,
+                    })
+                });
 
-
-                /**
-                 * 构造线要素
-                 */
-                if(category === 'feature-point'){
-                    var index = null;
-                    //用之前先清空一下图层，重新加载一下
-                    drawGroup.clearLayers();
-                    drawGroup.remove();
-                    drawGroup.addTo(buildMapTest);
-
-
-                    var objUrl = getObjectURL(document.getElementById('upload-img').files[0]) ;
-                    function getObjectURL(file) {
-                        var url = null;
-                        if (window.createObjectURL != undefined) { // basic
-                            url = window.createObjectURL(file);
-                        } else if (window.URL != undefined) { // mozilla(firefox)
-                            url = window.URL.createObjectURL(file);
-                        } else if (window.webkitURL != undefined) { // webkit or chrome
-                            url = window.webkitURL.createObjectURL(file);
-                        }
-                        return url;
-                    }
-
-                    var drawer = new L.Draw.Marker(buildMapTest, {
-                        icon: L.icon({
-                            iconUrl: objUrl,
-                        })
-                    });
-
-                    drawer.enable(); //启动工具
-                    buildMapTest.on('draw:created',
-                        function (e) {
-                            var type = e.layerType,
-                                drawlayer = e.layer;
-                            drawGroup.addLayer(drawlayer);
-                            console.log(drawlayer._map);
-                            $("#feature-zoom").val(drawlayer._map._zoom);
-                            $("#feature-coors").val(drawlayer._latlng);
-                        }
-                    );
-                    drawer = null;
-                }
-
-                //构造线要素
-                if(category === 'feature-line'){
-                    var index = null;
-                    //用之前先清空一下图层，重新加载一下
-                    drawGroup.clearLayers();
-                    drawGroup.remove();
-                    drawGroup.addTo(buildMapTest);
-
-                    //构造画图工具
-                    var drawer = new L.Draw.Polyline(buildMapTest);
-                    drawer.enable(); //启动工具
-
-                    buildMapTest.on('draw:created', function (e) {
+                drawer.enable(); //启动工具
+                map.on('draw:created',
+                    function (e) {
                         var type = e.layerType,
-                            layer = e.layer;
-                        drawGroup.addLayer(layer);
-                        console.log(layer);
-                        // var coors = layer._latlngs;
-                        // $.zui.store.set('test' + layer._latlngs[0].lat);
-
-                    });
-
-                    drawer = null;
-
-
-                }
-
-                /**
-                 * 构造面要素
-                 */
-                if(category === 'feature-polygon'){
-                    var index = null;
-                    //用之前先清空一下图层，重新加载一下
-                    drawGroup.clearLayers();
-                    drawGroup.remove();
-                    drawGroup.addTo(buildMapTest);
-
-                    //图片路径获取
-                    var imgUrl = getObjectURL(document.getElementById('upload-img').files[0]) ;
-                    function getObjectURL(file) {
-                        var url = null;
-                        if (window.createObjectURL != undefined) { // basic
-                            url = window.createObjectURL(file);
-                        } else if (window.URL != undefined) { // mozilla(firefox)
-                            url = window.URL.createObjectURL(file);
-                        } else if (window.webkitURL != undefined) { // webkit or chrome
-                            url = window.webkitURL.createObjectURL(file);
-                        }
-                        return url;
+                            drawlayer = e.layer;
+                        drawGroup.addLayer(drawlayer);
+                        console.log(drawlayer._map);
+                        $("#feature-zoom").val(drawlayer._map._zoom);
+                        $("#feature-coors").val(drawlayer._latlng);
                     }
+                );
+                drawer = null;
+            }
 
-                    //构造画图工具
-                    var drawer = new L.Draw.Rectangle(buildMapTest);
-                    drawer.enable(); //启动工具
-                    buildMapTest.on('draw:created', function (e) {
-                        var type = e.layerType,
-                            layer = e.layer;
-                        var imageBounds = [[layer._bounds._southWest.lat, layer._bounds._southWest.lng], [layer._bounds._northEast.lat, layer._bounds._northEast.lng]];
-                        $("#feature-coors").val(imageBounds);
-                        imageoverlay = L.imageOverlay(imgUrl, imageBounds).addTo(buildMapTest);
-                        drawGroup.addLayer(imageoverlay);
-                    });
-                    drawer = null;
+            //构造线要素
+            if(category === 'feature-line'){
+                var index = null;
+                //用之前先清空一下图层，重新加载一下
+                drawGroup.clearLayers();
+                drawGroup.remove();
+                drawGroup.addTo(map);
+
+                //构造画图工具
+                var drawer = new L.Draw.Polyline(map);
+                drawer.enable(); //启动工具
+
+                map.on('draw:created', function (e) {
+                    var type = e.layerType,
+                        layer = e.layer;
+                    drawGroup.addLayer(layer);
+                    console.log(layer);
+                    $("#feature-zoom").val(layer._map._zoom);
+
+
+                    //对线数组坐标进行重新构造
+                    var coors = layer._latlngs;
+                    var str = [];
+                    for(var i = 0;i<coors.length;i++){
+                        str.push(coors[i].lat);
+                        str.push(coors[i].lng);
+                    }
+                    $("#feature-coors").val(str);
+
+                });
+
+                drawer = null;
+
+
+            }
+
+            /**
+             * 构造面要素
+             */
+            if(category === 'feature-polygon'){
+                var index = null;
+                //用之前先清空一下图层，重新加载一下
+                drawGroup.clearLayers();
+                drawGroup.remove();
+                drawGroup.addTo(map);
+
+                //图片路径获取
+                var imgUrl = getObjectURL(document.getElementById('upload-img').files[0]) ;
+                function getObjectURL(file) {
+                    var url = null;
+                    if (window.createObjectURL != undefined) { // basic
+                        url = window.createObjectURL(file);
+                    } else if (window.URL != undefined) { // mozilla(firefox)
+                        url = window.URL.createObjectURL(file);
+                    } else if (window.webkitURL != undefined) { // webkit or chrome
+                        url = window.webkitURL.createObjectURL(file);
+                    }
+                    return url;
                 }
 
+                //构造画图工具
+                var drawer = new L.Draw.Rectangle(map);
+                drawer.enable(); //启动工具
+                map.on('draw:created', function (e) {
+                    var type = e.layerType,
+                        layer = e.layer;
+                    var imageBounds = [[layer._bounds._southWest.lat, layer._bounds._southWest.lng], [layer._bounds._northEast.lat, layer._bounds._northEast.lng]];
+                    //$("#feature-coors").val(imageBounds);
 
-                if(category === 'none'){
-                    alert('请先选择要素类型');
-                }
+                    imageoverlay = L.imageOverlay(imgUrl, imageBounds).addTo(map);
+                    drawGroup.addLayer(imageoverlay);
+                    var coors = layer._latlngs;
+                    var str = [];
+                    for(var i = 0;i<coors[0].length;i++){
+                         str.push(coors[0][i].lat);
+                         str.push(coors[0][i].lng);
+                        //console.log(coors[i]);
+                    }
+                    console.log(coors,str);
+                    $("#feature-coors").val(str);
+                });
+                drawer = null;
+            }
+
+
+            if(category === 'none'){
+                alert('请先选择要素类型');
             }
             //buildMapTest
-            else{
-                loadIndoorMap();
-                function loadIndoorMap() {
-                    buildMapTest = L.map('map', {
-                        minZoom: 0,
-                        maxZoom: 4,
-                        center: [0, 0],
-                        zoom: 4,
-                        crs: L.CRS.Simple
-                    });
-
-                    // 隐藏map，显示img-map
-                    $("#map").css('display', 'none');
-                    $(".img-map").css('display', 'block');
-
-                    //室内地图初始化 这里实际上是核心图片算法的处理
-                    var w = 1024,
-                        h = 650;
-                    //url = imageUrl;
-                    var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
-                    var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
-                    var bounds = new L.LatLngBounds(southWest, northEast);
-
-                    var indoor1 = L.imageOverlay('../asset/img/indoor1.jpg', bounds).addTo(buildMapTest);
-                    var indoor2 = L.imageOverlay('../asset/img/indoor2.jpg', bounds);
-                    var indoor3 = L.imageOverlay('../asset/img/indoor3.jpg', bounds);
-
-                    /**
-                     * 图层控制器
-                     */
-                    var baseMaps = {
-                        "1楼": indoor1,
-                        "2楼": indoor2,
-                        "3楼": indoor3
-                    };
-                    var overlayMaps = {
-
-                    };
-
-                    //设置图层控制器
-                    var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
-
-                    var markerGroup = new L.FeatureGroup();
-                    indoor2.on("add",function () {
-                        //unproject是将像素点向坐标点进行转换，然后再添加到地图上
-                        var marker1 = L.marker(buildMapTest.unproject([90, 600], buildMapTest.getMaxZoom() - 1));
-                        marker1.on("click", function () {
-                            lay.open({
-                                type: 1,
-                                shade: false,
-                                title: '<i class="fa fa-history"></i>信息查看',
-                                skin: 'layui-layer-lan',
-                                area:['400px','400px'],
-                                content: '信息查看',
-                            });
-                        });
-                        var marker2 = L.marker(buildMapTest.unproject([400, 400], buildMapTest.getMaxZoom() - 1));
-                        marker2.on("click", function () {
-                            lay.open({
-                                type: 1,
-                                area:['400px','400px'],
-                                shade: false,
-                                title: '<i class="fa fa-history"></i>信息查看',
-                                skin: 'layui-layer-lan',
-                                content: '信息查看',
-                            });
-                        });
-                        var marker3 = L.marker(buildMapTest.unproject([300, 500], buildMapTest.getMaxZoom() - 1));
-                        marker3.on("click", function () {
-                            lay.open({
-                                type: 1,
-                                area:['400px','400px'],
-                                shade: false,
-                                title: '<i class="fa fa-history"></i>信息查看',
-                                skin: 'layui-layer-lan',
-                                content: '信息查看',
-                            });
-                        });
-                        var marker4 = L.marker(buildMapTest.unproject([100, 380], buildMapTest.getMaxZoom() - 1));
-                        marker4.on("click", function(){
-                            lay.open({
-                                type: 1,
-                                area:['400px','400px'],
-                                shade: false,
-                                title: '<i class="fa fa-history"></i>信息查看',
-                                skin: 'layui-layer-lan',
-                                content: '信息查看',
-                            });
-                        });
-                        markerGroup.addLayer(marker1);
-                        markerGroup.addLayer(marker2);
-                        markerGroup.addLayer(marker3);
-                        markerGroup.addLayer(marker4);
-                        markerGroup.addTo(buildMapTest);
-                    });
-
-                    indoor2.on("remove",function () {
-                        buildMapTest.removeLayer(markerGroup);
-                    });
-
-
-                    buildMapTest.on("zoom", function (evt) {
-                        //console.log(typeof  evt.target._animateToZoom);
-                        if (evt.target._animateToZoom == 1) {
-                            $("#map").css('display', 'block');
-                            $(".img-map").css('display', 'none');
-                            buildMapTest.remove();
-                            buildMapTest = null;
-                        }
-                    });
-                }
-            }
+            // else{
+            //     loadIndoorMap();
+            //     function loadIndoorMap() {
+            //         buildMapTest = L.map('map', {
+            //             minZoom: 0,
+            //             maxZoom: 4,
+            //             center: [0, 0],
+            //             zoom: 4,
+            //             crs: L.CRS.Simple
+            //         });
+            //
+            //         // 隐藏map，显示img-map
+            //         $("#map").css('display', 'none');
+            //         $(".img-map").css('display', 'block');
+            //
+            //         //室内地图初始化 这里实际上是核心图片算法的处理
+            //         var w = 1024,
+            //             h = 650;
+            //         //url = imageUrl;
+            //         var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+            //         var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+            //         var bounds = new L.LatLngBounds(southWest, northEast);
+            //
+            //         var indoor1 = L.imageOverlay('../asset/img/indoor1.jpg', bounds).addTo(buildMapTest);
+            //         var indoor2 = L.imageOverlay('../asset/img/indoor2.jpg', bounds);
+            //         var indoor3 = L.imageOverlay('../asset/img/indoor3.jpg', bounds);
+            //
+            //         /**
+            //          * 图层控制器
+            //          */
+            //         var baseMaps = {
+            //             "1楼": indoor1,
+            //             "2楼": indoor2,
+            //             "3楼": indoor3
+            //         };
+            //         var overlayMaps = {
+            //
+            //         };
+            //
+            //         //设置图层控制器
+            //         var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+            //
+            //         var markerGroup = new L.FeatureGroup();
+            //         indoor2.on("add",function () {
+            //             //unproject是将像素点向坐标点进行转换，然后再添加到地图上
+            //             var marker1 = L.marker(buildMapTest.unproject([90, 600], buildMapTest.getMaxZoom() - 1));
+            //             marker1.on("click", function () {
+            //                 lay.open({
+            //                     type: 1,
+            //                     shade: false,
+            //                     title: '<i class="fa fa-history"></i>信息查看',
+            //                     skin: 'layui-layer-lan',
+            //                     area:['400px','400px'],
+            //                     content: '信息查看',
+            //                 });
+            //             });
+            //             var marker2 = L.marker(buildMapTest.unproject([400, 400], buildMapTest.getMaxZoom() - 1));
+            //             marker2.on("click", function () {
+            //                 lay.open({
+            //                     type: 1,
+            //                     area:['400px','400px'],
+            //                     shade: false,
+            //                     title: '<i class="fa fa-history"></i>信息查看',
+            //                     skin: 'layui-layer-lan',
+            //                     content: '信息查看',
+            //                 });
+            //             });
+            //             var marker3 = L.marker(buildMapTest.unproject([300, 500], buildMapTest.getMaxZoom() - 1));
+            //             marker3.on("click", function () {
+            //                 lay.open({
+            //                     type: 1,
+            //                     area:['400px','400px'],
+            //                     shade: false,
+            //                     title: '<i class="fa fa-history"></i>信息查看',
+            //                     skin: 'layui-layer-lan',
+            //                     content: '信息查看',
+            //                 });
+            //             });
+            //             var marker4 = L.marker(buildMapTest.unproject([100, 380], buildMapTest.getMaxZoom() - 1));
+            //             marker4.on("click", function(){
+            //                 lay.open({
+            //                     type: 1,
+            //                     area:['400px','400px'],
+            //                     shade: false,
+            //                     title: '<i class="fa fa-history"></i>信息查看',
+            //                     skin: 'layui-layer-lan',
+            //                     content: '信息查看',
+            //                 });
+            //             });
+            //             markerGroup.addLayer(marker1);
+            //             markerGroup.addLayer(marker2);
+            //             markerGroup.addLayer(marker3);
+            //             markerGroup.addLayer(marker4);
+            //             markerGroup.addTo(buildMapTest);
+            //         });
+            //
+            //         indoor2.on("remove",function () {
+            //             buildMapTest.removeLayer(markerGroup);
+            //         });
+            //
+            //
+            //         buildMapTest.on("zoom", function (evt) {
+            //             //console.log(typeof  evt.target._animateToZoom);
+            //             if (evt.target._animateToZoom == 1) {
+            //                 $("#map").css('display', 'block');
+            //                 $(".img-map").css('display', 'none');
+            //                 buildMapTest.remove();
+            //                 buildMapTest = null;
+            //             }
+            //         });
+            //     }
+            // }
 
 
         });
@@ -1054,7 +1071,6 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                         $("#build").css("display","block");
                     }else{
                         //$("#feature-content").html(table.other);
-
                         $("#other").css("display","block");
                     }
 
@@ -1133,6 +1149,68 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
 
 
+        });
+
+        /**
+         * 要素关联 前后端对接
+         */
+
+        $("#submitConnection").on("click",function () {
+
+            //从表单拿要素，组装
+            var name = $("#feature-name").val();
+            var category = $("#flag-category").val();
+            var zoom = $("#feature-zoom").val();
+            var flag = $("#flag-category").val();
+
+            //坐标字符串的处理
+            var coor = null;//Latlng(123.4,12345)
+
+            //点要素判断
+            if(flag === 'feature-point'){
+                var coors = $("#feature-coors").val();//Latlng(123.4,12345)
+                coors = coors.slice(7,coors.length-1);
+                coors = coors.split(',');
+                coor = coors;
+
+                console.log(coor);
+            }
+
+
+            //线要素判断
+            if(flag === 'feature-line'){
+                var coors = $("#feature-coors").val();
+                coors = coors.split(',');
+                coor = coors;
+            }
+
+            if(flag === 'feature-polygon'){
+                var coors = $("#feature-coors").val();
+                coors = coors.split(',');
+                coor = coors;
+            }
+
+            var data={
+                name:name,
+                category:category,
+                coors:coor,
+                zoom:zoom,
+                flag:flag
+            };
+
+            $.ajax({
+                url:end+'/feature/add',
+                type:'GET',
+                contentType:"application/json",
+                data:data,
+                cache:false,
+                success:function () {
+                    alert("添加成功");
+                },
+                error:function () {
+                    alert("添加失败");
+                }
+            });
         });
 
 

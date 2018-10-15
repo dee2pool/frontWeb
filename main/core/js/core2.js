@@ -325,9 +325,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var pointOption = common.wmsDefaultOption;
         pointOption.typeName = 'cite:xspoint';
 
-        //对象拼接转换为字符串
-        //var xsUrl = host + "/geoserver/cite/ows?" + jQuery.param(pointOption);
-
         $.getJSON(gisutil.splitWMSUrl(pointOption), function (json) {
             L.geoJSON(json, {
                 onEachFeature: addPoint,
@@ -339,16 +336,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             xsLayerGroup.addLayer(layer);
             //设备点 点击事件
             layer.on("click", function () {
-                //这里的逻辑应该是每次打开之前都要进行一下清空
-                // $("#pointContent").modal('show');
-                // $("#point-modal-name").val(feature.properties.name);
-                // $("#point-modal-coors").val(feature.geometry.coordinates);
-                //$("#pointModalId").val(feature.id);
                 $("#device-info-name").val("");
                 $("#device-info-desc").val("");
                 $("#device-info-coors").val("");
-                // $("#c1").html("");
-                // $("#c2").html("");
 
                 layx.group('group-nomerge', [
                     {
@@ -744,6 +734,13 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             })
         }).addTo(map);
 
+        //GIS配置-要素关联 配置的要素
+        //http://localhost:8060/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite:feature&styles=&bbox=-180.0,-90.0,180.0,90.0&width=768&height=384&srs=EPSG:4326&format=application/openlayers
+        var featureConnection=L.tileLayer.betterWms('http://192.168.0.142:8060/geoserver/cite/wms', {
+            layers: 'cite:feature',
+            transparent: true,
+            format: 'image/png'
+        });
 
 
         /**
@@ -758,7 +755,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             "建筑": build,
             "行政区":chinaWMS,
             "饼状图":pie,
-            "柱状图":chart
+            "柱状图":chart,
+            "要素":featureConnection
         };
 
         //设置图层控制器
