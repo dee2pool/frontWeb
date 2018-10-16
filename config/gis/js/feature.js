@@ -86,6 +86,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
 
         //后台地址
         var end = common.end;
+
         /**
          * 核心地图变量
          */
@@ -734,7 +735,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                 //往行里面追加 td单元格
                 $trTemp.append("<td"+" "+"id=indoorId"+i+">"+ t +"</td>");
                 $trTemp.append("<td>"+ t+"楼" +"</td>");
-                $trTemp.append("<td>"+ "<input class='form-control'"+"id=indoorImg"+i+" type='file'></input>" +"</td>");
+                $trTemp.append("<td>"+ "<input class='form-control'"+"id=indoorImg"+i+" type='file'/>"+ "<div style='display: none'"+"id=indoorDiv"+i+ "></div>"+"</td>");
                 $trTemp.appendTo("#indoor-table");
             }
         });
@@ -860,6 +861,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
 
 
         $(document).ready(function () {
+            //左侧默认区域树
             var zNodes = [
                     {id: 'china', pId: '0', name: "中国", open: true,coors:null,img:null,category:null},
                     {id: 'hunan', pId: 'china', name: "湖南",open: true,coors:null,img:null,category:null},
@@ -874,6 +876,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                     {id: 'wxh', pId: 'csxian', name: "万象汇",coors:[28.25433718,113.08051083],img:null,category:'feature-point'},
                 ];
 
+            //分类树，用于加载不同的资源
             var zNodes_category =[
                 { id:1, pId:0, name:"业务层资源", open:true},
                 { id:'11', pId:'1', name:"组织"},
@@ -882,14 +885,19 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                 { id:'14', pId:'1', name:"建筑"},
                 { id:'15', pId:'1', name:"道路"},
 
+                {id:'21',pId:'1',name:"已配置建筑"},
+
                 { id:'16', pId:'12', name:"摄像机"},
                 { id:'17', pId:'12', name:"照相机"},
                 { id:'18', pId:'12', name:"传感器"},
 
                 { id:'19', pId:'16', name:"海康"},
                 { id:'20', pId:'16', name:"大华"}
+
+
             ];
 
+            //选择要素分类和来自业务层的分类
             var zNodes_chooseCategory =[
                 { id:1, pId:0, name:"要素分类", open:true},
                 { id:'11', pId:1, name:"点要素", open:true},
@@ -1069,18 +1077,60 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                     }else if(treeNode.id === '14'){
                         //$("#feature-content").html(table.build);
                         $("#build").css("display","block");
+                    }
+                    //从后端加载已经配置的建筑要素
+                    else if(treeNode.id === '21'){
+                        $("#configFeature").css("display","block")
+                        $.ajax({
+                            type: "GET",           //因为是传输文件，所以必须是post
+                            url: end+'/feature/listByHasIndoor',         //对应的后台处理类的地址
+                            data: {
+                                hasIndoor:true
+                            },
+                            contentType:"application/json",
+                            cache:false,
+                            success: function (data) {
+                                console.log(data);
+
+                                for(var i=0;i<data.length;i++){
+                                    var temp = $("<tr></tr>");
+                                    //<th scope="row">1</th>
+                                    var flag = i+1;
+                                    temp.append("<th scope='row'>"+flag+"</th>")
+                                    temp.append("<td>"+data[i].resourceCode+"</td>");
+                                    temp.append("<td>"+"<button class=\"btn btn-primary btn-build\"" +" "+"id=showBuild"+i+">关联</button>"+"</td>");
+                                    temp.appendTo("#configFeature");
+
+                                    // $(document).on('click','#showBuild'+i,function(){
+                                    //     function testA() {
+                                    //         console.log(flag);
+                                    //     };
+                                    //     testA();
+                                    // });
+                                }
+                            }
+                        });
+
+
                     }else{
                         //$("#feature-content").html(table.other);
                         $("#other").css("display","block");
                     }
-
-
 
                    //关闭窗口
                     layx.destroyAll();
                 }
             });
 
+            //已配置要素点事件的绑定
+            //通过类来绑定是比较方便的
+            $(document).on('click','.btn-build',function(e){
+                function testA() {
+                    var v_id = $(e.target).attr('id');
+                    console.log(v_id);
+                };
+                testA();
+            });
 
             //启动要素关联的界面
             $(".btn-success").on("click",function () {
@@ -1163,8 +1213,8 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
             var flag = $("#flag-category").val();
             var img = $("#uploadImgName").val();
 
-            var levelNum = [];
-            var levelImg = [];
+            var levelNumArray = [0];
+            var levelImgArray = [0];
 
             //坐标字符串的处理
             var coor = null;//Latlng(123.4,12345)
@@ -1175,15 +1225,32 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                 coors = coors.slice(7,coors.length-1);
                 coors = coors.split(',');
                 coor = coors;
-                //console.log(coor);
 
                 //是否为建筑进行判断
                 var cate = $("#input-category").val();
 
                 if(cate === '建筑'){
+                    //构造楼层号数组和图片数组
+                    var level = $("#indoor-table").find("tr").length;
+                    //由于楼层的起点是不一定的，所有获取表格除题头外的第一行的楼层号从而来确定楼层号的起点位置
+                    var startNum = $("#indoor-table tr:eq(1) td:eq(0)").text();
+                    level = parseInt(level);
+                    level = level-1;
+                    startNum = parseInt(startNum);
+                    var total = level + startNum;
+                    var j=0;
+                    for(var i= startNum;i<total;i++){
+                        var levelNum = $("#indoorId"+i).text();
+                        //上传之后的图片，缓存在表格中的隐藏div中
+                        var levelImg = $("#indoorDiv"+i).html();
+                        //console.log(levelNum,levelImg);
 
+                        levelNumArray[j] = levelNum;
+                        levelImgArray[j] = levelImg;
+                        j++;
+                    }
+                    //console.log(levelNum);
                 }
-
             }
 
 
@@ -1207,8 +1274,8 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                 zoom:zoom,
                 flag:flag,
                 img:img,
-                levelNum:levelNum,
-                levelImg:levelImg
+                levelNum:levelNumArray,
+                levelImg:levelImgArray
             };
 
             $.ajax({
@@ -1249,6 +1316,26 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
         });
 
         /**
+         * 图片上传的分离方法
+         */
+        function uploadImage(id,levelNum,flag) {
+            var type = "file";          //后台接收时需要的参数名称，自定义即可
+            var formData = new FormData();
+            formData.append(type, $(id)[0].files[0]);    //生成一对表单属性
+            $.ajax({
+                type: "POST",           //因为是传输文件，所以必须是post
+                url: end+'/feature/upload',         //对应的后台处理类的地址
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    console.log(data,levelNum,flag);
+                    $("#indoorDiv"+flag).html(data);
+                }
+            });
+        }
+
+        /**
          * 要素关联 楼层内部图片上传
          */
         $("#upload-all-level-img").on("click",function () {
@@ -1257,15 +1344,23 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
             //由于楼层的起点是不一定的，所有获取表格除题头外的第一行的楼层号从而来确定楼层号的起点位置
             var startNum = $("#indoor-table tr:eq(1) td:eq(0)").text();
             level = parseInt(level);
+            level = level - 1;
             startNum = parseInt(startNum);
             var total = level + startNum;
             for(var i= startNum;i<total;i++){
                 var levelNum = $("#indoorId"+i).text();
                 var levelImg = $("#indoorImg"+i).val();
-                console.log(levelNum,levelImg);
+                //console.log(levelNum,levelImg);
+                var imgId = "#indoorImg"+i;
+                //赋值保存
+                uploadImage(imgId,levelNum,i);
             }
 
         });
+
+        $("#indoorImgBtn-1").on("click",function () {
+            alert(123);
+        })
 
 
     });
