@@ -1,0 +1,391 @@
+@charset "UTF-8";
+.core-map {
+    width: 100%;
+    padding: 0;
+    background-color: #081832cc;
+    height: 878px;
+}
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.white{
+    color:white;
+}
+
+.map-left{
+    width: 79%;
+    height: 100%;
+}
+
+.map-right{
+    width: 20.5%;
+    height: 100%;
+    background-color: #081832;
+}
+
+.map-box{
+    top: 35px;
+    width: 100%;
+    height: calc(100% - 35px);
+}
+
+.map-top{
+    position: absolute;
+    top: 60px;
+    left: 0;
+    height: 35px;
+    width: 79%;
+    border-bottom: 1px solid #4b8df8;
+    background-color: rgba(255, 255, 255, 0.84);
+    /*z-index: 9999;*/
+}
+.map-top > ul{
+    list-style: none;
+    font-size: 14px;
+    float: right;
+}
+
+.map-top > ul > li {
+    display: inline-block;
+    line-height: 35px;
+    padding: 0 10px;
+}
+
+.map-top>ul .active, .map-top>ul>li .active {
+    color: #0D8BBD;
+}
+
+.map-top > ul > li > a {
+    color: #2E2D3C;
+}
+
+.map-select {
+    position: fixed;
+    top: 160px;
+    right: 21.5%;
+    box-shadow: -10px 0px 15px #034c6a inset,
+    0px -10px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset,
+    0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    width: 120px;
+    height: 180px;
+    border-radius: 5px;
+    background-color: #081832e3;
+    z-index: 9999;
+}
+
+.map-select p {
+    padding: 8px 15px;
+    color: #FFFFff;
+    font-size: 14px;
+}
+
+.map-select p input[type=checkbox] {
+    width: 15px;
+    height: 15px;
+    position: relative;
+    top: 3px;
+    margin-right: 10px;
+}
+
+.map-right-top{
+    width: 100%;
+    height: 35px;
+    background-color: #034c6a;
+}
+
+.map-right-top>ul>li {
+    list-style: none;
+    display: inline-block;
+    line-height: 35px;
+    font-size: 14px;
+    text-align: center;
+    width: 32%;
+    color: #FFFFff;
+    cursor: pointer;
+}
+
+.map-right-top>ul>li.li-active {
+    background-color: #0D8BBD;
+}
+
+.map-core-content{
+    width: 100%;
+    padding: 0;
+    background-color: #081832cc;
+}
+
+.map-chart {
+    width: 100%;
+    height: 250px;
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 25px;
+}
+
+.map-table {
+    width: 100%;
+    height: 280px;
+    box-shadow: -10px 0px 15px #034c6a inset,
+    0px -10px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset,
+    0px 10px 15px #034c6a inset;
+    border: 1px solid #034c6a;
+    box-sizing: border-box;
+    position: relative;
+    margin-top: 25px;
+}
+
+.set_list {
+    padding: 10px 5%;
+    color: #eee;
+    font-size: 14px;
+}
+
+.list_i {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    top: 3px;
+    position: relative;
+}
+
+.map-work{
+    margin-top: 5px;
+    border-top: 1px solid #0D8BBD;
+}
+
+.map-work>ul>li {
+    list-style: none;
+    display: inline-block;
+    width: 32%;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px 0;
+}
+
+.map-work>ul>li i {
+    width: 28px;
+    height: 24px;
+    margin: 0 auto;
+    display: block;
+}
+
+.map-work>ul>li div {
+    color: #FFFFff;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.map-reslist {
+    width: 96%;
+    margin: 0 auto;
+    font-size: 13px;
+    display: none;
+}
+
+.map-reslist>ul>li {
+    list-style: none;
+    margin-top: 8px;
+}
+
+.map-reslist>ul>li:nth-child(2n+1) {
+    background-color: #0d8bbd36;
+}
+
+.map-reslist>ul>li p {
+    padding: 5px 0;
+    color: #eeeeee;
+}
+
+/*core原样式*/
+.img-map{
+    position: absolute;
+    width: calc(100%);
+    height: 100%;
+    display: none;
+}
+
+/*置顶在左上角的按钮组*/
+.map-container-btngroup{
+    position: absolute;
+    top: 40px;
+    left: 10px;
+    width: auto;
+    height: 34px;
+    z-index: 99999999;
+    background: #fff;
+    border-radius: 3px;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+}
+
+/*置顶在下方的弹出面板，主要用于工单和告警*/
+.index-panel{
+    position: absolute;
+    bottom: 0px;
+    /*height: auto;*/
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 500px;
+    z-index: 9999;
+    border-radius: 3px;
+    box-shadow: 1px 2px 1px rgba(0,0,0,.15);
+}
+
+
+/*弹出面板的表格*/
+.index-panel-table{
+    width: 100%;
+    height: 100%;
+}
+
+.nav-header{
+    line-height: 60px;
+    font-size: large;
+}
+
+
+
+#map{
+    text-align:center;
+    padding: 0 auto;
+}
+
+/*layer弹出层的样式设置*/
+.layer-open-section{
+    display: none;
+    padding: 5px 10px;
+}
+
+.layer-open-content-historytitle{
+    line-height: 26px;
+    font-size: 18px;
+}
+
+.layer-open-content-historyControl{
+    display: inline-block;
+}
+
+.layer-open-content-title{
+    line-height: 26px;
+    font-size: 18px;
+}
+
+.layer-open-content-control{
+    display: inline-block;
+}
+
+.layx-div{
+    padding: 10px 10px;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.device-chart{
+    position: relative;
+    width: 780px;
+    height: 500px;
+}
+
+#queryControl{
+    display: inline-block;
+    margin-top: 10px;
+}
+
+
+/*模糊框内的样式*/
+.pointInfo{
+    padding: 5px 0;
+}
+
+.pointInfo  > .row > .col-md-12{
+    margin-top: 5px;
+    font-size: 16px;
+}
+
+.pointInfo  > .row > .col-md-12 > .title{
+    font-weight: bold;
+}
+
+.pointInfo  > .row > .col-md-12 > input{
+    display: inline!important;
+}
+
+.ztree li a{
+    color: white!important;
+}
+
+.indoor{
+    display: none;
+}
+
+/*通用表格样式*/
+.p-chart{
+    height: 250px;
+    padding: 5px 10px;
+    margin-top: 15px;
+}
+
+
+/* start-通用的table样式，参见static.html */
+.p-table{
+    height: 200px;
+}
+
+.p-table-div{
+    height: auto !important;
+    margin-top: 0!important;
+    position: relative;
+}
+
+.p-table-div-table{
+    width: 100%;
+    height: 100%;
+    border-collapse: collapse;
+    position: absolute;
+    text-align: center;
+}
+
+.p-table-div-table tbody{
+    color: #ffffff;
+    font-size: 13px;
+}
+
+.p-table-div-table thead th{
+    color: #61d2f7;
+    font-size: 14px;
+    font-weight: 600;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    text-align: center !important;
+}
+
+.p-table-div-table tbody tr{
+    line-height: 32px;
+}
+
+/* 隔行阴影效果 */
+.p-table-div-table tbody tr:nth-child(2n+1){
+    background-color: #072951;
+    box-shadow: -10px 0px 15px #034c6a inset,
+    10px 0px 15px #034c6a inset;
+}
+
+th{
+    text-align: center!important;
+}
+
+/* end-通用的table样式 */
+
+

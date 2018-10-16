@@ -66,11 +66,12 @@ require.config({
         "ztree": "../../../common/lib/ztree/js/jquery.ztree.all",
         "draw": "../../../common/lib/leaflet/lib/draw/Leaflet.Draw",
         "zui":"../../../main/common/lib/zui/js/zui",
-        "layx": "../../../common/lib/layx/layx"
+        "layx": "../../../common/lib/layx/layx",
+        "table":"table"
     }
 });
-require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','leaflet','ztree', 'draw', 'zui', 'layx'],
-    function (jquery, frame, bootstrapTable,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,leaflet,ztree,draw,zui,layx) {
+require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','leaflet','ztree', 'draw', 'zui', 'layx','table'],
+    function (jquery, frame, bootstrapTable,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,leaflet,ztree,draw,zui,layx,table) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -81,7 +82,10 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
         var drawGroup = new L.FeatureGroup();
 
         //地图的加载
-        var host = "http://192.168.0.142:8060"
+        var host = "http://192.168.0.142:8060";
+
+        //后台地址
+        var end = "http://localhost:8040";
         /**
          * 核心地图变量
          */
@@ -124,12 +128,32 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 }
             },
             callback: {
-                beforeDrag: beforeDrag,
-                beforeRemove: beforeRemove,
-                beforeRename: beforeRename,
-                onRemove: onRemove,
-                onClick: onClick
+                // beforeDrag: beforeDrag,
+                // beforeRemove: beforeRemove,
+                // beforeRename: beforeRename,
+                // onRemove: onRemove,
+                // onClick: onClick
             }
+        };
+
+        var setting_category = {
+            view: {
+                selectedMulti: false
+            },
+            edit: {
+                enable: true,
+                showRemoveBtn: false,
+                showRenameBtn: false
+            },
+            data: {
+                keep: {
+                    parent: true,
+                    leaf: true
+                },
+                simpleData: {
+                    enable: true
+                }
+            },
         };
 
 
@@ -289,21 +313,30 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
          */
         var imageoverlay = null;//面要素叠加的临时变量
         $("#setPosition").on("click",function () {
-            var category = $('#feature-level1 option:selected').val();
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo3"),
+                nodes = zTree.getSelectedNodes(),
+                treeNode = nodes[0];
+            var category = treeNode.cate;
 
+            $("#flag-category").val(category);
+            console.log();
+
+            var mapcss = $("#map").css("display");
 
             //如果没有上传图片，需要进行提示的操作
-
             if(category === 'feature-point' || category === 'feature-polygon'){
                 if($("#upload-img").val() == ''){
                     alert('请先上传图像');
                     return ;
                 }
             }
-
-
+            if(treeNode.name === '建筑'){
+                $("#add-building-btn").css("display","block");
+            }else{
+                $("#add-building-btn").css("display","none");
+            }
             /**
-             * 构造线要素
+             * 构造点要素
              */
             if(category === 'feature-point'){
                 var index = null;
@@ -327,9 +360,9 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 }
 
                 var drawer = new L.Draw.Marker(map, {
-                        icon: L.icon({
-                            iconUrl: objUrl,
-                        })
+                    icon: L.icon({
+                        iconUrl: objUrl,
+                    })
                 });
 
                 drawer.enable(); //启动工具
@@ -363,8 +396,17 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                         layer = e.layer;
                     drawGroup.addLayer(layer);
                     console.log(layer);
-                    // var coors = layer._latlngs;
-                    // $.zui.store.set('test' + layer._latlngs[0].lat);
+                    $("#feature-zoom").val(layer._map._zoom);
+
+
+                    //对线数组坐标进行重新构造
+                    var coors = layer._latlngs;
+                    var str = [];
+                    for(var i = 0;i<coors.length;i++){
+                        str.push(coors[i].lat);
+                        str.push(coors[i].lng);
+                    }
+                    $("#feature-coors").val(str);
 
                 });
 
@@ -400,20 +442,24 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 //构造画图工具
                 var drawer = new L.Draw.Rectangle(map);
                 drawer.enable(); //启动工具
-
                 map.on('draw:created', function (e) {
                     var type = e.layerType,
                         layer = e.layer;
-
                     var imageBounds = [[layer._bounds._southWest.lat, layer._bounds._southWest.lng], [layer._bounds._northEast.lat, layer._bounds._northEast.lng]];
-                    $("#feature-coors").val(imageBounds);
+                    //$("#feature-coors").val(imageBounds);
 
                     imageoverlay = L.imageOverlay(imgUrl, imageBounds).addTo(map);
-
                     drawGroup.addLayer(imageoverlay);
-
+                    var coors = layer._latlngs;
+                    var str = [];
+                    for(var i = 0;i<coors[0].length;i++){
+                         str.push(coors[0][i].lat);
+                         str.push(coors[0][i].lng);
+                        //console.log(coors[i]);
+                    }
+                    console.log(coors,str);
+                    $("#feature-coors").val(str);
                 });
-
                 drawer = null;
             }
 
@@ -421,6 +467,121 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
             if(category === 'none'){
                 alert('请先选择要素类型');
             }
+            //buildMapTest
+            // else{
+            //     loadIndoorMap();
+            //     function loadIndoorMap() {
+            //         buildMapTest = L.map('map', {
+            //             minZoom: 0,
+            //             maxZoom: 4,
+            //             center: [0, 0],
+            //             zoom: 4,
+            //             crs: L.CRS.Simple
+            //         });
+            //
+            //         // 隐藏map，显示img-map
+            //         $("#map").css('display', 'none');
+            //         $(".img-map").css('display', 'block');
+            //
+            //         //室内地图初始化 这里实际上是核心图片算法的处理
+            //         var w = 1024,
+            //             h = 650;
+            //         //url = imageUrl;
+            //         var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+            //         var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+            //         var bounds = new L.LatLngBounds(southWest, northEast);
+            //
+            //         var indoor1 = L.imageOverlay('../asset/img/indoor1.jpg', bounds).addTo(buildMapTest);
+            //         var indoor2 = L.imageOverlay('../asset/img/indoor2.jpg', bounds);
+            //         var indoor3 = L.imageOverlay('../asset/img/indoor3.jpg', bounds);
+            //
+            //         /**
+            //          * 图层控制器
+            //          */
+            //         var baseMaps = {
+            //             "1楼": indoor1,
+            //             "2楼": indoor2,
+            //             "3楼": indoor3
+            //         };
+            //         var overlayMaps = {
+            //
+            //         };
+            //
+            //         //设置图层控制器
+            //         var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+            //
+            //         var markerGroup = new L.FeatureGroup();
+            //         indoor2.on("add",function () {
+            //             //unproject是将像素点向坐标点进行转换，然后再添加到地图上
+            //             var marker1 = L.marker(buildMapTest.unproject([90, 600], buildMapTest.getMaxZoom() - 1));
+            //             marker1.on("click", function () {
+            //                 lay.open({
+            //                     type: 1,
+            //                     shade: false,
+            //                     title: '<i class="fa fa-history"></i>信息查看',
+            //                     skin: 'layui-layer-lan',
+            //                     area:['400px','400px'],
+            //                     content: '信息查看',
+            //                 });
+            //             });
+            //             var marker2 = L.marker(buildMapTest.unproject([400, 400], buildMapTest.getMaxZoom() - 1));
+            //             marker2.on("click", function () {
+            //                 lay.open({
+            //                     type: 1,
+            //                     area:['400px','400px'],
+            //                     shade: false,
+            //                     title: '<i class="fa fa-history"></i>信息查看',
+            //                     skin: 'layui-layer-lan',
+            //                     content: '信息查看',
+            //                 });
+            //             });
+            //             var marker3 = L.marker(buildMapTest.unproject([300, 500], buildMapTest.getMaxZoom() - 1));
+            //             marker3.on("click", function () {
+            //                 lay.open({
+            //                     type: 1,
+            //                     area:['400px','400px'],
+            //                     shade: false,
+            //                     title: '<i class="fa fa-history"></i>信息查看',
+            //                     skin: 'layui-layer-lan',
+            //                     content: '信息查看',
+            //                 });
+            //             });
+            //             var marker4 = L.marker(buildMapTest.unproject([100, 380], buildMapTest.getMaxZoom() - 1));
+            //             marker4.on("click", function(){
+            //                 lay.open({
+            //                     type: 1,
+            //                     area:['400px','400px'],
+            //                     shade: false,
+            //                     title: '<i class="fa fa-history"></i>信息查看',
+            //                     skin: 'layui-layer-lan',
+            //                     content: '信息查看',
+            //                 });
+            //             });
+            //             markerGroup.addLayer(marker1);
+            //             markerGroup.addLayer(marker2);
+            //             markerGroup.addLayer(marker3);
+            //             markerGroup.addLayer(marker4);
+            //             markerGroup.addTo(buildMapTest);
+            //         });
+            //
+            //         indoor2.on("remove",function () {
+            //             buildMapTest.removeLayer(markerGroup);
+            //         });
+            //
+            //
+            //         buildMapTest.on("zoom", function (evt) {
+            //             //console.log(typeof  evt.target._animateToZoom);
+            //             if (evt.target._animateToZoom == 1) {
+            //                 $("#map").css('display', 'block');
+            //                 $(".img-map").css('display', 'none');
+            //                 buildMapTest.remove();
+            //                 buildMapTest = null;
+            //             }
+            //         });
+            //     }
+            // }
+
+
         });
 
         //确认提交
@@ -513,6 +674,15 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 maxMenu: false,
                 minMenu: false,
                 closeMenu: false,
+                minMenu:false,
+                maxMenu:false,
+                controlStyle:'background-color: #1070e2; color:#fff;',
+                border:false,
+                style:layx.multiLine(function(){/*
+                        #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+                            background-color: #9953c0;
+                        }
+                    */}),
                 width: 750,
                 height: 500,
                 statusBar: true,
@@ -546,7 +716,6 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
         //根据楼层数，动态生成表格
         $("#export-building").on("click",function () {
-            console.log(123);
             var total = parseInt($("#indoor-total").val());
             var start = parseInt($("#indoor-start").val());
             console.log(typeof  $("#indoor-total").val());
@@ -569,13 +738,131 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 $trTemp.appendTo("#indoor-table");
             }
         });
+        var coors = [28.25433718,113.08051083];
+        var build = L.marker(coors);
+        $("#showBuild").on("click",function () {
+            build.addTo(map);
+        });
 
+        //双击进入楼层内部
+        var buildMapTest = null;//进入建筑结构内部的map对象
+        buildMapTest = L.map('img-map', {
+            minZoom: 0,
+            maxZoom: 4,
+            center: [0, 0],
+            zoom: 4,
+            crs: L.CRS.Simple
+        });
+        build.on("dblclick",function () {
+            loadIndoorMap();
+            function loadIndoorMap() {
+                // 隐藏map，显示img-map
+                $("#map").css('display', 'none');
+                $("#img-map").css('display', 'block');
+
+                //室内地图初始化 这里实际上是核心图片算法的处理
+                var w = 1024,
+                    h = 650;
+                //url = imageUrl;
+                var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                var bounds = new L.LatLngBounds(southWest, northEast);
+
+                var indoor1 = L.imageOverlay('../img/indoor1.jpg', bounds).addTo(buildMapTest);
+                var indoor2 = L.imageOverlay('../img/indoor2.jpg', bounds);
+                var indoor3 = L.imageOverlay('../img/indoor3.jpg', bounds);
+
+                /**
+                 * 图层控制器
+                 */
+                var baseMaps = {
+                    "1楼": indoor1,
+                    "2楼": indoor2,
+                    "3楼": indoor3
+                };
+                var overlayMaps = {
+
+                };
+
+                //设置图层控制器
+                var layerControl = L.control.layers(baseMaps, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+
+                var markerGroup = new L.FeatureGroup();
+                indoor2.on("add",function () {
+                    //unproject是将像素点向坐标点进行转换，然后再添加到地图上
+                    var marker1 = L.marker(buildMapTest.unproject([90, 600], buildMapTest.getMaxZoom() - 1));
+                    marker1.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            area:['400px','400px'],
+                            content: '信息查看',
+                        });
+                    });
+                    var marker2 = L.marker(buildMapTest.unproject([400, 400], buildMapTest.getMaxZoom() - 1));
+                    marker2.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    var marker3 = L.marker(buildMapTest.unproject([300, 500], buildMapTest.getMaxZoom() - 1));
+                    marker3.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    var marker4 = L.marker(buildMapTest.unproject([100, 380], buildMapTest.getMaxZoom() - 1));
+                    marker4.on("click", function () {
+                        lay.open({
+                            type: 1,
+                            area:['400px','400px'],
+                            shade: false,
+                            title: '<i class="fa fa-history"></i>信息查看',
+                            skin: 'layui-layer-lan',
+                            content: '信息查看',
+                        });
+                    });
+                    markerGroup.addLayer(marker1);
+                    markerGroup.addLayer(marker2);
+                    markerGroup.addLayer(marker3);
+                    markerGroup.addLayer(marker4);
+                    markerGroup.addTo(buildMapTest);
+                });
+
+                indoor2.on("remove",function () {
+                    buildMapTest.removeLayer(markerGroup);
+                });
+
+
+                buildMapTest.on("zoom", function (evt) {
+                    //console.log(typeof  evt.target._animateToZoom);
+                    if (evt.target._animateToZoom == 1) {
+                        $("#map").css('display', 'block');
+                        $("#img-map").css('display', 'none');
+                        buildMapTest.remove();
+                        buildMapTest = null;
+                    }
+                });
+            }
+        });
 
 
         $(document).ready(function () {
-                var zNodes = [
+            var zNodes = [
                     {id: 'china', pId: '0', name: "中国", open: true,coors:null,img:null,category:null},
-                    {id: 'hunan', pId: 'china', name: "湖南",coors:null,img:null,category:null},
+                    {id: 'hunan', pId: 'china', name: "湖南",open: true,coors:null,img:null,category:null},
                     {id: 'changsha', pId: 'hunan', name: "长沙市",coors:null,img:null,category:null},
                     {id: 'changde', pId: 'hunan', name: "常德市",coors:null,img:null,category:null},
                     {id: 'xiangtan', pId: 'hunan', name: "湘潭市",coors:null,img:null,category:null},
@@ -586,7 +873,65 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                     {id: 'fhc', pId: 'csxian', name: "凤凰城",coors:[28.25380815,113.08434188],img:null,category:'feature-point'},
                     {id: 'wxh', pId: 'csxian', name: "万象汇",coors:[28.25433718,113.08051083],img:null,category:'feature-point'},
                 ];
+
+            var zNodes_category =[
+                { id:1, pId:0, name:"业务层资源", open:true},
+                { id:'11', pId:'1', name:"组织"},
+                { id:'12', pId:'1', name:"设备", open:true},
+                { id:'13', pId:'1', name:"人员"},
+                { id:'14', pId:'1', name:"建筑"},
+                { id:'15', pId:'1', name:"道路"},
+
+                { id:'16', pId:'12', name:"摄像机"},
+                { id:'17', pId:'12', name:"照相机"},
+                { id:'18', pId:'12', name:"传感器"},
+
+                { id:'19', pId:'16', name:"海康"},
+                { id:'20', pId:'16', name:"大华"}
+            ];
+
+            var zNodes_chooseCategory =[
+                { id:1, pId:0, name:"要素分类", open:true},
+                { id:'11', pId:1, name:"点要素", open:true},
+                { id:'12', pId:1, name:"线要素", open:true},
+                { id:'13', pId:1, name:"面要素", open:true},
+                //点要素
+                { id:'21', pId:11, name:"业务分类",cate:"feature-point"},
+                { id:'22', pId:11, name:"自定义分类",cate:"feature-point"},
+                //线要素
+                { id:'23', pId:12, name:"业务分类",cate:"feature-line"},
+                { id:'24', pId:12, name:"自定义分类",cate:"feature-line"},
+                //面要素
+                { id:'25', pId:13, name:"业务分类",cate:"feature-polygon"},
+                { id:'26', pId:13, name:"自定义分类",cate:"feature-polygon"},
+
+                //点要素自定义
+                { id:'101', pId:22, name:"建筑",cate:"feature-point"},
+                { id:'102', pId:22, name:"摄像头",cate:"feature-point"},
+                { id:'103', pId:22, name:"传感器",cate:"feature-point"},
+                //点要素业务分类
+                { id:'109', pId:21, name:"设备",cate:"feature-point"},
+                { id:'110', pId:21, name:"人",cate:"feature-point"},
+                { id:'111', pId:109, name:"海康",cate:"feature-point"},
+                { id:'112', pId:109, name:"大华",cate:"feature-point"},
+
+
+                //线要素自定义
+                { id:'104', pId:'24', name:"铁路",cate:"feature-line"},
+                { id:'105', pId:'24', name:"国道",cate:"feature-line"},
+                //面要素自定义
+                { id:'106', pId:'26', name:"区域地图",cate:"feature-polygon"},
+                { id:'107', pId:'26', name:"工厂地图",cate:"feature-polygon"},
+                { id:'108', pId:'26', name:"户型图",cate:"feature-polygon"},
+
+            ];
+
+
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            $.fn.zTree.init($("#treeDemo2"), setting_category, zNodes_category);
+            $.fn.zTree.init($("#treeDemo3"), setting_category, zNodes_chooseCategory);
+
+
             $("#addParent").bind("click", {isParent: true}, add);
             $("#edit").bind("click", edit);
             $("#remove").bind("click", remove);
@@ -666,11 +1011,207 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
 
             });
 
+            //要素分类input输入框的change事件联动
+            $("#input-category").on("onchange",function (obj) {
+                //对于是否显示楼层的控制显示
+                console.log($("#input-category").val());
+            });
+
             //动态高度设置
             // var height = $("#pan").height() - $("#pan-head").height() - 15;
             // $("#pan-body").css('height',height+'px');
+
+
+            //打开要素分类选择界面
+            $("#category").on("click",function () {
+                layx.group('group-nomerge', [
+                    {
+                        id: 'map-edit',
+                        title: '要素分类选择',
+                        content: document.getElementById('chooseCategory'),
+                        cloneElementContent: false,
+                    }
+                ],0, {
+                    id: 'info',
+                    mergeTitle: false,
+                    title: '选择加载要素',
+                    icon:false,
+                    minMenu:false,
+                    maxMenu:false,
+                    controlStyle:'background-color: #1070e2; color:#fff;',
+                    border:false,
+                    style:layx.multiLine(function(){/*
+                        #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+                            background-color: #9953c0;
+                        }
+                    */})
+                });
+            });
+
+            //确认要素分类选择
+            $("#chooseCategory-btn").on("click",function () {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo2"),
+                    nodes = zTree.getSelectedNodes(),
+                    treeNode = nodes[0];
+                if (nodes.length == 0) {
+                    alert("请先选择一个节点");
+                    return;
+                }else{
+                    $("#feature-content").css("display","none");
+                    $("#device").css("display","none");
+                    $("#build").css("display","none");
+                    $("#other").css("display","none");
+
+                    $("#feature-content").css("display","block");
+                    if(treeNode.id === '12'){
+                        //$("#feature-content").html(table.device);
+                        $("#device").css("display","block")
+                    }else if(treeNode.id === '14'){
+                        //$("#feature-content").html(table.build);
+                        $("#build").css("display","block");
+                    }else{
+                        //$("#feature-content").html(table.other);
+                        $("#other").css("display","block");
+                    }
+
+
+
+                   //关闭窗口
+                    layx.destroyAll();
+                }
+            });
+
+
+            //启动要素关联的界面
+            $(".btn-success").on("click",function () {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                    nodes = zTree.getSelectedNodes(),
+                    treeNode = nodes[0];
+                if (nodes.length == 0) {
+                    alert("请先选择一个区域节点才能进行要素关联!");
+                    return;
+                }else{
+                    //将位置关联的css打开
+                        $(".showTreeData").css("display","none");
+                        $(".editTreeData").css("display","block");
+                        $("#feature-name").val($(this).closest('tr').find('td')[0].innerText);
+                }
+            });
+
+            //要素关联界面中，打开选择要素分类的窗口
+            $("#open-category-win").on("click",function () {
+                layx.html('dom-get','要素分类选择',document.getElementById('category-win'),{
+                    cloneElementContent:false,
+                    //样式配置
+                    icon:false,
+                    minMenu:false,
+                    maxMenu:false,
+                    controlStyle:'background-color: #1070e2; color:#fff;',
+                    border:false,
+                    style:layx.multiLine(function(){/*
+                        #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+                            background-color: #9953c0;
+                        }
+                    */}),
+                });
+            });
+
+            //在要素分类所属的窗口中，选择所属的要素分类
+            $("#category-win-commit").on("click",function () {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo3"),
+                    nodes = zTree.getSelectedNodes(),
+                    treeNode = nodes[0];
+                if (nodes.length == 0) {
+                    alert("请先选择一个区域节点才能进行要素关联!");
+                    return;
+                }else{
+                    $("#input-category").val(treeNode.name);
+                    //console.log(zTree);
+
+                    //关闭窗口
+                    layx.destroyAll();
+                }
+            });
+
+
+            $("#showNoBuild").on("click",function () {
+                //console.log(456);
+                var coors = [28.25219321,113.08259818];
+                var marker = L.marker(coors).addTo(map);
+
+            });
+
+
+            $("#back-to-map").on("click",function () {
+                $("#map").css('display','block');
+                $("#img-map").css('display','none');
+            });
+
+
+
         });
 
+        /**
+         * 要素关联 前后端对接
+         */
+
+        $("#submitConnection").on("click",function () {
+
+            //从表单拿要素，组装
+            var name = $("#feature-name").val();
+            var category = $("#flag-category").val();
+            var zoom = $("#feature-zoom").val();
+            var flag = $("#flag-category").val();
+
+            //坐标字符串的处理
+            var coor = null;//Latlng(123.4,12345)
+
+            //点要素判断
+            if(flag === 'feature-point'){
+                var coors = $("#feature-coors").val();//Latlng(123.4,12345)
+                coors = coors.slice(7,coors.length-1);
+                coors = coors.split(',');
+                coor = coors;
+
+                console.log(coor);
+            }
+
+
+            //线要素判断
+            if(flag === 'feature-line'){
+                var coors = $("#feature-coors").val();
+                coors = coors.split(',');
+                coor = coors;
+            }
+
+            if(flag === 'feature-polygon'){
+                var coors = $("#feature-coors").val();
+                coors = coors.split(',');
+                coor = coors;
+            }
+
+            var data={
+                name:name,
+                category:category,
+                coors:coor,
+                zoom:zoom,
+                flag:flag
+            };
+
+            $.ajax({
+                url:end+'/feature/add',
+                type:'GET',
+                contentType:"application/json",
+                data:data,
+                cache:false,
+                success:function () {
+                    alert("添加成功");
+                },
+                error:function () {
+                    alert("添加失败");
+                }
+            });
+        });
 
 
 

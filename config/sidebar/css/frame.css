@@ -447,7 +447,68 @@ ul li {
     display: block;
     background-color: rgba(34, 41, 51, 0.9);
 }
+<<<<<<< HEAD
 
+=======
+/*topbar*/
+.navpanel{
+    position: absolute;
+    width: 280px;
+    height: 300px;
+    right: -110px;
+    overflow: hidden;
+    padding: 15px;
+    background-color: white;
+    border-left: 1px solid lightgrey;
+    border-right: 1px solid lightgrey;
+    border-bottom: 1px solid lightgrey;
+    -webkit-transition: max-height 0.4s linear;
+    -moz-transition: max-height 0.4s linear;
+    -ms-transition: max-height 0.4s linear;
+    -o-transition: max-height 0.4s linear;
+    transition: max-height 0.4s linear;
+    display: none;
+
+}
+.navpanel .on{
+    display: block;
+}
+/*.pull-right>li:after{
+    content:'';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    border: 10px solid transparent;
+    border-bottom-color: white;
+    left: 50%;
+    top: 40px;
+    left: 20px;
+}*/
+.panel-sign{
+    content:'';
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    border: 10px solid transparent;
+    border-bottom-color: white;
+    left: 50%;
+    top: 40px;
+    left: 20px;
+}
+.funcMenu{
+    position: relative;
+    height: 27%;
+    margin: 10px;
+    padding: 0px;
+    text-align: center;
+    border: 0px;
+}
+.funcMenu p{
+    position: absolute;
+    top: 20px;
+    left: 8px;
+}
+>>>>>>> 23fb285a8ce472b8a548eed956f7154632f88e13
 /*图标弹窗*/
 .iconPanel {
     width: 100%;

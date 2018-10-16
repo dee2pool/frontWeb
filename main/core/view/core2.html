@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>一张图</title>
+    <link rel="stylesheet" href="../../common/css/base.css">
+    <!--bootstrap以及插件样式-->
+    <link rel="stylesheet" href="../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/lib/bootstrap/libs/sui/css/sui.nav.css">
+    <link rel="stylesheet" href="../css/sidebar.css">
+
+    <!--leaflet以及相关样式-->
+    <link rel="stylesheet" href="../../common/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/contextmenu/leaflet.contextmenu.min.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/history/leaflet-history.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/draw/Leaflet.Draw.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/minimap/Control.MiniMap.css">
+    <link rel="stylesheet" href="../../common/lib/leaflet-lib/search/leaflet-search.css">
+
+    <!--其他相关-->
+    <link rel="stylesheet" href="../../common/lib/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../common/lib/layx/layx.css">
+    <link rel="stylesheet" href="../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" href="../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+
+    <link rel="stylesheet" href="../../../config/sidebar/css/frame.css">
+    <link rel="stylesheet" href="../css/core2.css">
+
+
+    <script src="../../common/lib/requirejs/require.js" defer async="true" data-main="../js/core2"></script>
+</head>
+<body>
+<div id="head"></div>
+
+<main class="core-map left" id="core">
+    <section class="map-left left">
+        <div class="map-top">
+            <ul>
+                <li><i class="fa fa-reorder margin-right-5"></i><a href="javascript:void (0)" id="topbar-control" class="active">图层选择</a></li>
+                <li><i class="fa fa-plus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomin">拉框放大</a> </li>
+                <li><i class="fa fa-minus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomout">拉框缩小</a> </li>
+                <li><i class="fa fa-history margin-right-5"></i><a href="javascript:void (0)" id="topbar-history">历史视图</a> </li>
+                <!--<li><i class="fa fa-search margin-right-5"></i><a href="javascript:void (0)" id="topbar-search">搜索</a> </li>-->
+                <li class="dropdown"><i class="fa fa-calculator margin-right-5"></i><a href="javascript:void (0)" id="topbar-measure" data-toggle="dropdown">测量</a>
+                    <ul class="dropdown-menu dropdown-menu-right topbar-dropdown-width" aria-labelledby="topbar-measure">
+                        <li><a href="javascript:void (0)" id="topbar-measure-length"><i class="fa fa-line-chart margin-right-5"></i>距离测量</a></li>
+                        <li><a href="javascript:void (0)" id="topbar-measure-area"><i class="fa fa-area-chart margin-right-5"></i>面积测量</a></li>
+                        <li><a href="javascript:void (0)" id="topbar-measure-clear"><i class="fa fa-trash margin-right-5"></i>清理</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown"><i class="fa fa-cogs margin-right-5"></i><a href="javascript:void (0)" id="topbar-setting" data-toggle="dropdown">设置</a>
+                    <ul class="dropdown-menu dropdown-menu-right topbar-setting" aria-labelledby="topbar-setting">
+                        <li><a href="#">设置1</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#">设置2</a></li>
+                    </ul>
+                </li>
+                <li><i class="fa fa-print margin-right-5"></i><a href="javascript:void(0)"  id="topbar-print">打印</a></li>
+            </ul>
+        </div>
+
+        <div class="map-box" id="map"></div>
+
+        <div class="map-box indoor" id="img-map"></div>
+    </section>
+
+    <section class="map-right right">
+        <!-- 头部 -->
+        <div class="map-right-top">
+            <ul>
+                <li class="li-active">统计信息</li>
+                <li>快捷导航</li>
+                <li>专题信息</li>
+            </ul>
+        </div>
+
+        <!-- 核心内容35 -->
+        <section class="map-core">
+            <!--1-->
+            <div class="map-core-content">
+                <div class="map_con_div" style="display: block;">
+                    <!-- 上方echart模块 -->
+                    <div class="map-chart" id="char1"></div>
+
+                    <!--下方table模块-->
+                    <div class="p-table">
+                        <div class="p-table-div">
+                            <table class="p-table-div-table">
+                                <thead>
+                                <tr>
+                                    <th id="table-th1">排名</th>
+                                    <th>车牌号</th>
+                                    <th>时长（km）</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                <tr>
+                                    <td>1</td>
+                                    <td>京A12345</td>
+                                    <td>134.2</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="map-core-content" style="display:none">
+                <div class="map-work">
+                    <ul>
+                        <li>
+                            <!-- <div class="img_div img_div01"></div> -->
+                            <i class="fa fa-yoast fa-2x white"></i>
+                            <div class="white">服务</div>
+                        </li>
+                        <li>
+                            <i class="fa fa-skyatlas fa-2x white"></i>
+                            <div>服务</div>
+                        </li>
+                        <li>
+                            <i class="fa fa-download fa-2x white"></i>
+                            <div>服务</div>
+                        </li>
+                        <li>
+                            <i class="fa fa-paper-plane fa-2x white"></i>
+                            <div>服务</div>
+                        </li>
+                        <li>
+                            <i class="fa fa-dashboard fa-2x white"></i>
+                            <div>服务</div>
+                        </li>
+                        <li>
+                            <i class="fa fa-hand-o-left fa-2x white"></i>
+                            <div>服务</div>
+                        </li>
+                        <li>
+                            <i class="fa fa-adn fa-2x white"></i>
+                            <div>服务</div>
+                        </li>
+                        <li>
+                            <i class="fa fa-desktop fa-2x white"></i>
+                            <div>服务</div>
+                        </li>
+                        <li>
+                            <i class="fa fa-envelope fa-2x white"></i>
+                            <div>服务</div>
+                        </li>
+                    </ul>
+                    <div class="map-reslist">
+                        <p class="set_list"><i class="fa fa-plane white"></i> 查询结果：
+                            <span class="right">
+                                    <i class="fa fa-backward"></i>
+                                    <a href="javascript:void(0)" class="white" id="back">返回 </a>
+                                </span>
+                        </p>
+
+                        <ul>
+                            <li>
+                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
+                                        src="../img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src="../img/find01.png">                                                </a>
+                                            </span></p>
+                                <p>湖南省长沙市长沙县星沙街道</p>
+                            </li>
+                            <li>
+                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
+                                        src="../img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src="../img/find01.png">                                                </a>
+                                            </span></p>
+                                <p>湖南省长沙市长沙县星沙街道</p>
+                            </li>
+                            <li>
+                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
+                                        src="../img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src="../img/find01.png">                                                </a>
+                                            </span></p>
+                                <p>湖南省长沙市长沙县星沙街道</p>
+                            </li>
+                            <li>
+                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
+                                        src="../img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src="../img/find01.png">                                                </a>
+                                            </span></p>
+                                <p>湖南省长沙市长沙县星沙街道</p>
+                            </li>
+                            <li>
+                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
+                                        src="../img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src="../img/find01.png">                                                </a>
+                                            </span></p>
+                                <p>湖南省长沙市长沙县星沙街道</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- 3 -->
+            <div class="map-core-content" style="display:none">
+                <p class="set_list">
+                    <i class="fa fa-list"></i> 专题列表：
+                </p>
+
+                <p>
+                <ul id="treeDemo" class="ztree white"></ul>
+                </p>
+            </div>
+
+        </section>
+    </section>
+</main>
+
+
+<!--历史视图容器-->
+<section class="history layer-open-section" id="history">
+    <div class="layer-open-content-history">
+        <span class="layer-open-content-title">历史视图：</span>
+        <div id="historyControl" class="layer-open-content-control"></div>
+    </div>
+</section>
+<!--测量容器-->
+<section class="layer-open-section" id="measure">
+    <div class="form-group btn-group" role="group">
+        <button id="measure-length" type="button" class="btn btn-primary"><span class="fa fa-line-chart"></span>
+            距离测量
+        </button>
+        <button id="measure-area" type="button" class="btn btn-primary"><span class="fa fa-area-chart"></span>
+            面积测量
+        </button>
+        <button id="measure-clear" type="button" class="btn btn-danger"><span class="fa fa-trash"></span>
+            清除
+        </button>
+    </div>
+</section>
+<!--精确查询容器-->
+<!--class="layer-open-section",这个类是用来隐藏容器，供给layer使用的-->
+<section class="layer-open-section" id="query">
+    <span class="layer-open-content-title">精确查询：</span>
+    <div class="layer-open-content-history">
+        <div id="queryControl" class="layer-open-content-control"></div>
+    </div>
+</section>
+<!--图层控制器容器-->
+<section class="layer-open-section" id="layerControlContainer">
+    <span class="layer-open-content-title">图层控制：</span>
+    <div class="layer-open-content-history">
+        <div id="layerControl" class="layer-open-content-control"></div>
+    </div>
+</section>
+<!--坐标显示容器容器-->
+<section class="layer-open-section" id="coordinate">
+    <span class="layer-open-content-title">当前坐标：</span>
+    <span id="coordinateControl" class="layer-open-content-control"></span>
+</section>
+
+<!--设备添加容器——layx -->
+<section class="layer-open-section" id="add-device-form">
+    <div class="layx-div" id="add-device-div">
+        <h3>设备添加</h3>
+        <form>
+            <div class="input-group">
+                <span class="input-group-addon">设备名称</span>
+                <input id="device-name" type="text" class="form-control" name="device-name">
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">坐标信息</span>
+                <input id="device-coors" type="text" class="form-control" name="device-coors" readonly>
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">设备类型</span>
+                <select class="form-control" id="device-type">
+                    <option>A</option>
+                    <option>B</option>
+                    <option>C</option>
+                    <option>D</option>
+                </select>
+            </div>
+            <br>
+            <div class="input-group">
+                <span class="input-group-addon">设备描述</span>
+                <input id="device-desc" type="text" class="form-control" name="device-desc">
+            </div>
+            <br>
+            <!--<div class="btn-group" style="left: 180px">-->
+            <!--<button type="button" class="btn btn-primary" id="sub-device-form">提交</button>-->
+            <!--<button type="button" class="btn btn-default" id="reset-device-form">重置</button>-->
+            <!--</div>-->
+        </form>
+    </div>
+</section>
+
+<!--用于设备详情的容器，里面包含了很多的东西-->
+<section class="layer-open-section" id="device">
+    <div class="layx-div" id="device-info">
+        <h3>设备信息</h3>
+        <div class="input-group">
+            <span class="input-group-addon">设备名称</span>
+            <input id="device-info-name" type="text" class="form-control" name="device-name" readonly>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">坐标信息</span>
+            <input id="device-info-coors" type="text" class="form-control" name="device-coors" readonly>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">设备类型</span>
+            <select class="form-control" id="device-info-type" readonly>
+                <option>A</option>
+                <option>B</option>
+                <option>C</option>
+                <option>D</option>
+            </select>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">设备描述</span>
+            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>
+        </div>
+    </div>
+    <div class="layx-div" id="device-chart">
+        <div id="c1" class="device-chart"></div>
+        <hr>
+        <div id="c2" class="device-chart"></div>
+    </div>
+    <div class="layx-div" id="device-history">
+
+    </div>
+</section>
+
+<!--告警中心，工单管理的layx左下角容器-->
+<section class="layer-open-section">
+    <div class="layx-div" id="workOrder-panel">
+        <div class="container-fluid">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Firstname</th>
+                    <th>Lastname</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@example.com</td>
+                </tr>
+                <tr>
+                    <td>Mary</td>
+                    <td>Moe</td>
+                    <td>mary@example.com</td>
+                </tr>
+                <tr>
+                    <td>July</td>
+                    <td>Dooley</td>
+                    <td>july@example.com</td>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@example.com</td>
+                </tr>
+                <tr>
+                    <td>Mary</td>
+                    <td>Moe</td>
+                    <td>mary@example.com</td>
+                </tr>
+                <tr>
+                    <td>July</td>
+                    <td>Dooley</td>
+                    <td>july@example.com</td>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@example.com</td>
+                </tr>
+                <tr>
+                    <td>Mary</td>
+                    <td>Moe</td>
+                    <td>mary@example.com</td>
+                </tr>
+                <tr>
+                    <td>July</td>
+                    <td>Dooley</td>
+                    <td>july@example.com</td>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@example.com</td>
+                </tr>
+                <tr>
+                    <td>Mary</td>
+                    <td>Moe</td>
+                    <td>mary@example.com</td>
+                </tr>
+                <tr>
+                    <td>July</td>
+                    <td>Dooley</td>
+                    <td>july@example.com</td>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@example.com</td>
+                </tr>
+                <tr>
+                    <td>Mary</td>
+                    <td>Moe</td>
+                    <td>mary@example.com</td>
+                </tr>
+                <tr>
+                    <td>July</td>
+                    <td>Dooley</td>
+                    <td>july@example.com</td>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@example.com</td>
+                </tr>
+                <tr>
+                    <td>Mary</td>
+                    <td>Moe</td>
+                    <td>mary@example.com</td>
+                </tr>
+                <tr>
+                    <td>July</td>
+                    <td>Dooley</td>
+                    <td>july@example.com</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="layx-div" id="alarm-panel">
+        <div class="container-fluid">
+            <table id="workOrder-table"></table>
+        </div>
+    </div>
+</section>
+
+</body>
+</html>
