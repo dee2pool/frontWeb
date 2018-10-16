@@ -2,15 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>人员管理</title>
     <link rel="stylesheet" href="../../common/css/common.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
-    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+
     <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/person.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/person"></script>
@@ -23,9 +25,23 @@
     <div id="sidebar"></div>
     <!--主体内容-->
     <div class="contentpage">
-        <div class="content row">
-            <div class="content-panel col-md-12">
-                <div class="head">
+        <div class="content">
+            <div class="content-panel panel-opera">
+                <a id="addPerson" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加
+                </a>
+                <a id="movePerson" class="button button-small button-highlight"><span
+                        class="glyphicon glyphicon-export"></span>移至
+                </a>
+                <a class="button button-highlight button-small"><span
+                        class="glyphicon glyphicon-log-in"></span>导入
+                </a>
+                <a class="button button-highlight button-small"><span
+                        class="glyphicon glyphicon-log-out"></span>导出
+                </a>
+            </div>
+            <div class="content-panel panel-main">
+                <!--<div class="head">
                     <div class="head-left" style="width: 480px">
                         <a id="addPerson" href="javascript:;"><span class="glyphicon glyphicon-plus"
                                                                     aria-hidden="true">添加</span></a>
@@ -34,15 +50,37 @@
                                                      aria-hidden="true">导入人员</span></a>
                         <a href="javascript:;"><span class="glyphicon glyphicon-log-out" aria-hidden="true">导出人员</span></a>
                     </div>
-                    <!--<div class="head-right" style="width: 400px">
-                        <form role="form" style="width: 300px;display: inline-block">
-                            <input type="text" class="form-control" placeholder="请输入人员姓名"
-                                   style="width: 230px;display: inline-block">
-                            <button type="button" class="btn btn-default">搜索</button>
-                        </form>
-                    </div>-->
+                </div>-->
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="person_table"></table>
                 </div>
-                <table id="person_table"></table>
+                <!--分页-->
+                <div class="fixed-table-pagination">
+                    <div class="pull-left">
+                        <span class="pagination-info"></span>
+                        <span class="page-list">
+                            <span class="btn-group dropup">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="page-size">10</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="menuitem" class="active"><a href="#">10</a></li>
+                                    <li role="menuitem"><a href="#">20</a></li>
+                                    <li role="menuitem"><a href="#">30</a></li>
+                                </ul>
+                            </span>
+                            条每页
+                        </span>
+                    </div>
+                    <div class="pull-right pagination">
+                        <ul class="pagination">
+                            <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
+                            <li class="page-item pNo active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -138,7 +176,7 @@
                     </div>
                     <div class="col-md-4">
                         <div class="profile">
-                            <img id="showImg" width="190px" height="220px" src=""/>
+                            <img id="showImg" width="190px" height="220px" src="data:image/jpeg;base64,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"/>
                         </div>
                         <div class="btn-img">
                             <div class="btn-group-vertical">
@@ -158,92 +196,93 @@
                 <div class="tab-main">
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">英文名：</label>
-                        <div class="col-sm-6">
+                        <div class="input-group col-sm-6">
                             <input name="englishName" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">邮箱：</label>
-                        <div class="col-sm-6">
+                        <div class="input-group col-sm-6">
                             <input name="email" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">到职日期：</label>
-                        <div class="col-sm-6">
-                            <input name="takeofficeDate" type="text" class="form-control" readonly>
+                        <div class="input-group  date form_datetime col-sm-6">
+                            <input type="text" name="takeofficeDate" class="form-control" readonly>
                             <span class="input-group-addon"><span
                                     class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">离职日期：</label>
-                        <div class="col-sm-6">
-                            <input name="departureDate" type="text" class="form-control" readonly>
+                        <div class="input-group  date form_datetime col-sm-6">
+                            <input type="text" name="departureDate" class="form-control" readonly>
                             <span class="input-group-addon"><span
                                     class="glyphicon glyphicon-calendar"></span></span>
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">学历：</label>
-                        <div class="col-sm-6">
+                        <div class="input-group col-sm-6">
                             <select name="diploma" class="form-control">
-                                <option>小学</option>
-                                <option>初中</option>
-                                <option>高中</option>
-                                <option>本科</option>
-                                <option>研究生</option>
-                                <option>博士</option>
+                                <option value="小学">小学</option>
+                                <option value="初中">初中</option>
+                                <option value="高中">高中</option>
+                                <option value="专科">专科</option>
+                                <option value="本科" selected>本科</option>
+                                <option value="研究生">研究生</option>
+                                <option value="博士">博士</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">民族：</label>
-                        <div class="col-sm-6">
+                        <div class="input-group col-sm-6">
                             <input name="nation" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">用户名：</label>
-                        <div class="col-sm-6">
+                        <div class="input-group col-sm-6">
                             <input name="userName" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">密码：</label>
-                        <div class="col-sm-6">
+                        <div class="input-group col-sm-6">
                             <input name="usePwd" type="password" class="form-control">
                         </div>
                     </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">备注：</label>
-                        <div class="col-sm-6">
+                        <div class="input-group col-sm-6">
                             <textarea name="remark" cols="45" rows="2"></textarea>
+                            <input  name="res" type="reset" style="display:none;" />
                         </div>
                     </div>
                 </div>
                 <div class="tab-footer">
-                    <button type="button" class="btn btn-danger">完成</button>
+                    <button type="submit" class="btn btn-danger">完成</button>
                     <button type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
+
 <!--迁移人员弹出层-->
 <div class="changeDept" style="display: none">
     <form class="form-horizontal">
         <div class="form-item form-group-sm" style="margin: 30px">
             <label class="col-sm-4 control-label">部门：</label>
             <div class="col-sm-6" style="padding: 0px">
-                <select class="form-control">
-                    <option>研发中心</option>
-                    <option>测试中心</option>
+                <select name="pDept" class="form-control">
                 </select>
             </div>
         </div>
         <div class="tab-footer">
-            <button type="button" class="btn btn-danger">完成</button>
+            <button id="per_move" type="button" class="btn btn-danger">完成</button>
             <button type="button" class="btn btn-default btn-cancel">取消</button>
         </div>
     </form>

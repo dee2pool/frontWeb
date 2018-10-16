@@ -1,0 +1,34 @@
+.contentpage{
+    padding-left: 0px;
+}
+/*弹窗*/
+.deviceForm{
+    width: 620px;
+    height: 300px;
+    padding-top: 25px;
+    margin: auto;
+}
+.deviceForm .form-item{
+    display: inline-block;
+    width: 270px;
+    margin-right: 25px;
+}
+.deviceForm label{
+    width:110px;
+    text-align: right;
+}
+.deviceForm .form-control{
+    display: inline-block;
+    width: 150px;
+    height: 20px;
+    padding: 0;
+}
+.tooltip{
+    z-index: 999999999;
+}
+.form-horizontal .has-feedback .form-control-feedback{
+    right: 0px;
+}
+.has-feedback label~.form-control-feedback{
+    top: 0px;
+}

@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
-    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../css/dept.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/dept"></script>
 </head>
 <body>
@@ -21,24 +23,10 @@
     <!--主体内容-->
     <div class="contentpage">
         <div class="content">
-            <!-- <div class="panel-head">
-                 <ul class="breadcrumb">
-                     <li>
-                         <a href="#">Home</a>
-                     </li>
-                     <li>
-                         <a href="#">Tutorials</a>
-                     </li>
-                     <li class="active">HTML5</li>
-                 </ul>
-             </div>-->
             <div class="content-panel panel-left">
                 <div class="head head-tree">
                     <div class="head-left-tree">
-                        <span>部门</span>
-                        <div class="opera-group">
-                            <a id="addDept" href="javascript:;"><i class="fa fa-plus"></i></a>
-                        </div>
+                        <span>部门树</span>
                     </div>
                 </div>
                 <!--<form role="form">
@@ -51,12 +39,12 @@
                 </form>-->
                 <div id="depttree"></div>
             </div>
+            <div class="content-panel panel-opera">
+                <a id="addDept" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加部门
+                </a>
+            </div>
             <div class="content-panel panel-right">
-                <div class="head">
-                    <div class="head-left-tree">
-                        <span>子部门列表</span>
-                    </div>
-                </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="dept_table"></table>
                 </div>
@@ -110,7 +98,7 @@
                 <label class="col-sm-4 control-label">备注：</label>
                 <div class="col-sm-6" style="padding: 0px">
                     <textarea name="deptRemark" cols="40" rows="2"></textarea>
-                    <input  name="res" type="reset" style="display:none;" />
+                    <input name="res" type="reset" style="display:none;"/>
                 </div>
             </div>
             <div class="tab-footer">

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>用户管理</title>
     <link rel="stylesheet" href="../../common/css/common.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="../../common/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" href="../css/user.css">
-    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
     <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
     <script type="text/javascript" src="../../common/js/md5.js"></script>
@@ -30,12 +31,12 @@
                 <div class="head head-tree">
                     <div class="head-left-tree">
                         <span style="margin-right: 15px">用户组</span>
-                        <div class="opera-group">
-                            <a id="addUgroup" href="javascript:;"><i class="fa fa-plus">添加</i></a>
-                            <a id="editUgroup" href="javascript:;"><i class="fa fa-pencil">修改</i></a>
-                            <a id="delUgroup" class="remove_ugroup" href="javascript:;"><i class="fa fa-remove">删除</i></a>
-                        </div>
                     </div>
+                </div>
+                <div class="opera-group">
+                    <a id="addUgroup" href="javascript:;"><i class="fa fa-plus">添加</i></a>
+                    <a id="editUgroup" href="javascript:;"><i class="fa fa-pencil">修改</i></a>
+                    <a id="delUgroup" class="remove_ugroup" href="javascript:;"><i class="fa fa-remove">删除</i></a>
                 </div>
                 <!--<form role="form" style="margin-bottom: 10px">
                     <div class="row">
@@ -48,26 +49,13 @@
                     <div id="ugrouptree"></div>
                 </div>
             </div>
+            <div class="content-panel panel-opera">
+                <a id="addUser" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加用户
+                </a>
+            </div>
             <div class="content-panel panel-right">
                 <div class="main-right">
-                    <div class="head">
-                        <div class="head-left" style="width: 480px">
-                            <a id="addUser" href="#"><span class="glyphicon glyphicon-plus"
-                                                           aria-hidden="true">添加</span></a>
-                            <a href="javascript:;"><span class="glyphicon glyphicon-log-in"
-                                                         aria-hidden="true">导入用户</span></a>
-                            <a href="javascript:;"><span class="glyphicon glyphicon-log-out"
-                                                         aria-hidden="true">导出用户</span></a>
-                        </div>
-                        <!--
-                        <div class="head-right">
-                            <form role="form" style="width: 300px;display: inline-block">
-                                <input type="text" class="form-control" placeholder="请输入姓名"
-                                       style="width: 230px;display: inline-block">
-                                <button type="button" class="btn btn-default">搜索</button>
-                            </form>
-                        </div>-->
-                    </div>
                     <div class="table-responsive">
                         <table class="table text-nowrap" id="user_table"></table>
                     </div>

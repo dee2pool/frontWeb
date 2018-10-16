@@ -1,11 +1,11 @@
-function DictController(){
-    var service=new Object();
-    service.url=host+"/base-data"+"/dict";
+define(['common'],function DictController(common){
+    var dictService=new Object();
+    dictService.url=common.host+"/base-data"+"/dict";
     /**
       *添加字典信息 
       *@param dict dict 
       */
-     service.addDict=function(dict,onSuccess){
+     dictService.addDict=function(dict,onSuccess){
 	     var dictStr=JSON.stringify(dict);
 		 var requestUrl=this.url+"/dict/add";
          $.ajax({
@@ -25,7 +25,7 @@ function DictController(){
       *@param name name 
       *@param dictCode dictCode 
       */
-     service.existName=function(name,dictCode,onSuccess){
+     dictService.existName=function(name,dictCode,onSuccess){
 	     var nameStr=name;
 	     var dictCodeStr=dictCode;
 		 var requestUrl=this.url+"/dict/exist";
@@ -47,7 +47,7 @@ function DictController(){
       *@param dict dict 
       *@param id id 
       */
-     service.updateDict=function(dict,id,onSuccess){
+     dictService.updateDict=function(dict,id,onSuccess){
 	     var dictStr=JSON.stringify(dict);
 	     var idStr=id;
 		 var requestUrl=this.url+"/dict/update";
@@ -68,7 +68,7 @@ function DictController(){
       *根据id删除字典信息 
       *@param ids ids 
       */
-     service.deleteDictByIds=function(ids,onSuccess){
+     dictService.deleteDictByIds=function(ids,onSuccess){
 	     var idsStr=JSON.stringify(ids);
 		 var requestUrl=this.url+"/dict/delete";
          $.ajax({
@@ -90,7 +90,7 @@ function DictController(){
       *@param dictCode dictCode 
       *@param name name 
       */
-     service.getDictList=function(pageNo,pageSize,dictCode,name,onSuccess){
+     dictService.getDictList=function(pageNo,pageSize,dictCode,name,onSuccess){
 	     var pageNoStr=pageNo;
 	     var pageSizeStr=pageSize;
 	     var dictCodeStr=dictCode;
@@ -115,7 +115,7 @@ function DictController(){
       *根据字典code,获取该子节点信心 
       *@param dictCode dictCode 
       */
-     service.getChildList=function(dictCode,onSuccess){
+     dictService.getChildList=function(dictCode,onSuccess){
 	     var dictCodeStr=dictCode;
 		 var requestUrl=this.url+"/"+dictCodeStr+"/child";
          $.ajax({
@@ -134,7 +134,7 @@ function DictController(){
       *添加字典详情信息 
       *@param dictDetail dictDetail 
       */
-     service.addDictDetail=function(dictDetail,onSuccess){
+     dictService.addDictDetail=function(dictDetail,onSuccess){
 	     var dictDetailStr=JSON.stringify(dictDetail);
 		 var requestUrl=this.url+"/dictDetail/add";
          $.ajax({
@@ -154,7 +154,7 @@ function DictController(){
       *@param name name 
       *@param detailCode detailCode 
       */
-     service.existDetailName=function(name,detailCode,onSuccess){
+     dictService.existDetailName=function(name,detailCode,onSuccess){
 	     var nameStr=name;
 	     var detailCodeStr=detailCode;
 		 var requestUrl=this.url+"/dictDetail/exist";
@@ -176,7 +176,7 @@ function DictController(){
       *@param dictDetail dictDetail 
       *@param id id 
       */
-     service.updateDictDetail=function(dictDetail,id,onSuccess){
+     dictService.updateDictDetail=function(dictDetail,id,onSuccess){
 	     var dictDetailStr=JSON.stringify(dictDetail);
 	     var idStr=id;
 		 var requestUrl=this.url+"/dictDetail/update";
@@ -197,7 +197,7 @@ function DictController(){
       *删除字典详情信息 
       *@param ids ids 
       */
-     service.deleteDcitDetailByIds=function(ids,onSuccess){
+     dictService.deleteDcitDetailByIds=function(ids,onSuccess){
 	     var idsStr=JSON.stringify(ids);
 		 var requestUrl=this.url+"/dictDetail/delete";
          $.ajax({
@@ -219,7 +219,7 @@ function DictController(){
       *@param dictCode dictCode 
       *@param name name 
       */
-     service.getDictDetailInfoList=function(pageNo,pageSize,dictCode,name,onSuccess){
+     dictService.getDictDetailInfoList=function(pageNo,pageSize,dictCode,name,onSuccess){
 	     var pageNoStr=pageNo;
 	     var pageSizeStr=pageSize;
 	     var dictCodeStr=dictCode;
@@ -244,7 +244,7 @@ function DictController(){
       *根据字典code查询字典详细信息 
       *@param dictCode dictCode 
       */
-     service.DictDetailByDictCode=function(dictCode,onSuccess){
+     dictService.DictDetailByDictCode=function(dictCode,onSuccess){
 	     var dictCodeStr=dictCode;
 		 var requestUrl=this.url+"/DictDetailByDictCode";
          $.ajax({
@@ -259,5 +259,5 @@ function DictController(){
              });
     };
            
-    return service;
-}
+    return dictService;
+})

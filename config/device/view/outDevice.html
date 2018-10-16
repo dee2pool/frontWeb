@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../common/css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../css/outDevice.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/normalize.css">
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/outDevice"></script>
+    <title>前端外围设备</title>
+</head>
+<body>
+<div class="wrapper">
+    <div id="head"></div>
+    <div class="contentpage">
+        <div class="content">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li>
+                    <a href="#">前端外围设备</a>
+                </li>
+            </ul>
+            <!--设备树-->
+            <aside data-pushbar-id="left" class="pushbar form-left">
+                <div class="panel-head">
+                    <img src="../img/tree.png" width="25" height="25">
+                    <span>设备</span>
+                </div>
+                <input id="keyword" type="text" class="form-control" placeholder="请输入组织或管理域名称" style="height: 30px">
+                <ul id="orgTree" class="ztree"></ul>
+            </aside>
+            <div class="content-panel panel-opera-se">
+                <button class="button button-primary button-small"><span class="glyphicon glyphicon-plus"></span>添加</button>
+                <button class="button button-caution button-small"><span class="glyphicon glyphicon-remove"></span>删除</button>
+                <a href="#" data-pushbar-target="left" class="button button-royal  button-small"><span class="glyphicon glyphicon-registration-mark"></span>加入通道</a>
+                <a href="mediaSrc.html" class="button button-primary button-small"><span class="glyphicon glyphicon-search"></span>查看通道</a>
+                <span class="button-dropdown button-dropdown-inverse" data-buttons="dropdown">
+                    <button class="button button-inverse button-small">
+                        更多<i class="fa fa-caret-down"></i>
+                    </button>
+                    <ul class="button-dropdown-list is-below">
+                        <li><a href="#">下载模版</a></li>
+                        <li><a href="#">导入设备</a></li>
+                        <li class="button-dropdown-divider"><a href="#">导出模版</a></li>
+                    </ul>
+                </span>
+                <div class="panel-search">
+                    <span>设备名称</span><input type="text" class="form-control">
+                    <span>设备IP</span><input type="text" class="form-control">
+                    <button class="button button-primary button-small"><i class="fa fa-search"></i>查询</button>
+                </div>
+            </div>
+            <div class="content-panel panel-table-se">
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="server_table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="../js/pushbar.js"></script>
+<script type="text/javascript">
+    var pushbar = new Pushbar({
+        blur:true,
+        overlay:true,
+    });
+</script>
+</body>
+</html>

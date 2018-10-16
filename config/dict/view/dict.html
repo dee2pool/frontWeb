@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字典管理</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+    <link rel="stylesheet" href="../css/dict.css">
+    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/dict"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content">
+            <div class="content-panel panel-left">
+                <div class="head head-tree">
+                    <div class="head-left-tree">
+                        <span>字典列表</span>
+                    </div>
+                </div>
+                <div class="opera-group">
+                    <a id="addDict" href="javascript:;"><i class="fa fa-plus">添加</i></a>
+                    <a id="editDict" href="javascript:;"><i class="fa fa-plus">修改</i></a>
+                    <a id="delDict" href="javascript:;"><i class="fa fa-plus">删除</i></a>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="dict_table"></table>
+                </div>
+            </div>
+            <div class="content-panel panel-opera">
+                <a id="addDictDetail" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加字典详情
+                </a>
+                <a id="editDictDetail" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>修改字典详情
+                </a>
+                <a id="delDictDetail" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>删除字典详情
+                </a>
+            </div>
+            <div class="content-panel panel-right">
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="dictDetail_table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--添加字典弹窗-->
+    <div id="add_Dict" style="display: none">
+        <form id="addDictForm" class="form-horizontal">
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>字典名称：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="dictName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>字典编号：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="dictNo" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>展示序号：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="showOrder" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label">备注：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <textarea name="dictRemark" cols="40" rows="2"></textarea>
+                    <input name="res" type="reset" style="display:none;"/>
+                </div>
+            </div>
+            <div class="tab-footer">
+                <button type="submit" class="btn btn-danger">完成</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </form>
+    </div>
+    <!--修改字典弹窗-->
+    <div id="edit_Dict" style="display: none">
+        <form id="editDictForm" class="form-horizontal">
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>字典名称：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="editDictName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>字典编号：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="editDictNo" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>展示序号：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="editShowOrder" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label">备注：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <textarea name="editRemark" cols="40" rows="2"></textarea>
+                    <input name="res" type="reset" style="display:none;"/>
+                </div>
+            </div>
+            <div class="tab-footer">
+                <button type="submit" class="btn btn-danger">完成</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </form>
+    </div>
+    <!--添加字典详情弹窗-->
+    <div id="add_DictDetail" style="display: none">
+        <form id="addDictDetailForm" class="form-horizontal">
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label">字典名称：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="dictName" class="form-control" type="text" readonly>
+                    <input name="dictCode" type="hidden">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>字典详情名称：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="detailValue" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>字典详情编号：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="detailCode" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label">备注：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <textarea name="remark" cols="40" rows="2"></textarea>
+                    <input name="res" type="reset" style="display:none;"/>
+                </div>
+            </div>
+            <div class="tab-footer">
+                <button type="submit" class="btn btn-danger">完成</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </form>
+    </div>
+    <!--修改字典详情弹窗-->
+    <div id="edit_DictDetail" style="display: none">
+        <form id="editDictDetailForm" class="form-horizontal">
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>字典详情名称：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="editDictDetailName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>字典详情编号：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="editDictDetailNo" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label">备注：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <textarea name="editRemark" cols="40" rows="2"></textarea>
+                    <input name="res" type="reset" style="display:none;"/>
+                </div>
+            </div>
+            <div class="tab-footer">
+                <button type="submit" class="btn btn-danger">完成</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

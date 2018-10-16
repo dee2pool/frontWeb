@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../common/css/common.css">
+    <link rel="stylesheet" type="text/css" href="../css/mainDevice.css">
+    <link rel="stylesheet" type="text/css" href="../../common/libs/bootstrap/css/bootstrap.min.css">
+    <title>Title</title>
+</head>
+<body>
+<!--添加设备弹窗-->
+<form id="DeviceForm"
+      data-bv-message="This value is not valid"
+      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+    <div class="form-item form-group-sm">
+        <label class="control-label"><i class="required">*</i>组织名称：</label>
+        <input name="orgName" class="form-control" type="text" readonly>
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>设备类型：</label>
+        <select class="form-control">
+            <option>nvr</option>
+            <option>dvr</option>
+        </select>
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>设备名称：</label>
+        <input name="deviceName" class="form-control" type="text" required data-bv-notempty-message="The first name is required and cannot be empty">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>IP地址：</label>
+        <input type="text" class="form-control" name="ip">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>拉流服务端口：</label>
+        <input name="orderNo" class="form-control" type="text">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>拉流协议：</label>
+        <input name="orderNo" class="form-control" type="text">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>运维端口：</label>
+        <input name="orderNo" class="form-control" type="text">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>运维设备协议：</label>
+        <input name="orderNo" class="form-control" type="text">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>视频通道数：</label>
+        <input name="orderNo" class="form-control" type="text">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>登录用户名：</label>
+        <input name="orderNo" class="form-control" type="text">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>登录密码：</label>
+        <input name="orderNo" class="form-control" type="password">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>网关：</label>
+        <input name="orderNo" class="form-control" type="text">
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>设备型号：</label>
+        <select class="form-control">
+            <option>大华IPC-HF3100P</option>
+        </select>
+    </div>
+    <div class="form-item form-group-sm">
+        <label class=" control-label"><i class="required">*</i>设备厂商：</label>
+        <select class="form-control">
+            <option>大华</option>
+        </select>
+    </div>
+    <div class="form-item form-group-sm" style="width: 560px">
+        <label class="control-label">备注：</label>
+        <textarea name="domainRemark" cols="60" rows="2"></textarea>
+    </div>
+    <div class="tab-footer">
+        <button type="submit" class="btn btn-primary">完成</button>
+        <button type="button" class="btn btn-default btn-cancel">取消</button>
+    </div>
+</form>
+</body>
+</html>

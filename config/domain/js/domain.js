@@ -29,15 +29,15 @@ require.config({
         }
     },
     paths: {
-        "jquery": '../../common/libs/jquery/jquery-1.11.3.min',
-        "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
+        "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
+        "bootstrap": "../../../common/lib/bootstrap/js/bootstrap.min",
         "common": "../../common/js/util",
-        "layer": "../../common/libs/layer/layer",
+        "layer": "../../../common/lib/layer/layer",
         "frame": "../../sidebar/js/wframe",
         "topBar": "../../../common/component/head/js/topbar",
-        "bootstrap-treeview": "../../common/libs/bootstrap-treeview/js/bootstrap-treeview",
-        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
-        "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
+        "bootstrap-treeview": "../../../common/lib/bootstrap/libs/bootstrap-treeview/js/bootstrap-treeview",
+        "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
+        "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
         "domainService": "../../../common/js/service/DomainController",
@@ -54,8 +54,9 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
         topBar.init();
         //解决layer不显示问题
         layer.config({
-            path: '../../common/libs/layer/'
+            path: '../../../common/lib/layer/'
         });
+        /********************************* 管理域树 ***************************************/
         var domainTree = {};
         domainTree.getTree = function () {
             var tree = [];
@@ -123,7 +124,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
             })
         }
         domainTree.init();
-        //组织树
+        /********************************* 组织树 ***************************************/
         var orgTree={};
         orgTree.getData=function () {
             var tree = [];
@@ -225,6 +226,12 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                 $('#area_table').bootstrapTable({
                     columns:[{
                         checkbox: true
+                    },{
+                        title:'序号',
+                        align:'center',
+                        formatter: function (value, row, index) {
+                            return index+1;
+                        }
                     },{
                         field: 'name',
                         title: '管理域名称',

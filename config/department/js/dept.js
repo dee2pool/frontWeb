@@ -134,10 +134,6 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         title: '部门名称',
                         align: 'center'
                     }, {
-                        field: 'id',
-                        title: '部门ID',
-                        align: 'center'
-                    }, {
                         field: 'parentId',
                         visible: false
                     }, {

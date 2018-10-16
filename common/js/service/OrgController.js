@@ -173,6 +173,7 @@ define(['common'], function OrgController(common) {
         $.ajax({
             url: requestUrl,
             type: 'GET',
+            async:false,
             data: {
                 orgCode: orgCodeStr,
             },

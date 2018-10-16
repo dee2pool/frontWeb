@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../common/css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../css/mediaSrc.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/normalize.css">
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/mediaSrc"></script>
+    <title>媒体源管理</title>
+</head>
+<body>
+<div class="wrapper">
+    <div id="head"></div>
+    <div class="contentpage">
+        <div class="content">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li>
+                    <a href="mainDevice.html">设备管理</a>
+                </li>
+                <li>
+                    <a href="#">通道信息</a>
+                </li>
+            </ul>
+            <!--<div class="content-panel panel-left">
+                <div class="panel-head">
+                    <img src="../img/tree.png" width="25" height="25">
+                    <span>组织树</span>
+                </div>
+                <input id="keyword" type="text" class="form-control" placeholder="请输入组织或管理域名称" style="height: 30px">
+                <ul id="orgTree" class="ztree"></ul>
+            </div>-->
+            <div class="content-panel panel-opera-se">
+                <a id="addMediaSrc" href="javascript:;" data-pushbar-target="left"
+                   class="button button-royal  button-small"><span
+                        class="glyphicon glyphicon-registration-mark"></span>通道关联设备</a>
+                <a id="altMediaDev" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-edit"></span>修改通道关联设备
+                </a>
+                <a id="delMediaDev" class="button button-caution button-small"><span
+                        class="glyphicon glyphicon-remove"></span>批量删除
+                </a>
+                <div class="panel-search">
+                    <span>通道名称</span><input type="text" name="d_name" class="form-control">
+                    <button id="search" class="button button-primary button-small"><i class="fa fa-search"></i>查询
+                    </button>
+                </div>
+            </div>
+            <div class="content-panel panel-main">
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="mediaSrc_table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--加入通道弹窗-->
+<div id="addMedia" style="display: none">
+    <form id="addMediaForm" class="form-horizontal">
+        <div class="form-item form-group-sm">
+            <label class="col-sm-4 control-label"><i class="required">*</i>设备名称：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input type="text" class="form-control" name="device" readonly>
+                <input type="hidden" name="deviceSrcId">
+            </div>
+            <a id="choseDevice" href="#" style="display: inline-block;margin-top: 5px;margin-left: 10px"><span
+                    class="badge">选择</span></a>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-4 control-label"><i class="required">*</i>设备通道号：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="uriNum" class="form-control" type="text">
+                <input type="hidden" name="deviceSrcConId">
+                <input type="hidden" name="deviceSrcCode">
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-4 control-label">通道类型：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <select class="form-control" name="srcTypeCode">
+                    <option value="131">模拟摄像机</option>
+                    <option value="132">网络摄像机</option>
+                </select>
+                <input name="res" type="reset" style="display:none;"/>
+            </div>
+        </div>
+        <div class="tab-footer">
+            <button type="submit" class="btn btn-primary">完成</button>
+            <button type="button" class="btn btn-default btn-cancel">取消</button>
+        </div>
+    </form>
+</div>
+<!--通道需要关联媒体源的设备表格-->
+<div id="deviceTable" style="display: none">
+    <div class="table-responsive">
+        <table class="table text-nowrap" id="device_table_media"></table>
+    </div>
+    <div class="tab-footer">
+        <button id="sub" type="button" class="btn btn-primary">完成</button>
+        <button type="button" class="btn btn-default btn-cancel">取消</button>
+    </div>
+</div>
+</body>
+</html>
