@@ -86,6 +86,24 @@ define(['common'],function DomainController(common) {
         });
     };
 
+    /*
+    * 根据域代码，查询该域下所拥有的组织
+    * */
+    domainService.getDomainOrg=function(domainCode,onSuccess){
+        var requestUrl=this.url+"/"+domainCode+"/list";
+        $.ajax({
+            url:requestUrl,
+            type:'GET',
+            async:false,
+            data:{
+                domainCode:domainCode,
+            },
+            cache:false,
+            success:onSuccess,
+            error:common.onError
+        })
+    }
+
     /**
      *根据域代码,查询该域的直接子域节点
      *@param domainCode domainCode 域代码,访问根节点请传入"-1"

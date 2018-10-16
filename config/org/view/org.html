@@ -7,9 +7,11 @@
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
-    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" href="../css/org.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
     <link rel="stylesheet" href="../../../common/lib/ztree/css/metroStyle/metroStyle.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/org"></script>
 </head>
@@ -37,9 +39,6 @@
                     <div class="head head-tree">
                         <div class="head-left-tree">
                             <span>组织机构树</span>
-                            <div class="opera-group">
-                                <a id="addOrg" href="javascript:;"><i class="fa fa-plus"></i></a>
-                            </div>
                         </div>
                     </div>
                     <!--<form role="form">
@@ -52,12 +51,12 @@
                     </form>-->
                     <div id="orgtree"></div>
                 </div>
+                <div class="content-panel panel-opera">
+                    <a id="addOrg" class="button button-primary button-small"><span
+                            class="glyphicon glyphicon-plus"></span>添加组织
+                    </a>
+                </div>
                 <div class="content-panel panel-right">
-                    <div class="head">
-                        <div class="head-left-tree">
-                            <span>子组织列表</span>
-                        </div>
-                    </div>
                     <div class="table-responsive">
                         <table class="table text-nowrap" id="org_table"></table>
                     </div>

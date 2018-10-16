@@ -19,26 +19,31 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
+        'bootstrap-table-zh-CN':{
+            deps: ['bootstrap', 'jquery'],
+            exports: "bootstrapTableZhCN"
+        },
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapValidator"
         }
     },
     paths: {
-        "jquery": '../../common/libs/jquery/jquery-1.11.3.min',
-        "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
+        "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
+        "bootstrap": "../../../common/lib/bootstrap/js/bootstrap.min",
         "common": "../../common/js/util",
-        "layer": "../../common/libs/layer/layer",
+        "layer": "../../../common/lib/layer/layer",
         "frame": "../../sidebar/js/wframe",
         "topBar": "../../../common/component/head/js/topbar",
-        "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
+        "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
+        "bootstrap-table-zh-CN":"../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
-        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min"
+        "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min"
     }
 });
-require(['jquery', 'common', 'layer', 'frame', 'MenuService', 'bootstrap-table', 'bootstrapValidator', 'bootstrap', 'topBar'],
-    function (jquery, common, layer, frame, MenuService, bootstrapTable, bootstrapValidator, bootstrap, topBar) {
+require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootstrap-table','bootstrap-table-zh-CN','bootstrapValidator', 'topBar'],
+    function (jquery, common, layer, frame, MenuService,bootstrap,bootstrapTable,bootstrapTableZhCN,bootstrapValidator,topBar) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -47,7 +52,7 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService', 'bootstrap-table',
         topBar.init();
         //解决layer不显示问题
         layer.config({
-            path: '../../common/libs/layer/'
+            path: '../../../common/lib/layer/'
         });
         /********************************* 添加菜单 ***************************************/
         var menuAdd = {};
@@ -124,6 +129,7 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService', 'bootstrap-table',
                 var layerId = layer.open({
                     type: 1,
                     area: '380px',
+                    skin: 'layui-layer-lan',
                     scrollbar: false,
                     offset: '100px',
                     title: '添加菜单',
@@ -199,6 +205,7 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService', 'bootstrap-table',
                 type: 1,
                 area: '380px',
                 scrollbar: false,
+                skin: 'layui-layer-lan',
                 offset: '100px',
                 title: '修改菜单',
                 content: $('#editMpanel')
@@ -270,8 +277,8 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService', 'bootstrap-table',
                                 }
                             },
                             formatter: function () {
-                                var icons = "<div class='btn-group'><button id='edit_btn' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
-                                    "<button id='del_btn' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
+                                var icons = "<div class='button-group'><button id='edit_btn' type='button' class='button button-tiny button-highlight'><i class='fa fa-edit'></i>修改</button>" +
+                                    "<button id='del_btn' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>删除</button>" +
                                     "</div>"
                                 return icons;
                             }

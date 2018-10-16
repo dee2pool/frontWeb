@@ -1,3 +1,17 @@
+.content-panel{
+    top: 0px;
+}
+.panel-right{
+    top: 63px;
+}
+.panel-left{
+    padding-top: 15px;
+}
+.opera-group{
+    width: 100%;
+    text-align: center;
+    line-height: 1.8em;
+}
 .add_ugroup{
     width: auto;
     height: auto;

@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
     <title>区域管理</title>
-    <link rel="stylesheet" href="../../common/css/common.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
-    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
-    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/bootstrap-treeview/css/bootstrap-treeview.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+    <link rel="stylesheet" type="text/css" href="../css/domain.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/domain"></script>
 </head>
 <body>
@@ -22,24 +25,10 @@
     <!--主体内容-->
     <div class="contentpage">
         <div class="content">
-           <!-- <div class="panel-head">
-                <ul class="breadcrumb">
-                    <li>
-                        <a href="#">Home</a>
-                    </li>
-                    <li>
-                        <a href="#">Tutorials</a>
-                    </li>
-                    <li class="active">HTML5</li>
-                </ul>
-            </div>-->
             <div class="content-panel panel-left">
                 <div class="head head-tree">
                     <div class="head-left-tree">
                         <span>管理域</span>
-                        <div class="opera-group">
-                            <a id="addDomain" href="javascript:;"><i class="fa fa-plus"></i></a>
-                        </div>
                     </div>
                 </div>
                 <!--<form role="form">
@@ -52,12 +41,12 @@
                 </form>-->
                 <div id="domaintree"></div>
             </div>
+            <div class="content-panel panel-opera">
+                <a id="addDomain" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加管理域
+                </a>
+            </div>
             <div class="content-panel panel-right">
-                <div class="head">
-                    <div class="head-left-tree">
-                        <span>子域列表</span>
-                    </div>
-                </div>
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="area_table"></table>
                 </div>

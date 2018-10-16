@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="../../common/css/common.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css"
+          href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/mainDevice.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/normalize.css">
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/mainDevice"></script>
+    <title>硬件设备</title>
+</head>
+<body>
+<div class="wrapper">
+    <div id="head"></div>
+    <div class="contentpage">
+        <div class="content">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li>
+                    <a href="#">硬件设备</a>
+                </li>
+            </ul>
+            <div class="content-panel panel-left">
+                <div class="panel-head">
+                    <img src="../img/tree.png" width="25" height="25">
+                    <span>组织树</span>
+                </div>
+                <input id="keyword" type="text" class="form-control" placeholder="请输入组织或管理域名称" style="height: 30px">
+                <ul id="orgTree" class="ztree"></ul>
+            </div>
+            <div class="content-panel panel-opera">
+                <a id="addDevice" href="javascript:;" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加设备
+                </a>
+                <a id="delDevice" class="button button-caution button-small"><span class="glyphicon glyphicon-remove"></span>批量删除
+                </a>
+                <a href="mediaSrc.html" data-pushbar-target="left"
+                   class="button button-royal  button-small"><span
+                        class="glyphicon glyphicon-search"></span>查看通道信息</a>
+                <span class="button-dropdown button-dropdown-inverse" data-buttons="dropdown">
+                    <button class="button button-inverse button-small">
+                        更多<i class="fa fa-caret-down"></i>
+                    </button>
+                    <ul class="button-dropdown-list is-below">
+                        <li><a href="#">下载模版</a></li>
+                        <li><a href="#">导入设备</a></li>
+                        <li class="button-dropdown-divider"><a href="#">导出模版</a></li>
+                    </ul>
+                </span>
+                <div class="panel-search">
+                    <span>设备名称</span><input type="text" name="d_name" class="form-control">
+                    <span>设备IP</span><input type="text" name="d_ip" class="form-control">
+                    <button id="search" class="button button-primary button-small"><i class="fa fa-search"></i>查询
+                    </button>
+                </div>
+            </div>
+            <div class="content-panel panel-table">
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="device_table"></table>
+                </div>
+                <!--分页-->
+                <div class="fixed-table-pagination">
+                    <div class="pull-left">
+                        <span class="pagination-info"></span>
+                        <span class="page-list">
+                            <span class="btn-group dropup">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="page-size">10</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="menuitem" class="active"><a href="#">10</a></li>
+                                    <li role="menuitem"><a href="#">20</a></li>
+                                    <li role="menuitem"><a href="#">30</a></li>
+                                </ul>
+                            </span>
+                            条每页
+                        </span>
+                    </div>
+                    <div class="pull-right pagination">
+                        <ul class="pagination">
+                            <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
+                            <li class="page-item pNo active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--添加设备弹窗-->
+    <div id="add_device" style="display: none">
+        <form id="DeviceForm" class="form-horizontal deviceForm">
+            <div class="form-item form-group-sm form-group">
+                <label class="control-label"><i class="required">*</i>组织名称：</label>
+                <input name="orgName" class="form-control" type="text" readonly>
+                <input name="orgCode" type="hidden">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>设备大类：</label>
+                <select name="dictCode" class="form-control">
+                    <option value="111">摄像机</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>设备类型：</label>
+                <select name="typeCode" class="form-control">
+                    <option value="120">nvr</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>设备名称：</label>
+                <input name="deviceName" class="form-control" type="text">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>IP地址：</label>
+                <input name="ip" type="text" class="form-control">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>网关：</label>
+                <select name="parentCode" class="form-control">
+                    <option value="43000000002000000111">GB28181媒体网关</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>拉流服务端口：</label>
+                <input name="amgPort" class="form-control" type="text">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>拉流协议：</label>
+                <select name="amgProto" class="form-control">
+                    <option name="HIKVISION">HIKVISION</option>
+                    <option name="DAHUA">DAHUA</option>
+                    <option name="RTSP">RTSP</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>运维端口：</label>
+                <input name="adgPort" class="form-control" type="text">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>运维设备协议：</label>
+                <select name="adgProto" class="form-control">
+                    <option name="HIKVISION">HIKVISION</option>
+                    <option name="DAHUA">DAHUA</option>
+                    <option name="ONVIF">ONVIF</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>通道数：</label>
+                <select name="deviceChaNum" class="form-control">
+                    <option value="1">1</option>
+                    <option value="4">4</option>
+                    <option value="8">8</option>
+                    <option value="16">16</option>
+                    <option value="32">32</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>登录用户名：</label>
+                <input name="deviceUser" class="form-control" type="text">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>登录密码：</label>
+                <input name="devicePwd" class="form-control" type="password">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>设备型号：</label>
+                <select name="modelId" class="form-control">
+                    <option value="05c3890c021811e7ba4d507b9da7c91f">大华IPC-HF3100P</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>设备厂商：</label>
+                <select name="manuId" class="form-control">
+                    <option value="3366fc9a181e11e6ac36507b9da7c91f">大华</option>
+                </select>
+            </div>
+            <div class="tab-footer">
+                <button type="submit" class="btn btn-primary">完成</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </form>
+    </div>
+    <!--修改设备弹窗-->
+    <div id="edit_device" style="display: none">
+        <form id="editDeviceForm" class="form-horizontal deviceForm">
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>设备名称：</label>
+                <input name="editDeviceName" class="form-control" type="text">
+                <input name="deviceId" type="hidden">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>IP地址：</label>
+                <input type="text" class="form-control" name="editip">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>拉流服务端口：</label>
+                <input name="editAmgPort" class="form-control" type="text">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>拉流协议：</label>
+                <select name="editAmgProto" class="form-control">
+                    <option name="HIKVISION">HIKVISION</option>
+                    <option name="DAHUA">DAHUA</option>
+                    <option name="RTSP">RTSP</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>运维端口：</label>
+                <input name="editAdgPort" class="form-control" type="text">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>运维设备协议：</label>
+                <select name="editAdgProto" class="form-control">
+                    <option name="HIKVISION">HIKVISION</option>
+                    <option name="DAHUA">DAHUA</option>
+                    <option name="ONVIF">ONVIF</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>通道数：</label>
+                <select name="editDeviceChaNum" class="form-control">
+                    <option value="1">1</option>
+                    <option value="4">4</option>
+                    <option value="8">8</option>
+                    <option value="16">16</option>
+                    <option value="32">32</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>登录用户名：</label>
+                <input name="editDeviceUser" class="form-control" type="text">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>登录密码：</label>
+                <input name="editDevicePwd" class="form-control" type="password">
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>设备型号：</label>
+                <select name="editModelId" class="form-control">
+                    <option value="HK-IPC">HK-IPC</option>
+                </select>
+            </div>
+            <div class="form-item form-group-sm form-group">
+                <label class=" control-label"><i class="required">*</i>设备厂商：</label>
+                <select name="editManuId" class="form-control">
+                    <option value="HIKVISION">HIKVISION</option>
+                </select>
+            </div>
+            <div class="tab-footer">
+                <button type="submit" class="btn btn-primary">完成</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </form>
+    </div>
+    <!--加入通道弹窗-->
+    <div id="addMedia" style="display: none">
+        <form id="addMediaForm" class="form-horizontal">
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>通道名称：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="deviceSrcName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>编码设备：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input type="text" class="form-control" name="device" readonly>
+                    <input type="hidden" name="deviceSrcId">
+                </div>
+                <a id="choseDevice" href="#" style="display: inline-block;margin-top: 5px;margin-left: 10px"><span
+                        class="badge">选择</span></a>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>设备通道号：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="uriNum" class="form-control" type="text">
+                    <input type="hidden" name="deviceSrcConId">
+                    <input type="hidden" name="deviceSrcCode">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label">通道类型：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <select class="form-control" name="srcTypeCode">
+                        <option value="131">模拟摄像机</option>
+                        <option value="132">网络摄像机</option>
+                    </select>
+                    <input name="res" type="reset" style="display:none;"/>
+                </div>
+            </div>
+            <div class="tab-footer">
+                <button type="submit" class="btn btn-primary">完成</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </form>
+    </div>
+    <!--通道需要关联媒体源的设备表格-->
+    <div id="deviceTable" style="display: none">
+        <div class="table-responsive">
+            <table class="table text-nowrap" id="device_table_media"></table>
+        </div>
+        <!--分页-->
+        <div class="fixed-table-pagination">
+            <div class="pull-left">
+                <span class="pagination-info"></span>
+                <span class="page-list">
+                            <span class="btn-group dropup">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="page-size">10</span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu">
+                                    <li role="menuitem" class="active"><a href="#">10</a></li>
+                                    <li role="menuitem"><a href="#">20</a></li>
+                                    <li role="menuitem"><a href="#">30</a></li>
+                                </ul>
+                            </span>
+                            条每页
+                        </span>
+            </div>
+            <div class="pull-right pagination">
+                <ul class="pagination">
+                    <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
+                    <li class="page-item pNo active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

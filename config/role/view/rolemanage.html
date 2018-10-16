@@ -8,27 +8,27 @@
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
-    <link rel="stylesheet" href="../css/role.css">
-    <link rel="stylesheet" href="../../common/libs/nav/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+    <link rel="stylesheet" type="text/css" href="../css/role.css">
     <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/Role"></script>
 </head>
 <body>
 <div class="wrapper">
-    <!--头部-->
     <div id="head"></div>
     <!--侧边栏-->
     <div id="sidebar"></div>
     <!--主体内容-->
     <div class="contentpage">
         <div class="content">
-            <div class="content-panel">
-                <div class="head">
-                    <div class="head-left" style="width: 280px">
-                        <a id="addRole" href="javascript:;"><span class="glyphicon glyphicon-plus" aria-hidden="true">添加角色</span></a>
-                    </div>
-                </div>
+            <div class="content-panel panel-opera">
+                <a id="addRole" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加角色
+                </a>
+            </div>
+            <div class="content-panel panel-main">
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="role_table"></table>
                 </div>
