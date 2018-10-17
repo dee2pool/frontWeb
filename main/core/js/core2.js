@@ -134,6 +134,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
         //全局通用地址
         var host = common.host;
+        var end = common.end;
         //全局通用变量，用于所有的绘图图层
         var drawGroup = new L.FeatureGroup();
 
@@ -742,6 +743,101 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             format: 'image/png'
         });
 
+        /**
+         * 异步方式 加载要素关联的要素 主要是通过后台查找来完成
+         */
+        //异步点的加载
+        var featurePointGroup = L.layerGroup();
+        $.ajax({
+            url:end+'/feature/listPolygon',
+            type:'GET',
+            contentType:"application/json",
+            data:{
+                "feature_id":"feature-point"
+            },
+            cache:false,
+            success:function (data) {
+                //console.log(data);
+                for(var i=0;i<data.length;i++){
+                    var temp = data[i];
+                    //console.log(temp);
+
+                    var Icon = L.icon({
+                        iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
+                    });
+                    var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{icon: Icon});
+                    featurePointGroup.addLayer(marker);
+                }
+            },
+            error:function () {
+                console.log(0)
+            }
+        });
+        //异步线的加载
+        var featureLineGroup = L.layerGroup();
+        $.ajax({
+            url:end+'/feature/listPolygon',
+            type:'GET',
+            contentType:"application/json",
+            data:{
+                "feature_id":"feature-line"
+            },
+            cache:false,
+            success:function (data) {
+                //console.log(data);
+                for(var i=0;i<data.length;i++){
+                    var temp = data[i];
+                    //console.log(temp);
+
+                    var latlngs = [];
+                    for(var j=0;j<temp.geo.coordinates.length;j++){
+                        var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
+                        latlngs.push(array);
+                    };
+
+                    var polyline = L.polyline(latlngs, {color: 'black'});
+                    featureLineGroup.addLayer(polyline);
+                }
+            },
+            error:function () {
+                //console.log(0)
+            }
+        });
+
+        //异步面的加载
+        var featurePolygonGroup = L.layerGroup();
+        $.ajax({
+            url:end+'/feature/listPolygon',
+            type:'GET',
+            contentType:"application/json",
+            data:{
+                "feature_id":"feature-polygon"
+            },
+            cache:false,
+            success:function (data) {
+                //console.log(data);
+                for(var i=0;i<data.length;i++){
+                    var temp = data[i];
+                    console.log(temp);
+
+                    var imageUrl = "../../common/asset/img/upload/"+temp.imgPolygon,
+                        imageBounds = [[temp.geo.coordinates[0][0][1], temp.geo.coordinates[0][0][0]], [[temp.geo.coordinates[0][2][1], temp.geo.coordinates[0][2][0]]]];
+                    var overlay = L.imageOverlay(imageUrl, imageBounds);
+
+                    // var latlngs = [];
+                    // for(var j=0;j<temp.geo.coordinates.length;j++){
+                    //     var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
+                    //     latlngs.push(array);
+                    // };
+                    //
+                    // var polyline = L.polyline(latlngs, {color: 'black'});
+                    featurePolygonGroup.addLayer(overlay);
+                }
+            },
+            error:function () {
+                //console.log(0)
+            }
+        });
 
         /**
          * 图层控制器
@@ -751,6 +847,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         };
         var overlayMaps = {
             "轨迹": routeLayerGroup,
+            "要素点":featurePointGroup,
+            "要素线":featureLineGroup,
+            "要素面":featurePolygonGroup,
             "设备点": xsLayerGroup,
             "建筑": build,
             "行政区":chinaWMS,

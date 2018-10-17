@@ -1,6 +1,7 @@
 define(['layer'], function (layer) {
     var common = {};
     common.host = "https://192.168.0.144:8080";
+    common.end = "http://192.168.0.222:8040";
     common.wsHost = 'https:' == document.location.protocol ? "wss://" + document.location.host + "/web" : "ws://" + document.location.host + "/web";
     //解决跨域
     $.ajaxSetup({
