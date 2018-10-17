@@ -144,7 +144,7 @@ define(['common'],function DeviceInfoController(common){
       *@param type type 
       */
      deviceService.getDeviceInfoByType=function(type,onSuccess){
-	     var typeStr=type;
+	     var typeStr=JSON.stringify(type);
 		 var requestUrl=this.url+"/getDeviceInfoByType";
          $.ajax({
              url:requestUrl,

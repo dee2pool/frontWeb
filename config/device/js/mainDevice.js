@@ -162,7 +162,20 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             }, {
                 field: 'orgCode',
                 title: '组织',
-                align: 'center'
+                align: 'center',
+                formatter: function (value) {
+                    var orgName;
+                    orgService.getOrgByCode(value, function (data) {
+                        if (data.result) {
+                            orgName = data.data.name;
+                        }
+                    })
+                    if (orgName == null) {
+                        return '无'
+                    } else {
+                        return orgName;
+                    }
+                }
             }, {
                 title: '操作',
                 align: 'center',
@@ -188,41 +201,30 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 if (data.result) {
                     //向表格中填充数据
                     $('#device_table').bootstrapTable('load', data.data);
-                    $('#device_table_media').bootstrapTable('load', data.data);
-
+                    deviceTable.page['count']=data.extra;
                     //初始化分页组件
-                    common.pageInit(deviceTable.page.pageNumber, deviceTable.page.pageSize, data.extra)
+                    common.pageInit(deviceTable.page.pageNumber, deviceTable.page.pageSize, data.extra);
                 }
             })
         }
         deviceTable.init();
         /********************************* 分页操作 ***************************************/
-        common.pageList(deviceTable.page, deviceTable.init)
-        //点击上一页
-        common.prePage(deviceTable.page, deviceTable.init)
-        //点击下一页
-        common.nextPage(deviceTable.page, deviceTable.init)
-        //跳转到指定的页面
-        $('.pNo>a').click(function () {
-            alert("aa")
-            //得到跳转的页码
-            var pnum = $(this).html();
-            alert(pnum)
-            init_page.pageNumber = pnum;
-            //跳转到指定的页面
-            deviceInfoService.getDeviceInfoList(init_page, function (data) {
-                if (data.result) {
-                    $('#device_table').bootstrapTable('load', data.data);
-                }
-            })
-        })
+        common.initPageOpera(deviceTable.page,deviceTable.init)
         /********************************* 查询设备 ***************************************/
         $('#search').click(function () {
             var ip = $('input[name="d_ip"]').val();
             var name = $('input[name="d_name"]').val();
+            if(ip==''){
+                ip=null;
+            }
+            if(name==''){
+                name=null;
+            }
             deviceService.getDeviceInfoList(deviceTable.page, ip, name, null, function (data) {
                 if (data.result) {
-
+                    $('#device_table').bootstrapTable('load', data.data);
+                    //初始化分页组件
+                    common.pageInit(deviceTable.page.pageNumber,deviceTable.page.pageSize,data.extra)
                 }
             })
         })
@@ -299,7 +301,10 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                     if (data.result) {
                         //向表格中添加
                         device.id = data.data;
-                        $('#device_table').bootstrapTable('append', device);
+                        var allPageNum=$('.page-next').prev().children().html();
+                        if(deviceTable.page.pageNumber==allPageNum){
+                            $('#device_table').bootstrapTable('append', device);
+                        }
                         //清空表格
                         $("input[name='res']").click();
                         //清空验证
@@ -325,7 +330,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         type: 1,
                         skin: 'layui-layer-lan',
                         resize: false,
-                        area: ['620px', '420px'],
+                        area: ['620px', '435px'],
                         scrollbar: false,
                         offset: '100px',
                         title: '添加设备',
@@ -487,6 +492,10 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                                     field: 'id',
                                     values: ids
                                 })
+                                //更新分页条
+                                var pageCount=deviceTable.page.count-data.dataCount
+                                common.pageInit(deviceTable.page.pageNumber,deviceTable.page.pageSize,pageCount);
+                                deviceTable.page.count=pageCount;
                             } else {
                                 layer.msg(data.description);
                             }
@@ -498,15 +507,16 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             })
         }
         deviceDel.init();
-        /********************************* 添加到通道 ***************************************/
+        /********************************* 添加到媒体源 ***************************************/
         $('#addMediaSrc').click(function () {
             var dev = $('#device_table').bootstrapTable('getSelections');
             if (dev.length == 0) {
-                layer.msg('请选择单通道设备');
+                layer.msg('请选择设备');
             } else if (dev.length > 1) {
                 layer.msg('只能选择一个设备')
             } else {
-                $('input[name="deviceSrcConId"]').val(dev[0].id)
+                $('input[name="deviceSrcName"]').val(dev[0].deviceName);
+                $('input[name="deviceSrcConId"]').val(dev[0].id);
                 $('input[name="deviceSrcCode"]').val(dev[0].gb28181Id);
                 var layerId = layer.open({
                     type: 1,
@@ -515,7 +525,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                     area: ['420px', '257px'],
                     scrollbar: false,
                     offset: '100px',
-                    title: '加入通道',
+                    title: '加入媒体源',
                     content: $('#addMedia')
                 })
             }
@@ -528,7 +538,8 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 resize: false,
                 skin: 'layui-layer-rim',
                 scrollbar: false,
-                area: ['720px', '457px'],
+                title:'关联设备',
+                area: ['520px', '457px'],
                 offset: '100px',
                 content: $('#deviceTable')
             })
@@ -622,4 +633,18 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 $('input[name="deviceSrcId"]').val(row.id);
             }
         })
+        var mediaTable={};
+        mediaTable.init = function () {
+            var type = new Array();
+            //根据设备类型查询设备类型暂时只指定120:ipc，121:dome
+            type.push(120);
+            type.push(121);
+            deviceService.getDeviceInfoByType(type, function (data) {
+                if (data.result) {
+                    //向表格中填充数据
+                    $('#device_table_media').bootstrapTable('load', data.data);
+                }
+            })
+        }
+        mediaTable.init();
     })

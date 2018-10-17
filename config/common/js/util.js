@@ -49,14 +49,18 @@ define(['layer'], function (layer) {
     common.pageRight = function (pageNo, pageSize, count) {
         var pageNum;
         count % pageSize == 0 ? pageNum = count / pageSize : pageNum = parseInt(count / pageSize) + 1;
-        for (var i = 0; i < pageNum - 1; i++) {
-            var p = i + 2;
-            var active="";
-            if(p==pageNo){
-                active="active"
-                $('.pagination>li').removeClass('active')
+        if(count==0){
+            $('.page-next').before('<li class="page-item active"><a class="page-link pNo" href="#">1</a></li>')
+        }else{
+            for (var i = 0; i < pageNum; i++) {
+                var p = i + 1;
+                var active="";
+                if(p==pageNo){
+                    active="active"
+                    $('.pagination>li').removeClass('active')
+                }
+                $('.page-next').before('<li class="page-item '+active+'"><a class="page-link pNo" href="#">' + p + '</a></li>')
             }
-            $('.page-next').before('<li class="page-item '+active+'"><a class="page-link" href="#">' + p + '</a></li>')
         }
     }
     //分页组件
@@ -66,51 +70,62 @@ define(['layer'], function (layer) {
         common.pageRight(pageNo, pageSize, count);
     }
     //改变页面展示条数
-    common.pageList = function (pageSize, initTable) {
+    common.pageList = function (page, initTable) {
         $('li[role="menuitem"]>a').click(function () {
-            pageSize.pageSize = $(this).html();
+            page.pageSize = $(this).html();
             $('.page-size').html($(this).html());
             $(this).parent().addClass('active');
             $(this).parent().siblings().removeClass('active');
             initTable();
-            //清除
-            $('.pagination>li').each(function () {
-                if ($(this).children().html() > 1) {
-                    $(this).remove();
-                }
-            })
+            common.clearPageNum();
         })
     }
     //点击上一页
-    common.prePage = function (pageSize, initTable) {
+    common.prePage = function (page, initTable) {
         $('.page-pre>a').click(function () {
-            if (pageSize.pageNumber > 1) {
-                pageSize.pageNumber--;
+            if (page.pageNumber > 1) {
+                page.pageNumber--;
                 initTable();
-                //清除
-                $('.pagination>li').each(function () {
-                    if ($(this).children().html() > 1) {
-                        $(this).remove();
-                    }
-                })
+                common.clearPageNum();
             }
         })
     }
     //点击下一页
-    common.nextPage = function (pageSize, initTable) {
+    common.nextPage = function (page, initTable) {
         $('.page-next>a').click(function () {
             var pageNum = $('.page-next').prev().children().html();
-            if (pageSize.pageNumber < pageNum) {
-                pageSize.pageNumber++;
+            if (page.pageNumber < pageNum) {
+                page.pageNumber++;
                 initTable();
-                //清除
-                $('.pagination>li').each(function () {
-                    if ($(this).children().html() > 1) {
-                        $(this).remove();
-                    }
-                })
+                common.clearPageNum();
             }
         })
+    }
+    //跳转到制定的页面
+    common.toPage=function(page,initTable){
+        $('.pageAction').on('click','.pNo',function () {
+            //得到跳转的页码
+            var pnum = $(this).html();
+            page.pageNumber = pnum;
+            initTable();
+            common.clearPageNum();
+        })
+    }
+    //清除分页条，删除所有的页码
+    common.clearPageNum=function(){
+        //清除
+        $('.pagination>li').each(function () {
+            if ($(this).children().html() > 0) {
+                $(this).remove();
+            }
+        })
+    }
+    //分页操作集合 page:有关页码和条数的对象 initTable:初始化表格的方法
+    common.initPageOpera=function(page,initTable){
+        common.pageList(page,initTable);
+        common.prePage(page,initTable);
+        common.nextPage(page,initTable);
+        common.toPage(page,initTable);
     }
     //带侧边栏页面动态高度宽度
     common.height = $(window).height();
