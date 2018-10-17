@@ -760,12 +760,124 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 //console.log(data);
                 for(var i=0;i<data.length;i++){
                     var temp = data[i];
-                    //console.log(temp);
 
                     var Icon = L.icon({
                         iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
                     });
                     var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{icon: Icon});
+                    var configId = temp.configId;
+                    //如果存在室内点，那么触发相应的室内楼层事件
+                    if(temp.hasIndoor == true){
+                        marker.on("dblclick",function () {
+                            //查询相应的所属的楼层图片
+                            //console.log(true);
+                            var buildMapTest = null;
+                            buildMapTest = L.map('img-map', {
+                                minZoom: 0,
+                                maxZoom: 4,
+                                center: [0, 0],
+                                zoom: 4,
+                                crs: L.CRS.Simple
+                            });
+                            // 隐藏map，显示img-map
+                            $("#map").css('display', 'none');
+                            $("#img-map").css('display', 'block');
+
+                            var w = 1024,
+                                h = 650;
+                            //url = imageUrl;
+                            var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                            var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                            var bounds = new L.LatLngBounds(southWest, northEast);
+
+
+
+                            //切换事件，当不同的layer添加到图上
+                            buildMapTest.on("layeradd",function (layer) {
+                                var bounds = layer.layer._bounds;
+
+                                //如果是undefined，说明添加进来的是点要素，那么什么也不做
+                                //只有添加面要素的时候，才调用后台接口进行加点的操作
+                                if(bounds === undefined){
+
+                                }else{
+                                    var url = layer.layer._url;
+                                    url = url.split("/");
+                                    var imgId = url[url.length-1];
+
+                                    $.ajax({
+                                        type: "GET",           //因为是传输文件，所以必须是post
+                                        url: end+'/feature/listIndoorPointByImgId',         //对应的后台处理类的地址
+                                        data: {
+                                            imgId:imgId
+                                        },
+                                        contentType:"application/json",
+                                        cache:false,
+                                        success: function (data) {
+                                            if(data.length != 0){
+                                                for(var i=0;i<data.length;i++){
+                                                    L.marker([data[i].geo.coordinates[1], data[i].geo.coordinates[0]]).addTo(buildMapTest);
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+
+
+
+
+                            var indoorGroup = new L.FeatureGroup();
+                            //异步加载楼层内部的图片
+                            $.ajax({
+                                url:end+'/feature/listIndoorByConfigId',
+                                type:'GET',
+                                contentType:"application/json",
+                                data:{
+                                    "configId":configId
+                                },
+                                cache:false,
+                                success:function (data) {
+                                    /**
+                                     * 图层控制器
+                                     */
+                                    var baseMap = new Object();
+                                    for(var i=0;i<data.length;i++){
+                                        //console.log(data[i]);
+                                        var num = data[i].indoorNum;
+                                        var level = L.imageOverlay("../../common/asset/img/upload/"+data[i].indoorImg, bounds);
+                                        if(i === 0){
+                                            level.addTo(buildMapTest);
+                                        }
+                                        baseMap[num]=level;
+                                    }
+                                    var overlayMaps = {};
+                                    //设置图层控制器
+                                    var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+                                },
+                                error:function () {
+                                    //console.log(0)
+                                }
+                            });
+                            console.log(indoorGroup);
+
+
+
+                            buildMapTest.on("zoom", function (evt) {
+                                //console.log(typeof  evt.target._animateToZoom);
+                                if (evt.target._animateToZoom == 1) {
+                                    $("#map").css('display', 'block');
+                                    $(".img-map").css('display', 'none');
+                                    buildMapTest.remove();
+                                    buildMapTest = null;
+                                }
+                            });
+                        });
+                    }
+                    else{
+
+                    }
                     featurePointGroup.addLayer(marker);
                 }
             },

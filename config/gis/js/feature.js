@@ -375,6 +375,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                         console.log(drawlayer._map);
                         $("#feature-zoom").val(drawlayer._map._zoom);
                         $("#feature-coors").val(drawlayer._latlng);
+                        console.log(map.latLngToLayerPoint(drawlayer._latlng));
                     }
                 );
                 drawer = null;
@@ -1069,6 +1070,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                     $("#device").css("display","none");
                     $("#build").css("display","none");
                     $("#other").css("display","none");
+                    $("#configFeature").css("display","none");
 
                     $("#feature-content").css("display","block");
                     if(treeNode.id === '12'){
@@ -1080,7 +1082,10 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                     }
                     //从后端加载已经配置的建筑要素
                     else if(treeNode.id === '21'){
-                        $("#configFeature").css("display","block")
+                        $("#configFeature").css("display","block");
+                        //把表格先做一次清空处理
+                        $("#configFeature  tr:not(:first)").empty("");
+
                         $.ajax({
                             type: "GET",           //因为是传输文件，所以必须是post
                             url: end+'/feature/listByHasIndoor',         //对应的后台处理类的地址
@@ -1098,22 +1103,14 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                                     var flag = i+1;
                                     temp.append("<th scope='row'>"+flag+"</th>")
                                     temp.append("<td>"+data[i].resourceCode+"</td>");
-                                    temp.append("<td>"+"<button class=\"btn btn-primary btn-build\"" +" "+"id=showBuild"+i+">关联</button>"+"</td>");
+                                    temp.append("<td>"+"<button class=\"btn btn-primary btn-build\"" +" "+"id="+data[i].configId+">查看</button>"+"</td>");
+                                    temp.append("<td style='display: none'>"+data[i].configId+"</td>");
                                     temp.appendTo("#configFeature");
 
-                                    // $(document).on('click','#showBuild'+i,function(){
-                                    //     function testA() {
-                                    //         console.log(flag);
-                                    //     };
-                                    //     testA();
-                                    // });
                                 }
                             }
                         });
-
-
                     }else{
-                        //$("#feature-content").html(table.other);
                         $("#other").css("display","block");
                     }
 
@@ -1123,13 +1120,127 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
             });
 
             //已配置要素点事件的绑定
-            //通过类来绑定是比较方便的
+            //通过类来绑定已经配置好的建筑点要素
+            //当点击此按钮，会获取关联按钮的id（自动赋予了configId），通过后台查询接口，查询详细信息并且赋值到右侧地图上
+            //此时赋值到右侧地图上的点是带有内部层级地图的
+
             $(document).on('click','.btn-build',function(e){
-                function testA() {
-                    var v_id = $(e.target).attr('id');
-                    console.log(v_id);
-                };
-                testA();
+                //对地图中已经存在的点进行清空操作
+
+                var configId = $(e.target).attr('id');
+                //把configId赋值到input中去，用于后期的要素管理
+                $("#configFeatureId").val(configId);
+
+                //通过configId来进行查询
+                $.ajax({
+                    url:end+'/feature/findByConfigId',
+                    type:'GET',
+                    contentType:"application/json",
+                    data:{
+                        configId:configId
+                    },
+                    cache:false,
+                    success:function (data) {
+                        //console.log(data);
+                        var coor = data.geo.coordinates;
+                        var marker = L.marker([coor[1],coor[0]]).addTo(map);
+                        var configId = data.configId;
+
+                        //双击事件进入地图
+                        marker.on("dblclick",function () {
+
+                            //将原有地图注销
+                            map.remove();
+                            //重新注册新的地图事件
+                            map = L.map('map', {
+                                minZoom: 0,
+                                maxZoom: 4,
+                                center: [0, 0],
+                                zoom: 4,
+                                crs: L.CRS.Simple
+                            });
+                            map.on("baselayerchange",function (layer) {
+                                //layerchange =  layer;
+                                var url = layer.layer._url;
+                                console.log(url,typeof url);
+                                var id = url.split("/");
+                                 $("#indoorLevelId").val("");
+                                 $("#indoorLevelId").val(id[id.length-1]);
+                            });
+                            var w = 1024,
+                                h = 650;
+                            //url = imageUrl;
+                            var southWest = map.unproject([0, h], map.getMaxZoom() - 1);
+                            var northEast = map.unproject([w, 0], map.getMaxZoom() - 1);
+                            var bounds = new L.LatLngBounds(southWest, northEast);
+
+                            //var indoor1 = L.imageOverlay('../img/indoor1.jpg', bounds).addTo(map);
+
+                            //异步加载内部的图片
+                            $.ajax({
+                                url:end+'/feature/listIndoorByConfigId',
+                                type:'GET',
+                                contentType:"application/json",
+                                data:{
+                                    "configId":configId
+                                },
+                                cache:false,
+                                success:function (data) {
+                                    /**
+                                     * 图层控制器
+                                     */
+                                    function generateMap() {
+                                        this.keys = new Array();
+                                        this.values= new Array();
+                                        this.set = function (key, value) {
+                                            if (this.values[key] == null) {//如键不存在则身【键】数组添加键名
+                                                this.keys.push(value);
+                                            }
+                                            this.values[key] = value;//给键赋值
+                                        };
+                                        this.get = function (key) {
+                                            return this.values[key];
+                                        };
+                                        this.remove = function (key) {
+                                            this.keys.remove(key);
+                                            this.values[key] = null;
+                                        };
+                                        this.isEmpty = function () {
+                                            return this.keys.length == 0;
+                                        };
+                                        this.size = function () {
+                                            return this.keys.length;
+                                        };
+                                    };
+                                    var t=new generateMap();
+                                    var baseMap = new Object();
+                                    for(var i=0;i<data.length;i++){
+                                        //console.log(data[i]);
+                                        var num = data[i].indoorNum;
+                                        var level = L.imageOverlay("../../../main/common/asset/img/upload/"+data[i].indoorImg, bounds);
+                                        // if(i === 0){
+                                        //     level.addTo(map);
+                                        // }
+
+                                        baseMap[num]=level;
+                                    }
+                                    var overlayMaps = {};
+                                    //设置图层控制器
+                                    var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(map);
+                                },
+                                error:function () {
+                                    //console.log(0)
+                                }
+                            });
+
+
+
+                        });
+                    },
+                    error:function () {
+                        alert("添加失败");
+                    }
+                });
             });
 
             //启动要素关联的界面
@@ -1201,11 +1312,23 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
 
         });
 
+        var layerchange = null;
+
+        map.on("layeradd",function (layer) {
+            layerchange =  layer;
+            console.log(layer);
+        });
+
         /**
          * 要素关联 前后端对接
          */
         $("#submitConnection").on("click",function () {
 
+            //获取地图状态，判断当前的地图状态是在在indoor还是outdoor
+            //如果是indoor那么正常进行，如果是outdoor，那么需要调用indoor添加的接口
+
+            var zoom = map.getZoom();
+            zoom = parseInt(zoom);
             //从表单拿要素，组装
             var name = $("#feature-name").val();
             var category = $("#flag-category").val();
@@ -1217,80 +1340,142 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
             var levelImgArray = [0];
 
             //坐标字符串的处理
-            var coor = null;//Latlng(123.4,12345)
+            var coor = null;//
+            //当图层等级大于4的时候，那么是outdoor，否则就是indoor
+            if(zoom>4){
+                /**
+                 * start indoor
+                 * @type {jQuery}
+                 */
 
-            //点要素判断
-            if(flag === 'feature-point'){
-                var coors = $("#feature-coors").val();//Latlng(123.4,12345)
-                coors = coors.slice(7,coors.length-1);
-                coors = coors.split(',');
-                coor = coors;
+                //点要素判断
+                if(flag === 'feature-point'){
+                    var coors = $("#feature-coors").val();//Latlng(123.4,12345)
+                    coors = coors.slice(7,coors.length-1);
+                    coors = coors.split(',');
+                    coor = coors;
 
-                //是否为建筑进行判断
-                var cate = $("#input-category").val();
+                    //是否为建筑进行判断
+                    var cate = $("#input-category").val();
 
-                if(cate === '建筑'){
-                    //构造楼层号数组和图片数组
-                    var level = $("#indoor-table").find("tr").length;
-                    //由于楼层的起点是不一定的，所有获取表格除题头外的第一行的楼层号从而来确定楼层号的起点位置
-                    var startNum = $("#indoor-table tr:eq(1) td:eq(0)").text();
-                    level = parseInt(level);
-                    level = level-1;
-                    startNum = parseInt(startNum);
-                    var total = level + startNum;
-                    var j=0;
-                    for(var i= startNum;i<total;i++){
-                        var levelNum = $("#indoorId"+i).text();
-                        //上传之后的图片，缓存在表格中的隐藏div中
-                        var levelImg = $("#indoorDiv"+i).html();
-                        //console.log(levelNum,levelImg);
+                    if(cate === '建筑'){
+                        //构造楼层号数组和图片数组
+                        var level = $("#indoor-table").find("tr").length;
+                        //由于楼层的起点是不一定的，所有获取表格除题头外的第一行的楼层号从而来确定楼层号的起点位置
+                        var startNum = $("#indoor-table tr:eq(1) td:eq(0)").text();
+                        level = parseInt(level);
+                        level = level-1;
+                        startNum = parseInt(startNum);
+                        var total = level + startNum;
+                        var j=0;
+                        for(var i= startNum;i<total;i++){
+                            var levelNum = $("#indoorId"+i).text();
+                            //上传之后的图片，缓存在表格中的隐藏div中
+                            var levelImg = $("#indoorDiv"+i).html();
+                            //console.log(levelNum,levelImg);
 
-                        levelNumArray[j] = levelNum;
-                        levelImgArray[j] = levelImg;
-                        j++;
+                            levelNumArray[j] = levelNum;
+                            levelImgArray[j] = levelImg;
+                            j++;
+                        }
+                        //console.log(levelNum);
                     }
-                    //console.log(levelNum);
                 }
-            }
 
 
-            //线要素判断
-            if(flag === 'feature-line'){
-                var coors = $("#feature-coors").val();
-                coors = coors.split(',');
-                coor = coors;
-            }
-
-            if(flag === 'feature-polygon'){
-                var coors = $("#feature-coors").val();
-                coors = coors.split(',');
-                coor = coors;
-            }
-
-            var data={
-                name:name,
-                category:category,
-                coors:coor,
-                zoom:zoom,
-                flag:flag,
-                img:img,
-                levelNum:levelNumArray,
-                levelImg:levelImgArray
-            };
-
-            $.ajax({
-                url:end+'/feature/add',
-                type:'GET',
-                contentType:"application/json",
-                data:data,
-                cache:false,
-                success:function () {
-                    alert("添加成功");
-                },
-                error:function () {
-                    alert("添加失败");
+                //线要素判断
+                if(flag === 'feature-line'){
+                    var coors = $("#feature-coors").val();
+                    coors = coors.split(',');
+                    coor = coors;
                 }
-            });
+
+                if(flag === 'feature-polygon'){
+                    var coors = $("#feature-coors").val();
+                    coors = coors.split(',');
+                    coor = coors;
+                }
+
+                var data={
+                    name:name,
+                    category:category,
+                    coors:coor,
+                    zoom:zoom,
+                    flag:flag,
+                    img:img,
+                    levelNum:levelNumArray,
+                    levelImg:levelImgArray
+                };
+
+                $.ajax({
+                    url:end+'/feature/add',
+                    type:'GET',
+                    contentType:"application/json",
+                    data:data,
+                    cache:false,
+                    success:function () {
+                        alert("添加成功");
+                    },
+                    error:function () {
+                        alert("添加失败");
+                    }
+                });
+                /**
+                 * end indoor
+                 */
+            }else{
+                console.log('indoor');
+                console.log($("#configFeatureId").val());
+                var configId = $("#configFeatureId").val();
+                var imgId = $("#indoorLevelId").val()
+
+                // 异步查询indoorLevel实体
+                $.ajax({
+                    type: "GET",           //因为是传输文件，所以必须是post
+                    url: end+'/feature/listIndoorByindoorImg',         //对应的后台处理类的地址
+                    data: {
+                        indoorImg:imgId
+                    },
+                    contentType:"application/json",
+                    cache:false,
+                    success: function (data) {
+                        //返回的level数据
+                        var d=data[0];
+                        var indoorLevelId = d.indoorLevelId;
+                        var num = d.indoorNum;
+                        //坐标处理
+                        var coors = $("#feature-coors").val();//Latlng(123.4,12345)
+                        coors = coors.slice(7,coors.length-1);
+                        coors = coors.split(',');
+                        coor = coors;
+                        //构造传送的后端data
+                        var dataPoint={
+                            indoorLevelId:indoorLevelId,
+                            indoorNum:num,
+                            indoorPointImg:img,
+                            geo:coor
+                        };
+                        //异步保存
+                        $.ajax({
+                            url:end+'/feature/addIndoorLevelPoint',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:dataPoint,
+                            cache:false,
+                            success:function () {
+                                alert("添加成功");
+                            },
+                            error:function () {
+                                alert("添加失败");
+                            }
+                        });
+
+                    }
+                });
+            }
+
+
+
         });
 
         /**
