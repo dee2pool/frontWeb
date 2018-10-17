@@ -32,3 +32,6 @@
 .has-feedback label~.form-control-feedback{
     top: 0px;
 }
+.form-group-sm select.form-control{
+    height: 20px;
+}
