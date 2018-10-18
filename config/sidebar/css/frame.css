@@ -447,9 +447,6 @@ ul li {
     display: block;
     background-color: rgba(34, 41, 51, 0.9);
 }
-<<<<<<< HEAD
-
-=======
 /*topbar*/
 .navpanel{
     position: absolute;
@@ -507,7 +504,6 @@ ul li {
     position: absolute;
     left: 8px;
 }
->>>>>>> 23fb285a8ce472b8a548eed956f7154632f88e13
 /*图标弹窗*/
 .iconPanel {
     width: 100%;
