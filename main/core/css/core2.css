@@ -6,6 +6,10 @@
     height: 878px;
 }
 
+.noShow{
+    display:none;
+}
+
 .left {
     float: left;
 }
@@ -191,6 +195,7 @@
     margin: 0 auto;
     font-size: 13px;
     display: none;
+    color: #ffffff;
 }
 
 .map-reslist>ul>li {

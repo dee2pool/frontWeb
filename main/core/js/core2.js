@@ -1893,13 +1893,17 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             mapBarActive();
             //样式存在问题，所以地图导航条延后加载
             $(".map-top").css("display","block");
-
             rightChange();
             //char1();
+            //右侧导航按钮切换
             mapRestList();
+            //返回导航按钮
             back();
+            //空间查询中，选择不同的查询方式，显示对应的窗口
+            querySelectChange()
 
-            //给main高度
+            //right-nav-panel-querySelect
+
 
         });
 
@@ -1942,19 +1946,43 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             })
         }
 
-        //服务点击查询
+        //快捷导航中的点击按钮事件
         function mapRestList(){
-            $(".map-work>ul>li").click(function(){
+            //空间查询切换
+            $("#right-nav-query").on("click",function () {
                 $(".map-work>ul").hide();
-                $(".map-reslist").show();
-            })
-        }
+                $("#right-nav-panel-query").show();
+            });
+        };
+
+
         //服务点击 查询结果返回
         function back(){
             $("#back").on("click",function(){
                 $(".map-work>ul").show();
                 $(".map-reslist").hide();
             })
+        }
+
+        function querySelectChange() {
+            $("#right-nav-panel-querySelect").bind("change",function (obj) {
+                //先把全部的li隐藏，然后再分别显示
+                //right-nav-panel-wordQuery
+                //right-nav-panel-radiusQuery
+                //right-nav-panel-rangeQuery
+                $("#right-nav-panel-wordQuery").css("display","none");
+                $("#right-nav-panel-radiusQuery").css("display","none");
+                $("#right-nav-panel-rangeQuery").css("display","none");
+                var flag = obj.target.value;
+                if(flag === 'word'){
+                    $("#right-nav-panel-wordQuery").css("display","block");
+                }else if(flag === 'range'){
+                    $("#right-nav-panel-radiusQuery").css("display","block");
+                }else{
+                    $("#right-nav-panel-rangeQuery").css("display","block");
+                }
+
+            });
         }
 
         //统计分析图

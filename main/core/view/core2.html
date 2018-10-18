@@ -132,10 +132,10 @@
             <div class="map-core-content" style="display:block">
                 <div class="map-work">
                     <ul>
-                        <li>
+                        <li id="right-nav-query">
                             <!-- <div class="img_div img_div01"></div> -->
-                            <i class="fa fa-yoast fa-2x white"></i>
-                            <div class="white">服务</div>
+                            <i class="fa fa-search fa-2x white"></i>
+                            <div class="white">查询</div>
                         </li>
                         <li>
                             <i class="fa fa-skyatlas fa-2x white"></i>
@@ -145,70 +145,85 @@
                             <i class="fa fa-download fa-2x white"></i>
                             <div>服务</div>
                         </li>
-                        <li>
-                            <i class="fa fa-paper-plane fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-dashboard fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-hand-o-left fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-adn fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-desktop fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
                     </ul>
-                    <div class="map-reslist">
-                        <p class="set_list"><i class="fa fa-plane white"></i> 查询结果：
+                    <!--跳转面板-->
+                    <div class="map-reslist" id="right-nav-panel-query">
+                        <p class="set_list"><i class="fa fa-search white"></i>查询：
                             <span class="right">
-                                    <i class="fa fa-backward"></i>
-                                    <a href="javascript:void(0)" class="white" id="back">返回上级菜单</a>
-                                </span>
+                                <i class="fa fa-backward"></i>
+                                <a href="javascript:void(0)" class="white" id="back">返回上级菜单</a>
+                            </span>
                         </p>
-
                         <ul>
                             <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src="../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
+                                <!--选择查询类型-->
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label>查询类型：</label>
+                                        <select class="form-control" id="right-nav-panel-querySelect">
+                                            <option value="" disabled selected></option>
+                                            <option value="word">关键字查询</option>
+                                            <option value="radius">半径查询</option>
+                                            <option value="range">拉框查询</option>
+                                        </select>
+                                    </div>
+                                </form>
                             </li>
-                            <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src=" ../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
+                            <li id="right-nav-panel-wordQuery" class="noShow">
+                                <!--关键字查询-->
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label>关键字：</label>
+                                        <input type="text" class="form-control" placeholder="请输入关键字">
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <!--form里面的button的type默认为submit，应当修改为button-->
+                                        <button class="btn btn-primary" type="button">图层选择</button>
+                                        <button class="btn btn-danger" type="button">确认查询</button>
+                                    </div>
+                                </form>
                             </li>
-                            <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src=" ../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
+                            <li id="right-nav-panel-radiusQuery" class="noShow">
+                                <!--半径查询-->
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label>半径：</label>
+                                        <input type="text" class="form-control" placeholder="请输入半径">
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="button">图层选择</button>
+                                        <button class="btn btn-primary" type="button">中心点选择</button>
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <button class="btn btn-danger" type="button">确认查询</button>
+                                    </div>
+                                </form>
                             </li>
-                            <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src=" ../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
+                            <li id="right-nav-panel-rangeQuery" class="noShow">
+                                <!--拉框查询-->
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary" type="button">图层选择</button>
+                                        <button class="btn btn-primary" type="button">范围选择</button>
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <button class="btn btn-danger" type="button">确认查询</button>
+                                    </div>
+                                </form>
                             </li>
-                            <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src=" ../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
