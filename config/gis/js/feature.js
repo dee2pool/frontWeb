@@ -1160,7 +1160,6 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                                 crs: L.CRS.Simple
                             });
                             map.on("baselayerchange",function (layer) {
-                                //layerchange =  layer;
                                 var url = layer.layer._url;
                                 console.log(url,typeof url);
                                 var id = url.split("/");
@@ -1215,7 +1214,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                                     var t=new generateMap();
                                     var baseMap = new Object();
                                     for(var i=0;i<data.length;i++){
-                                        //console.log(data[i]);
+
                                         var num = data[i].indoorNum;
                                         var level = L.imageOverlay("../../../main/common/asset/img/upload/"+data[i].indoorImg, bounds);
                                         // if(i === 0){
@@ -1327,8 +1326,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
             //获取地图状态，判断当前的地图状态是在在indoor还是outdoor
             //如果是indoor那么正常进行，如果是outdoor，那么需要调用indoor添加的接口
 
-            var zoom = map.getZoom();
-            zoom = parseInt(zoom);
+            var currentzoom = parseInt(map.getZoom());
             //从表单拿要素，组装
             var name = $("#feature-name").val();
             var category = $("#flag-category").val();
@@ -1342,7 +1340,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
             //坐标字符串的处理
             var coor = null;//
             //当图层等级大于4的时候，那么是outdoor，否则就是indoor
-            if(zoom>4){
+            if(currentzoom > 4){
                 /**
                  * start indoor
                  * @type {jQuery}
@@ -1372,13 +1370,10 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                             var levelNum = $("#indoorId"+i).text();
                             //上传之后的图片，缓存在表格中的隐藏div中
                             var levelImg = $("#indoorDiv"+i).html();
-                            //console.log(levelNum,levelImg);
-
                             levelNumArray[j] = levelNum;
                             levelImgArray[j] = levelImg;
                             j++;
                         }
-                        //console.log(levelNum);
                     }
                 }
 
@@ -1414,7 +1409,10 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                     data:data,
                     cache:false,
                     success:function () {
-                        alert("添加成功");
+                        //alert会阻塞js代码的运行，所以刷新代码直接放在下方即可
+                        alert('添加成功');
+                        location.reload();
+
                     },
                     error:function () {
                         alert("添加失败");
@@ -1424,8 +1422,6 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                  * end indoor
                  */
             }else{
-                console.log('indoor');
-                console.log($("#configFeatureId").val());
                 var configId = $("#configFeatureId").val();
                 var imgId = $("#indoorLevelId").val()
 
@@ -1463,7 +1459,8 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                             data:dataPoint,
                             cache:false,
                             success:function () {
-                                alert("添加成功");
+                                alert('添加成功');
+                                location.reload();
                             },
                             error:function () {
                                 alert("添加失败");
@@ -1514,8 +1511,10 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                 processData: false,
                 contentType: false,
                 success: function (data) {
-                    console.log(data,levelNum,flag);
+                    //console.log(data,levelNum,flag);
                     $("#indoorDiv"+flag).html(data);
+
+                    alert(levelNum+'楼上传成功！');
                 }
             });
         }
@@ -1532,6 +1531,7 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
             level = level - 1;
             startNum = parseInt(startNum);
             var total = level + startNum;
+            //遍历上传图片
             for(var i= startNum;i<total;i++){
                 var levelNum = $("#indoorId"+i).text();
                 var levelImg = $("#indoorImg"+i).val();
@@ -1544,7 +1544,6 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
         });
 
         $("#indoorImgBtn-1").on("click",function () {
-            alert(123);
         })
 
 

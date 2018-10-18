@@ -805,6 +805,17 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                     url = url.split("/");
                                     var imgId = url[url.length-1];
 
+                                    //当面要素切换的时候，清除所有的marker
+                                    buildMapTest.eachLayer(function(layer){
+                                        console.log(layer);
+                                        //对layer的类型进行判断，如果是marker，那么直接进行remove操作
+                                        //仍然通过bound来判断，如果bound是undefined，那么说明是点layer，则将此layer进行清除操作；
+                                        if(layer._bounds === undefined){
+                                            buildMapTest.removeLayer(layer);
+                                        }
+
+                                    });
+
                                     $.ajax({
                                         type: "GET",           //因为是传输文件，所以必须是post
                                         url: end+'/feature/listIndoorPointByImgId',         //对应的后台处理类的地址
