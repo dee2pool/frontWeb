@@ -137,7 +137,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var end = common.end;
         //全局通用变量，用于所有的绘图图层
         var drawGroup = new L.FeatureGroup();
-
+        //3+2.5+2.5+2+8+8
         /**
          * 核心地图变量
          */
@@ -145,7 +145,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             center: [28.25152980300004, 113.08251277400007],
             maxZoom: 17,
             minZoom: 14,
-            zoom: 14,
+            zoom: 15,
             maxBounds:[[28.230743408203125,113.06167602539062],[28.271942138671875,113.11935424804688]],
             crs: L.CRS.EPSG4326,
             attributionControl: false,//版权控件
@@ -1260,37 +1260,37 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
          */
         map.on("zoomend", function (evt) {
             //对于楼层的操作
-            if (evt.sourceTarget._animateToZoom === 17) {
-                // $.getJSON("../asset/json/indoor.json", function(geoJSON) {
-                indoorLayer.addTo(map);
-                levelControl.addTo(map);
-                // });
-            }
-            else {
-                map.removeLayer(indoorLayer);
-                map.removeControl(levelControl);
-            }
-
-            //三一工厂是否应该出现的判断
-            if (evt.sourceTarget._animateToZoom >= 16) {
-                var center=[113.10121178627014,28.24112355709076];
-                if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
-                    if (map.hasLayer(testSanYiLayer)) {
-                    }
-                    else {
-                        //模糊态的处理
-                        var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
-                        testSanYiLayer.addTo(map);
-                    }
-                }
-            }
-            else {
-                if (map.hasLayer(testSanYiLayer)) {
-                    map.removeLayer(testSanYiLayer);
-                }
-                else {
-                }
-            }
+            // if (evt.sourceTarget._animateToZoom === 17) {
+            //     // $.getJSON("../asset/json/indoor.json", function(geoJSON) {
+            //     indoorLayer.addTo(map);
+            //     levelControl.addTo(map);
+            //     // });
+            // }
+            // else {
+            //     map.removeLayer(indoorLayer);
+            //     map.removeControl(levelControl);
+            // }
+            //
+            // //三一工厂是否应该出现的判断
+            // if (evt.sourceTarget._animateToZoom >= 16) {
+            //     var center=[113.10121178627014,28.24112355709076];
+            //     if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
+            //         if (map.hasLayer(testSanYiLayer)) {
+            //         }
+            //         else {
+            //             //模糊态的处理
+            //             var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
+            //             testSanYiLayer.addTo(map);
+            //         }
+            //     }
+            // }
+            // else {
+            //     if (map.hasLayer(testSanYiLayer)) {
+            //         map.removeLayer(testSanYiLayer);
+            //     }
+            //     else {
+            //     }
+            // }
 
             //对于测试工程图和模糊层的设置
             if (evt.sourceTarget._animateToZoom == 17) {
@@ -1895,7 +1895,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             $(".map-top").css("display","block");
 
             rightChange();
-            char1();
+            //char1();
             mapRestList();
             back();
 

@@ -84,6 +84,12 @@
     text-decoration: underline;
 }
 
+ul li a{
+    color:black;
+}
+.tree-head a{
+    color:black;
+}
 
 a:hover {
     color: #23527c;

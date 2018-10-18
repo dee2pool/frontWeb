@@ -1144,7 +1144,9 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                         //console.log(data);
                         var coor = data.geo.coordinates;
                         var marker = L.marker([coor[1],coor[0]]).addTo(map);
+                        map.panTo([coor[1],coor[0]]);
                         var configId = data.configId;
+
 
                         //双击事件进入地图
                         marker.on("dblclick",function () {
@@ -1217,9 +1219,6 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
 
                                         var num = data[i].indoorNum;
                                         var level = L.imageOverlay("../../../main/common/asset/img/upload/"+data[i].indoorImg, bounds);
-                                        // if(i === 0){
-                                        //     level.addTo(map);
-                                        // }
 
                                         baseMap[num]=level;
                                     }
@@ -1248,8 +1247,22 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                     nodes = zTree.getSelectedNodes(),
                     treeNode = nodes[0];
                 if (nodes.length == 0) {
-                    alert("请先选择一个区域节点才能进行要素关联!");
-                    return;
+                    //在nodes为0的情况下，如果地图处于某种状态，那么，区域节点也是可以不用进行选择的
+                    //console.log(map.getZoom());
+                    var currentZoom = map.getZoom();
+
+                    //如果zoom大于4，说明地图处于大地图状态，那么必须要选择区域节点
+                    //如果zoom小于等于4，那么说明处于室内地图状态，那么此时不用选择区域节点
+                    if(currentZoom >4){
+                        alert("请先选择一个区域节点才能进行要素关联!");
+                        return;
+                    }
+                    else{
+                        $(".showTreeData").css("display","none");
+                        $(".editTreeData").css("display","block");
+                        $("#feature-name").val($(this).closest('tr').find('td')[0].innerText);
+                    }
+
                 }else{
                     //将位置关联的css打开
                         $(".showTreeData").css("display","none");
