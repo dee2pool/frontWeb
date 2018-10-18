@@ -137,7 +137,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         var end = common.end;
         //全局通用变量，用于所有的绘图图层
         var drawGroup = new L.FeatureGroup();
-
+        //3+2.5+2.5+2+8+8
         /**
          * 核心地图变量
          */
@@ -145,7 +145,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             center: [28.25152980300004, 113.08251277400007],
             maxZoom: 17,
             minZoom: 14,
-            zoom: 14,
+            zoom: 15,
             maxBounds:[[28.230743408203125,113.06167602539062],[28.271942138671875,113.11935424804688]],
             crs: L.CRS.EPSG4326,
             attributionControl: false,//版权控件
@@ -760,12 +760,135 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 //console.log(data);
                 for(var i=0;i<data.length;i++){
                     var temp = data[i];
-                    //console.log(temp);
 
                     var Icon = L.icon({
                         iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
                     });
                     var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{icon: Icon});
+                    var configId = temp.configId;
+                    //如果存在室内点，那么触发相应的室内楼层事件
+                    if(temp.hasIndoor == true){
+                        marker.on("dblclick",function () {
+                            //查询相应的所属的楼层图片
+                            //console.log(true);
+                            var buildMapTest = null;
+                            buildMapTest = L.map('img-map', {
+                                minZoom: 0,
+                                maxZoom: 4,
+                                center: [0, 0],
+                                zoom: 4,
+                                crs: L.CRS.Simple
+                            });
+                            // 隐藏map，显示img-map
+                            $("#map").css('display', 'none');
+                            $("#img-map").css('display', 'block');
+
+                            var w = 1024,
+                                h = 650;
+                            //url = imageUrl;
+                            var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                            var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                            var bounds = new L.LatLngBounds(southWest, northEast);
+
+
+
+                            //切换事件，当不同的layer添加到图上
+                            buildMapTest.on("layeradd",function (layer) {
+                                var bounds = layer.layer._bounds;
+
+                                //如果是undefined，说明添加进来的是点要素，那么什么也不做
+                                //只有添加面要素的时候，才调用后台接口进行加点的操作
+                                if(bounds === undefined){
+
+                                }else{
+                                    var url = layer.layer._url;
+                                    url = url.split("/");
+                                    var imgId = url[url.length-1];
+
+                                    //当面要素切换的时候，清除所有的marker
+                                    buildMapTest.eachLayer(function(layer){
+                                        console.log(layer);
+                                        //对layer的类型进行判断，如果是marker，那么直接进行remove操作
+                                        //仍然通过bound来判断，如果bound是undefined，那么说明是点layer，则将此layer进行清除操作；
+                                        if(layer._bounds === undefined){
+                                            buildMapTest.removeLayer(layer);
+                                        }
+
+                                    });
+
+                                    $.ajax({
+                                        type: "GET",           //因为是传输文件，所以必须是post
+                                        url: end+'/feature/listIndoorPointByImgId',         //对应的后台处理类的地址
+                                        data: {
+                                            imgId:imgId
+                                        },
+                                        contentType:"application/json",
+                                        cache:false,
+                                        success: function (data) {
+                                            if(data.length != 0){
+                                                for(var i=0;i<data.length;i++){
+                                                    L.marker([data[i].geo.coordinates[1], data[i].geo.coordinates[0]]).addTo(buildMapTest);
+                                                }
+
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+
+
+
+
+                            var indoorGroup = new L.FeatureGroup();
+                            //异步加载楼层内部的图片
+                            $.ajax({
+                                url:end+'/feature/listIndoorByConfigId',
+                                type:'GET',
+                                contentType:"application/json",
+                                data:{
+                                    "configId":configId
+                                },
+                                cache:false,
+                                success:function (data) {
+                                    /**
+                                     * 图层控制器
+                                     */
+                                    var baseMap = new Object();
+                                    for(var i=0;i<data.length;i++){
+                                        //console.log(data[i]);
+                                        var num = data[i].indoorNum;
+                                        var level = L.imageOverlay("../../common/asset/img/upload/"+data[i].indoorImg, bounds);
+                                        if(i === 0){
+                                            level.addTo(buildMapTest);
+                                        }
+                                        baseMap[num]=level;
+                                    }
+                                    var overlayMaps = {};
+                                    //设置图层控制器
+                                    var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+                                },
+                                error:function () {
+                                    //console.log(0)
+                                }
+                            });
+                            console.log(indoorGroup);
+
+
+
+                            buildMapTest.on("zoom", function (evt) {
+                                //console.log(typeof  evt.target._animateToZoom);
+                                if (evt.target._animateToZoom == 1) {
+                                    $("#map").css('display', 'block');
+                                    $(".img-map").css('display', 'none');
+                                    buildMapTest.remove();
+                                    buildMapTest = null;
+                                }
+                            });
+                        });
+                    }
+                    else{
+
+                    }
                     featurePointGroup.addLayer(marker);
                 }
             },
@@ -1137,37 +1260,37 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
          */
         map.on("zoomend", function (evt) {
             //对于楼层的操作
-            if (evt.sourceTarget._animateToZoom === 17) {
-                // $.getJSON("../asset/json/indoor.json", function(geoJSON) {
-                indoorLayer.addTo(map);
-                levelControl.addTo(map);
-                // });
-            }
-            else {
-                map.removeLayer(indoorLayer);
-                map.removeControl(levelControl);
-            }
-
-            //三一工厂是否应该出现的判断
-            if (evt.sourceTarget._animateToZoom >= 16) {
-                var center=[113.10121178627014,28.24112355709076];
-                if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
-                    if (map.hasLayer(testSanYiLayer)) {
-                    }
-                    else {
-                        //模糊态的处理
-                        var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
-                        testSanYiLayer.addTo(map);
-                    }
-                }
-            }
-            else {
-                if (map.hasLayer(testSanYiLayer)) {
-                    map.removeLayer(testSanYiLayer);
-                }
-                else {
-                }
-            }
+            // if (evt.sourceTarget._animateToZoom === 17) {
+            //     // $.getJSON("../asset/json/indoor.json", function(geoJSON) {
+            //     indoorLayer.addTo(map);
+            //     levelControl.addTo(map);
+            //     // });
+            // }
+            // else {
+            //     map.removeLayer(indoorLayer);
+            //     map.removeControl(levelControl);
+            // }
+            //
+            // //三一工厂是否应该出现的判断
+            // if (evt.sourceTarget._animateToZoom >= 16) {
+            //     var center=[113.10121178627014,28.24112355709076];
+            //     if(center[0] < map.getBounds()._northEast.lng && center[0] > map.getBounds()._southWest.lng && center[1] > map.getBounds()._southWest.lat && center[1] < map.getBounds()._northEast.lat){
+            //         if (map.hasLayer(testSanYiLayer)) {
+            //         }
+            //         else {
+            //             //模糊态的处理
+            //             var boundCoord = [[[-90,-180], [-90,180], [90,180], [90,-180], [-90,-180]]];
+            //             testSanYiLayer.addTo(map);
+            //         }
+            //     }
+            // }
+            // else {
+            //     if (map.hasLayer(testSanYiLayer)) {
+            //         map.removeLayer(testSanYiLayer);
+            //     }
+            //     else {
+            //     }
+            // }
 
             //对于测试工程图和模糊层的设置
             if (evt.sourceTarget._animateToZoom == 17) {
@@ -1772,7 +1895,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             $(".map-top").css("display","block");
 
             rightChange();
-            char1();
+            //char1();
             mapRestList();
             back();
 

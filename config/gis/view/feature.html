@@ -51,21 +51,22 @@
 
                                 <h4>要素详情</h4>
                                 <!--已经配置的建筑点，从后端拿到的-->
-                                <table id="configFeature" class="table table-bordered form-hidden">
+                                <table id="configFeature" class="table   form-hidden">
                                     <thead>
                                     <tr>
                                         <th></th>
                                         <th>要素名称</th>
                                         <th>操作</th>
+                                        <th style="display: none">configID</th>
                                     </tr>
                                     </thead>
-
                                     <tbody>
-
                                     </tbody>
                                 </table>
+                                <input type="text" style="display: none" id="configFeatureId">
+                                <input type="text" style="display: none" id="indoorLevelId">
 
-                                <table id="other" class="table table-bordered form-hidden">
+                                <table id="other" class="table   form-hidden">
                                     <thead>
                                     <tr>
                                         <th></th>
@@ -166,7 +167,7 @@
                                     </tbody>
                                 </table>
 
-                                <table id="build" class="table table-bordered form-hidden">
+                                <table id="build" class="table   form-hidden">
                                     <thead>
                                     <tr>
                                         <th></th>
@@ -276,7 +277,7 @@
                                     </tbody>
                                 </table>
 
-                                <table id="device" class="table table-bordered form-hidden">
+                                <table id="device" class="table   form-hidden">
                                     <thead>
                                     <tr>
                                         <th></th>
@@ -594,7 +595,7 @@
 
                 <!--1.3自动生成的楼层表格-->
                 <div class="col-sm-10 col-sm-offset-1">
-                    <table class="table table-bordered table-striped" id="indoor-table">
+                    <table class="table   table-striped" id="indoor-table">
                         <thead>
                             <tr>
                                 <th>楼层号</th>

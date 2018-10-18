@@ -78,6 +78,30 @@ define(['jquery','turf','common','leaflet'],function ($,turf,common,leaflet) {
         return [coors[1],coors[0]];
     };
 
+    gisutil.generateMap = function () {
+        this.keys = new Array();
+        this.values= new Array();
+        this.set = function (key, value) {
+            if (this.values[key] == null) {//如键不存在则身【键】数组添加键名
+                this.keys.push(value);
+            }
+            this.values[key] = value;//给键赋值
+        };
+        this.get = function (key) {
+            return this.values[key];
+        };
+        this.remove = function (key) {
+            this.keys.remove(key);
+            this.values[key] = null;
+        };
+        this.isEmpty = function () {
+            return this.keys.length == 0;
+        };
+        this.size = function () {
+            return this.keys.length;
+        };
+    };
+
 
 
     return gisutil;

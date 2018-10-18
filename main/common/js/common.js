@@ -3,7 +3,7 @@ define(['jquery'],function () {
     //全局服务器连接地址
     common.host = "http://192.168.0.142:8060";
 
-    common.end = "http://localhost:8040";
+    common.end = "http://192.168.0.222:8040";
 
     //全局页面跳转地址，用于部署IIS
     common.openurl = "/hnvmns-frontweb";
