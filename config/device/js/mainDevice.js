@@ -79,6 +79,8 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             callback: {
                 onClick: function (event, treeId, treeNode) {
                     tree.selected = treeNode;
+                    deviceTable.orgCode=treeNode.code;
+                    deviceTable.init();
                 }
             }
         }
@@ -197,7 +199,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             'pageSize': 10
         }
         deviceTable.init = function () {
-            deviceService.getDeviceInfoList(deviceTable.page, null, null, null, function (data) {
+            deviceService.getDeviceInfoList(deviceTable.page,deviceTable.ip,deviceTable.name,deviceTable.orgCode, function (data) {
                 if (data.result) {
                     //向表格中填充数据
                     $('#device_table').bootstrapTable('load', data.data);
@@ -212,21 +214,9 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
         common.initPageOpera(deviceTable.page,deviceTable.init)
         /********************************* 查询设备 ***************************************/
         $('#search').click(function () {
-            var ip = $('input[name="d_ip"]').val();
-            var name = $('input[name="d_name"]').val();
-            if(ip==''){
-                ip=null;
-            }
-            if(name==''){
-                name=null;
-            }
-            deviceService.getDeviceInfoList(deviceTable.page, ip, name, null, function (data) {
-                if (data.result) {
-                    $('#device_table').bootstrapTable('load', data.data);
-                    //初始化分页组件
-                    common.pageInit(deviceTable.page.pageNumber,deviceTable.page.pageSize,data.extra)
-                }
-            })
+             deviceTable.ip = $('input[name="d_ip"]').val();
+            deviceTable.name = $('input[name="d_name"]').val();
+            deviceTable.init();
         })
         /********************************* 添加设备 ***************************************/
         var deviceAdd = {};
@@ -305,12 +295,15 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         if(deviceTable.page.pageNumber==allPageNum){
                             $('#device_table').bootstrapTable('append', device);
                         }
+                        //更新分页条
+                        common.pageInit(deviceTable.page.pageNumber,deviceTable.page.pageSize,deviceTable.page.count+1);
                         //清空表格
                         $("input[name='res']").click();
                         //清空验证
                         $("#DeviceForm").data('bootstrapValidator').destroy();
                         //关闭弹窗
                         layer.closeAll();
+                        layer.msg('添加成功')
                     } else {
                         layer.msg(data.description);
                     }
@@ -447,7 +440,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             $("input[name='editDeviceName']").val(row.deviceName);
             $("input[name='deviceId']").val(row.id);
             $("input[name='editip']").val(row.deviceIp);
-            $("input[name='editAmgPot']").val(row.amgPort);
+            $("select[name='editAmgPot']").val(row.amgPort);
             $("select[name='editAmgProto']").val(row.amgProto);
             $("input[name='editAdgPort']").val(row.adgPort);
             $("select[name='editAdgProto']").val(row.adgProto);
@@ -647,4 +640,8 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             })
         }
         mediaTable.init();
+        /********************************* 刷新 ***************************************/
+        $('#refresh').click(function () {
+            deviceTable.init();
+        })
     })

@@ -80,7 +80,7 @@ require(['jquery','common','layer','frame', 'bootstrap-table','jquery-slimScroll
             method:'get',
             pagination:true,
             pageNumber:1,
-            pageSize:10,
+            pageSize:1,
             sidePagination:'server',
             pageList: [10, 25, 50, 100],
             responseHandler:function(res){

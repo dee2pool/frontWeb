@@ -49,22 +49,53 @@ define(['layer'], function (layer) {
     common.pageRight = function (pageNo, pageSize, count) {
         var pageNum;
         count % pageSize == 0 ? pageNum = count / pageSize : pageNum = parseInt(count / pageSize) + 1;
-        if(count==0){
+        if (count == 0) {
             $('.page-next').before('<li class="page-item active"><a class="page-link pNo" href="#">1</a></li>')
-        }else{
+        } else {
             for (var i = 0; i < pageNum; i++) {
                 var p = i + 1;
-                var active="";
-                if(p==pageNo){
-                    active="active"
+                var active = "";
+                if (p == pageNo) {
+                    active = "active"
                     $('.pagination>li').removeClass('active')
                 }
-                $('.page-next').before('<li class="page-item '+active+'"><a class="page-link pNo" href="#">' + p + '</a></li>')
+                if (pageNum >= 8) {
+                    if (pageNo <= 4 && p >= 6) {
+                        $('.page-next').before('<li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>' +
+                            '<li class="page-item"><a class="page-link pNo" href="#">' + pageNum + '</a></li>');
+                        break;
+                    }
+                    if(pageNo>=pageNum-3&&p<pageNum-4){
+                        if(p==1){
+                            $('.page-next').before('<li class="page-item"><a class="page-link pNo" href="#">1</a></li>' +
+                                '<li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>')
+                            continue;
+                        }else{
+                            continue;
+                        }
+                    }
+                    if(pageNo>4&&pageNo<pageNum-3){
+                        var prePage=pageNo-1;
+                        var nextPage=parseInt(pageNo)+1;
+                        $('.page-next').before('<li class="page-item"><a class="page-link pNo" href="#">1</a></li>' +
+                            '<li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>' +
+                            '<li class="page-item"><a class="page-link pNo" href="#">' + prePage + '</a></li>' +
+                            '<li class="page-item active"><a class="page-link pNo" href="#">' + pageNo + '</a></li>' +
+                            '<li class="page-item"><a class="page-link pNo" href="#">' + nextPage +'</a></li>' +
+                            '<li class="page-item page-last-separator disabled"><a class="page-link" href="#">...</a></li>' +
+                            '<li class="page-item"><a class="page-link pNo" href="#">' + pageNum + '</a></li>');
+                        break;
+                    }
+                }
+                $('.page-next').before('<li class="page-item ' + active + '"><a class="page-link pNo" href="#">' + p + '</a></li>')
+
             }
         }
     }
     //分页组件
     common.pageInit = function (pageNo, pageSize, count) {
+        //清除之前的分页条
+        common.clearPageNum();
         common.tableHeight();
         common.pageLeft(pageNo, pageSize, count);
         common.pageRight(pageNo, pageSize, count);
@@ -102,8 +133,8 @@ define(['layer'], function (layer) {
         })
     }
     //跳转到制定的页面
-    common.toPage=function(page,initTable){
-        $('.pageAction').on('click','.pNo',function () {
+    common.toPage = function (page, initTable) {
+        $('.pageAction').on('click', '.pNo', function () {
             //得到跳转的页码
             var pnum = $(this).html();
             page.pageNumber = pnum;
@@ -112,20 +143,20 @@ define(['layer'], function (layer) {
         })
     }
     //清除分页条，删除所有的页码
-    common.clearPageNum=function(){
+    common.clearPageNum = function () {
         //清除
         $('.pagination>li').each(function () {
-            if ($(this).children().html() > 0) {
+            if ($(this).children().html() > 0 || $(this).children().html() == '...') {
                 $(this).remove();
             }
         })
     }
     //分页操作集合 page:有关页码和条数的对象 initTable:初始化表格的方法
-    common.initPageOpera=function(page,initTable){
-        common.pageList(page,initTable);
-        common.prePage(page,initTable);
-        common.nextPage(page,initTable);
-        common.toPage(page,initTable);
+    common.initPageOpera = function (page, initTable) {
+        common.pageList(page, initTable);
+        common.prePage(page, initTable);
+        common.nextPage(page, initTable);
+        common.toPage(page, initTable);
     }
     //带侧边栏页面动态高度宽度
     common.height = $(window).height();
