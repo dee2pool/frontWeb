@@ -1,4 +1,8 @@
 @charset "UTF-8";
+a{
+    text-decoration: none!important;
+}
+
 .core-map {
     width: 100%;
     padding: 0;
@@ -392,5 +396,10 @@ th{
 }
 
 /* end-通用的table样式 */
+
+/*图层控制器面板增加背景颜色*/
+.layerControlTreeContainer{
+    background: darkgray;
+}
 
 

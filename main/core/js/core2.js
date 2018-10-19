@@ -958,7 +958,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 }
             },
             error:function () {
-                //console.log(0)
             }
         });
 
@@ -1451,13 +1450,43 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             lay.open({
                 type: 1,
                 shade: false,
-                title: '<i class="fa fa-tasks"></i>&nbsp图层选择',
+                title: '<i class="fa fa-reorder"></i>&nbsp图层选择',
                 skin: 'layui-layer-lan',
                 //area: ['280px', '250px'],
                 offset: ['150px', '10px'],
                 //title: false, //不显示标题
                 //.layer-open-content
                 content: $('#layerControlContainer'),
+            });
+        });
+
+        //全新的底图控制器
+        $("#topbar-controlBase").on("click", function () {
+            lay.open({
+                type: 1,
+                shade: false,
+                title: '<i class="fa fa-tasks"></i>&nbsp底图控制',
+                skin: 'layui-layer-lan',
+                //area: ['280px', '250px'],
+                offset: ['150px', '10px'],
+                //title: false, //不显示标题
+                //.layer-open-content
+                content: $('#layerControlContainerBase'),
+            });
+        });
+
+        //全新的数据控制器
+        $("#topbar-controlData").on("click", function () {
+            lay.open({
+                type: 1,
+                shade: false,
+                title: '<i class="fa fa-tasks"></i>&nbsp数据控制',
+                skin: 'layui-layer-lan',
+                //area: ['280px', '250px'],
+                offset: ['150px', '10px'],
+                //title: false, //不显示标题
+                //.layer-open-content
+                content: $('#layerControlContainerData'),
             });
         });
 
@@ -1902,8 +1931,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             //空间查询中，选择不同的查询方式，显示对应的窗口
             querySelectChange()
 
-            //right-nav-panel-querySelect
-
 
         });
 
@@ -1913,7 +1940,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         function initHeight() {
             var height = $("body").height() - 60 + 'px !important';
             $("#core").css('cssText',height);
-            console.log(height);
         }
 
         /**
@@ -2086,12 +2112,70 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
         ];
 
-        var zTree;
+        //start 底图控制器的树
+        var baseLayserSetting = {
+            check: {
+                enable: true,
+                chkStyle: "radio",
+                radioType: "level"
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
+        };
+        var baseLayserZNodes =[
+            //底图数据分类
+            { id:'basemap', pId:0,nocheck:true, name:"底图数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
+            { id:'tdt',pId:'basemap',  name:"天地图",  icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'bd', pId:'basemap',  name:"百度地图",icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'gd', pId:'basemap',  name:"高德地图",icon:"../asset/img/ztree/layers-icon.png"},
+        ];
+        //start 底图控制器的树
+
+
+
+        //start 数据控制器的树
+        var dataLayserSetting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onCheck: dataLayerTreeOnCheck
+            }
+        };
+        function dataLayerTreeOnCheck(event, treeId, treeNode) {
+            alert(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
+        };
+        var dataLayerZNodes =[
+            //底图数据分类
+            { id:'draw', pId:0,nocheck:true, name:"标绘数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
+            { id:'d_point',pId:'draw',  name:"天地图",  icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'d_line', pId:'draw',  name:"百度地图",icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'d_polygon', pId:'draw',  name:"高德地图",icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'service', pId:0,nocheck:true, name:"业务数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
+            { id:'s_point',pId:'service',  name:"天地图",  icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'s_line', pId:'service',  name:"百度地图",icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'s_polygon', pId:'service',  name:"高德地图",icon:"../asset/img/ztree/layers-icon.png"},
+        ];
+        //end 数据控制器的树
+
         $(document).ready(function(){
+
             $.fn.zTree.init($("#treeDemo"), setting, zNodes);
             $.fn.zTree.init($("#treeDemo1"), setting, zNodes);
             $.fn.zTree.init($("#treeDemo2"), setting, zNodes);
             zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            //底图控制器
+            $.fn.zTree.init($("#layerControlBase"), baseLayserSetting, baseLayserZNodes);
+            //数据控制器
+            var dataControlTree = $.fn.zTree.init($("#layerControlData"), dataLayserSetting, dataLayerZNodes);
         });
 
         /**

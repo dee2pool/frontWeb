@@ -38,7 +38,14 @@
     <section class="map-left left">
         <div class="map-top">
             <ul>
-                <li><i class="fa fa-reorder margin-right-5"></i><a href="javascript:void (0)" id="topbar-control" class="active">图层选择</a></li>
+                <li class="dropdown"><i class="fa fa-reorder margin-right-5"></i><a href="javascript:void (0)" id="topbar-layerControl" data-toggle="dropdown">图层</a>
+                    <ul class="dropdown-menu dropdown-menu-right topbar-dropdown-width" aria-labelledby="topbar-measure">
+                        <li><a href="javascript:void (0)" id="topbar-control"><i class="fa fa-reorder margin-right-5"></i>图层选择</a></li>
+                        <!--全新的图层控制器-->
+                        <li><a href="javascript:void(0)" id="topbar-controlBase"><i class="fa fa-tasks margin-right-5"></i>底图控制</a></li>
+                        <li><a href="javascript:void(0)" id="topbar-controlData"><i class="fa fa-tasks margin-right-5"></i>数据控制</a></li>
+                    </ul>
+                </li>
                 <li><i class="fa fa-plus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomin">拉框放大</a> </li>
                 <li><i class="fa fa-minus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomout">拉框缩小</a> </li>
                 <li><i class="fa fa-history margin-right-5"></i><a href="javascript:void (0)" id="topbar-history">历史视图</a> </li>
@@ -223,7 +230,6 @@
                                     </div>
                                 </form>
                             </li>
-
                         </ul>
                     </div>
                 </div>
@@ -278,6 +284,24 @@
     <span class="layer-open-content-title">图层控制：</span>
     <div class="layer-open-content-history">
         <div id="layerControl" class="layer-open-content-control"></div>
+    </div>
+</section>
+<!--全新的底图控制器-->
+<section class="layer-open-section layerControlTreeContainer" id="layerControlContainerBase">
+    <span class="layer-open-content-title">底图控制：</span>
+    <div class="layer-open-content-history">
+        <div class="layer-open-content-control">
+            <ul id="layerControlBase" class="ztree"></ul>
+        </div>
+    </div>
+</section>
+<!--全新的数据控制器-->
+<section class="layer-open-section layerControlTreeContainer" id="layerControlContainerData">
+    <span class="layer-open-content-title">数据控制：</span>
+    <div class="layer-open-content-history">
+        <div id="" class="layer-open-content-control">
+            <ul id="layerControlData" class="ztree"></ul>
+        </div>
     </div>
 </section>
 <!--坐标显示容器容器-->
@@ -380,91 +404,6 @@
                     <td>John</td>
                     <td>Doe</td>
                     <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
                 </tr>
                 </tbody>
             </table>
