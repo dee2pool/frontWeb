@@ -123,7 +123,7 @@ require.config({
     }
 });
 require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS','ztree'],
-    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree) {
+    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree,layerControl) {
 
         //加载公用头部导航栏标签
         //$("#head").html(common.head);
@@ -744,222 +744,23 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         });
 
         /**
-         * 异步方式 加载要素关联的要素 主要是通过后台查找来完成
+         * 异步方式数据控制器使用 加载要素关联的要素 主要是通过后台查找来完成
+         * 数据控制器的树来调用
          */
         //异步点的加载
-        var featurePointGroup = L.layerGroup();
-        $.ajax({
-            url:end+'/feature/listPolygon',
-            type:'GET',
-            contentType:"application/json",
-            data:{
-                "feature_id":"feature-point"
-            },
-            cache:false,
-            success:function (data) {
-                //console.log(data);
-                for(var i=0;i<data.length;i++){
-                    var temp = data[i];
-
-                    var Icon = L.icon({
-                        iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
-                    });
-                    var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{icon: Icon});
-                    var configId = temp.configId;
-                    //如果存在室内点，那么触发相应的室内楼层事件
-                    if(temp.hasIndoor == true){
-                        marker.on("dblclick",function () {
-                            //查询相应的所属的楼层图片
-                            //console.log(true);
-                            var buildMapTest = null;
-                            buildMapTest = L.map('img-map', {
-                                minZoom: 0,
-                                maxZoom: 4,
-                                center: [0, 0],
-                                zoom: 4,
-                                crs: L.CRS.Simple
-                            });
-                            // 隐藏map，显示img-map
-                            $("#map").css('display', 'none');
-                            $("#img-map").css('display', 'block');
-
-                            var w = 1024,
-                                h = 650;
-                            //url = imageUrl;
-                            var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
-                            var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
-                            var bounds = new L.LatLngBounds(southWest, northEast);
-
-
-
-                            //切换事件，当不同的layer添加到图上
-                            buildMapTest.on("layeradd",function (layer) {
-                                var bounds = layer.layer._bounds;
-
-                                //如果是undefined，说明添加进来的是点要素，那么什么也不做
-                                //只有添加面要素的时候，才调用后台接口进行加点的操作
-                                if(bounds === undefined){
-
-                                }else{
-                                    var url = layer.layer._url;
-                                    url = url.split("/");
-                                    var imgId = url[url.length-1];
-
-                                    //当面要素切换的时候，清除所有的marker
-                                    buildMapTest.eachLayer(function(layer){
-                                        console.log(layer);
-                                        //对layer的类型进行判断，如果是marker，那么直接进行remove操作
-                                        //仍然通过bound来判断，如果bound是undefined，那么说明是点layer，则将此layer进行清除操作；
-                                        if(layer._bounds === undefined){
-                                            buildMapTest.removeLayer(layer);
-                                        }
-
-                                    });
-
-                                    $.ajax({
-                                        type: "GET",           //因为是传输文件，所以必须是post
-                                        url: end+'/feature/listIndoorPointByImgId',         //对应的后台处理类的地址
-                                        data: {
-                                            imgId:imgId
-                                        },
-                                        contentType:"application/json",
-                                        cache:false,
-                                        success: function (data) {
-                                            if(data.length != 0){
-                                                for(var i=0;i<data.length;i++){
-                                                    L.marker([data[i].geo.coordinates[1], data[i].geo.coordinates[0]]).addTo(buildMapTest);
-                                                }
-
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-
-
-
-
-                            var indoorGroup = new L.FeatureGroup();
-                            //异步加载楼层内部的图片
-                            $.ajax({
-                                url:end+'/feature/listIndoorByConfigId',
-                                type:'GET',
-                                contentType:"application/json",
-                                data:{
-                                    "configId":configId
-                                },
-                                cache:false,
-                                success:function (data) {
-                                    /**
-                                     * 图层控制器
-                                     */
-                                    var baseMap = new Object();
-                                    for(var i=0;i<data.length;i++){
-                                        //console.log(data[i]);
-                                        var num = data[i].indoorNum;
-                                        var level = L.imageOverlay("../../common/asset/img/upload/"+data[i].indoorImg, bounds);
-                                        if(i === 0){
-                                            level.addTo(buildMapTest);
-                                        }
-                                        baseMap[num]=level;
-                                    }
-                                    var overlayMaps = {};
-                                    //设置图层控制器
-                                    var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
-                                },
-                                error:function () {
-                                    //console.log(0)
-                                }
-                            });
-                            console.log(indoorGroup);
-
-
-
-                            buildMapTest.on("zoom", function (evt) {
-                                //console.log(typeof  evt.target._animateToZoom);
-                                if (evt.target._animateToZoom == 1) {
-                                    $("#map").css('display', 'block');
-                                    $(".img-map").css('display', 'none');
-                                    buildMapTest.remove();
-                                    buildMapTest = null;
-                                }
-                            });
-                        });
-                    }
-                    else{
-
-                    }
-                    featurePointGroup.addLayer(marker);
-                }
-            },
-            error:function () {
-                console.log(0)
-            }
-        });
+        //var featurePointGroup = L.layerGroup();
         //异步线的加载
-        var featureLineGroup = L.layerGroup();
-        $.ajax({
-            url:end+'/feature/listPolygon',
-            type:'GET',
-            contentType:"application/json",
-            data:{
-                "feature_id":"feature-line"
-            },
-            cache:false,
-            success:function (data) {
-                //console.log(data);
-                for(var i=0;i<data.length;i++){
-                    var temp = data[i];
-                    //console.log(temp);
-
-                    var latlngs = [];
-                    for(var j=0;j<temp.geo.coordinates.length;j++){
-                        var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
-                        latlngs.push(array);
-                    };
-
-                    var polyline = L.polyline(latlngs, {color: 'black'});
-                    featureLineGroup.addLayer(polyline);
-                }
-            },
-            error:function () {
-                //console.log(0)
-            }
-        });
-
+        //var featureLineGroup = L.layerGroup();
         //异步面的加载
-        var featurePolygonGroup = L.layerGroup();
-        $.ajax({
-            url:end+'/feature/listPolygon',
-            type:'GET',
-            contentType:"application/json",
-            data:{
-                "feature_id":"feature-polygon"
-            },
-            cache:false,
-            success:function (data) {
-                //console.log(data);
-                for(var i=0;i<data.length;i++){
-                    var temp = data[i];
-                    console.log(temp);
+        //var featurePolygonGroup = L.layerGroup();
 
-                    var imageUrl = "../../common/asset/img/upload/"+temp.imgPolygon,
-                        imageBounds = [[temp.geo.coordinates[0][0][1], temp.geo.coordinates[0][0][0]], [[temp.geo.coordinates[0][2][1], temp.geo.coordinates[0][2][0]]]];
-                    var overlay = L.imageOverlay(imageUrl, imageBounds);
+        //异步查询后，进行回调处理
 
-                    // var latlngs = [];
-                    // for(var j=0;j<temp.geo.coordinates.length;j++){
-                    //     var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
-                    //     latlngs.push(array);
-                    // };
-                    //
-                    // var polyline = L.polyline(latlngs, {color: 'black'});
-                    featurePolygonGroup.addLayer(overlay);
-                }
-            },
-            error:function () {
-            }
-        });
+
+
+
+
+
 
         /**
          * 图层控制器
@@ -969,9 +770,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         };
         var overlayMaps = {
             "轨迹": routeLayerGroup,
-            "要素点":featurePointGroup,
-            "要素线":featureLineGroup,
-            "要素面":featurePolygonGroup,
             "设备点": xsLayerGroup,
             "建筑": build,
             "行政区":chinaWMS,
@@ -2136,7 +1934,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
 
-        //start 数据控制器的树
+        //start 数据控制器树
         var dataLayserSetting = {
             check: {
                 enable: true
@@ -2150,19 +1948,295 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 onCheck: dataLayerTreeOnCheck
             }
         };
+        /**
+         * 设置一个缓存数组，当节点处于check状态时，layergroup被放入数组中作为缓存使用；
+         * 当节点处于取消check状态时，根据节点id去从缓存数组中找layergroup，并且把相应的layergroup从地图中移除；
+         */
+        var dataLayertemp = {};
+
         function dataLayerTreeOnCheck(event, treeId, treeNode) {
-            alert(treeNode.tId + ", " + treeNode.name + "," + treeNode.checked);
+            //首先获取当前节点信息，并且
+            if(treeNode.id === 's_point'){
+                if(dataLayertemp[treeNode.id] === undefined){
+                    var featurePointGroup = L.layerGroup();
+                }else{
+                    featurePointGroup = dataLayertemp[treeNode.id];
+                }
+                var featurePointGroup = L.layerGroup();
+                if(treeNode.checked === true){
+                    map.removeLayer(featurePointGroup);
+                    var res = $.when(
+                        $.ajax({
+                            url:end+'/feature/listPolygon',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:{
+                                "feature_id":"feature-point"
+                            },
+                            cache:false,
+                            success:function (data) {
+                            },
+                            error:function () {
+                            }
+                        }));
+                    res.done(function (r1) {
+                        function serviceDataPoint(data) {
+                            for(var i=0;i<data.length;i++){
+                                var temp = data[i];
+
+                                var Icon = L.icon({
+                                    iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
+                                });
+                                var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{icon: Icon});
+                                var configId = temp.configId;
+                                //如果存在室内点，那么触发相应的室内楼层事件
+                                if(temp.hasIndoor == true){
+                                    marker.on("dblclick",function () {
+                                        //查询相应的所属的楼层图片
+                                        //console.log(true);
+                                        var buildMapTest = null;
+                                        buildMapTest = L.map('img-map', {
+                                            minZoom: 0,
+                                            maxZoom: 4,
+                                            center: [0, 0],
+                                            zoom: 4,
+                                            crs: L.CRS.Simple
+                                        });
+                                        // 隐藏map，显示img-map
+                                        $("#map").css('display', 'none');
+                                        $("#img-map").css('display', 'block');
+
+                                        var w = 1024,
+                                            h = 650;
+                                        //url = imageUrl;
+                                        var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                                        var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                                        var bounds = new L.LatLngBounds(southWest, northEast);
+
+
+
+                                        //切换事件，当不同的layer添加到图上
+                                        buildMapTest.on("layeradd",function (layer) {
+                                            var bounds = layer.layer._bounds;
+
+                                            //如果是undefined，说明添加进来的是点要素，那么什么也不做
+                                            //只有添加面要素的时候，才调用后台接口进行加点的操作
+                                            if(bounds === undefined){
+
+                                            }else{
+                                                var url = layer.layer._url;
+                                                url = url.split("/");
+                                                var imgId = url[url.length-1];
+
+                                                //当面要素切换的时候，清除所有的marker
+                                                buildMapTest.eachLayer(function(layer){
+                                                    console.log(layer);
+                                                    //对layer的类型进行判断，如果是marker，那么直接进行remove操作
+                                                    //仍然通过bound来判断，如果bound是undefined，那么说明是点layer，则将此layer进行清除操作；
+                                                    if(layer._bounds === undefined){
+                                                        buildMapTest.removeLayer(layer);
+                                                    }
+
+                                                });
+
+                                                $.ajax({
+                                                    type: "GET",           //因为是传输文件，所以必须是post
+                                                    url: end+'/feature/listIndoorPointByImgId',         //对应的后台处理类的地址
+                                                    data: {
+                                                        imgId:imgId
+                                                    },
+                                                    contentType:"application/json",
+                                                    cache:false,
+                                                    success: function (data) {
+                                                        if(data.length != 0){
+                                                            for(var i=0;i<data.length;i++){
+                                                                L.marker([data[i].geo.coordinates[1], data[i].geo.coordinates[0]]).addTo(buildMapTest);
+                                                            }
+
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+
+
+
+
+                                        var indoorGroup = new L.FeatureGroup();
+                                        //异步加载楼层内部的图片
+                                        $.ajax({
+                                            url:end+'/feature/listIndoorByConfigId',
+                                            type:'GET',
+                                            contentType:"application/json",
+                                            data:{
+                                                "configId":configId
+                                            },
+                                            cache:false,
+                                            success:function (data) {
+                                                /**
+                                                 * 图层控制器
+                                                 */
+                                                var baseMap = new Object();
+                                                for(var i=0;i<data.length;i++){
+                                                    //console.log(data[i]);
+                                                    var num = data[i].indoorNum;
+                                                    var level = L.imageOverlay("../../common/asset/img/upload/"+data[i].indoorImg, bounds);
+                                                    if(i === 0){
+                                                        level.addTo(buildMapTest);
+                                                    }
+                                                    baseMap[num]=level;
+                                                }
+                                                var overlayMaps = {};
+                                                //设置图层控制器
+                                                var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+                                            },
+                                            error:function () {
+                                                //console.log(0)
+                                            }
+                                        });
+                                        console.log(indoorGroup);
+
+
+
+                                        buildMapTest.on("zoom", function (evt) {
+                                            //console.log(typeof  evt.target._animateToZoom);
+                                            if (evt.target._animateToZoom == 1) {
+                                                $("#map").css('display', 'block');
+                                                $(".img-map").css('display', 'none');
+                                                buildMapTest.remove();
+                                                buildMapTest = null;
+                                            }
+                                        });
+                                    });
+                                }
+                                else{
+
+                                }
+                                featurePointGroup.addLayer(marker);
+                            }
+                        };
+                         serviceDataPoint(r1);
+                         dataLayertemp[treeNode.id] = featurePointGroup;
+                    });
+                    res.then(function () {
+                        map.addLayer(featurePointGroup);
+                    });
+                }
+                else{
+                    map.removeLayer(featurePointGroup);
+                }
+            }
+
+            if(treeNode.id === 's_line'){
+                if(dataLayertemp[treeNode.id] === undefined){
+                    var featureLineGroup = L.layerGroup();
+                }else{
+                    featureLineGroup = dataLayertemp[treeNode.id];
+                }
+                if(treeNode.checked === true){
+                    var res = $.when(
+                        $.ajax({
+                            url:end+'/feature/listPolygon',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:{
+                                "feature_id":"feature-line"
+                            },
+                            cache:false,
+                            success:function (data) {
+                            },
+                            error:function () {
+                            }
+                        }));
+                    res.done(function (r1) {
+                        //console.log(r1);
+                        function serviceDataLine(data,featureLineGroup) {
+                            //console.log(data);
+                            for(var i=0;i<data.length;i++){
+                                var temp = data[i];
+                                //console.log(temp);
+
+                                var latlngs = [];
+                                for(var j=0;j<temp.geo.coordinates.length;j++){
+                                    var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
+                                    latlngs.push(array);
+                                };
+
+                                var polyline = L.polyline(latlngs, {color: 'black'});
+                                featureLineGroup.addLayer(polyline);
+                            }
+                        };
+                        serviceDataLine(r1,featureLineGroup);
+                        dataLayertemp[treeNode.id] = featureLineGroup;
+
+                    });
+                    res.then(function () {
+                        map.addLayer(featureLineGroup);
+                    });
+
+                }
+                else{
+                    map.removeLayer(featureLineGroup);
+                    dataLayertemp[treeNode.id] = undefined;
+                }
+            }
+
+            if(treeNode.id === 's_polygon'){
+                if(dataLayertemp[treeNode.id] === undefined){
+                    var featurePolygonGroup = L.layerGroup();
+                }else{
+                    featurePolygonGroup = dataLayertemp[treeNode.id];
+                }
+                if(treeNode.checked === true){
+                    var res = $.when(
+                        $.ajax({
+                            url:end+'/feature/listPolygon',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:{
+                                "feature_id":"feature-polygon"
+                            },
+                            cache:false,
+                            success:function (data) {
+                            },
+                            error:function () {
+                            }
+                        }));
+                    res.done(function (r1) {
+                        //serviceDataPolygon(r1);
+                        function serviceDataPolygon(data,featurePolygonGroup) {
+                            for(var i=0;i<data.length;i++){
+                                var temp = data[i];
+                                console.log(temp);
+                                var imageUrl = "../../common/asset/img/upload/"+temp.imgPolygon,
+                                    imageBounds = [[temp.geo.coordinates[0][0][1], temp.geo.coordinates[0][0][0]], [[temp.geo.coordinates[0][2][1], temp.geo.coordinates[0][2][0]]]];
+                                var overlay = L.imageOverlay(imageUrl, imageBounds);
+                                featurePolygonGroup.addLayer(overlay);
+                            }
+                        }
+                        serviceDataPolygon(r1,featurePolygonGroup);
+                        dataLayertemp[treeNode.id] = featurePolygonGroup;
+                    });
+                    res.then(function () {
+                        map.addLayer(featurePolygonGroup);
+                    });
+                }
+                else{
+                    map.removeLayer(featurePolygonGroup);
+                }
+            }
+
+            console.log(treeNode.id + ", " + treeNode.name + "," + treeNode.checked);
         };
         var dataLayerZNodes =[
-            //底图数据分类
             { id:'draw', pId:0,nocheck:true, name:"标绘数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
             { id:'d_point',pId:'draw',  name:"天地图",  icon:"../asset/img/ztree/layers-icon.png"},
             { id:'d_line', pId:'draw',  name:"百度地图",icon:"../asset/img/ztree/layers-icon.png"},
             { id:'d_polygon', pId:'draw',  name:"高德地图",icon:"../asset/img/ztree/layers-icon.png"},
             { id:'service', pId:0,nocheck:true, name:"业务数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
-            { id:'s_point',pId:'service',  name:"天地图",  icon:"../asset/img/ztree/layers-icon.png"},
-            { id:'s_line', pId:'service',  name:"百度地图",icon:"../asset/img/ztree/layers-icon.png"},
-            { id:'s_polygon', pId:'service',  name:"高德地图",icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'s_point',pId:'service',  name:"点要素",  icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'s_line', pId:'service',  name:"线要素",icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'s_polygon', pId:'service',  name:"面要素",icon:"../asset/img/ztree/layers-icon.png"},
         ];
         //end 数据控制器的树
 

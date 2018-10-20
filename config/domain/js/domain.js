@@ -223,6 +223,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
         }
         domainService.getDomainList(init_page.pageNumber,init_page.pageSize,init_page.domainName,function (data) {
             if(data.result){
+                console.log(data);
                 $('#area_table').bootstrapTable({
                     columns:[{
                         checkbox: true
