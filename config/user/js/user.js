@@ -180,7 +180,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'jquery-slimScroll', 'b
                     domain[data.data[i].code]=data.data[i].name;
                 }
             }
-        })
+        });
         var page={};
         page.pageNo=1;
         page.pageSize=10;
