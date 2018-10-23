@@ -166,8 +166,8 @@
                                 <!--选择查询类型-->
                                 <form class="form-inline">
                                     <div class="form-group">
-                                        <label>查询类型：</label>
-                                        <select class="form-control" id="right-nav-panel-querySelect">
+                                        <label class="queryForm-label" >查询类型：</label>
+                                        <select class="form-control queryForm-input" id="right-nav-panel-querySelect">
                                             <option value="" disabled selected></option>
                                             <option value="word">关键字查询</option>
                                             <option value="radius">半径查询</option>
@@ -175,43 +175,55 @@
                                         </select>
                                     </div>
                                 </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <!--form里面的button的type默认为submit，应当修改为button-->
+                                        <label class="queryForm-label">图层选择：</label>
+                                        <!--<label未选择图层</label>-->
+                                        <input type="text" class="queryForm-input form-control" disabled placeholder="未选择">
+                                        <button class="btn btn-danger" type="button">选择</button>
+                                    </div>
+                                </form>
                             </li>
                             <li id="right-nav-panel-wordQuery" class="noShow">
                                 <!--关键字查询-->
                                 <form class="form-inline">
                                     <div class="form-group">
-                                        <label>关键字：</label>
-                                        <input type="text" class="form-control" placeholder="请输入关键字">
+                                        <label class="queryForm-label">关键字：</label>
+                                        <input type="text" class="queryForm-input form-control" placeholder="请输入关键字">
                                     </div>
                                 </form>
                                 <br>
                                 <form class="form-inline">
                                     <div class="form-group">
-                                        <!--form里面的button的type默认为submit，应当修改为button-->
-                                        <button class="btn btn-primary" type="button">图层选择</button>
-                                        <button class="btn btn-danger" type="button">确认查询</button>
+                                        <label class="queryForm-label"></label>
+                                        <input type="button" class="queryForm-input btn btn-danger" value="确认查询">
                                     </div>
                                 </form>
                             </li>
+
                             <li id="right-nav-panel-radiusQuery" class="noShow">
                                 <!--半径查询-->
                                 <form class="form-inline">
                                     <div class="form-group">
-                                        <label>半径：</label>
-                                        <input type="text" class="form-control" placeholder="请输入半径">
+                                        <label class="queryForm-label">半径：</label>
+                                        <input type="text" class="queryForm-input form-control" placeholder="请输入半径">
                                     </div>
                                 </form>
                                 <br>
                                 <form class="form-inline">
                                     <div class="form-group">
-                                        <button class="btn btn-primary" type="button">图层选择</button>
-                                        <button class="btn btn-primary" type="button">中心点选择</button>
+                                        <label class="queryForm-label">中心选择：</label>
+                                        <input type="text" class="queryForm-input form-control" disabled placeholder="未选择">
+                                        <button class="btn btn-danger" type="button">选择</button>
                                     </div>
                                 </form>
                                 <br>
                                 <form class="form-inline">
                                     <div class="form-group">
-                                        <button class="btn btn-danger" type="button">确认查询</button>
+                                        <label class="queryForm-label"></label>
+                                        <input type="button" class="queryForm-input btn btn-danger" value="确认查询">
                                     </div>
                                 </form>
                             </li>
@@ -219,14 +231,16 @@
                                 <!--拉框查询-->
                                 <form class="form-inline">
                                     <div class="form-group">
-                                        <button class="btn btn-primary" type="button">图层选择</button>
-                                        <button class="btn btn-primary" type="button">范围选择</button>
+                                        <label class="queryForm-label">范围选择：</label>
+                                        <input type="text" class="queryForm-input form-control" disabled placeholder="未选择">
+                                        <button class="btn btn-danger" type="button">选择</button>
                                     </div>
                                 </form>
                                 <br>
                                 <form class="form-inline">
                                     <div class="form-group">
-                                        <button class="btn btn-danger" type="button">确认查询</button>
+                                        <label class="queryForm-label"></label>
+                                        <input type="button" class="queryForm-input btn btn-danger" value="确认查询">
                                     </div>
                                 </form>
                             </li>

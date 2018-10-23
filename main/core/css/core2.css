@@ -216,6 +216,15 @@ a{
     color: #eeeeee;
 }
 
+.map-reslist .queryForm-label{
+    width: 75px;
+}
+
+.map-reslist .queryForm-input{
+    width: 150px;
+}
+
+
 /*core原样式*/
 .img-map{
     position: absolute;

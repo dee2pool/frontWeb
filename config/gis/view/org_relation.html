@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>组织关联</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+
+    <!--<link rel="stylesheet" href="../../common/libs/nav/css/nav.css">-->
+    <link rel="stylesheet" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+
+    <!--本页-->
+    <link rel="stylesheet" href="../css/org_relation.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="../../../common/lib/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/lib/draw/Leaflet.Draw.css">
+    <link rel="stylesheet" href="../../../common/lib/layer/theme/default/layer.css">
+
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/org_relation"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content feature">
+            <div class="panel panel-default" style="height: 100%" id="pan">
+                <div class="panel-heading" id="pan-head">
+                    <h3 class="panel-title">组织关联</h3>
+                </div>
+                <div class="panel-body" id="pan-body" style="height:calc(100% - 30px)">
+                    <!--核心内容-->
+                    <div class="feature-center feature-border">
+                        <div class="left feature-border">
+                            <div class="left-on feature-border">
+                                <div class="tree-head">
+                                    <a id="relation" href="#" onclick="return false;"><i class="fa fa-connectdevelop"></i>关联</a>
+                                </div>
+                                <ul id="treeDemo" class="ztree"></ul>
+                            </div>
+                        </div>
+                        <div class="right feature-border" >
+                            <div class="map feature-border" id="map" style=""></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

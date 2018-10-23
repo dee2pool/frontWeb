@@ -67,6 +67,7 @@
                                 </table>
 
                                 <input type="text" style="display: none" id="configFeatureId">
+
                                 <input type="text" style="display: none" id="indoorLevelId">
 
                                 <table id="other" class="table   form-hidden">
@@ -381,7 +382,7 @@
                                     </tbody>
                                 </table>
 
-                                <table class="table-bordered table" id="device2"></table>
+                                <table class="table-bordered table" id="bt-table"></table>
 
 
 
@@ -407,6 +408,7 @@
                                                 <label class="col-sm-2 col-sm-offset-2 little-title">要素名称:</label>
                                                 <div class="col-sm-3">
                                                     <input type="text" class="form-control" placeholder="要素名称" id="feature-name">
+                                                    <input type="text" class="form-control hidden" id="feature-resId">
                                                 </div>
                                             </div>
                                         </div>
@@ -417,6 +419,10 @@
                                                 <div class="col-sm-3">
                                                     <input type="text" readonly="readonly" class="form-control" placeholder="所属分类" id="input-category">
                                                 </div>
+                                                <div class="col-sm-3">
+                                                    <input type="text" readonly="readonly" class="form-control hidden" placeholder="所属分类" id="input-categoryTypeCode">
+                                                </div>
+                                                <!--用于判断是什么类型（点线面）的要素，从而在后端执行哪一种接口-->
                                                 <div style="display: none">
                                                     <input type="text" readonly="readonly" class="form-control" id="flag-category">
                                                 </div>

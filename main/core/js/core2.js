@@ -310,8 +310,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 skin: 'layui-layer-lan',
                 area: ['200px', '80px'],
                 offset: ['150px', '10px'],
-                //title: false, //不显示标题
-                //.layer-open-content
                 content: $('#history'),
             });
         });
@@ -320,12 +318,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         /**
          * 设备点相关
          */
-            //点测试图层
+        //点测试图层
         var xsLayerGroup = L.layerGroup();
-
         var pointOption = common.wmsDefaultOption;
         pointOption.typeName = 'cite:xspoint';
-
         $.getJSON(gisutil.splitWMSUrl(pointOption), function (json) {
             L.geoJSON(json, {
                 onEachFeature: addPoint,
@@ -536,14 +532,11 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         function pointRangeSearch(latlngs) {
             //将画线区域显示出来，但是感觉没有必要
             //var range = L.rectangle(latlngs[0], {color: "#ff7800"}).addTo(map);
-
             //构建一个turf区域
             var turfLine = turf.lineString([[latlngs[0][0].lng, latlngs[0][0].lat], [latlngs[0][1].lng, latlngs[0][1].lat], [latlngs[0][2].lng, latlngs[0][2].lat], [latlngs[0][3].lng, latlngs[0][3].lat]]);
             var buffered = turf.lineToPolygon(turfLine);
-
             //将layergroup转换为geojson，方便处理
             var features = xsLayerGroup.toGeoJSON().features;
-
             //使用foreach对数据进行遍历
             features.forEach(function (value) {
                 //console.log(value.geometry);
@@ -559,23 +552,17 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     }).addTo(map);
                 }
             });
-
             //内存释放
             features = null;
             turfLine = null;
             buffered = null;
         }
-
-
-
         /**
          * 轨迹相关
          */
         var routeLayerGroup = L.layerGroup();
-        //routeLayerGroup.addTo(map);
         var routeOption = common.wmsDefaultOption;
         routeOption.typeName = 'cite:route';
-
         $.getJSON(gisutil.splitWMSUrl(routeOption), function (json) {
             L.geoJSON(json, {
                 onEachFeature: function (feature, layer) {
@@ -692,12 +679,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     markerGroup.addLayer(marker4);
                     markerGroup.addTo(buildMapTest);
                 });
-
                 indoor2.on("remove",function () {
                     buildMapTest.removeLayer(markerGroup);
                 });
-
-
                 buildMapTest.on("zoom", function (evt) {
                     //console.log(typeof  evt.target._animateToZoom);
                     if (evt.target._animateToZoom == 1) {
@@ -708,10 +692,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     }
                 });
             }
-
-
         });
-
         //用于专题图的测试行政区域
         var chinaWMS=L.tileLayer.betterWms('http://192.168.0.142:8060/geoserver/cite/wms', {
             layers: 'cite:chartmap',
@@ -725,7 +706,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 iconSize: [160, 160],
                 html: '<div id="marker' + 1 + '" style="width: 160px; height: 160px; position: relative; background-color: transparent;">asd</div>'
             })
-        }).addTo(map);
+        });
         //柱状图测试
         var chart = L.marker([28.238828360437484,113.08478097085977], {
             icon: L.divIcon({
@@ -733,7 +714,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 iconSize: [160, 160],
                 html: '<div id="marker' + 2 + '" style="width: 160px; height: 160px; position: relative; background-color: transparent;">asd</div>'
             })
-        }).addTo(map);
+        });
 
         //GIS配置-要素关联 配置的要素
         //http://localhost:8060/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite:feature&styles=&bbox=-180.0,-90.0,180.0,90.0&width=768&height=384&srs=EPSG:4326&format=application/openlayers
@@ -1801,9 +1782,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 if(flag === 'word'){
                     $("#right-nav-panel-wordQuery").css("display","block");
                 }else if(flag === 'range'){
-                    $("#right-nav-panel-radiusQuery").css("display","block");
-                }else{
                     $("#right-nav-panel-rangeQuery").css("display","block");
+                }else{
+                    $("#right-nav-panel-radiusQuery").css("display","block");
                 }
 
             });
@@ -1962,9 +1943,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 }else{
                     featurePointGroup = dataLayertemp[treeNode.id];
                 }
-                var featurePointGroup = L.layerGroup();
+               // var featurePointGroup = L.layerGroup();
                 if(treeNode.checked === true){
-                    map.removeLayer(featurePointGroup);
                     var res = $.when(
                         $.ajax({
                             url:end+'/feature/listPolygon',
@@ -1986,6 +1966,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
                                 var Icon = L.icon({
                                     iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
+                                    iconAnchor: [20, 20],
+                                    iconSize: [40, 40]
                                 });
                                 var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{icon: Icon});
                                 var configId = temp.configId;
@@ -2124,6 +2106,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 }
                 else{
                     map.removeLayer(featurePointGroup);
+                    dataLayertemp[treeNode.id] = undefined;
                 }
             }
 
@@ -2271,29 +2254,29 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         //     ]
         // });
 
-        $('#workOrder-table').bootstrapTable({
-            method: 'get',
-            contentType: "application/x-www-form-urlencoded",//一种编码。好像在post请求的时候需要用到。这里用的get请求，注释掉这句话也能拿到数据
-            url: "http://123.123.123.123:8080/mock/alarm",//要请求数据的文件路径
-            dataField: "data",//这是返回的json数组的key.默认好像是"rows".这里只有前后端约定好就行
-            pageNumber: 1, //初始化加载第一页，默认第一页
-            pagination: true,//是否分页
-            // queryParams:queryParams,//请求服务器时所传的参数
-            sidePagination: 'client',//指定服务器端分页
-            pageSize: 10,//单页记录数
-            pageList: [10, 20, 30, 40],//分页步进值
-            responseHandler: responseHandler,//请求数据成功后，渲染表格前的方法
-            colums: [{//列参数
-                field: "id",
-                title: "id",
-            }, {
-                field: "name",
-                title: "名称",
-            }, {
-                field: "price",
-                title: "价格"
-            }]
-        });
+        // $('#workOrder-table').bootstrapTable({
+        //     method: 'get',
+        //     contentType: "application/x-www-form-urlencoded",//一种编码。好像在post请求的时候需要用到。这里用的get请求，注释掉这句话也能拿到数据
+        //     url: "http://123.123.123.123:8080/mock/alarm",//要请求数据的文件路径
+        //     dataField: "data",//这是返回的json数组的key.默认好像是"rows".这里只有前后端约定好就行
+        //     pageNumber: 1, //初始化加载第一页，默认第一页
+        //     pagination: true,//是否分页
+        //     // queryParams:queryParams,//请求服务器时所传的参数
+        //     sidePagination: 'client',//指定服务器端分页
+        //     pageSize: 10,//单页记录数
+        //     pageList: [10, 20, 30, 40],//分页步进值
+        //     responseHandler: responseHandler,//请求数据成功后，渲染表格前的方法
+        //     colums: [{//列参数
+        //         field: "id",
+        //         title: "id",
+        //     }, {
+        //         field: "name",
+        //         title: "名称",
+        //     }, {
+        //         field: "price",
+        //         title: "价格"
+        //     }]
+        // });
         // //请求服务数据时所传参数
         // function queryParams(params){
         //     return {
@@ -2302,13 +2285,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         //     }
         // };
 
-        function responseHandler(result) {
-            console.log(result);
-            return {
-                total: result.dataLength, //总页数,前面的key必须为"total"
-                data: result.rowDatas //行数据，前面的key要与之前设置的dataField的值一致.
-            };
-        };
 
         // // $.ajax({
         // //
