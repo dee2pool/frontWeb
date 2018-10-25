@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>视频预览</title>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2">
+            <button class="btn btn-primary" id="create-session">Create Session</button>
+            <button class="btn btn-primary" id="close-session">Close Session</button>
+        </div>
+        <div class="col-md-10">
+            <button class="btn btn-primary" id="create-win">Create Window</button>
+            <button class="btn btn-primary" id="close-win">Close Window</button>
+
+            <button class="btn btn-primary" id="maximum-win">Maximum Window</button>
+            <button class="btn btn-primary" id="minimum-win">Minimum Window</button>
+            <button class="btn btn-primary" id="restore-win">Restore Window</button>
+            <button class="btn btn-primary" id="preview">Preview Window</button>
+            <button class="btn btn-primary" id="update-win-list">Update Window List</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3"></div>
+        <div class="col-md-4">
+            <label>X:</label><input id="x" type="text"/><br>
+            <label>Y:</label><input id="y" type="text"/><br>
+            <label>Width:</label><input id="width" type="text"/><br>
+            <label>Height:</label><input id="height" type="text"/><br>
+            <button class="btn btn-primary" id="set-win">Set Window</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3" id="window-list"></div>
+
+    </div>
+
+</div>
+</body>
+</html>

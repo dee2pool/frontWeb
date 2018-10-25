@@ -7,6 +7,10 @@ require.config({
         'bootstrap': {
             deps: ['jquery'],
         },
+        'common': {
+            deps: ['jquery'],
+            exports:'common'
+        },
         'contextmenu': {
             deps: ['leaflet'],
             exports: 'contextmenu'
@@ -83,7 +87,11 @@ require.config({
         },
         'ztree':{
             deps:['jquery'],
-            export:'ztree'
+            exports:'ztree'
+        },
+        'Test':{
+            deps:['jquery','common'],
+            exports:'Test'
         },
 
 
@@ -91,6 +99,7 @@ require.config({
     paths: {
         "jquery": "../../common/lib/jquery/jquery-3.3.1.min",
         //全局通用变量
+        //"common": "../../common/js/common",
         "common": "../../common/js/common",
         "gisutil": "../../common/js/util/gisutil",
         "bootstrap": "../../common/lib/bootstrap/js/bootstrap",
@@ -119,11 +128,14 @@ require.config({
         "topBar":"../../../common/component/head/js/topbar",
         "BetterWMS":"../../common/lib/leaflet-lib/BetterWMS/BetterWMS",
         "ztree":"../../common/lib/ztree/js/jquery.ztree.all.min",
+        "Test":"../../common/js/Test",
+        "deviceService":"../../common/js/DeviceInfoController",
+        "bluebird":"../../../common/lib/bluebird/bluebird.min"
 
     }
 });
-require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS','ztree'],
-    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree,layerControl) {
+require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS','ztree','bluebird'],
+    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree,bluebird) {
 
         //加载公用头部导航栏标签
         //$("#head").html(common.head);
@@ -133,11 +145,12 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
         //全局通用地址
-        var host = common.host;
+        var host = common.geoserver;
         var end = common.end;
         //全局通用变量，用于所有的绘图图层
         var drawGroup = new L.FeatureGroup();
-        //3+2.5+2.5+2+8+8
+        //初始化设备信息查询的接口
+
         /**
          * 核心地图变量
          */
@@ -400,12 +413,12 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         }
 
         //Search插件的加载，有了这个就不用在写WFS查询调用了，主要是json数据已经拿到了，没必要在去查了
-        var queryControl = new L.Control.Search({
-            layer: xsLayerGroup,
-            propertyName: 'name'
-            // collapsed:false
-        });
-        map.addControl(queryControl);
+        // var queryControl = new L.Control.Search({
+        //     layer: xsLayerGroup,
+        //     propertyName: 'name'
+        //     // collapsed:false
+        // });
+        // map.addControl(queryControl);
 
         /**
          * 添加设备相关
@@ -736,12 +749,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         //var featurePolygonGroup = L.layerGroup();
 
         //异步查询后，进行回调处理
-
-
-
-
-
-
 
         /**
          * 图层控制器
@@ -1570,7 +1577,363 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
          */
 
 
+        /**
+         * start 视频预览的配置
+         */
+        var videourl = "https://192.168.0.144:8080";
+        var userName="tqd1";
+        var password="C5EDB9E07FC689D5B894BDBD4DE4EC75";
+        var userNameStr=userName;
+        var passwordStr=password;
+        var captchaIdStr=undefined;
+        var captchaStr=undefined;
+        var requestUrl=videourl+"/auth/login";
+        $.ajax({
+            url:requestUrl,
+            type:'Post',
+            data:{
+                userName:userNameStr,
+                password:passwordStr,
+                captchaId:captchaIdStr,
+                captcha:captchaStr,
+            },
+            cache:false,
+        });
 
+        $(function () {
+            var nativeWinService=new NativeWinService("http://localhost:61111/cms");
+            function authToken(onSuccess){
+                $.ajax({
+                    url:videourl+"/auth/token/temp",
+                    type:'Get',
+                    data:{
+                    },
+                    cache:false,
+                    success:onSuccess
+                })
+            };
+            function runAsync(){
+                var p = new bluebird.Promise(function(resolve, reject){
+                    authToken(function (data) {
+                        if(data.result){
+                            resolve(data);
+                        }
+
+                    })
+                });
+                return p;
+            };
+            runAsync().then(function(resp){
+                console.log(resp);
+            });
+
+
+
+
+            function video() {
+                var nativeWinService=new NativeWinService("http://localhost:61111/cms");
+                $.when(
+                    $.ajax({
+                        url:videourl+"/auth/token/temp",
+                        type:'Get',
+                        data:{
+                        },
+                        cache:false,
+                    })
+                ).done(function (resp) {
+                    var token=resp.data;
+                    var serverUrl=videourl;
+                    nativeWinService.openSession(token,serverUrl);
+                }).then(function (resp) {
+                    //这里存在着一个异步的问题，必须要按照顺序依次执行下面的方法，才能正确调出视频，为了保证不受异步干扰，所以增加了延迟方法
+                    setTimeout(function(){
+                        nativeWinService.createWindow(1,"test",100,100,400,300);
+                    },500);
+                    setTimeout(function(){
+                        nativeWinService.getWindowList();
+                    },1000);
+                    setTimeout(function(){
+                        nativeWinService.preview(winId);
+                    },1500);
+                });
+            }
+
+            $("#video-win").on("click",function () {
+                video();
+            });
+
+        });
+
+        //本地窗口管理模块
+        function NativeWinService(url){
+            var requestUrl=url;
+            /**
+             * 发送操作命令到窗口管理服务
+             * @param {命令} cmd
+             * @param {成功回调函数} onSuccess
+             * @param {失败回调函数} onError
+             */
+            function sendCommand(cmd,onSuccess,onError){
+                var json=JSON.stringify(cmd);
+                $.ajax({
+                    url:requestUrl,
+                    type:'POST',
+                    dataType:"json",
+                    data:json,
+                    cache:false,
+                    success:onSuccess,
+                    error:onError
+                });
+            }
+            //用于保存已经打开的会话,已经基于此会话创建的窗口的信息
+            var object={
+                sessionId:undefined,//会话Id
+                windows:{}//已打开的窗口集合
+            };
+            /**
+             * 创建会话
+             * @param token 临时访问凭据 通过调用LoginController.getTempToken获得
+             * @param serviceUrl 后台服务器地址
+             */
+            object.openSession=function(token,serviceUrl){
+                var createCommand={
+                    "jsonType":"Request",
+                    "requestType":"NewSession",
+                    "data":{
+                        "url":serviceUrl,
+                        "token":token
+                    }
+                };
+                sendCommand(createCommand,function(resp){
+                    if(resp.result==1){
+                        object.sessionId=resp.data.sessionID;
+                    }else{
+                        console.log("open session fail")
+                    }
+                },function(e){});
+            }
+            /**
+             * 注销本次会话,调用此接口,所有已打开窗口都将会关闭
+             */
+            object.closeSession=function(){
+                var closeCmd={
+                    "jsonType": "Request",
+                    "requestType":"CloseSession",
+                    "data":	{
+                        "sessionID":this.sessionId
+                    }
+                }
+                sendCommand(closeCmd,function(resp){
+                    if(resp.result==1){
+                        object.sessionId=undefined;
+                        object.windows={};
+                    }
+                },function(e){});
+            }
+            /**
+             * 创建窗口
+             * @param winType 窗口类型,取值为1,2;1表示视频预览窗口；2表示平台管理窗口
+             * @param title 窗口标题
+             * @param x 窗口位置,横坐标 x
+             * @param y 窗口位置,纵坐标 y
+             * @param width 窗口宽度
+             * @param height 窗口高度
+             */
+            object.createWindow=function(winType,title,x,y,width,height){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"NewWindow",
+                    "data": {
+                        "sessionID":sessionId,
+                        "type":winType,      //1—预览窗口；2—平台
+                        "title": title,
+                        "xPos":x,
+                        "yPos":y,
+                        "width":width,
+                        "height":height
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+                        var winId=resp.data.windowID;
+                        object.windows[winId]={
+                            id:winId,
+                            type:winType,
+                            title: title,
+                            x:x,
+                            y:y,
+                            width:width,
+                            height:height
+                        }
+                    }
+                },function(e){});
+
+            }
+            /**
+             * 设置指定窗口的属性
+             * @param winId 指定窗口的属性
+             * @param title 设置后窗口的标题
+             * @param x 设置后窗口的位置横坐标 x
+             * @param y 设置后窗口的位置纵坐标 y
+             * @param width 设置后窗口的宽度
+             * @param height 设置后窗口的高度
+             */
+            object.setWindow=function(winId,title,x,y,width,height){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"PosWindow",
+                    "data": {
+                        "sessionID":sessionId,
+                        "windowID":winId,
+                        "title": title,
+                        "xPos":x,
+                        "yPos":y,
+                        "width":width,
+                        "height":height
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+                        object.windows[winId].title=title;
+                        object.windows[winId].x=x;
+                        object.windows[winId].y=y;
+                        object.windows[winId].width=width;
+                        object.windows[winId].height=height;
+                    }else{
+                        console.log("set win["+title+"] position fail")
+                    }
+                },function(e){});
+            }
+            /**
+             * 关闭指定窗口
+             * @param winId 待关闭窗口的Id
+             */
+            object.closeWindow=function(winId){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"CloseWindow",
+                    "data": {
+                        "sessionID":sessionId,
+                        "windowID":winId
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+                        delete object.windows[winId]
+                    }
+                },function(e){});
+
+            }
+            /**
+             * 将指定窗口最大化
+             * @param winId 待最大化窗口的Id
+             */
+            object.maximumWin=function(winId){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"CtrlWindow",
+                    "data": {
+                        "sessionID": sessionId,
+                        "windowID": winId,
+                        "maxWin": 1
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+
+                    }
+                },function(e){});
+            }
+            /**
+             * 将指定窗口最小化
+             * @param winId 待最小化窗口的Id
+             */
+            object.minimumWin=function(winId){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"CtrlWindow",
+                    "data": {
+                        "sessionID": sessionId,
+                        "windowID": winId,
+                        "maxWin":2
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+
+                    }
+                },function(e){});
+            }
+            /**
+             * 将指定窗口恢复到前一个位置,一般用于窗口最小化后,恢复到原来位置
+             * @param winId 待恢复到原来位置窗口的Id
+             */
+            object.restoreWin=function(winId){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"CtrlWindow",
+                    "data": {
+                        "sessionID": sessionId,
+                        "windowID": winId,
+                        "maxWin":0
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+
+                    }
+                },function(e){});
+            }
+            /**
+             * 在视频预览类型的窗口上,开始视频预览,目前此函数将设备信息已经写死了,
+             */
+            object.preview=function(winId){
+                var sessionId=this.sessionId;
+                var cmd= {
+                    "jsonType": "Request",
+                    "requestType":"RLVideoWin",
+                    "data": {
+                        "sessionID":sessionId,
+                        "windowID":winId,
+                        "serverIP": "192.168.0.141",
+                        "localIP": "192.168.0.239",
+                        "localPort": 5065,
+                        "serverID":"43010400002000000001",
+                        "serverRealm":"4301040000",
+                        "serverUserName":"43010400004000000001",
+                        "serverUserPwd":"12345678",
+                        "Port": 9060,
+                        "DevID":"43000000001320000004"
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+
+                    }
+                },function(e){});
+
+            }
+            /**
+             * 获取已经打开的窗口的列表
+             */
+            object.getWindowList=function(){
+                var winIds=[];
+                for(winId in object.windows){
+                    winIds.push(object.windows[winId]);
+                }
+                return winIds;
+            }
+            return object;
+        }
+        /**
+         * end 视频预览的配置
+         */
 
 
 
@@ -1969,8 +2332,97 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                     iconAnchor: [20, 20],
                                     iconSize: [40, 40]
                                 });
-                                var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{icon: Icon});
+
+                                var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{
+                                    icon: Icon,
+                                    //在这里attribution仅作为缓存变量来使用
+                                    attribution:temp.resourceCode
+                                });
+
+
                                 var configId = temp.configId;
+                                // marker.on("click",function () {
+                                //     console.log(marker.getLatLng());
+                                //     $("#device-info-name").val("");
+                                //     $("#device-info-desc").val("");
+                                //     $("#device-info-coors").val("");
+                                //
+                                //     var id = temp.resourceCode;
+                                //
+                                //     //console.log(id);
+                                //
+                                //     //异步
+                                //     var requestUrl=common.host+"/mgc"+"/deviceInfoService/getDeviceById";
+                                //     var info = $.when(
+                                //         $.ajax({
+                                //             url:requestUrl,
+                                //             type:'GET',
+                                //             data:{
+                                //                 id:id
+                                //             },
+                                //             cache:false,
+                                //         })
+                                //     );
+                                //
+                                //     info.done(function (r1) {
+                                //         layx.group('group-nomerge', [
+                                //             {
+                                //                 id: 'device-info',
+                                //                 title: '设备信息',
+                                //                 content: '<div class="layx-div"><h3>设备信息</h3>\n' +
+                                //                 '        <div class="input-group">\n' +
+                                //                 '            <span class="input-group-addon">设备名称</span>\n' +
+                                //                 '            <input id="device-info-name" type="text" class="form-control" value=" ' +r1.data[0].deviceName+ ' " name="device-name" readonly>\n' +
+                                //                 '        </div>\n' +
+                                //                 '        <br>\n' +
+                                //                 '        <div class="input-group">\n' +
+                                //                 '            <span class="input-group-addon">坐标信息</span>\n' +
+                                //                 '            <input id="device-info-coors" type="text" class="form-control" value=" ' + " " + ' " name="device-coors" readonly>\n' +
+                                //                 '        </div>\n' +
+                                //                 '        <br>\n' +
+                                //                 '        <div class="input-group">\n' +
+                                //                 '            <span class="input-group-addon">设备类型</span>\n' +
+                                //                 '            <select class="form-control" id="device-info-type" readonly>\n' +
+                                //                 '                <option>A</option>\n' +
+                                //                 '                <option>B</option>\n' +
+                                //                 '                <option>C</option>\n' +
+                                //                 '                <option>D</option>\n' +
+                                //                 '            </select>\n' +
+                                //                 '        </div>\n' +
+                                //                 '        <br>\n' +
+                                //                 '        <div class="input-group">\n' +
+                                //                 '            <span class="input-group-addon">设备描述</span>\n' +
+                                //                 '            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>\n' +
+                                //                 '        </div> </div>',
+                                //                 //cloneElementContent:false,
+                                //             },
+                                //             {
+                                //                 id: 'device-current',
+                                //                 title: '实时监测',
+                                //                 content: document.getElementById('device-chart'),
+                                //                 cloneElementContent: false,
+                                //             },
+                                //             {
+                                //                 id: 'device-history',
+                                //                 title: '历史记录',
+                                //                 content: document.getElementById('device-history'),
+                                //                 cloneElementContent: false,
+                                //             }
+                                //         ], 0, {
+                                //             id: 'info',
+                                //             mergeTitle: false,
+                                //             title: '设备详情',
+                                //         });
+                                //     });
+                                //
+                                //
+                                //
+                                //     // $("#device-info-name").val(feature.properties.name);
+                                //     // $("#device-info-desc").val("");
+                                //     // $("#device-info-coors").val(feature.geometry.coordinates);
+                                // });
+                                featurePointGroup.addLayer(marker);
+
                                 //如果存在室内点，那么触发相应的室内楼层事件
                                 if(temp.hasIndoor == true){
                                     marker.on("dblclick",function () {
@@ -2092,15 +2544,98 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                     });
                                 }
                                 else{
-
                                 }
-                                featurePointGroup.addLayer(marker);
+
+
                             }
                         };
                          serviceDataPoint(r1);
                          dataLayertemp[treeNode.id] = featurePointGroup;
                     });
                     res.then(function () {
+                        featurePointGroup.eachLayer(function (layer) {
+                            // layer.on("click",function () {
+                            //    console.log(layer.getAttribution());
+                            // });
+
+                            layer.on("click",function () {
+                                $("#device-info-name").val("");
+                                $("#device-info-desc").val("");
+                                $("#device-info-coors").val("");
+                                var id = layer.getAttribution();
+                                console.log(id);
+                                //异步
+                                var requestUrl=common.host+"/mgc"+"/deviceInfoService/getDeviceById";
+                                var info = $.when(
+                                    $.ajax({
+                                        url:requestUrl,
+                                        type:'GET',
+                                        data:{
+                                            id:id
+                                        },
+                                        cache:false,
+                                    })
+                                );
+
+                                info.done(function (r1) {
+                                    console.log(r1);
+                                    layx.group('group-nomerge', [
+                                        {
+                                            id: 'device-info',
+                                            title: '设备信息',
+                                            content: '<div class="layx-div"><h3>设备信息</h3>\n' +
+                                            '        <div class="input-group">\n' +
+                                            '            <span class="input-group-addon">设备名称</span>\n' +
+                                            '            <input id="device-info-name" type="text" class="form-control" value=" ' +r1.data[0].deviceName+ ' " name="device-name" readonly>\n' +
+                                            '        </div>\n' +
+                                            '        <br>\n' +
+                                            '        <div class="input-group">\n' +
+                                            '            <span class="input-group-addon">坐标信息</span>\n' +
+                                            '            <input id="device-info-coors" type="text" class="form-control" value=" ' + " " + ' " name="device-coors" readonly>\n' +
+                                            '        </div>\n' +
+                                            '        <br>\n' +
+                                            '        <div class="input-group">\n' +
+                                            '            <span class="input-group-addon">设备类型</span>\n' +
+                                            '            <select class="form-control" id="device-info-type" readonly>\n' +
+                                            '                <option>A</option>\n' +
+                                            '                <option>B</option>\n' +
+                                            '                <option>C</option>\n' +
+                                            '                <option>D</option>\n' +
+                                            '            </select>\n' +
+                                            '        </div>\n' +
+                                            '        <br>\n' +
+                                            '        <div class="input-group">\n' +
+                                            '            <span class="input-group-addon">设备描述</span>\n' +
+                                            '            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>\n' +
+                                            '        </div> </div>',
+                                            //cloneElementContent:false,
+                                        },
+                                        {
+                                            id: 'device-current',
+                                            title: '实时监测',
+                                            content: document.getElementById('device-chart'),
+                                            cloneElementContent: false,
+                                        },
+                                        {
+                                            id: 'device-history',
+                                            title: '历史记录',
+                                            content: document.getElementById('device-history'),
+                                            cloneElementContent: false,
+                                        }
+                                    ], 0, {
+                                        id: 'info',
+                                        mergeTitle: false,
+                                        title: '设备详情',
+                                    });
+                                });
+
+
+
+                                // $("#device-info-name").val(feature.properties.name);
+                                // $("#device-info-desc").val("");
+                                // $("#device-info-coors").val(feature.geometry.coordinates);
+                            });
+                        });
                         map.addLayer(featurePointGroup);
                     });
                 }

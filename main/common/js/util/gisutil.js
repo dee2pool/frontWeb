@@ -37,7 +37,7 @@ define(['jquery','turf','common','leaflet'],function ($,turf,common,leaflet) {
 
     //拼接字符串，为了拼接WMS服务的字符串
     gisutil.splitWMSUrl = function (wmsoption) {
-        return common.host+"/geoserver/cite/ows?" + $.param(wmsoption);
+        return common.geoserver+"/geoserver/cite/ows?" + $.param(wmsoption);
     };
 
     //将layer数据转换为WKT

@@ -81,7 +81,9 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
         var drawGroup = new L.FeatureGroup();
 
         //地图的加载
-        var host = "http://192.168.0.142:8060";
+        var host = common.geoserver;
+
+        var serviceHost = common.host;
 
         //后台地址
         var end = common.end;
@@ -131,16 +133,16 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
                         drawGroup.addLayer(drawlayer);
                         //弹出layx对话框，是否确定这个位置，如果确认，执行异步操作，如果不确定，当前点移除
                         // console.log(1);
-                        // lay.confirm('确定当前位置吗？', {
-                        //     btn: ['确定','取消'] //按钮
-                        // }, function(){
-                        //     lay.msg('保存成功');
-                        //     treeNode.font.color = "red";
-                        //     zTree.updateNode(nodes[0]);
-                        //     drawer.disable();
-                        // }, function(){
-                        //     drawGroup.removeLayer(drawlayer);
-                        // });
+                        lay.confirm('确定当前位置吗？', {
+                            btn: ['确定','取消'] //按钮
+                        }, function(){
+                            lay.msg('保存成功');
+                            treeNode.font.color = "red";
+                            zTree.updateNode(nodes[0]);
+                            drawer.disable();
+                        }, function(){
+                            drawGroup.removeLayer(drawlayer);
+                        });
                     }
                 );
 
@@ -183,23 +185,87 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
 
                 }
             };
-            //左侧默认区域树
-            var zNodes = [
-                {id: 'china', pId: '0', name: "中国", open: true,font:{'color':'black'}},
-                {id: 'hunan', pId: 'china', name: "湖南",open: true,font:{'color':'black'}},
-                {id: 'changsha', pId: 'hunan', name: "长沙市",font:{'color':'black'}},
-                {id: 'csxian', pId: 'changsha', name: "长沙县",font:{'color':'black'}},
-                {id: 'hngd', pId: 'csxian', name: "华南光电",font:{'color':'black'}},
-                {id: 'syh', pId: 'csxian', name: "松雅湖",font:{'color':'black'}},
-                {id: 'qcz', pId: 'csxian', name: "汽车站",font:{'color':'black'}},
-            ];
-            function getFont(treeId, node) {
-                return node.font ? node.font : {};
+            //根据分类异步加载相关要素设计
+            var setting_chooseCategory = {
+                async: {
+                    enable: true,
+                    url: serviceHost + '/base-data/org/-1/chidlren',
+                    //提交的参数
+                    autoParam: ["code=parentTypeCode"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
+                    type: "get",
+                    dataFilter: ajaxchooseCategoryFilter //用来将ajax异步返回的json数据处理成为ztree能用的json数据
+                },
+                data: {},
+                callback: {
+                    onClick: ajaxchooseCategoryOnClick
+                }
             };
-            function onClick(event, treeId, treeNode, clickFlag) {
-                console.log('执行ajax查询的事件');
+
+            function ajaxchooseCategoryFilter(treeId, parentNode, responseData) {
+                var d = []; //构造数组，用于存在改造后的数据，并且返回
+                for (var i = 0; i < responseData.dataSize; i++) {
+                    var temp = responseData.data[i];
+                    //加isParent主要是为了使得数组可以下拉打开查询
+                    //如果此节点下有节点，那么会加载相应的节点，如果没有，则不会添加相应的节点
+                    temp.isParent = 'true';
+                    d[i] = temp
+                }
+
+                return d;
             };
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+            function ajaxchooseCategoryOnClick(event, treeId, treeNode) {
+                // console.log(treeNode);
+                var code = treeNode.code;
+                $.ajax({
+                    url: serviceHost + '/event-linkage/resource/list',
+                    type: 'get',
+                    data: {
+                        pageNo: '1',
+                        pageSize: '5',
+                        resTypeCode: code
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            };
+
+            $.ajax({
+                //https://192.168.0.144:8080/base-data/org/-1/chidlren
+                url: serviceHost + '/base-data/org/-1/chidlren',
+                type: 'get',
+                // data: {
+                //     parentTypeCode: 'resType'
+                // },
+                dataType: 'json',
+                success: function (data) {
+                    var d = data.data[0];
+                    d.isParent = 'true';
+                    $.fn.zTree.init($("#treeDemo"), setting_chooseCategory, data.data[0]);
+                }
+            });
+
+
+
+            // //左侧默认区域树
+            // var zNodes = [
+            //     {id: 'china', pId: '0', name: "中国", open: true,font:{'color':'black'}},
+            //     {id: 'hunan', pId: 'china', name: "湖南",open: true,font:{'color':'black'}},
+            //     {id: 'changsha', pId: 'hunan', name: "长沙市",font:{'color':'black'}},
+            //     {id: 'csxian', pId: 'changsha', name: "长沙县",font:{'color':'black'}},
+            //     {id: 'hngd', pId: 'csxian', name: "华南光电",font:{'color':'black'}},
+            //     {id: 'syh', pId: 'csxian', name: "松雅湖",font:{'color':'black'}},
+            //     {id: 'qcz', pId: 'csxian', name: "汽车站",font:{'color':'black'}},
+            // ];
+            // function getFont(treeId, node) {
+            //     return node.font ? node.font : {};
+            // };
+            // function onClick(event, treeId, treeNode, clickFlag) {
+            //     console.log('执行ajax查询的事件');
+            // };
+            // $.fn.zTree.init($("#treeDemo"), setting, zNodes);
 
         });
 
