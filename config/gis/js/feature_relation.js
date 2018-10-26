@@ -687,18 +687,11 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                     {
                         label: '保存',
                         callback: function (id, button, event) {
-                            // // 获取 iframe 页面 window对象
-                            // var name = $("#device-name").val();
-                            // var geom = $("#device-coors").val();
-                            // //执行添加的方法
-                            // device.addDevice(name, geom, id);
                         }
                     },
                     {
                         label: '关闭',
                         callback: function (id, button, event) {
-                            // drawGroup.clearLayers();
-                            // // $("#add-device-form").css('display','none');
                             layx.destroy(id);
                         }
                     }
@@ -936,7 +929,208 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                 {id: '107', pId: '26', name: "工厂地图", cate: "feature-polygon"},
                 {id: '108', pId: '26', name: "户型图", cate: "feature-polygon"},
             ];
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+
+            /**
+             * start 组织树的异步加载
+             */
+
+            var setting_orgCategory = {
+                async: {
+                    enable: true,
+                    url: getAsyncOrgUrl,
+                    //提交的参数
+                    autoParam: ["code=parentTypeCode"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
+                    type: "get",
+                    dataFilter: ajaxchooseCategoryOrgFilter //用来将ajax异步返回的json数据处理成为ztree能用的json数据
+                },
+                data: {},
+                callback: {
+                    //点击查询事件
+                    onClick: ajaxchooseCategoryOnOrgClick
+                }
+            };
+            //动态构造url
+            function getAsyncOrgUrl(treeId, treeNode) {
+                var url = serviceHost+"/base-data/org/"+treeNode.code+"/chidlren";
+                return url;
+            };
+
+            //处理返回的数据格式
+            function ajaxchooseCategoryOrgFilter(treeId, parentNode, responseData) {
+                var d = []; //构造数组，用于存在改造后的数据，并且返回
+                for (var i = 0; i < responseData.dataSize; i++) {
+                    var temp = responseData.data[i];
+                    //加isParent主要是为了使得数组可以下拉打开查询
+                    //如果此节点下有节点，那么会加载相应的节点，如果没有，则不会添加相应的节点
+                    temp.isParent = 'true';
+                    d[i] = temp
+                }
+
+                return d;
+            };
+
+            function ajaxchooseCategoryOnOrgClick(event, treeId, treeNode) {
+                var code = treeNode.code;
+                var markerData = null;
+                $.when($.ajax({
+                    url: end + '/orggeo/listByOrgId',
+                    type: 'get',
+                    dataType: 'json',
+                    data:{
+                        code:code
+                    },
+                    success: function (resp) {
+                        var data = resp[0];
+                        var marker
+                    }
+                })).done(function (resp) {
+                    markerData = resp[0];
+                }).then(function (resp) {
+                    console.log(markerData);
+                    if(markerData != undefined){
+
+                        //如果存在内部地图，那么触发相应的绑定事件
+                        if(markerData.hasIndoor){
+                            console.log('有内部地图');
+                            var configId = markerData.orgId;
+                            //把configId赋值到input中去，用于后期的要素管理
+                            $("#oId").val(configId);
+
+                            //异步查询内部代码
+                            $.ajax({
+                                url:end+'/orggeo/listByOrgId',
+                                type:'GET',
+                                contentType:"application/json",
+                                data:{
+                                    code:configId
+                                },
+                                cache:false,
+                                success:function (resp) {
+                                    //console.log(data);
+                                    var data = resp[0];
+                                     var coor = data.geom.coordinates;
+                                     var oId = data.oid;
+                                     var marker = L.marker([coor[1],coor[0]]).addTo(map);
+                                     map.panTo([coor[1],coor[0]]);
+
+                                     marker.on("dblclick",function () {
+                                        console.log('显示内部地图');
+                                         //将原有地图注销
+                                         map.remove();
+                                         //重新注册新的地图事件
+                                         map = L.map('map', {
+                                             minZoom: 0,
+                                             maxZoom: 4,
+                                             center: [0, 0],
+                                             zoom: 4,
+                                             crs: L.CRS.Simple
+                                         });
+                                         map.on("baselayerchange",function (layer) {
+                                             var url = layer.layer._url;
+                                             console.log(url,typeof url);
+                                             var id = url.split("/");
+                                             $("#indoorLevelId").val("");
+                                             $("#indoorLevelId").val(id[id.length-1]);
+                                         });
+                                         var w = 1024,
+                                             h = 650;
+                                         //url = imageUrl;
+                                         var southWest = map.unproject([0, h], map.getMaxZoom() - 1);
+                                         var northEast = map.unproject([w, 0], map.getMaxZoom() - 1);
+                                         var bounds = new L.LatLngBounds(southWest, northEast);
+
+                                         //异步加载内部的图片
+                                         $.ajax({
+                                                 url:end+'/orggeo/listByOidToIndoor',
+                                                 type:'GET',
+                                                 contentType:"application/json",
+                                                 data:{
+                                                     "oId":oId
+                                                 },
+                                                 cache:false,
+                                                 success:function (data) {
+                                                     /**
+                                                      * 图层控制器
+                                                      */
+                                                     function generateMap() {
+                                                         this.keys = new Array();
+                                                         this.values= new Array();
+                                                         this.set = function (key, value) {
+                                                             if (this.values[key] == null) {//如键不存在则身【键】数组添加键名
+                                                                 this.keys.push(value);
+                                                             }
+                                                             this.values[key] = value;//给键赋值
+                                                         };
+                                                         this.get = function (key) {
+                                                             return this.values[key];
+                                                         };
+                                                         this.remove = function (key) {
+                                                             this.keys.remove(key);
+                                                             this.values[key] = null;
+                                                         };
+                                                         this.isEmpty = function () {
+                                                             return this.keys.length == 0;
+                                                         };
+                                                         this.size = function () {
+                                                             return this.keys.length;
+                                                         };
+                                                     };
+                                                     var t=new generateMap();
+                                                     var baseMap = new Object();
+                                                     for(var i=0;i<data.length;i++){
+
+                                                         var num = data[i].indoorNum;
+                                                         var level = L.imageOverlay("../../../main/common/asset/img/upload/"+data[i].indoorImg, bounds);
+
+                                                         baseMap[num]=level;
+                                                     }
+                                                     var overlayMaps = {};
+                                                     //设置图层控制器
+                                                     var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(map);
+                                                 },
+                                                 error:function () {
+                                                     //console.log(0)
+                                                 }
+                                             });
+
+                                     });
+                                },
+                                error:function () {
+                                    alert("添加失败");
+                                }
+                            });
+                        }
+                        else{
+                            console.log('没有内部地图');
+                            var marker = L.marker([markerData.geom.coordinates[1],markerData.geom.coordinates[0]]).addTo(map);
+                            map.panTo([markerData.geom.coordinates[1],markerData.geom.coordinates[0]],markerData.zoomNum);
+                        }
+                    }
+
+
+                })
+                //异步处理
+
+            };
+
+            $.ajax({
+                url: serviceHost + '/base-data/org/-1/chidlren',
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    var d = data.data[0];
+                    d.isParent = 'true';
+                    $.fn.zTree.init($("#treeDemo"), setting_orgCategory, data.data[0]);
+                }
+            });
+
+
+
+            /**
+             * end 组织树的具体加载
+             */
+
+
             //通过要素分类加载具体设备的树
             $.ajax({
                 url: serviceHost + '/event-linkage/resource/type/list',
@@ -956,83 +1150,9 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
             $("#edit").bind("click", edit);
             $("#remove").bind("click", remove);
 
-            //一级下拉菜单联动
-            $("#feature-level1").bind("change", function (obj) {
-                //目标value，根据不同的目标value，显示不同的子分类
-                //点要素的二级联动
-                if (obj.target.value === 'feature-point') {
-                    //$("#add-building-btn").css("display","block");
-                    //清空option
-                    $("#feature-level2").find("option").remove();
-                    var dataList = [
-                        "请选择", "建筑", "摄像头", "传感器"
-                    ];
-                    for (var i = 0; i < dataList.length; i++) {
-                        //先创建好select里面的option元素
-                        var option = document.createElement("option");
-                        $(option).val(dataList[i]);
-                        $(option).text(dataList[i]);
-                        $('#feature-level2').append(option);
-                    }
-                }
 
-                if (obj.target.value === 'feature-line') {
-                    $("#add-building-btn").css("display", "none");
-                    //清空option
-                    $("#feature-level2").find("option").remove();
-                    var dataList = [
-                        "请选择", "铁路", "国道", "高速公路"
-                    ];
-                    for (var i = 0; i < dataList.length; i++) {
-                        //先创建好select里面的option元素
-                        var option = document.createElement("option");
-                        //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
-                        $(option).val(dataList[i]);
-                        //给option的text赋值,这就是你点开下拉框能够看到的东西
-                        $(option).text(dataList[i]);
-                        //获取select 下拉框对象,并将option添加进select
-                        $('#feature-level2').append(option);
-                    }
-                }
 
-                if (obj.target.value === 'feature-polygon') {
-                    $("#add-building-btn").css("display", "none");
-                    //清空option
-                    $("#feature-level2").find("option").remove();
-                    var dataList = [
-                        "请选择", "区域地图", "工厂地图", "房间地图"
-                    ];
-                    for (var i = 0; i < dataList.length; i++) {
-                        //先创建好select里面的option元素
-                        var option = document.createElement("option");
-                        //转换DOM对象为JQ对象,好用JQ里面提供的方法 给option的value赋值
-                        $(option).val(dataList[i]);
-                        //给option的text赋值,这就是你点开下拉框能够看到的东西
-                        $(option).text(dataList[i]);
-                        //获取select 下拉框对象,并将option添加进select
-                        $('#feature-level2').append(option);
-                    }
-                }
-            });
 
-            //二级下拉菜单联动
-            $("#feature-level2").bind("change", function (obj) {
-                //对于是否显示楼层的控制显示
-                if (obj.target.value === '建筑') {
-                    $("#add-building-btn").css("display", "block");
-                }
-
-                if (obj.target.value != '建筑') {
-                    $("#add-building-btn").css("display", "none");
-                }
-
-            });
-
-            //要素分类input输入框的change事件联动
-            $("#input-category").on("onchange", function (obj) {
-                //对于是否显示楼层的控制显示
-                console.log($("#input-category").val());
-            });
 
             //打开要素分类选择界面
             $("#category").on("click", function () {
@@ -1143,8 +1263,6 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                     function responseHandler(result) {
                         //每一页中的数据是有限的，定为5或者是10
                         //通过rescode遍历，查表内是否存在rescode
-
-
                         return {
                             total: result.extra, //总页数,前面的key必须为"total"
                             data: result.data //行数据，前面的key要与之前设置的dataField的值一致.
@@ -1599,9 +1717,9 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                 // 异步查询indoorLevel实体
                 $.ajax({
                     type: "GET",           //因为是传输文件，所以必须是post
-                    url: end + '/feature/listIndoorByindoorImg',         //对应的后台处理类的地址
+                    url: end + '/orggeo/listByImgToIndoor',         //对应的后台处理类的地址
                     data: {
-                        indoorImg: imgId
+                        img: imgId
                     },
                     contentType: "application/json",
                     cache: false,

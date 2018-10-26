@@ -1239,6 +1239,8 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                         alert("添加失败");
                     }
                 });
+
+
             });
 
             //启动要素关联的界面
@@ -1408,11 +1410,12 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                     name:name,
                     category:category,
                     coors:coor,
-                    zoom:zoom,
+                    zoomNum:zoom,
                     flag:flag,
                     img:img,
                     levelNum:levelNumArray,
-                    levelImg:levelImgArray
+                    levelImg:levelImgArray,
+                    resCodeId:""
                 };
 
                 $.ajax({
@@ -1436,12 +1439,12 @@ require(['jquery','common', 'frame', 'bootstrap-table','bootstrapValidator','boo
                  */
             }else{
                 var configId = $("#configFeatureId").val();
-                var imgId = $("#indoorLevelId").val()
+                var imgId = $("#indoorLevelId").val();
 
                 // 异步查询indoorLevel实体
                 $.ajax({
-                    type: "GET",           //因为是传输文件，所以必须是post
-                    url: end+'/feature/listIndoorByindoorImg',         //对应的后台处理类的地址
+                    type: "GET",
+                    url: end+'/feature/listIndoorByindoorImg',//对应的后台处理类的地址
                     data: {
                         indoorImg:imgId
                     },

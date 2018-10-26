@@ -147,6 +147,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         //全局通用地址
         var host = common.geoserver;
         var end = common.end;
+        var serviceHost = common.host;
         //全局通用变量，用于所有的绘图图层
         var drawGroup = new L.FeatureGroup();
         //初始化设备信息查询的接口
@@ -1600,6 +1601,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             cache:false,
         });
 
+
+        /**
+         *
+         */
         $(function () {
             var nativeWinService=new NativeWinService("http://localhost:61111/cms");
             function authToken(onSuccess){
@@ -1648,13 +1653,13 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     //这里存在着一个异步的问题，必须要按照顺序依次执行下面的方法，才能正确调出视频，为了保证不受异步干扰，所以增加了延迟方法
                     setTimeout(function(){
                         nativeWinService.createWindow(1,"test",100,100,400,300);
-                    },500);
+                    },1500);
                     setTimeout(function(){
                         nativeWinService.getWindowList();
-                    },1000);
+                    },2000);
                     setTimeout(function(){
                         nativeWinService.preview(winId);
-                    },1500);
+                    },2500);
                 });
             }
 
@@ -2422,7 +2427,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                 //     // $("#device-info-coors").val(feature.geometry.coordinates);
                                 // });
                                 featurePointGroup.addLayer(marker);
-
                                 //如果存在室内点，那么触发相应的室内楼层事件
                                 if(temp.hasIndoor == true){
                                     marker.on("dblclick",function () {
@@ -2447,21 +2451,16 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                         var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
                                         var bounds = new L.LatLngBounds(southWest, northEast);
 
-
-
-                                        //切换事件，当不同的layer添加到图上
+                                        //切换事件，当不同的layer添加到图上，查询当前图层的设备点并且进行加载
                                         buildMapTest.on("layeradd",function (layer) {
                                             var bounds = layer.layer._bounds;
-
                                             //如果是undefined，说明添加进来的是点要素，那么什么也不做
                                             //只有添加面要素的时候，才调用后台接口进行加点的操作
                                             if(bounds === undefined){
-
                                             }else{
                                                 var url = layer.layer._url;
                                                 url = url.split("/");
                                                 var imgId = url[url.length-1];
-
                                                 //当面要素切换的时候，清除所有的marker
                                                 buildMapTest.eachLayer(function(layer){
                                                     console.log(layer);
@@ -2472,7 +2471,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                                     }
 
                                                 });
-
                                                 $.ajax({
                                                     type: "GET",           //因为是传输文件，所以必须是post
                                                     url: end+'/feature/listIndoorPointByImgId',         //对应的后台处理类的地址
@@ -2492,9 +2490,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                                 });
                                             }
                                         });
-
-
-
 
                                         var indoorGroup = new L.FeatureGroup();
                                         //异步加载楼层内部的图片
@@ -2529,8 +2524,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                             }
                                         });
                                         console.log(indoorGroup);
-
-
 
                                         buildMapTest.on("zoom", function (evt) {
                                             //console.log(typeof  evt.target._animateToZoom);
@@ -2747,16 +2740,289 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             console.log(treeNode.id + ", " + treeNode.name + "," + treeNode.checked);
         };
         var dataLayerZNodes =[
-            { id:'draw', pId:0,nocheck:true, name:"标绘数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
-            { id:'d_point',pId:'draw',  name:"天地图",  icon:"../asset/img/ztree/layers-icon.png"},
-            { id:'d_line', pId:'draw',  name:"百度地图",icon:"../asset/img/ztree/layers-icon.png"},
-            { id:'d_polygon', pId:'draw',  name:"高德地图",icon:"../asset/img/ztree/layers-icon.png"},
             { id:'service', pId:0,nocheck:true, name:"业务数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
             { id:'s_point',pId:'service',  name:"点要素",  icon:"../asset/img/ztree/layers-icon.png"},
             { id:'s_line', pId:'service',  name:"线要素",icon:"../asset/img/ztree/layers-icon.png"},
             { id:'s_polygon', pId:'service',  name:"面要素",icon:"../asset/img/ztree/layers-icon.png"},
         ];
         //end 数据控制器的树
+
+        //start 组织树控制器
+        var setting_orgCategory = {
+            async: {
+                enable: true,
+                url: getAsyncOrgUrl,
+                //提交的参数
+                autoParam: ["code=parentTypeCode"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
+                type: "get",
+                dataFilter: ajaxchooseCategoryOrgFilter //用来将ajax异步返回的json数据处理成为ztree能用的json数据
+            },
+            data: {},
+            callback: {
+                //点击查询事件
+                onClick: ajaxchooseCategoryOnOrgClick
+            }
+        };
+        //动态构造url
+        function getAsyncOrgUrl(treeId, treeNode) {
+            var url = serviceHost+"/base-data/org/"+treeNode.code+"/chidlren";
+            return url;
+        };
+
+        //处理返回的数据格式
+        function ajaxchooseCategoryOrgFilter(treeId, parentNode, responseData) {
+            var d = []; //构造数组，用于存在改造后的数据，并且返回
+            for (var i = 0; i < responseData.dataSize; i++) {
+                var temp = responseData.data[i];
+                //加isParent主要是为了使得数组可以下拉打开查询
+                //如果此节点下有节点，那么会加载相应的节点，如果没有，则不会添加相应的节点
+                temp.isParent = 'true';
+                d[i] = temp
+            }
+
+            return d;
+        };
+
+        function ajaxchooseCategoryOnOrgClick(event, treeId, treeNode) {
+            var code = treeNode.code;
+            var markerData = null;
+            $.when($.ajax({
+                url: end + '/orggeo/listByOrgId',
+                type: 'get',
+                dataType: 'json',
+                data:{
+                    code:code
+                },
+                success: function (resp) {
+                    var data = resp[0];
+                    var marker
+                }
+            })).done(function (resp) {
+                markerData = resp[0];
+            }).then(function (resp) {
+                console.log(markerData);
+                if(markerData != undefined){
+
+                    //如果存在内部地图，那么触发相应的绑定事件
+                    if(markerData.hasIndoor){
+                        console.log('有内部地图');
+                        var configId = markerData.orgId;
+                        //把configId赋值到input中去，用于后期的要素管理
+                        $("#oId").val(configId);
+
+                        //异步查询内部代码
+                        $.ajax({
+                            url:end+'/orggeo/listByOrgId',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:{
+                                code:configId
+                            },
+                            cache:false,
+                            success:function (resp) {
+                                //console.log(data);
+                                var data = resp[0];
+                                var coor = data.geom.coordinates;
+                                var oId = data.oid;
+                                var marker = L.marker([coor[1],coor[0]]).addTo(map);
+                                map.panTo([coor[1],coor[0]]);
+
+                                marker.on("dblclick",function () {
+                                    //start
+                                    // console.log('显示内部地图');
+                                    // //将原有地图注销
+                                    // map.remove();
+                                    // //重新注册新的地图事件
+                                    // map = L.map('map', {
+                                    //     minZoom: 0,
+                                    //     maxZoom: 4,
+                                    //     center: [0, 0],
+                                    //     zoom: 4,
+                                    //     crs: L.CRS.Simple
+                                    // });
+                                    // map.on("baselayerchange",function (layer) {
+                                    //     var url = layer.layer._url;
+                                    //     console.log(url,typeof url);
+                                    //     var id = url.split("/");
+                                    //     $("#indoorLevelId").val("");
+                                    //     $("#indoorLevelId").val(id[id.length-1]);
+                                    // });
+                                    // var w = 1024,
+                                    //     h = 650;
+                                    // //url = imageUrl;
+                                    // var southWest = map.unproject([0, h], map.getMaxZoom() - 1);
+                                    // var northEast = map.unproject([w, 0], map.getMaxZoom() - 1);
+                                    // var bounds = new L.LatLngBounds(southWest, northEast);
+                                    //
+                                    // //异步加载内部的图片
+                                    // $.ajax({
+                                    //     url:end+'/orggeo/listByOidToIndoor',
+                                    //     type:'GET',
+                                    //     contentType:"application/json",
+                                    //     data:{
+                                    //         "oId":oId
+                                    //     },
+                                    //     cache:false,
+                                    //     success:function (data) {
+                                    //         /**
+                                    //          * 图层控制器
+                                    //          */
+                                    //         var baseMap = new Object();
+                                    //         for(var i=0;i<data.length;i++){
+                                    //             var num = data[i].indoorNum;
+                                    //             var level = L.imageOverlay("../../../main/common/asset/img/upload/"+data[i].indoorImg, bounds);
+                                    //             baseMap[num]=level;
+                                    //         }
+                                    //         var overlayMaps = {};
+                                    //         //设置图层控制器
+                                    //         var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(map);
+                                    //     },
+                                    //     error:function () {
+                                    //         //console.log(0)
+                                    //     }
+                                    // });
+                                    // //end
+
+
+                                    //start
+                                    //查询相应的所属的楼层图片
+                                    //console.log(true);
+                                    var buildMapTest = null;
+                                    buildMapTest = L.map('img-map', {
+                                        minZoom: 0,
+                                        maxZoom: 4,
+                                        center: [0, 0],
+                                        zoom: 4,
+                                        crs: L.CRS.Simple
+                                    });
+                                    // 隐藏map，显示img-map
+                                    $("#map").css('display', 'none');
+                                    $("#img-map").css('display', 'block');
+
+                                    var w = 1024,
+                                        h = 650;
+                                    //url = imageUrl;
+                                    var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                                    var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                                    var bounds = new L.LatLngBounds(southWest, northEast);
+
+                                    //切换事件，当不同的layer添加到图上，查询当前图层的设备点并且进行加载
+                                    buildMapTest.on("layeradd",function (layer) {
+                                        var bounds = layer.layer._bounds;
+                                        //如果是undefined，说明添加进来的是点要素，那么什么也不做
+                                        //只有添加面要素的时候，才调用后台接口进行加点的操作
+                                        if(bounds === undefined){
+                                        }else{
+                                            var url = layer.layer._url;
+                                            url = url.split("/");
+                                            var imgId = url[url.length-1];
+                                            //当面要素切换的时候，清除所有的marker
+                                            buildMapTest.eachLayer(function(layer){
+                                                console.log(layer);
+                                                //对layer的类型进行判断，如果是marker，那么直接进行remove操作
+                                                //仍然通过bound来判断，如果bound是undefined，那么说明是点layer，则将此layer进行清除操作；
+                                                if(layer._bounds === undefined){
+                                                    buildMapTest.removeLayer(layer);
+                                                }
+
+                                            });
+                                            $.ajax({
+                                                type: "GET",
+                                                url: end+'/feature/listIndoorPointByImgId',
+                                                data: {
+                                                    imgId:imgId
+                                                },
+                                                contentType:"application/json",
+                                                cache:false,
+                                                success: function (data) {
+                                                    if(data.length != 0){
+                                                        for(var i=0;i<data.length;i++){
+                                                            L.marker([data[i].geo.coordinates[1], data[i].geo.coordinates[0]]).addTo(buildMapTest);
+                                                        }
+
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                    var indoorGroup = new L.FeatureGroup();
+                                    //异步加载楼层内部的图片
+                                    $.ajax({
+                                        url:end+'/orggeo/listByOidToIndoor',
+                                        type:'GET',
+                                        contentType:"application/json",
+                                        data:{
+                                            "oId":oId
+                                        },
+                                        cache:false,
+                                        success:function (data) {
+                                            /**
+                                             * 图层控制器
+                                             */
+                                            var baseMap = new Object();
+                                            for(var i=0;i<data.length;i++){
+                                                //console.log(data[i]);
+                                                var num = data[i].indoorNum;
+                                                var level = L.imageOverlay("../../common/asset/img/upload/"+data[i].indoorImg, bounds);
+                                                if(i === 0){
+                                                    level.addTo(buildMapTest);
+                                                }
+                                                baseMap[num]=level;
+                                            }
+                                            var overlayMaps = {};
+                                            //设置图层控制器
+                                            var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+                                        },
+                                        error:function () {
+                                            //console.log(0)
+                                        }
+                                    });
+                                    console.log(indoorGroup);
+
+                                    buildMapTest.on("zoom", function (evt) {
+                                        //console.log(typeof  evt.target._animateToZoom);
+                                        if (evt.target._animateToZoom == 1) {
+                                            $("#map").css('display', 'block');
+                                            $(".img-map").css('display', 'none');
+                                            buildMapTest.remove();
+                                            buildMapTest = null;
+                                        }
+                                    });
+                                    //end
+
+                                });
+                            },
+                            error:function () {
+                                alert("添加失败");
+                            }
+                        });
+                    }
+                    else{
+                        console.log('没有内部地图');
+                        var marker = L.marker([markerData.geom.coordinates[1],markerData.geom.coordinates[0]]).addTo(map);
+                        map.panTo([markerData.geom.coordinates[1],markerData.geom.coordinates[0]],markerData.zoomNum);
+                    }
+                }
+
+
+            })
+            //异步处理
+
+        };
+
+        $.ajax({
+            url: serviceHost + '/base-data/org/-1/chidlren',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                var d = data.data[0];
+                d.isParent = 'true';
+                $.fn.zTree.init($("#layerControlOrg"), setting_orgCategory, data.data[0]);
+            }
+        });
+        //end 组织树控制器
 
         $(document).ready(function(){
 
@@ -2766,6 +3032,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             zTree = $.fn.zTree.getZTreeObj("treeDemo");
             //底图控制器
             $.fn.zTree.init($("#layerControlBase"), baseLayserSetting, baseLayserZNodes);
+
             //数据控制器
             var dataControlTree = $.fn.zTree.init($("#layerControlData"), dataLayserSetting, dataLayerZNodes);
         });

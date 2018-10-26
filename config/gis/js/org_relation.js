@@ -115,6 +115,8 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
             var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
                 nodes = zTree.getSelectedNodes(),
                 treeNode = nodes[0];
+            //console.log(treeNode);
+            var orgCode = treeNode.code;
             if(treeNode === undefined){
                 alert("请先选择一个组织节点");
                 return;
@@ -131,65 +133,223 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
                         var type = e.layerType,
                             drawlayer = e.layer;
                         drawGroup.addLayer(drawlayer);
+                        var coors = drawlayer.getLatLng();
+                        var zoom = map.getZoom();
+                        var hasIndoor = null;
                         //弹出layx对话框，是否确定这个位置，如果确认，执行异步操作，如果不确定，当前点移除
-                        // console.log(1);
-                        lay.confirm('确定当前位置吗？', {
-                            btn: ['确定','取消'] //按钮
+                        lay.confirm('是否添加内部地图？', {
+                            btn: ['添加内部地图','直接保存','取消'] //按钮
                         }, function(){
-                            lay.msg('保存成功');
-                            treeNode.font.color = "red";
-                            zTree.updateNode(nodes[0]);
+                            hasIndoor = true;
+                            openIndoorWin(orgCode,coors,hasIndoor);
                             drawer.disable();
+                            lay.closeAll();
                         }, function(){
+                            hasIndoor = false;
+                            console.log('直接保存');
+                            saveOrgPoint(orgCode,coors,hasIndoor);
+                            //关闭所有的layer弹出层
+                            lay.closeAll();
+                        },function(){
                             drawGroup.removeLayer(drawlayer);
                         });
                     }
                 );
-
-
-                map.on("draw:drawstop",function (e) {
-                    var type = e.layerType,
-                        layer = e.layer;
-                    // Do whatever else you need to. (save to db; add to map etc)
-                    console.log(layer);
-                });
-                //drawer = null;
             }
 
         });
 
+        /**
+         *打开添加楼层内部信息的窗口
+         */
+        function openIndoorWin(orgCode,coors,hasIndoor) {
+            layx.html('indoor', '添加楼层', document.getElementById('indoor'), {
+                //取用模式，而不是拷贝模式，不然的话拿不到值
+                cloneElementContent: false,
+                //上边中间打开
+                //position: 'c',
+                maxMenu: false,
+                minMenu: false,
+                closeMenu: false,
+                minMenu: false,
+                maxMenu: false,
+                controlStyle: 'background-color: #1070e2; color:#fff;',
+                border: false,
+                style: layx.multiLine(function () {/*
+                        #layx-purple-control-style .layx-inlay-menus .layx-icon:hover {
+                            background-color: #9953c0;
+                        }
+                    */
+                }),
+                width: 750,
+                height: 500,
+                statusBar: true,
+                storeStatus: false,
+                icon: '<i class="fa fa-plus-circle"></i>',
+                event: {},
+                buttons: [
+                    {
+                        label: '保存',
+                        callback: function (id, button, event) {
+                            console.log('保存');
+                            saveOrgPoint(orgCode,coors,hasIndoor);
+                        }
+                    },
+                    {
+                        label: '关闭',
+                        callback: function (id, button, event) {
+                            console.log('关闭');
+                            layx.destroy(id);
+                        }
+                    }
+                ]
+            });
+        };
 
+        /**
+         * export-building
+         * 添加楼层的内部信息
+         */
+        $("#export-building").on("click",function () {
+            var total = parseInt($("#indoor-total").val());
+            var start = parseInt($("#indoor-start").val());
+            console.log(typeof  $("#indoor-total").val());
+            if (total === null || start === null || total < start) {
+                alert('楼层信息输入有误！请重新输入');
+                return;
+            }
+
+            for (var i = start; i < total; i++) {
+                var t = i;
+                if (t >= 0) {
+                    t += 1;
+                }
+                //动态创建一个tr行标签,并且转换成jQuery对象
+                var $trTemp = $("<tr></tr>");
+                //往行里面追加 td单元格
+                $trTemp.append("<td" + " " + "id=indoorId" + i + ">" + t + "</td>");
+                $trTemp.append("<td>" + t + "楼" + "</td>");
+                $trTemp.append("<td>" + "<input class='form-control'" + "id=indoorImg" + i + " type='file'/>" + "<div style='display: none'" + "id=indoorDiv" + i + "></div>" + "</td>");
+                $trTemp.appendTo("#indoor-table");
+            }
+        });
+
+        /**
+         * 一键上传所有内部楼层的照片upload-all-level-img
+         */
+        $("#upload-all-level-img").on("click", function () {
+            //获取楼层表格行数，获取的表格行数包括了题头，所以实际数值应该减一
+            var level = $("#indoor-table").find("tr").length;
+            //由于楼层的起点是不一定的，所有获取表格除题头外的第一行的楼层号从而来确定楼层号的起点位置
+            var startNum = $("#indoor-table tr:eq(1) td:eq(0)").text();
+            level = parseInt(level);
+            level = level - 1;
+            startNum = parseInt(startNum);
+            var total = level + startNum;
+            //遍历上传图片
+            for (var i = startNum; i < total; i++) {
+                var levelNum = $("#indoorId" + i).text();
+                var levelImg = $("#indoorImg" + i).val();
+                //console.log(levelNum,levelImg);
+                var imgId = "#indoorImg" + i;
+                //赋值保存
+                uploadImage(imgId, levelNum, i);
+            }
+        });
+
+        /**
+         * 图片上传的分离方法
+         */
+        function uploadImage(id, levelNum, flag) {
+            var type = "file";          //后台接收时需要的参数名称，自定义即可
+            var formData = new FormData();
+            formData.append(type, $(id)[0].files[0]);    //生成一对表单属性
+            $.ajax({
+                type: "POST",           //因为是传输文件，所以必须是post
+                url: end + '/feature/upload',         //对应的后台处理类的地址
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    //console.log(data,levelNum,flag);
+                    $("#indoorDiv" + flag).html(data);
+                    alert(levelNum + '楼上传成功！');
+                }
+            });
+        };
+
+        function saveOrgPoint(orgCode,latlng,hasIndoor) {
+            var code =orgCode;
+            var zoom = parseInt(map.getZoom());
+            var hasIndoor = hasIndoor;
+            //坐标字符串的处理
+            var t = [latlng.lat,latlng.lng];
+            // var coors = latlng;//Latlng(123.4,12345)
+            // coors = coors.slice(7, coors.length - 1);
+            // coors = coors.split(',');
+            var coor = t;
+
+            //楼层号数组和楼层图片的数组
+            var levelNumArray = [0];
+            var levelImgArray = [0];
+
+            //如果在室内，那么需要保存内部图片
+            if(hasIndoor){
+                //构造楼层号数组和图片数组
+                var level = $("#indoor-table").find("tr").length;
+                //由于楼层的起点是不一定的，所有获取表格除题头外的第一行的楼层号从而来确定楼层号的起点位置
+                var startNum = $("#indoor-table tr:eq(1) td:eq(0)").text();
+                level = parseInt(level);
+                level = level - 1;
+                startNum = parseInt(startNum);
+                var total = level + startNum;
+                var j = 0;
+                for (var i = startNum; i < total; i++) {
+                    var levelNum = $("#indoorId" + i).text();
+                    //上传之后的图片，缓存在表格中的隐藏div中
+                    var levelImg = $("#indoorDiv" + i).html();
+                    levelNumArray[j] = levelNum;
+                    levelImgArray[j] = levelImg;
+                    j++;
+                }
+            }
+            else{
+
+            }
+
+            var data = {
+                orgId:code,
+                zoomNum: zoom,
+                hasIndoor: hasIndoor,
+                coors:coor,
+                levelNum: levelNumArray,
+                levelImg: levelImgArray,
+
+            };
+            $.ajax({
+                url: end + '/orggeo/addOrgPoint',
+                type: 'GET',
+                contentType: "application/json",
+                data: data,
+                cache: false,
+                success: function (resp) {
+                    //alert会阻塞js代码的运行，所以刷新代码直接放在下方即可
+                    alert(resp);
+                    //刷新代码
+                    //location.reload();
+                },
+                error: function () {
+                    alert(resp);
+                }
+            });
+        }
 
         $(document).ready(function () {
-            var setting = {
-                view: {
-                    selectedMulti: false,
-                    fontCss: getFont,
-                },
-                edit: {
-                    enable: true,
-                    showRemoveBtn: false,
-                    showRenameBtn: false
-                },
-                data: {
-                    keep: {
-                        parent: true,
-                        leaf: true
-                    },
-                    simpleData: {
-                        enable: true
-                    }
-                },
-                callback: {
-                    onClick: onClick
-
-                }
-            };
             //根据分类异步加载相关要素设计
             var setting_chooseCategory = {
                 async: {
                     enable: true,
-                    url: serviceHost + '/base-data/org/-1/chidlren',
+                    url: getAsyncUrl,
                     //提交的参数
                     autoParam: ["code=parentTypeCode"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
                     type: "get",
@@ -201,6 +361,15 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
                 }
             };
 
+            //动态构造url
+            function getAsyncUrl(treeId, treeNode) {
+                //https://192.168.0.144:8080/base-data/org/-1/chidlren
+                var code = treeNode.code;
+                var url = serviceHost+"/base-data/org/"+treeNode.code+"/chidlren";
+                return url;
+            };
+
+            //处理返回的数据格式
             function ajaxchooseCategoryFilter(treeId, parentNode, responseData) {
                 var d = []; //构造数组，用于存在改造后的数据，并且返回
                 for (var i = 0; i < responseData.dataSize; i++) {
@@ -215,7 +384,7 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
             };
 
             function ajaxchooseCategoryOnClick(event, treeId, treeNode) {
-                // console.log(treeNode);
+                console.log(treeNode);
                 var code = treeNode.code;
                 $.ajax({
                     url: serviceHost + '/event-linkage/resource/list',
@@ -233,7 +402,6 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
             };
 
             $.ajax({
-                //https://192.168.0.144:8080/base-data/org/-1/chidlren
                 url: serviceHost + '/base-data/org/-1/chidlren',
                 type: 'get',
                 // data: {
@@ -246,26 +414,6 @@ require(['jquery','common','bootstrap','bootstrap-table', 'frame','bootstrapVali
                     $.fn.zTree.init($("#treeDemo"), setting_chooseCategory, data.data[0]);
                 }
             });
-
-
-
-            // //左侧默认区域树
-            // var zNodes = [
-            //     {id: 'china', pId: '0', name: "中国", open: true,font:{'color':'black'}},
-            //     {id: 'hunan', pId: 'china', name: "湖南",open: true,font:{'color':'black'}},
-            //     {id: 'changsha', pId: 'hunan', name: "长沙市",font:{'color':'black'}},
-            //     {id: 'csxian', pId: 'changsha', name: "长沙县",font:{'color':'black'}},
-            //     {id: 'hngd', pId: 'csxian', name: "华南光电",font:{'color':'black'}},
-            //     {id: 'syh', pId: 'csxian', name: "松雅湖",font:{'color':'black'}},
-            //     {id: 'qcz', pId: 'csxian', name: "汽车站",font:{'color':'black'}},
-            // ];
-            // function getFont(treeId, node) {
-            //     return node.font ? node.font : {};
-            // };
-            // function onClick(event, treeId, treeNode, clickFlag) {
-            //     console.log('执行ajax查询的事件');
-            // };
-            // $.fn.zTree.init($("#treeDemo"), setting, zNodes);
 
         });
 

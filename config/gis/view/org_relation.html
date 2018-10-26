@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="../../../common/lib/ztree/css/metroStyle/metroStyle.css">
     <link rel="stylesheet" href="../../../common/lib/leaflet/lib/draw/Leaflet.Draw.css">
     <link rel="stylesheet" href="../../../common/lib/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../../common/lib/layx/layx.css">
 
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/org_relation"></script>
 </head>
@@ -47,7 +48,12 @@
                                 </div>
                                 <ul id="treeDemo" class="ztree"></ul>
                             </div>
+                            <div id="feature-content" class="left-up">
+
+                            </div>
                         </div>
+
+
                         <div class="right feature-border" >
                             <div class="map feature-border" id="map" style=""></div>
                         </div>
@@ -60,5 +66,65 @@
         </div>
     </div>
 </div>
+
+<section style="display: none">
+    <div id="indoor">
+        <div class="container-fluid editTreeData">
+            <div class="row">
+                <!--1.1楼层信息-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 little-title">楼层信息:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" placeholder="起始楼层" id="indoor-start">
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" placeholder="终止总数" id="indoor-total">
+                        </div>
+                    </div>
+                </div>
+
+                <!--1.2导入楼层地图-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <a href="#" class="black-a" id="export-building"><i class="fa fa-hand-o-up"></i>添加楼层信息</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!--1.3自动生成的楼层表格-->
+                <div class="col-sm-10 col-sm-offset-1">
+                    <table class="table   table-striped" id="indoor-table">
+                        <thead>
+                        <tr>
+                            <th>楼层号</th>
+                            <th>楼层名称</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--1.4一键上传按钮-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 little-title" >一键上传:</label>
+                        <div class="col-sm-3">
+                            <button class="btn btn-primary" id="upload-all-level-img">上传所有楼层图片</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--1.5保存楼层信息和图片信息-->
+
+
+            </div>
+        </div>
+    </div>
+
+</section>
 </body>
 </html>
