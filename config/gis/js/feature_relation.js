@@ -329,17 +329,26 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                 treeNode = nodes[0];
             var category = treeNode.cate;
 
+            var cate= null;
+            if(treeNode.getPath()[1].name === '点要素'){
+                cate = 'feature-point';
+            }else if(treeNode.getPath()[1].name === '线要素'){
+                cate = 'feature-line';
+            }else{
+                cate = 'feature-polygon';
+            }
+
             $("#flag-category").val(category);
             //console.log();
 
             var mapcss = $("#map").css("display");
 
             //如果没有上传图片，需要进行提示的操作
-            if (category === 'feature-point' || category === 'feature-polygon') {
-                if ($("#upload-img").val() == '') {
-                    alert('请先上传图像');
-                    return;
-                }
+            if (cate === 'feature-point' || cate === 'feature-polygon') {
+                // if ($("#upload-img").val() != '' ||$("#uploadImgName").val() != '') {
+                //     alert('请先上传图像');
+                //     return;
+                // }
             }
             if (treeNode.name === '建筑') {
                 $("#add-building-btn").css("display", "block");
@@ -349,15 +358,21 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
             /**
              * 构造点要素
              */
-            if (category === 'feature-point') {
+            if (cate === 'feature-point') {
                 var index = null;
                 //用之前先清空一下图层，重新加载一下
                 drawGroup.clearLayers();
                 drawGroup.remove();
                 drawGroup.addTo(map);
+                var objUrl = null;
+                if ($("#upload-img").val() != '') {
+                    objUrl = getObjectURL(document.getElementById('upload-img').files[0]);
+                }
+                if ($("#uploadImgName").val()!= '') {
+                    objUrl = "../../../main/common/asset/img/upload/"+$("#uploadImgName").val();
+                }
 
 
-                var objUrl = getObjectURL(document.getElementById('upload-img').files[0]);
 
                 function getObjectURL(file) {
                     var url = null;
@@ -392,7 +407,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                 drawer = null;
             }
             //构造线要素
-            if (category === 'feature-line') {
+            if (cate === 'feature-line') {
                 var index = null;
                 //用之前先清空一下图层，重新加载一下
                 drawGroup.clearLayers();
@@ -422,7 +437,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
             /**
              * 构造面要素
              */
-            if (category === 'feature-polygon') {
+            if (cate === 'feature-polygon') {
                 var index = null;
                 //用之前先清空一下图层，重新加载一下
                 drawGroup.clearLayers();
@@ -464,7 +479,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                 });
                 drawer = null;
             }
-            if (category === 'none') {
+            if (cate === 'none') {
                 alert('请先选择要素类型');
             }
             //buildMapTest
@@ -595,6 +610,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
 
             //获取所属分类
             var category = $('#feature-level1 option:selected').val();
+
 
             //点要素提交情况
             if (category === 'feature-point') {
@@ -968,10 +984,11 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
 
                 return d;
             };
-
+            var orgGroup = L.featureGroup().addTo(map);
             function ajaxchooseCategoryOnOrgClick(event, treeId, treeNode) {
                 var code = treeNode.code;
                 var markerData = null;
+                orgGroup.clearLayers();
                 $.when($.ajax({
                     url: end + '/orggeo/listByOrgId',
                     type: 'get',
@@ -988,14 +1005,12 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                 }).then(function (resp) {
                     console.log(markerData);
                     if(markerData != undefined){
-
                         //如果存在内部地图，那么触发相应的绑定事件
                         if(markerData.hasIndoor){
                             console.log('有内部地图');
                             var configId = markerData.orgId;
                             //把configId赋值到input中去，用于后期的要素管理
                             $("#oId").val(configId);
-
                             //异步查询内部代码
                             $.ajax({
                                 url:end+'/orggeo/listByOrgId',
@@ -1012,7 +1027,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                                      var oId = data.oid;
                                      var marker = L.marker([coor[1],coor[0]]).addTo(map);
                                      map.panTo([coor[1],coor[0]]);
-
+                                    orgGroup.addLayer(marker)
                                      marker.on("dblclick",function () {
                                         console.log('显示内部地图');
                                          //将原有地图注销
@@ -1104,6 +1119,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                             console.log('没有内部地图');
                             var marker = L.marker([markerData.geom.coordinates[1],markerData.geom.coordinates[0]]).addTo(map);
                             map.panTo([markerData.geom.coordinates[1],markerData.geom.coordinates[0]],markerData.zoomNum);
+                            orgGroup.addLayer(marker);
                         }
                     }
 
@@ -1145,15 +1161,58 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                     $.fn.zTree.init($("#treeDemo2"), setting_chooseCategory, data.data[0]);
                 }
             });
-            $.fn.zTree.init($("#treeDemo3"), setting_category, zNodes_chooseCategory);
+
+            /**
+             * start 要素分类树
+             */
+            var setting_featureCate = {
+                async: {
+                    enable: true,
+                    url: end + "/featureCategory/findByPid",
+                    //提交的参数
+                    autoParam: ["id=pid"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
+                    type: "get",
+                    dataFilter: ajaxchoosefeatureCateFilter //用来将ajax异步返回的json数据处理成为ztree能用的json数据
+                },
+                data: {},
+                callback: {
+                    onClick:cateClick
+                }
+            };
+            function cateClick() {
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo3"),
+                    nodes = zTree.getSelectedNodes(),
+                    treeNode = nodes[0];
+                if (nodes.length == 0) {
+                    layer.msg("请先选择一个节点");
+                    return;
+                };
+                console.log(treeNode);
+            };
+            function ajaxchoosefeatureCateFilter(treeId, parentNode, responseData) {
+                var d = []; //构造数组，用于存在改造后的数据，并且返回
+                for (var i = 0; i < responseData.length; i++) {
+                    var temp = responseData[i];
+                    var t = {};
+                    t.id = temp.fcId;
+                    t.pid = temp.fcPid;
+                    t.name = temp.fcName;
+                    t.img = temp.fcIcon;
+                    t.isParent = true;
+                    d[i] = t;
+                }
+                return d;
+            };
+            var zNodes_chooseCate = [
+                {id: 'fc', pId: 0, name: "要素分类", open: true,isParent:true},
+            ];
+            $.fn.zTree.init($("#treeDemo3"), setting_featureCate, zNodes_chooseCate);
+            /**
+             * end 要素分类树
+             */
             $("#addParent").bind("click", {isParent: true}, add);
             $("#edit").bind("click", edit);
             $("#remove").bind("click", remove);
-
-
-
-
-
             //打开要素分类选择界面
             $("#category").on("click", function () {
                 layx.group('group-nomerge', [
@@ -1600,6 +1659,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                 } else {
                     $("#input-category").val(treeNode.name);
                     $("#input-categoryTypeCode").val(treeNode.typeCode);
+                    $("#uploadImgName").val(treeNode.img);
                     //关闭窗口
                     layx.destroyAll();
                 }
@@ -1619,18 +1679,31 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
          * 要素关联 前后端对接
          */
         $("#submitConnection").on("click", function () {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo3"),
+                nodes = zTree.getSelectedNodes(),
+                treeNode = nodes[0];
             //获取地图状态，判断当前的地图状态是在在indoor还是outdoor
             //如果是indoor那么正常进行，如果是outdoor，那么需要调用indoor添加的接口
             var currentzoom = parseInt(map.getZoom());
             //从表单拿要素，组装
             var name = $("#feature-name").val();
-            var category = $("#flag-category").val();
+            var category = treeNode.id;
             var zoom = $("#feature-zoom").val();
             var flag = $("#flag-category").val();
             var img = $("#uploadImgName").val();
             var resCodeId = $("#feature-resId").val();
             var levelNumArray = [0];
             var levelImgArray = [0];
+
+            var type= null;
+            if(treeNode.getPath()[1].name === '点要素'){
+                type = 'feature-point';
+            }else if(treeNode.getPath()[1].name === '线要素'){
+                type = 'feature-line';
+            }else{
+                type = 'feature-polygon';
+            }
+
             //坐标字符串的处理
             var coor = null;//
             //当图层等级大于4的时候，那么是outdoor，否则就是indoor
@@ -1640,7 +1713,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                  * @type {jQuery}
                  */
                 //点要素判断
-                if (flag === 'feature-point') {
+                if (type === 'feature-point') {
                     var coors = $("#feature-coors").val();//Latlng(123.4,12345)
                     coors = coors.slice(7, coors.length - 1);
                     coors = coors.split(',');
@@ -1668,13 +1741,13 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                     }
                 }
                 //线要素判断
-                if (flag === 'feature-line') {
+                if (type === 'feature-line') {
                     var coors = $("#feature-coors").val();
                     coors = coors.split(',');
                     coor = coors;
                 }
 
-                if (flag === 'feature-polygon') {
+                if (type === 'feature-polygon') {
                     var coors = $("#feature-coors").val();
                     coors = coors.split(',');
                     coor = coors;
@@ -1684,7 +1757,7 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                     category: category,
                     coors: coor,
                     zoomNum: zoom,
-                    flag: flag,
+                    flag: type,
                     img: img,
                     levelNum: levelNumArray,
                     levelImg: levelImgArray,
@@ -1716,8 +1789,8 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
 
                 // 异步查询indoorLevel实体
                 $.ajax({
-                    type: "GET",           //因为是传输文件，所以必须是post
-                    url: end + '/orggeo/listByImgToIndoor',         //对应的后台处理类的地址
+                    type: "GET",
+                    url: end + '/orggeo/listByImgToIndoor',
                     data: {
                         img: imgId
                     },
@@ -1796,7 +1869,6 @@ require(['jquery', 'common', 'bootstrap', 'bootstrap-table', 'frame', 'bootstrap
                 success: function (data) {
                     //console.log(data,levelNum,flag);
                     $("#indoorDiv" + flag).html(data);
-
                     alert(levelNum + '楼上传成功！');
                 }
             });

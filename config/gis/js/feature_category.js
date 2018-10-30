@@ -65,8 +65,8 @@ require.config({
 
     }
 });
-require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','leaflet','ztree','layx','colorpicker'],
-    function (jquery, frame, bootstrapTable,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,leaflet,ztree,layx,colorpicker) {
+require(['jquery', 'common','frame', 'bootstrap-table','bootstrapValidator','bootstrap', 'bootstrap-switch','bootstrap-treeview','topBar','leaflet','ztree','layx','colorpicker','layer'],
+    function (jquery,common, frame, bootstrapTable,bootstrapValidator,bootstrap, bootstrapSwitch,treeview,topBar,leaflet,ztree,layx,colorpicker,layer) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -74,77 +74,68 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
         $('#head').html(topBar.htm);
         topBar.init();
 
-        //树的加载
-        var setting = {
-            data: {
-                simpleData: {
-                    enable: true
-                }
-            },
-            callback: {
-                onClick: onClick,
-                onRemove: onRemove,
-            },
-            edit: {
+        var end = common.end;
+
+
+        /**
+         * start 分类树
+         */
+        var setting_featureCate = {
+            async: {
                 enable: true,
-                showRemoveBtn: false,
-                showRenameBtn: false
+                url: end + "/featureCategory/findByPid",
+                //提交的参数
+                autoParam: ["id=pid"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
+                type: "get",
+                dataFilter: ajaxchoosefeatureCateFilter //用来将ajax异步返回的json数据处理成为ztree能用的json数据
             },
+            data: {},
+            callback: {
+                //点击查询事件
+                onClick: onClick
+            }
         };
 
-        var zNodes =[
-            { id:1, pId:0, name:"要素分类", open:true},
-            { id:'11', pId:1, name:"点要素", open:true},
-            { id:'12', pId:1, name:"线要素", open:true},
-            { id:'13', pId:1, name:"面要素", open:true},
-            //点要素
-            { id:'21', pId:11, name:"业务分类"},
-            { id:'22', pId:11, name:"自定义分类"},
-            //线要素
-            { id:'23', pId:12, name:"业务分类"},
-            { id:'24', pId:12, name:"自定义分类"},
-            //面要素
-            { id:'25', pId:13, name:"业务分类"},
-            { id:'26', pId:13, name:"自定义分类"},
-
-            //点要素自定义
-            { id:'101', pId:22, name:"建筑"},
-            { id:'102', pId:22, name:"摄像头"},
-            { id:'103', pId:22, name:"传感器"},
-            //点要素业务分类
-            { id:'109', pId:21, name:"设备"},
-            { id:'110', pId:21, name:"人"},
-            { id:'111', pId:109, name:"海康"},
-            { id:'112', pId:109, name:"大华"},
-
-
-            //线要素自定义
-            { id:'104', pId:'24', name:"铁路"},
-            { id:'105', pId:'24', name:"国道"},
-            //面要素自定义
-            { id:'106', pId:'26', name:"区域地图"},
-            { id:'107', pId:'26', name:"工厂地图"},
-            { id:'108', pId:'26', name:"户型图"},
-
-        ];
+        //处理返回的数据格式
+        function ajaxchoosefeatureCateFilter(treeId, parentNode, responseData) {
+            var d = []; //构造数组，用于存在改造后的数据，并且返回
+            for (var i = 0; i < responseData.length; i++) {
+                var temp = responseData[i];
+                var t = {};
+                t.id = temp.fcId;
+                t.pid = temp.fcPid;
+                t.name = temp.fcName;
+                t.img = temp.fcIcon;
+                t.isParent = true;
+                d[i] = t;
+            }
+            return d;
+        };
 
         /**
          * 删除节点
          * @param e
          */
-        function onRemove(e, treeId, treeNode) {
-            showLog("[ " + getTime() + " onRemove ]&nbsp;&nbsp;&nbsp;&nbsp; " + treeNode.name);
-        }
         function remove(e) {
             var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
                 nodes = zTree.getSelectedNodes(),
                 treeNode = nodes[0];
-            if (nodes.length == 0) {
-                alert("请先选择一个节点");
-                return;
+            if (treeNode && (treeNode.pId != '0' && treeNode.pid != 'fc')) {
+                var id = treeNode.id;
+                layer.confirm('确认删除选中分类？', {
+                    btn: ['确定','取消'] //按钮
+                }, function(){
+                    featureCategory.delete(id,function () {
+                        layer.msg('删除成功！');
+                    });
+                    var callbackFlag = $("#callbackTrigger").attr("checked");
+                    zTree.removeNode(treeNode, callbackFlag);
+                }, function(){
+                    layer.closeAll();
+                });
+            }else{
+                layer.msg('未选择点或当前点不可删除！');
             }
-            var callbackFlag = $("#callbackTrigger").attr("checked");
-            zTree.removeNode(treeNode, callbackFlag);
         };
 
         /**
@@ -158,13 +149,12 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 nodes = zTree.getSelectedNodes(),
                 treeNode = nodes[0];
             //既要保证选择了节点，也要保证选择的节点是点线面要素下的
-            if (treeNode && (treeNode.id != '1' && treeNode.id != '11' && treeNode.id != '13' && treeNode.id != '12' && treeNode.id != '21' && treeNode.id != '23' && treeNode.id != '25' )) {
+            if(treeNode && (treeNode.pid != '0' && treeNode.id != 'fc')) {
                 treeNode = zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, isParent:isParent, name:"新加要素分类"});
-            } else {
-                alert("元素分类必须属于点线面要素自定义分类下，请重新选择！");
+            }else{
+                layer.msg('元素分类必须属于点线面要素中，请重新选择！');
                 return;
             }
-
         };
 
         /**
@@ -176,43 +166,22 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 nodes = zTree.getSelectedNodes(),
                 treeNode = nodes[0];
             if (nodes.length == 0) {
-                alert("请先选择一个节点");
+                layer.msg("请先选择一个节点");
                 return;
             };
-
             //显示状态的重置
-            $("#name").css("display","none");
-            $("#e-name").css("display","none");
-            $("#e-icon").css("display","none");
-            $("#icon-preview").css("display","none");
-            $("#style").css("display","none");
-            $("#feature-edit").css("display","none");
-
-
-
+            console.log(treeNode);
+            featureCategory.clearAllInput();
+            if(treeNode.img != undefined){
+                var url = "../../../main/common/asset/img/upload/"+treeNode.img;
+                $("#icon-preview").attr("src",url);
+            };
             $("#name").css("display","block");
-            //$("#e-icon").css("display","block");
             $("#icon-preview").css("display","block");
-            //$("#style").css("display","block");
-
-
             $("#category-name").val(treeNode.name);
             $("#e-category-name").val(treeNode.name);
 
         };
-
-        /**
-         * 查看地图
-         */
-        function showMap() {
-            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
-                nodes = zTree.getSelectedNodes(),
-                treeNode = nodes[0];
-            if (nodes.length == 0) {
-                alert("请先选择一个节点");
-                return;
-            };
-        }
 
         /**
          * 编辑信息
@@ -226,96 +195,230 @@ require(['jquery', 'frame', 'bootstrap-table','bootstrapValidator','bootstrap', 
                 return;
             };
 
+            if (treeNode && (treeNode.pId != '0' && treeNode.pid != 'fc')) {
+                $("#name").css("display","none");
+                $("#e-name").css("display","none");
+                $("#e-icon").css("display","none");
+                $("#icon-preview").css("display","none");
+                $("#style").css("display","none");
+                $("#feature-edit").css("display","none");
 
+                $("#e-name").css("display","block");
+                $("#e-icon").css("display","block");
+                $("#icon-preview").css("display","block");
+                //$("#style").css("display","block");
+                $("#feature-edit").css("display","block");
+                var id = treeNode.id;
+                //如果id存在，执行更新方法，否则执行的是add方法
+                featureCategory.exist(id,function (repo){
+                    //大于0说明存在要素，那么执行更新方法，否则执行添加方法
+                    if(repo.length>0){
+                        var data = repo[0];
+                        console.log(data);
+                        $("#e-name").val(data.fcName);
+                        $("#fcId").val(data.fcId);
+                        var url = "../../../main/common/asset/img/upload/"+data.fcIcon;
+                        $("#img-preview").attr("src",url);
+                        $("#img-url").val(data.fcIcon);
+                    }else{
+                        $("#fcId").val("none");
+                    }
+                });
+            } else {
+                layer.msg('当前节点不可编辑，请重新选择！');
+                return;
+            }
+        }
+        /**
+         * 要素点更新，更新和增加实质上应该是同一种方法
+         */
+        function update() {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getSelectedNodes(),
+                treeNode = nodes[0];
+            if (nodes.length == 0) {
+                layer.msg("请先选择一个节点");
+                return;
+            };
+            treeNode.name = $("#e-category-name").val();
+            zTree.updateNode(treeNode);
+        };
+        function uploadImg(imgid) {
+            var type = "file";          //后台接收时需要的参数名称，自定义即可
+            var id = imgid;            //即input的id，用来寻找值
+            var formData = new FormData();
+            formData.append(type, $("#" + id)[0].files[0]);    //生成一对表单属性
+            $.ajax({
+                type: "POST",           //因为是传输文件，所以必须是post
+                url: end + '/feature/upload',         //对应的后台处理类的地址
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    alert("上传成功");
+                    var url = "../../../main/common/asset/img/upload/"+data;
+                    $("#img-preview").attr("src",url);
+                    $("#img-url").val(data);
+                    console.log(data);
+                }
+            })
+        };
+        var featureCategory = {};
+        featureCategory.add = function (data,onSuccess) {
+            $.ajax({
+                url: end + '/featureCategory/add',
+                type: 'GET',
+                contentType: "application/json",
+                data: data,
+                cache: false,
+                success: onSuccess,
+                error: function () {
+                    alert("添加失败");
+                }
+            });
+        };
+        featureCategory.update = function (data,onSuccess) {
+            $.ajax({
+                url: end + '/featureCategory/update',
+                type: 'GET',
+                contentType: "application/json",
+                data: data,
+                cache: false,
+                success: onSuccess,
+                error: function () {
+                    alert("添加失败");
+                }
+            });
+        };
+        featureCategory.exist = function (id,onSuccess) {
+            var data={
+                fcId:id
+            };
+            $.ajax({
+                url: end + '/featureCategory/exist',
+                type: 'GET',
+                contentType: "application/json",
+                data: data,
+                cache: false,
+                success: onSuccess,
+                error: function () {
+                    alert("添加失败");
+                }
+            });
+        };
+        featureCategory.delete = function (id,onSuccess) {
+            $.ajax({
+                url: end + '/featureCategory/delete',
+                type: 'GET',
+                contentType: "application/json",
+                data: {
+                    id:id,
+                },
+                cache: false,
+                success: onSuccess,
+                error: function () {
+                    alert("添加失败");
+                }
+            });
+        };
+
+        featureCategory.clearAllInput = function () {
             $("#name").css("display","none");
             $("#e-name").css("display","none");
             $("#e-icon").css("display","none");
             $("#icon-preview").css("display","none");
             $("#style").css("display","none");
             $("#feature-edit").css("display","none");
-
-            $("#e-name").css("display","block");
-            $("#e-icon").css("display","block");
-            $("#icon-preview").css("display","block");
-            $("#style").css("display","block");
-            $("#feature-edit").css("display","block");
-
-            // //点要素的显示
-            // if(treeNode.pId === '11'){
-            //     //将所有表单项先全部隐藏
-            //     $("#name").css("display","none");
-            //     $("#icon").css("display","none");
-            //     $("#icon-preview").css("display","none");
-            //     $("#style").css("display","none");
-            //
-            //     //把适当需要的显示出来
-            //     $("#name").css("display","block");
-            //     $("#icon").css("display","block");
-            //     $("#icon-preview").css("display","block");
-            //
-            //     $("#category-name").val(treeNode.name);
-            // }
-            //
-            // //线要素的显示
-            // if(treeNode.pId === '12'){
-            //     $("#name").css("display","none");
-            //     $("#icon").css("display","none");
-            //     $("#icon-preview").css("display","none");
-            //     $("#style").css("display","none");
-            //     $("#style-preview").css("display","none");
-            //
-            //     $("#name").css("display","block");
-            //     $("#style").css("display","block");
-            //
-            //     $("#color").val("");
-            //
-            //     $("#color").colorpicker({
-            //         fillcolor:true
-            //     });
-            //
-            //     $("#category-name").val(treeNode.name);
-            //
-            // }
-            // //面要素的显示
-            // if(treeNode.pId === '13'){
-            //     $("#name").css("display","none");
-            //     $("#icon").css("display","none");
-            //     $("#icon-preview").css("display","none");
-            //     $("#style").css("display","none");
-            //     $("#name").css("display","block");
-            //     $("#category-name").val(treeNode.name);
-            // }
-        }
+            $("#feature-content input").val("");
+            $("#img-preview").attr("src","");
+        };
 
 
         $(document).ready(function(){
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            var zNodes_chooseCategory = [
+                {id: 'fc', pId: 0, name: "要素分类", open: true,isParent:true},
+            ];
+            $.fn.zTree.init($("#treeDemo"), setting_featureCate, zNodes_chooseCategory);
 
-            //移除节点
+            //$.fn.zTree.init($("#treeDemo"), setting, zNodes);            //移除节点
             $("#remove").bind("click", remove);
-
-            //查看地图
-            $("#show-map").bind("click", showMap);
-
             //编辑
             $("#edit").bind("click",edit);
-
-
-
             //增加
             $("#add").bind("click", {isParent:true}, add);
-
             initHeight();
 
+            //添加和修改的方法
+            $("#confirmUpdate").on("click",function () {
+                var fcId = $("#fcId").val();
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                    nodes = zTree.getSelectedNodes(),
+                    treeNode = nodes[0];
+                if (nodes.length == 0) {
+                    layer.msg("请先选择一个节点");
+                    return;
+                }else{};
+                var type= null;
+                if(treeNode.getPath()[1].name === '点要素'){
+                    type = 'point';
+                }else if(treeNode.getPath()[1].name === '线要素'){
+                    type = 'polyline';
+                }else{
+                    type = 'polygon';
+                }
+                var pid = treeNode.getPath()[ treeNode.getPath().length-2].id;
+                //none调用add，否则调用update
+                if(fcId === 'none'){
+                    var data = {
+                        type:type,
+                        name:$("#e-category-name").val(),
+                        pid:pid,
+                        icon:$("#img-url").val(),
+                        style:""
+                    };
+                    featureCategory.add(data,function (repo) {
+                        if(repo === 'success'){
+                            layer.confirm('添加成功！', {
+                                btn: ['确定'] //按钮
+                            }, function(){
+                                location.reload();
+                            });
+                        }
+                    });
+                }
+                else{
+                    var data = {
+                        id:fcId,
+                        type:type,
+                        name:$("#e-category-name").val(),
+                        pid:pid,
+                        icon:$("#img-url").val(),
+                        style:""
+                    };
+                    console.log(data);
+                    featureCategory.update(data,function (repo) {
+                        if(repo === 'success'){
+                            layer.msg("修改成功");
+                            location.reload();
+                        }
+                    });
+                }
+
+
+            });
+
+            //图片上传
+            $("#uploadImg").on("click",function () {
+                var id = 'img'
+                uploadImg(id);
+            });
         });
 
         //通过获取class=content的高度，从而对class=tab中的内容进行高度赋值
         function initHeight() {
-            console.log($(".content").height());
             var height = 'height:'+$(".content").height()+'px !important';
-            //$("div.test").css("cssText", "width:650px !important;");
-            $(".left").css('cssText',height)
-            $(".right").css('cssText',height)
+            $(".left").css('cssText',height);
+            $(".right").css('cssText',height);
         }
 
     });

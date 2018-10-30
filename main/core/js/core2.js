@@ -1653,13 +1653,13 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     //这里存在着一个异步的问题，必须要按照顺序依次执行下面的方法，才能正确调出视频，为了保证不受异步干扰，所以增加了延迟方法
                     setTimeout(function(){
                         nativeWinService.createWindow(1,"test",100,100,400,300);
-                    },1500);
+                    },500);
                     setTimeout(function(){
                         nativeWinService.getWindowList();
                     },2000);
                     setTimeout(function(){
                         nativeWinService.preview(winId);
-                    },2500);
+                    },3000);
                 });
             }
 
@@ -2077,8 +2077,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             back();
             //空间查询中，选择不同的查询方式，显示对应的窗口
             querySelectChange()
-
-
         });
 
         /**
@@ -2221,43 +2219,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
 
-
-
-        // 右侧的树加载
-        var setting = {
-            view: {
-                dblClickExpand: false
-            },
-            check: {
-                enable: false
-            }
-
-        };
-        var zNodes =[
-            {"id":0,"name":"全国","open":true,icon:"../img/down1.png",children:[
-                    { "id":1,"pid":0, "name":"长沙","open":true, icon:"../img/page.png",
-                        children: [
-                            { "id":11,"pid":1, "name":"设备1"},
-                            { "id":12, "pid":1,"name":"设备2"},
-                            { "id":13,"pid":1, "name":"设备3"}
-                        ]
-                    },
-                    {"id":2,"pid":0,"name":"北京",icon:"../img/page.png",
-                        children: [
-                            { "id":21,"pid":2, "name":"设备4"},
-
-                            { "id":23,"pid":2, "name":"设备5"}
-                        ]
-                    },
-                    {"id":3,"pid":0,"name":"广州", icon:"../img/page.png",
-                        children: [
-                            { "id":31,"pid":3, "name":"设备6"},
-
-                            { "id":33,"pid":3, "name":"设备7"}
-                        ]}
-                ]}
-
-        ];
 
         //start 底图控制器的树
         var baseLayserSetting = {
@@ -2745,7 +2706,206 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             { id:'s_line', pId:'service',  name:"线要素",icon:"../asset/img/ztree/layers-icon.png"},
             { id:'s_polygon', pId:'service',  name:"面要素",icon:"../asset/img/ztree/layers-icon.png"},
         ];
-        //end 数据控制器的树
+
+        //要素分类树--------------------------------------------------------
+        var setting_featureCate = {
+            check: {
+                enable: true
+            },
+            async: {
+                enable: true,
+                url: end + "/featureCategory/findByPid",
+                //提交的参数
+                autoParam: ["id=pid"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
+                type: "get",
+                dataFilter: featureCateFilter //用来将ajax异步返回的json数据处理成为ztree能用的json数据
+            },
+            data: {},
+            callback: {
+                //点击查询事件
+                onClick: featureCateClick,
+                onCheck: featureCateOnCheck
+            }
+        };
+
+        //处理返回的数据格式
+        function featureCateFilter(treeId, parentNode, responseData) {
+            var d = []; //构造数组，用于存在改造后的数据，并且返回
+            for (var i = 0; i < responseData.length; i++) {
+                var temp = responseData[i];
+                var t = {};
+                t.id = temp.fcId;
+                t.pid = temp.fcPid;
+                t.name = temp.fcName;
+                t.img = temp.fcIcon;
+                t.isParent = true;
+                d[i] = t;
+            }
+            return d;
+        };
+
+        function featureCateClick(e){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getSelectedNodes(),
+                treeNode = nodes[0];
+            if (nodes.length == 0) {
+                layer.msg("请先选择一个节点");
+                return;
+            };
+            //显示状态的重置
+            console.log(treeNode);
+            featureCategory.clearAllInput();
+            if(treeNode.img != undefined){
+                var url = "../../../main/common/asset/img/upload/"+treeNode.img;
+                $("#icon-preview").attr("src",url);
+            };
+            $("#name").css("display","block");
+            $("#icon-preview").css("display","block");
+            $("#category-name").val(treeNode.name);
+            $("#e-category-name").val(treeNode.name);
+
+        };
+
+        var dataLayertemp = {};
+        function featureCateOnCheck(event, treeId, treeNode) {
+            //首先获取当前节点信息，并且
+            if(dataLayertemp[treeNode.id] === undefined){
+                var featurePointGroup = L.layerGroup();
+            }else{
+                featurePointGroup = dataLayertemp[treeNode.id];
+            }
+
+            if(treeNode.checked === true){
+                var res = $.when(
+                    $.ajax({
+                        url:end+'/feature/listPolygon',
+                        type:'GET',
+                        contentType:"application/json",
+                        data:{
+                            "feature_id":treeNode.id
+                        },
+                        cache:false,
+                        success:function (data) {
+                        },
+                        error:function () {
+                        }
+                    }));
+                res.done(function (r1) {
+                    function serviceDataPoint(data) {
+                        for(var i=0;i<data.length;i++){
+                            var temp = data[i];
+
+                            var Icon = L.icon({
+                                iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
+                                iconAnchor: [20, 20],
+                                iconSize: [40, 40]
+                            });
+
+                            var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{
+                                icon: Icon,
+                                //在这里attribution仅作为缓存变量来使用
+                                attribution:temp.resourceCode
+                            });
+                            featurePointGroup.addLayer(marker);
+                        }
+                    };
+                    serviceDataPoint(r1);
+                    dataLayertemp[treeNode.id] = featurePointGroup;
+                });
+                res.then(function () {
+                    featurePointGroup.eachLayer(function (layer) {
+                        layer.on("click",function () {
+                            $("#device-info-name").val("");
+                            $("#device-info-desc").val("");
+                            $("#device-info-coors").val("");
+                            var id = layer.getAttribution();
+                            console.log(id);
+                            //异步
+                            var requestUrl=common.host+"/mgc"+"/deviceInfoService/getDeviceById";
+                            var info = $.when(
+                                $.ajax({
+                                    url:requestUrl,
+                                    type:'GET',
+                                    data:{
+                                        id:id
+                                    },
+                                    cache:false,
+                                })
+                            );
+
+                            info.done(function (r1) {
+                                console.log(r1);
+                                layx.group('group-nomerge', [
+                                    {
+                                        id: 'device-info',
+                                        title: '设备信息',
+                                        content: '<div class="layx-div"><h3>设备信息</h3>\n' +
+                                        '        <div class="input-group">\n' +
+                                        '            <span class="input-group-addon">设备名称</span>\n' +
+                                        '            <input id="device-info-name" type="text" class="form-control" value=" ' +r1.data[0].deviceName+ ' " name="device-name" readonly>\n' +
+                                        '        </div>\n' +
+                                        '        <br>\n' +
+                                        '        <div class="input-group">\n' +
+                                        '            <span class="input-group-addon">坐标信息</span>\n' +
+                                        '            <input id="device-info-coors" type="text" class="form-control" value=" ' + " " + ' " name="device-coors" readonly>\n' +
+                                        '        </div>\n' +
+                                        '        <br>\n' +
+                                        '        <div class="input-group">\n' +
+                                        '            <span class="input-group-addon">设备类型</span>\n' +
+                                        '            <select class="form-control" id="device-info-type" readonly>\n' +
+                                        '                <option>A</option>\n' +
+                                        '                <option>B</option>\n' +
+                                        '                <option>C</option>\n' +
+                                        '                <option>D</option>\n' +
+                                        '            </select>\n' +
+                                        '        </div>\n' +
+                                        '        <br>\n' +
+                                        '        <div class="input-group">\n' +
+                                        '            <span class="input-group-addon">设备描述</span>\n' +
+                                        '            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>\n' +
+                                        '        </div> </div>',
+                                        //cloneElementContent:false,
+                                    },
+                                    {
+                                        id: 'device-current',
+                                        title: '实时监测',
+                                        content: document.getElementById('device-chart'),
+                                        cloneElementContent: false,
+                                    },
+                                    {
+                                        id: 'device-history',
+                                        title: '历史记录',
+                                        content: document.getElementById('device-history'),
+                                        cloneElementContent: false,
+                                    }
+                                ], 0, {
+                                    id: 'info',
+                                    mergeTitle: false,
+                                    title: '设备详情',
+                                });
+                            });
+                        });
+                    });
+                    map.addLayer(featurePointGroup);
+                });
+            }
+            else{
+                map.removeLayer(featurePointGroup);
+                dataLayertemp[treeNode.id] = undefined;
+            }
+            console.log(treeNode.id + ", " + treeNode.name + "," + treeNode.checked);
+    };
+
+        var zNodes_chooseCategory = [
+            {id: 'fc', pId: 0, name: "要素分类", open: true,isParent:true,doCheck:false},
+        ];
+        $.fn.zTree.init($("#layerControlData"), setting_featureCate, zNodes_chooseCategory);
+        //end 数据控制器的树-------------------------------------------------------
+
+
+
+
+
 
         //start 组织树控制器
         var setting_orgCategory = {
@@ -2783,9 +2943,11 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             return d;
         };
 
+        var orgGroup = L.featureGroup().addTo(map);
         function ajaxchooseCategoryOnOrgClick(event, treeId, treeNode) {
             var code = treeNode.code;
             var markerData = null;
+            orgGroup.clearLayers();
             $.when($.ajax({
                 url: end + '/orggeo/listByOrgId',
                 type: 'get',
@@ -2802,7 +2964,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             }).then(function (resp) {
                 console.log(markerData);
                 if(markerData != undefined){
-
                     //如果存在内部地图，那么触发相应的绑定事件
                     if(markerData.hasIndoor){
                         console.log('有内部地图');
@@ -2826,64 +2987,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                 var oId = data.oid;
                                 var marker = L.marker([coor[1],coor[0]]).addTo(map);
                                 map.panTo([coor[1],coor[0]]);
-
+                                orgGroup.addLayer(marker);
                                 marker.on("dblclick",function () {
-                                    //start
-                                    // console.log('显示内部地图');
-                                    // //将原有地图注销
-                                    // map.remove();
-                                    // //重新注册新的地图事件
-                                    // map = L.map('map', {
-                                    //     minZoom: 0,
-                                    //     maxZoom: 4,
-                                    //     center: [0, 0],
-                                    //     zoom: 4,
-                                    //     crs: L.CRS.Simple
-                                    // });
-                                    // map.on("baselayerchange",function (layer) {
-                                    //     var url = layer.layer._url;
-                                    //     console.log(url,typeof url);
-                                    //     var id = url.split("/");
-                                    //     $("#indoorLevelId").val("");
-                                    //     $("#indoorLevelId").val(id[id.length-1]);
-                                    // });
-                                    // var w = 1024,
-                                    //     h = 650;
-                                    // //url = imageUrl;
-                                    // var southWest = map.unproject([0, h], map.getMaxZoom() - 1);
-                                    // var northEast = map.unproject([w, 0], map.getMaxZoom() - 1);
-                                    // var bounds = new L.LatLngBounds(southWest, northEast);
-                                    //
-                                    // //异步加载内部的图片
-                                    // $.ajax({
-                                    //     url:end+'/orggeo/listByOidToIndoor',
-                                    //     type:'GET',
-                                    //     contentType:"application/json",
-                                    //     data:{
-                                    //         "oId":oId
-                                    //     },
-                                    //     cache:false,
-                                    //     success:function (data) {
-                                    //         /**
-                                    //          * 图层控制器
-                                    //          */
-                                    //         var baseMap = new Object();
-                                    //         for(var i=0;i<data.length;i++){
-                                    //             var num = data[i].indoorNum;
-                                    //             var level = L.imageOverlay("../../../main/common/asset/img/upload/"+data[i].indoorImg, bounds);
-                                    //             baseMap[num]=level;
-                                    //         }
-                                    //         var overlayMaps = {};
-                                    //         //设置图层控制器
-                                    //         var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(map);
-                                    //     },
-                                    //     error:function () {
-                                    //         //console.log(0)
-                                    //     }
-                                    // });
-                                    // //end
-
-
                                     //start
                                     //查询相应的所属的楼层图片
                                     //console.log(true);
@@ -2928,7 +3033,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                             });
                                             $.ajax({
                                                 type: "GET",
-                                                url: end+'/feature/listIndoorPointByImgId',
+                                                url: end+'/orggeo/listIndoorPointByImgId',
                                                 data: {
                                                     imgId:imgId
                                                 },
@@ -3002,6 +3107,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         console.log('没有内部地图');
                         var marker = L.marker([markerData.geom.coordinates[1],markerData.geom.coordinates[0]]).addTo(map);
                         map.panTo([markerData.geom.coordinates[1],markerData.geom.coordinates[0]],markerData.zoomNum);
+                        orgGroup.addLayer(marker);
                     }
                 }
 
@@ -3019,118 +3125,29 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 console.log(data);
                 var d = data.data[0];
                 d.isParent = 'true';
-                $.fn.zTree.init($("#layerControlOrg"), setting_orgCategory, data.data[0]);
+                $.fn.zTree.init($("#treeDemo"), setting_orgCategory, data.data[0]);
             }
         });
         //end 组织树控制器
 
+
         $(document).ready(function(){
 
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-            $.fn.zTree.init($("#treeDemo1"), setting, zNodes);
-            $.fn.zTree.init($("#treeDemo2"), setting, zNodes);
-            zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            //$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            // $.fn.zTree.init($("#treeDemo1"), setting, zNodes);
+            // $.fn.zTree.init($("#treeDemo2"), setting, zNodes);
+            //zTree = $.fn.zTree.getZTreeObj("treeDemo");
             //底图控制器
             $.fn.zTree.init($("#layerControlBase"), baseLayserSetting, baseLayserZNodes);
 
             //数据控制器
-            var dataControlTree = $.fn.zTree.init($("#layerControlData"), dataLayserSetting, dataLayerZNodes);
+            var dataControlTree = $.fn.zTree.init($("#layerControlTest"), dataLayserSetting, dataLayerZNodes);
         });
 
         /**
          * index-panel初始化
          */
 
-        // mock 模拟 添加
-        // Mock.mock('http://123.123.123.123:8080/mock/alarm', {
-        //     "data|20": [
-        //         {
-        //             'id': '@integer(1, 100)',
-        //             'name': '@name',
-        //             'age': '@integer(1, 100)',
-        //             'time': '@datetime',
-        //             'email': '@email',
-        //             'ip': '@ip'
-        //
-        //         }
-        //     ]
-        // });
-
-        // $('#workOrder-table').bootstrapTable({
-        //     method: 'get',
-        //     contentType: "application/x-www-form-urlencoded",//一种编码。好像在post请求的时候需要用到。这里用的get请求，注释掉这句话也能拿到数据
-        //     url: "http://123.123.123.123:8080/mock/alarm",//要请求数据的文件路径
-        //     dataField: "data",//这是返回的json数组的key.默认好像是"rows".这里只有前后端约定好就行
-        //     pageNumber: 1, //初始化加载第一页，默认第一页
-        //     pagination: true,//是否分页
-        //     // queryParams:queryParams,//请求服务器时所传的参数
-        //     sidePagination: 'client',//指定服务器端分页
-        //     pageSize: 10,//单页记录数
-        //     pageList: [10, 20, 30, 40],//分页步进值
-        //     responseHandler: responseHandler,//请求数据成功后，渲染表格前的方法
-        //     colums: [{//列参数
-        //         field: "id",
-        //         title: "id",
-        //     }, {
-        //         field: "name",
-        //         title: "名称",
-        //     }, {
-        //         field: "price",
-        //         title: "价格"
-        //     }]
-        // });
-        // //请求服务数据时所传参数
-        // function queryParams(params){
-        //     return {
-        //         pageSize : params.limit, //每一页的数据行数，默认是上面设置的10(pageSize)
-        //         pageIndex : params.offset/params.limit+1, //当前页面,默认是上面设置的1(pageNumber)
-        //     }
-        // };
-
-
-        // // $.ajax({
-        // //
-        // //     dataType: 'json',
-        // //     success: function (e) {
-        // //
-        // //     }
-        // // });
-        //
-        // $('#workOrder-table').bootstrapTable({
-        //     url: '123.123.123.123:8080/mock/alarm',
-        //     method:'get',
-        //     striped:true,
-        //     clickToSelect:true,
-        //     pagination:true,
-        //     sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
-        //     pageNumber: 1,                       //初始化加载第一页，默认第一页
-        //     pageSize: 10,                       //每页的记录行数（*）
-        //     pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-        //     total:20,
-        //     // queryParamsType:'',
-        //     // queryParams: function queryParams(params) {   //设置查询参数
-        //     //     var param = {
-        //     //         pageNumber: params.pageNumber,
-        //     //         pageSize: params.pageSize,
-        //     //     };
-        //     //     return param;
-        //     // },
-        //     columns: [{
-        //         radio:true
-        //     },{
-        //         field: 'id',
-        //         title: 'guid'
-        //     }, {
-        //         field: 'name',
-        //         title: '姓名'
-        //     },
-        //         {
-        //             field: 'age',
-        //             title: '年龄'
-        //         }
-        //     ],
-        //     //data:e.data
-        // });
 
 
         //使用layx作为工单和告警中心的弹窗
