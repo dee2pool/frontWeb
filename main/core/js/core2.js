@@ -130,12 +130,13 @@ require.config({
         "ztree":"../../common/lib/ztree/js/jquery.ztree.all.min",
         "Test":"../../common/js/Test",
         "deviceService":"../../common/js/DeviceInfoController",
-        "bluebird":"../../../common/lib/bluebird/bluebird.min"
+        "bluebird":"../../../common/lib/bluebird/bluebird.min",
+        "gbc":"../../../common/js/service/GBCatalogController"
 
     }
 });
-require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS','ztree','bluebird'],
-    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree,bluebird) {
+require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS','ztree','bluebird','gbc'],
+    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree,bluebird,gbc) {
 
         //加载公用头部导航栏标签
         //$("#head").html(common.head);
@@ -1599,42 +1600,44 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 captcha:captchaStr,
             },
             cache:false,
+            success:function (resp) {
+                if(resp.result != true){
+                    lay.msg('视频服务登陆失败，请刷新重试！');
+                }
+            }
         });
-
 
         /**
          *
          */
         $(function () {
             var nativeWinService=new NativeWinService("http://localhost:61111/cms");
-            function authToken(onSuccess){
-                $.ajax({
-                    url:videourl+"/auth/token/temp",
-                    type:'Get',
-                    data:{
-                    },
-                    cache:false,
-                    success:onSuccess
-                })
-            };
-            function runAsync(){
-                var p = new bluebird.Promise(function(resolve, reject){
-                    authToken(function (data) {
-                        if(data.result){
-                            resolve(data);
-                        }
-
-                    })
-                });
-                return p;
-            };
-            runAsync().then(function(resp){
-                console.log(resp);
-            });
-
-
-
-
+            // function authToken(onSuccess){
+            //     $.ajax({
+            //         url:videourl+"/auth/token/temp",
+            //         type:'Get',
+            //         data:{
+            //         },
+            //         cache:false,
+            //         success:onSuccess
+            //     })
+            // };
+            // function runAsync(){
+            //     var p = new bluebird.Promise(function(resolve, reject){
+            //         authToken(function (data) {
+            //             if(data.result){
+            //                 resolve(data);
+            //             }
+            //
+            //         })
+            //     });
+            //     return p;
+            // };
+            // runAsync().then(function(resp){
+            //     if(resp.result != true){
+            //         lay.msg('视频服务token获取失败，请刷新重试！');
+            //     }
+            // });
             function video() {
                 var nativeWinService=new NativeWinService("http://localhost:61111/cms");
                 $.when(
@@ -1713,10 +1716,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     if(resp.result==1){
                         object.sessionId=resp.data.sessionID;
                     }else{
-                        console.log("open session fail")
+                        lay.msg("创建session失败");
                     }
                 },function(e){});
-            }
+            };
             /**
              * 注销本次会话,调用此接口,所有已打开窗口都将会关闭
              */
@@ -1727,14 +1730,14 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     "data":	{
                         "sessionID":this.sessionId
                     }
-                }
+                };
                 sendCommand(closeCmd,function(resp){
                     if(resp.result==1){
                         object.sessionId=undefined;
                         object.windows={};
                     }
                 },function(e){});
-            }
+            };
             /**
              * 创建窗口
              * @param winType 窗口类型,取值为1,2;1表示视频预览窗口；2表示平台管理窗口
@@ -1758,7 +1761,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         "width":width,
                         "height":height
                     }
-                }
+                };
                 sendCommand(cmd,function(resp){
                     if(resp.result==1){
                         var winId=resp.data.windowID;
@@ -1771,10 +1774,12 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                             width:width,
                             height:height
                         }
+                    }else{
+                        lay.msg('窗口初始化失败，请刷新后重试！');
                     }
                 },function(e){});
 
-            }
+            };
             /**
              * 设置指定窗口的属性
              * @param winId 指定窗口的属性
@@ -1798,7 +1803,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         "width":width,
                         "height":height
                     }
-                }
+                };
                 sendCommand(cmd,function(resp){
                     if(resp.result==1){
                         object.windows[winId].title=title;
@@ -1810,7 +1815,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         console.log("set win["+title+"] position fail")
                     }
                 },function(e){});
-            }
+            };
             /**
              * 关闭指定窗口
              * @param winId 待关闭窗口的Id
@@ -1824,7 +1829,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                         "sessionID":sessionId,
                         "windowID":winId
                     }
-                }
+                };
                 sendCommand(cmd,function(resp){
                     if(resp.result==1){
                         delete object.windows[winId]
@@ -1898,25 +1903,61 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             /**
              * 在视频预览类型的窗口上,开始视频预览,目前此函数将设备信息已经写死了,
              */
-            object.preview=function(winId){
+            object.preview=function(winId,temp){
                 var sessionId=this.sessionId;
-                var cmd= {
-                    "jsonType": "Request",
-                    "requestType":"RLVideoWin",
-                    "data": {
-                        "sessionID":sessionId,
-                        "windowID":winId,
-                        "serverIP": "192.168.0.141",
-                        "localIP": "192.168.0.239",
-                        "localPort": 5065,
-                        "serverID":"43010400002000000001",
-                        "serverRealm":"4301040000",
-                        "serverUserName":"43010400004000000001",
-                        "serverUserPwd":"12345678",
-                        "Port": 9060,
-                        "DevID":"43000000001320000004"
+                var cmd = null;
+                if(temp === undefined || temp === null){
+                    cmd = {
+                        "jsonType": "Request",
+                        "requestType":"RLVideoWin",
+                        "data": {
+                            //旧设备
+                            // "sessionID":sessionId,
+                            // "windowID":winId,
+                            // "serverIP": "192.168.0.141",
+                            //
+                            // "localIP": "192.168.0.239",
+                            // "localPort": 5065,
+                            //
+                            // "serverID":"43010400002000000001",
+                            // "serverRealm":"4301040000",
+                            // "serverUserName":"43010400004000000001",
+                            // "serverUserPwd":"12345678",
+                            // "Port": 9060,
+                            // //
+                            // "DevID":"43000000001320000004"
+
+                            // //新设备
+                            "sessionID":sessionId,
+                            "windowID":winId,
+                            "serverIP": "192.168.0.142",
+                            "serverID":"43000000002000000001",
+
+                            "serverRealm":"4301040000",
+                            "serverUserName":"43010400004000000001",
+                            "serverUserPwd":"12345678",
+                            "Port": 9060,
+                            "DevID":"11020000001320000002"
+                        }
                     }
-                }
+                }else{
+                    cmd = {
+                        "jsonType": "Request",
+                        "requestType":"RLVideoWin",
+                        "data": {
+                            // //新设备
+                            "sessionID":sessionId,
+                            "windowID":winId,
+                            "serverIP": temp.serverIP,
+                            "serverID":temp.serverID,
+
+                            "serverRealm":temp.serverRealm,
+                            "serverUserName":temp.serverUserName,
+                            "serverUserPwd":temp.serverUserPwd,
+                            "Port": temp.Port,
+                            "DevID":temp.DevID
+                        }
+                }};
                 sendCommand(cmd,function(resp){
                     if(resp.result==1){
 
@@ -2508,10 +2549,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     });
                     res.then(function () {
                         featurePointGroup.eachLayer(function (layer) {
-                            // layer.on("click",function () {
-                            //    console.log(layer.getAttribution());
-                            // });
-
                             layer.on("click",function () {
                                 $("#device-info-name").val("");
                                 $("#device-info-desc").val("");
@@ -2532,7 +2569,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                 );
 
                                 info.done(function (r1) {
-                                    console.log(r1);
+                                    //console.log(r1);
+                                    $(document).on('click','#showVideo',function(){
+
+                                    });
                                     layx.group('group-nomerge', [
                                         {
                                             id: 'device-info',
@@ -2544,24 +2584,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                             '        </div>\n' +
                                             '        <br>\n' +
                                             '        <div class="input-group">\n' +
-                                            '            <span class="input-group-addon">坐标信息</span>\n' +
-                                            '            <input id="device-info-coors" type="text" class="form-control" value=" ' + " " + ' " name="device-coors" readonly>\n' +
-                                            '        </div>\n' +
-                                            '        <br>\n' +
-                                            '        <div class="input-group">\n' +
-                                            '            <span class="input-group-addon">设备类型</span>\n' +
-                                            '            <select class="form-control" id="device-info-type" readonly>\n' +
-                                            '                <option>A</option>\n' +
-                                            '                <option>B</option>\n' +
-                                            '                <option>C</option>\n' +
-                                            '                <option>D</option>\n' +
-                                            '            </select>\n' +
-                                            '        </div>\n' +
-                                            '        <br>\n' +
-                                            '        <div class="input-group">\n' +
-                                            '            <span class="input-group-addon">设备描述</span>\n' +
-                                            '            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>\n' +
-                                            '        </div> </div>',
+                                            '            <span class="input-group-addon">视频查看</span>\n' +
+                                            '            <button id="showVideo" type="button">查看视频</button>\n' +
+                                            '        </div> ' +
+                                            '</div>',
                                             //cloneElementContent:false,
                                         },
                                         {
@@ -2770,9 +2796,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         function featureCateOnCheck(event, treeId, treeNode) {
             //首先获取当前节点信息，并且
             if(dataLayertemp[treeNode.id] === undefined){
-                var featurePointGroup = L.layerGroup();
+                var featureGroup = L.layerGroup();
             }else{
-                featurePointGroup = dataLayertemp[treeNode.id];
+                featureGroup = dataLayertemp[treeNode.id];
             }
 
             if(treeNode.checked === true){
@@ -2794,26 +2820,47 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     function serviceDataPoint(data) {
                         for(var i=0;i<data.length;i++){
                             var temp = data[i];
+                            var type = temp.geo.type;
 
-                            var Icon = L.icon({
-                                iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
-                                iconAnchor: [20, 20],
-                                iconSize: [40, 40]
-                            });
+                            if(type === 'Point'){
+                                var Icon = L.icon({
+                                    iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
+                                    iconAnchor: [20, 20],
+                                    iconSize: [40, 40]
+                                });
 
-                            var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{
-                                icon: Icon,
-                                //在这里attribution仅作为缓存变量来使用
-                                attribution:temp.resourceCode
-                            });
-                            featurePointGroup.addLayer(marker);
+                                var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{
+                                    icon: Icon,
+                                    //在这里attribution仅作为缓存变量来使用
+                                    attribution:temp.resourceCode
+                                });
+                                featureGroup.addLayer(marker);
+                            }else if(type === 'LineString'){
+                                var latlngs = [];
+                                for(var j=0;j<temp.geo.coordinates.length;j++){
+                                    var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
+                                    latlngs.push(array);
+                                };
+
+                                var polyline = L.polyline(latlngs, {color: 'black'});
+                                featureGroup.addLayer(polyline);
+                            }else if(type === 'Polygon'){
+                                var temp = data[i];
+                                console.log(temp);
+                                var imageUrl = "../../common/asset/img/upload/"+temp.imgPolygon,
+                                    imageBounds = [[temp.geo.coordinates[0][0][1], temp.geo.coordinates[0][0][0]], [[temp.geo.coordinates[0][2][1], temp.geo.coordinates[0][2][0]]]];
+                                var overlay = L.imageOverlay(imageUrl, imageBounds);
+                                featureGroup.addLayer(overlay);
+                            }
+
+
                         }
                     };
                     serviceDataPoint(r1);
-                    dataLayertemp[treeNode.id] = featurePointGroup;
+                    dataLayertemp[treeNode.id] = featureGroup;
                 });
                 res.then(function () {
-                    featurePointGroup.eachLayer(function (layer) {
+                    featureGroup.eachLayer(function (layer) {
                         layer.on("click",function () {
                             $("#device-info-name").val("");
                             $("#device-info-desc").val("");
@@ -2832,9 +2879,337 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                     cache:false,
                                 })
                             );
-
                             info.done(function (r1) {
-                                console.log(r1);
+                                $(document).on('click','#showVideo',function(){
+                                    console.log(r1);
+                                    var id = r1.data[0].id;
+                                    //调用getGb28181Code接口，获取gb28181Code,mediaSrcsCode
+                                    gbc.getGb28181Code(id,undefined,function (resp) {
+                                        console.log(resp);
+                                        var gb28181Code = resp.data.gb28181Code;
+                                        var mediaSrcsCode = resp.data.mediaSrcsCode;
+                                        if(mediaSrcsCode === null || mediaSrcsCode === undefined){
+                                            lay.msg('此设备没有可以播放的视频！');
+                                            return ;
+                                        }else{
+                                            gbc.getGbConfigByServerId(gb28181Code,function (resp) {
+                                                console.log(resp);
+                                                //相关参数传入，执行打开视频
+                                                var d = {
+                                                    "serverIP": resp.data[20].configValue,
+                                                    "serverID":resp.data[10].configValue,
+                                                    "serverRealm":resp.data[16].configValue,
+                                                    "serverUserName":resp.data[15].configValue,
+                                                    "serverUserPwd":resp.data[17].configValue,
+                                                    "Port": Number(resp.data[11].configValue),
+                                                    "DevID":mediaSrcsCode
+                                                };
+                                                console.log(d);
+                                                function NativeWinService(url){
+                                                    var requestUrl=url;
+                                                    /**
+                                                     * 发送操作命令到窗口管理服务
+                                                     * @param {命令} cmd
+                                                     * @param {成功回调函数} onSuccess
+                                                     * @param {失败回调函数} onError
+                                                     */
+                                                    function sendCommand(cmd,onSuccess,onError){
+                                                        var json=JSON.stringify(cmd);
+                                                        $.ajax({
+                                                            url:requestUrl,
+                                                            type:'POST',
+                                                            dataType:"json",
+                                                            data:json,
+                                                            cache:false,
+                                                            success:onSuccess,
+                                                            error:onError
+                                                        });
+                                                    }
+                                                    //用于保存已经打开的会话,已经基于此会话创建的窗口的信息
+                                                    var object={
+                                                        sessionId:undefined,//会话Id
+                                                        windows:{}//已打开的窗口集合
+                                                    };
+                                                    /**
+                                                     * 创建会话
+                                                     * @param token 临时访问凭据 通过调用LoginController.getTempToken获得
+                                                     * @param serviceUrl 后台服务器地址
+                                                     */
+                                                    object.openSession=function(token,serviceUrl){
+                                                        var createCommand={
+                                                            "jsonType":"Request",
+                                                            "requestType":"NewSession",
+                                                            "data":{
+                                                                "url":serviceUrl,
+                                                                "token":token
+                                                            }
+                                                        };
+                                                        sendCommand(createCommand,function(resp){
+                                                            if(resp.result==1){
+                                                                object.sessionId=resp.data.sessionID;
+                                                            }else{
+                                                                console.log("open session fail")
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 注销本次会话,调用此接口,所有已打开窗口都将会关闭
+                                                     */
+                                                    object.closeSession=function(){
+                                                        var closeCmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CloseSession",
+                                                            "data":	{
+                                                                "sessionID":this.sessionId
+                                                            }
+                                                        }
+                                                        sendCommand(closeCmd,function(resp){
+                                                            if(resp.result==1){
+                                                                object.sessionId=undefined;
+                                                                object.windows={};
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 创建窗口
+                                                     * @param winType 窗口类型,取值为1,2;1表示视频预览窗口；2表示平台管理窗口
+                                                     * @param title 窗口标题
+                                                     * @param x 窗口位置,横坐标 x
+                                                     * @param y 窗口位置,纵坐标 y
+                                                     * @param width 窗口宽度
+                                                     * @param height 窗口高度
+                                                     */
+                                                    object.createWindow=function(winType,title,x,y,width,height){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"NewWindow",
+                                                            "data": {
+                                                                "sessionID":sessionId,
+                                                                "type":winType,      //1—预览窗口；2—平台
+                                                                "title": title,
+                                                                "xPos":x,
+                                                                "yPos":y,
+                                                                "width":width,
+                                                                "height":height
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+                                                                var winId=resp.data.windowID;
+                                                                object.windows[winId]={
+                                                                    id:winId,
+                                                                    type:winType,
+                                                                    title: title,
+                                                                    x:x,
+                                                                    y:y,
+                                                                    width:width,
+                                                                    height:height
+                                                                }
+                                                            }
+                                                        },function(e){});
+
+                                                    }
+                                                    /**
+                                                     * 设置指定窗口的属性
+                                                     * @param winId 指定窗口的属性
+                                                     * @param title 设置后窗口的标题
+                                                     * @param x 设置后窗口的位置横坐标 x
+                                                     * @param y 设置后窗口的位置纵坐标 y
+                                                     * @param width 设置后窗口的宽度
+                                                     * @param height 设置后窗口的高度
+                                                     */
+                                                    object.setWindow=function(winId,title,x,y,width,height){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"PosWindow",
+                                                            "data": {
+                                                                "sessionID":sessionId,
+                                                                "windowID":winId,
+                                                                "title": title,
+                                                                "xPos":x,
+                                                                "yPos":y,
+                                                                "width":width,
+                                                                "height":height
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+                                                                object.windows[winId].title=title;
+                                                                object.windows[winId].x=x;
+                                                                object.windows[winId].y=y;
+                                                                object.windows[winId].width=width;
+                                                                object.windows[winId].height=height;
+                                                            }else{
+                                                                console.log("set win["+title+"] position fail")
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 关闭指定窗口
+                                                     * @param winId 待关闭窗口的Id
+                                                     */
+                                                    object.closeWindow=function(winId){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CloseWindow",
+                                                            "data": {
+                                                                "sessionID":sessionId,
+                                                                "windowID":winId
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+                                                                delete object.windows[winId]
+                                                            }
+                                                        },function(e){});
+
+                                                    }
+                                                    /**
+                                                     * 将指定窗口最大化
+                                                     * @param winId 待最大化窗口的Id
+                                                     */
+                                                    object.maximumWin=function(winId){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CtrlWindow",
+                                                            "data": {
+                                                                "sessionID": sessionId,
+                                                                "windowID": winId,
+                                                                "maxWin": 1
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 将指定窗口最小化
+                                                     * @param winId 待最小化窗口的Id
+                                                     */
+                                                    object.minimumWin=function(winId){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CtrlWindow",
+                                                            "data": {
+                                                                "sessionID": sessionId,
+                                                                "windowID": winId,
+                                                                "maxWin":2
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 将指定窗口恢复到前一个位置,一般用于窗口最小化后,恢复到原来位置
+                                                     * @param winId 待恢复到原来位置窗口的Id
+                                                     */
+                                                    object.restoreWin=function(winId){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CtrlWindow",
+                                                            "data": {
+                                                                "sessionID": sessionId,
+                                                                "windowID": winId,
+                                                                "maxWin":0
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    object.preview=function(winId,d){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd= {
+                                                            "jsonType": "Request",
+                                                            "requestType":"RLVideoWin",
+                                                            "data": {
+                                                                "sessionID":sessionId,
+                                                                "windowID":winId,
+                                                                // "serverIP": d.serverIP,
+                                                                // "serverID":d.serverID,
+                                                                //
+                                                                // "serverRealm":d.serverRealm,
+                                                                // "serverUserName":d.serverUserName,
+                                                                // "serverUserPwd":d.serverUserPwd,
+                                                                // "Port": 9060,
+                                                                // "DevID":d.DevID
+                                                                // "sessionID":sessionId,
+                                                                // "windowID":winId,
+                                                                "serverIP": d.serverIP,
+                                                                "serverID":d.serverID,
+
+                                                                "serverRealm":d.serverRealm,
+                                                                "serverUserName":"43010400004000000001",
+                                                                "serverUserPwd":d.serverUserPwd,
+                                                                "Port": Number(d.Port),
+                                                                "DevID":d.DevID
+                                                            }
+                                                        };
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+
+                                                            }
+                                                        },function(e){});
+
+                                                    }
+
+                                                    /**
+                                                     * 获取已经打开的窗口的列表
+                                                     */
+                                                    object.getWindowList=function(){
+                                                        var winIds=[];
+                                                        for(winId in object.windows){
+                                                            winIds.push(object.windows[winId]);
+                                                        }
+                                                        return winIds;
+                                                    }
+                                                    return object;
+                                                }
+                                                var nativeWinService=new NativeWinService("http://localhost:61111/cms");
+                                                $.when(
+                                                    $.ajax({
+                                                        url:videourl+"/auth/token/temp",
+                                                        type:'Get',
+                                                        data:{
+                                                        },
+                                                        cache:false,
+                                                    })
+                                                ).done(function (resp) {
+                                                    var token=resp.data;
+                                                    var serverUrl=videourl;
+                                                    nativeWinService.openSession(token,serverUrl);
+                                                }).then(function (resp) {
+                                                    //这里存在着一个异步的问题，必须要按照顺序依次执行下面的方法，才能正确调出视频，为了保证不受异步干扰，所以增加了延迟方法
+                                                    setTimeout(function(){
+                                                        nativeWinService.createWindow(1,"test",100,100,400,300);
+                                                    },500);
+                                                    setTimeout(function(){
+                                                        nativeWinService.getWindowList();
+                                                    },2000);
+                                                    setTimeout(function(){
+                                                        nativeWinService.preview(winId,d);
+                                                    },3000);
+                                                });
+
+
+
+                                            });
+                                        }
+                                    });
+                                });
                                 layx.group('group-nomerge', [
                                     {
                                         id: 'device-info',
@@ -2846,24 +3221,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                         '        </div>\n' +
                                         '        <br>\n' +
                                         '        <div class="input-group">\n' +
-                                        '            <span class="input-group-addon">坐标信息</span>\n' +
-                                        '            <input id="device-info-coors" type="text" class="form-control" value=" ' + " " + ' " name="device-coors" readonly>\n' +
-                                        '        </div>\n' +
-                                        '        <br>\n' +
-                                        '        <div class="input-group">\n' +
-                                        '            <span class="input-group-addon">设备类型</span>\n' +
-                                        '            <select class="form-control" id="device-info-type" readonly>\n' +
-                                        '                <option>A</option>\n' +
-                                        '                <option>B</option>\n' +
-                                        '                <option>C</option>\n' +
-                                        '                <option>D</option>\n' +
-                                        '            </select>\n' +
-                                        '        </div>\n' +
-                                        '        <br>\n' +
-                                        '        <div class="input-group">\n' +
-                                        '            <span class="input-group-addon">设备描述</span>\n' +
-                                        '            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>\n' +
-                                        '        </div> </div>',
+                                        '            <span class="input-group-addon">视频查看</span>\n' +
+                                        '            <button id="showVideo" class="form-control" type="button">查看视频</button>\n' +
+                                        '        </div> ' +
+                                        '</div>',
                                         //cloneElementContent:false,
                                     },
                                     {
@@ -2878,7 +3239,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                                         content: document.getElementById('device-history'),
                                         cloneElementContent: false,
                                     }
-                                ], 0, {
+                                ], 0,
+                                    {
                                     id: 'info',
                                     mergeTitle: false,
                                     title: '设备详情',
@@ -2886,11 +3248,11 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                             });
                         });
                     });
-                    map.addLayer(featurePointGroup);
+                    map.addLayer(featureGroup);
                 });
             }
             else{
-                map.removeLayer(featurePointGroup);
+                map.removeLayer(featureGroup);
                 dataLayertemp[treeNode.id] = undefined;
             }
             console.log(treeNode.id + ", " + treeNode.name + "," + treeNode.checked);
@@ -3141,7 +3503,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             $.fn.zTree.init($("#layerControlBase"), baseLayserSetting, baseLayserZNodes);
 
             //数据控制器
-            var dataControlTree = $.fn.zTree.init($("#layerControlTest"), dataLayserSetting, dataLayerZNodes);
+            //var dataControlTree = $.fn.zTree.init($("#layerControlTest"), dataLayserSetting, dataLayerZNodes);
         });
 
         /**

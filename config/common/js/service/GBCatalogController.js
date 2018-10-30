@@ -1,6 +1,6 @@
 define(['common'],function GBCatalogController(common){
     var gbc=new Object();
-    gbc.url=common.host+"/mgc"+"/GBCatalogService";
+    gbc.url=host+"/mgc"+"/GBCatalogService";
     /**
      *添加组织信息
      *@param GBCatalog GBCatalog
