@@ -40,14 +40,16 @@ define(['common'],function RoleController(common){
     };
            
     /**
-      *加载角色列表  
+      *分页查询角色信息
       */
-     RoleService.getRoleList=function(onSuccess){
-		 var requestUrl=this.url+"/list";
+     RoleService.getRoleList=function(pageNo,pageSize,onSuccess){
+		 var requestUrl=this.url+"/list/page";
          $.ajax({
              url:requestUrl,
              type:'Get',
              data:{
+                 pageNo:pageNo,
+                 pageSize:pageSize
              },
              cache:false,
              success:onSuccess,
@@ -56,14 +58,17 @@ define(['common'],function RoleController(common){
     };
            
     /**
-      *no comment for this interface
+      *更新角色
       */
-     RoleService.updateRole=function(onSuccess){
+     RoleService.updateRole=function(role,roleId,onSuccess){
+         var role=JSON.stringify(role)
 		 var requestUrl=this.url+"/update";
          $.ajax({
              url:requestUrl,
-             type:'Get',
+             type:'Post',
              data:{
+                 role:role,
+                 roleId:roleId
              },
              cache:false,
              success:onSuccess,

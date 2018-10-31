@@ -71,7 +71,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             path: '../../common/libs/layer/'
         });
         var orgTree = {};
-        orgTree.getTree = function () {
+        /*orgTree.getTree = function () {
             var tree = [];
             var temp = {};
             orgService.listAllOrg(function (data) {
@@ -104,6 +104,13 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 }
             })
             return tree;
+        }*/
+        orgTree.getTree = function () {
+            orgService.getChildList('-1', function (data) {
+                if (data.result) {
+                    return data.data;
+                }
+            })
         }
         orgTree.isNodeSelected = false;
         orgTree.nodeSelected;
@@ -314,50 +321,51 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         //添加组织
         $('#addOrg').click(function () {
             if (!orgTree.isNodeSelected) {
-                layer.msg('请选择上级组织')
+                $('input[name="orgParentName"]').val('无');
+                $('input[name="orgParentCode"]').val('-1');
             } else {
-                //开启验证
-                orgvalia.addValidator();
                 $('input[name="orgParentName"]').val(orgTree.nodeSelected.text);
                 $('input[name="orgParentCode"]').val(orgTree.nodeSelected.code);
-                layer.open({
-                    type: 1,
-                    title: '添加组织',
-                    offset: '100px',
-                    area: '600px',
-                    resize: false,
-                    content: $('#add_org')
-                })
-                //表单提交
-                $('#orgForm').on('success.form.bv', function () {
-                    var org = {};
-                    org.name = $('input[name="orgName"]').val();
-                    org.parentCode = $('input[name="orgParentCode"]').val();
-                    org.orderNo = $('input[name="orgOrderNo"]').val();
-                    org.description = $('textarea[name="orgRemark"]').val();
-                    areaCode = $('input[name="areaCode"]').val();
-                    orgService.addOrg(org, areaCode, function (data) {
-                        if (data.result) {
-                            layer.msg('添加组织成功');
-                            orgTree.getTree();
-                            orgTree.init();
-                            //向表格中添加
-                            org.code = data.data
-                            $('#org_table').bootstrapTable('append', org);
-                            layer.closeAll();
-                            //清空表单
-                            $('input[name="orgParentName"]').val('无');
-                            $('input[name="orgParentCode"]').val('-1');
-                            $("input[name='res']").click();
-                            //清空验证
-                            $("#orgForm").data('bootstrapValidator').destroy();
-                        } else {
-                            layer.msg(data.description)
-                        }
-                    })
-                    return false;
-                })
             }
+            //开启验证
+            orgvalia.addValidator();
+            layer.open({
+                type: 1,
+                title: '添加组织',
+                offset: '100px',
+                area: '600px',
+                resize: false,
+                content: $('#add_org')
+            })
+            //表单提交
+            $('#orgForm').on('success.form.bv', function () {
+                var org = {};
+                org.name = $('input[name="orgName"]').val();
+                org.parentCode = $('input[name="orgParentCode"]').val();
+                org.orderNo = $('input[name="orgOrderNo"]').val();
+                org.description = $('textarea[name="orgRemark"]').val();
+                areaCode = $('input[name="areaCode"]').val();
+                orgService.addOrg(org, areaCode, function (data) {
+                    if (data.result) {
+                        layer.msg('添加组织成功');
+                        orgTree.getTree();
+                        orgTree.init();
+                        //向表格中添加
+                        org.code = data.data
+                        $('#org_table').bootstrapTable('append', org);
+                        layer.closeAll();
+                        //清空表单
+                        $('input[name="orgParentName"]').val('无');
+                        $('input[name="orgParentCode"]').val('-1');
+                        $("input[name='res']").click();
+                        //清空验证
+                        $("#orgForm").data('bootstrapValidator').destroy();
+                    } else {
+                        layer.msg(data.description)
+                    }
+                })
+                return false;
+            })
         })
 
         //初始化区域树
@@ -412,7 +420,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                             }
                             var newNodes = data.data;
                             //添加节点
-                            treeObj.addNodes(treeNode,newNodes);
+                            treeObj.addNodes(treeNode, newNodes);
                         }
                     })
                 }

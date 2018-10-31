@@ -66,13 +66,12 @@ define(['common'],function PersonnelController(common){
       *@param ids  人员集合 
       */
      personService.deletePersonnelByIds=function(ids,onSuccess){
-	     var idsStr=JSON.stringify(ids);
 		 var requestUrl=this.url+"/delete";
          $.ajax({
              url:requestUrl,
              type:'Post',
              data:{
-                   ids:idsStr,
+                   ids:ids,
              },
              cache:false,
              success:onSuccess,

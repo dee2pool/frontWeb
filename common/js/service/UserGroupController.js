@@ -5,14 +5,16 @@ define(['./../../../config/common/js/util'], function UserGroupController(common
      *添加用户组信息
      *@param ug ug
      */
-    ugroupService.addUserGroup = function (ug, onSuccess) {
+    ugroupService.addUserGroup = function (ug,roleIds,onSuccess) {
         var ugStr = JSON.stringify(ug);
+        var roleIdsStr=JSON.stringify(roleIds);
         var requestUrl = this.url + "/add";
         $.ajax({
             url: requestUrl,
             type: 'POST',
             data: {
                 ug: ugStr,
+                roleIds:roleIdsStr
             },
             cache: false,
             success: onSuccess,
@@ -223,6 +225,45 @@ define(['./../../../config/common/js/util'], function UserGroupController(common
             error: common.onError
         });
     };
-
+    /*
+    * 查询用户组拥有的角色
+    * @param groupId
+    * */
+    ugroupService.getUserGroupRoleByGroupId=function (groupId,onSuccess) {
+        var requestUrl=this.url+"/"+groupId+"/list";
+        $.ajax({
+            url:requestUrl,
+            type:'GET',
+            async:false,
+            data:{
+                groupId:groupId
+            },
+            cache:false,
+            success:onSuccess,
+            error:common.onError
+        })
+    };
+    /**
+     *查询用户组所拥有的角色
+     *@param groupId  用户组id
+     *@param roleIds  角色id集合
+     */
+    ugroupService.getUserGroupRoleById=function(groupId,roleIds,onSuccess){
+        var groupIdStr=groupId;
+        var roleIdsStr=JSON.stringify(roleIds);
+        var requestUrl=this.url+"/groupRoleList";
+        $.ajax({
+            url:requestUrl,
+            type:'Get',
+            async:false,
+            data:{
+                groupId:groupIdStr,
+                roleIds:roleIdsStr,
+            },
+            cache:false,
+            success:onSuccess,
+            error:common.onError
+        });
+    };
     return ugroupService;
 })

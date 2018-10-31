@@ -7,6 +7,7 @@ define(['bootstrapValidator','RoleService'], function (bootstrapValidator,RoleSe
             layer.open({
                 type: 1,
                 area: '380px',
+                skin: 'layui-layer-lan',
                 offset: '100px',
                 scrollbar: false,
                 title: '添加角色',
@@ -58,6 +59,9 @@ define(['bootstrapValidator','RoleService'], function (bootstrapValidator,RoleSe
                     //表单清空
                     $("input[name='res']").click();
                     $("#add_role").data('bootstrapValidator').destroy();
+                }else{
+                    layer.msg(data.description);
+                    $("button[type='submit']").removeAttr('disabled');
                 }
             })
             return false;

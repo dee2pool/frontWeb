@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <title>部门管理</title>
     <link rel="stylesheet" href="../../common/css/common.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
-    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
-    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../common/css/buttons.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
-    <link rel="stylesheet" type="text/css" href="../css/dept.css">
+    <link rel="stylesheet" href="../css/dept.css">
+    <link rel="stylesheet" href="../../common/css/normalize.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/dept"></script>
 </head>
 <body>
@@ -37,43 +39,16 @@
                         </div>
                     </div>
                 </form>-->
-                <div id="depttree"></div>
+                <ul id="depttree" class="ztree"></ul>
             </div>
             <div class="content-panel panel-opera">
                 <a id="addDept" class="button button-primary button-small"><span
                         class="glyphicon glyphicon-plus"></span>添加部门
                 </a>
             </div>
-            <div class="content-panel panel-right">
+            <div class="content-panel panel-table">
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="dept_table"></table>
-                </div>
-                <!--分页-->
-                <div class="fixed-table-pagination">
-                    <div class="pull-left">
-                        <span class="pagination-info"></span>
-                        <span class="page-list">
-                            <span class="btn-group dropup">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="page-size">10</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="menuitem" class="active"><a href="#">10</a></li>
-                                    <li role="menuitem"><a href="#">20</a></li>
-                                    <li role="menuitem"><a href="#">30</a></li>
-                                </ul>
-                            </span>
-                            条每页
-                        </span>
-                    </div>
-                    <div class="pull-right pagination">
-                        <ul class="pagination">
-                            <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
-                            <li class="page-item pNo active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
@@ -102,7 +77,7 @@
                 </div>
             </div>
             <div class="tab-footer">
-                <button type="submit" class="btn btn-danger">完成</button>
+                <button type="submit" class="btn btn-primary">完成</button>
                 <button type="button" class="btn btn-default btn-cancel">取消</button>
             </div>
         </form>
@@ -123,7 +98,7 @@
                 </div>
             </div>
             <div class="tab-footer">
-                <button type="submit" class="btn btn-danger">完成</button>
+                <button type="submit" class="btn btn-primary">完成</button>
                 <button type="button" class="btn btn-default btn-cancel">取消</button>
             </div>
         </form>

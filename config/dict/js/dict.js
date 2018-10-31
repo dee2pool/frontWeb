@@ -1,8 +1,7 @@
 require.config({
     shim: {
-        'frame': {
-            deps: ['jquery', 'menu', 'MenuService'],
-            exports: "frame"
+        'ztree': {
+            deps: ['jquery']
         },
         'common': {
             deps: ['jquery'],
@@ -19,27 +18,33 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
+        'bootstrap-table-zh-CN': {
+            deps: ['bootstrap-table', 'jquery'],
+            exports: "bootstrapTableZhcN"
+        },
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapValidator"
         }
     },
     paths: {
-        "jquery": '../../common/libs/jquery/jquery-1.11.3.min',
-        "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
+        "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
+        "bootstrap": "../../../common/lib/bootstrap/js/bootstrap.min",
         "common": "../../common/js/util",
-        "layer": "../../common/libs/layer/layer",
+        "layer": "../../../common/lib/layer/layer",
         "frame": "../../sidebar/js/wframe",
         "topBar": "../../../common/component/head/js/topbar",
-        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
-        "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
+        "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
+        "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
+        "bootstrap-table-zh-CN": "../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
-        "dictService": "../../../common/js/service/DictController"
+        "dictService": "../../../common/js/service/DictController",
+        "ztree": "../../../common/lib/ztree/js/jquery.ztree.core"
     }
 });
-require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table', 'bootstrap', 'topBar', 'dictService'],
-    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable, bootstrap, topBar, dictService) {
+require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'topBar', 'dictService', 'ztree'],
+    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable, bootstrapTableZhcN, bootstrap, topBar, dictService, ztree) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -48,8 +53,65 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         topBar.init();
         //解决layer不显示问题
         layer.config({
-            path: '../../common/libs/layer/'
+            path: '../../../common/lib/layer/'
         });
+        /********************************* 字典树 ***************************************/
+        var dictTree = {};
+        dictTree.setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "dictCode",
+                    pIdKey: "dictParentCode",
+                },
+                key: {
+                    name: "dictName"
+                },
+                keep: {
+                    parent: true
+                }
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    dictTree.selected = treeNode;
+                    dictTable.init(treeNode.dictCode);
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    //清空当前父节点的子节点
+                    dictTree.obj.removeChildNodes(treeNode);
+                    dictService.getChildList(treeNode.dictCode, function (data) {
+                        if (data.result) {
+                            if (data.result) {
+                                for (var i = 0; i < data.dataSize; i++) {
+                                    data.data[i].isParent = true;
+                                    data.data[i].icon = "../img/dict.png";
+                                }
+                                var newNodes = data.data;
+                                //添加节点
+                                dictTree.obj.addNodes(treeNode, newNodes);
+                            }
+                        }
+                    })
+                }
+            }
+        };
+        dictTree.zNode = function () {
+            var treeNode;
+            dictService.getChildList('-1', function (data) {
+                if (data.result) {
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/dict.png";
+                    }
+                    treeNode = data.data;
+                }
+            })
+            return treeNode;
+        }
+        dictTree.init = function () {
+            dictTree.obj = $.fn.zTree.init($("#dictTree"), dictTree.setting, dictTree.zNode());
+        }
+        dictTree.init();
         /********************************* 添加字典 ***************************************/
         var dictAdd = {};
         dictAdd.valia = function () {
@@ -78,21 +140,20 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         }
         dictAdd.submit = function (layerId) {
             $('#addDictForm').on('success.form.bv', function () {
+                console.log("aa")
                 var dict = {};
                 dict.dictName = $('input[name="dictName"]').val();
                 dict.dictCode = $('input[name="dictNo"]').val();
+                dict.dictParentCode = $('input[name="parentCode"]').val();
                 dict.remark = $('textarea[name="remark"]').val();
-                dict.showOrder = $('input[name="showOrder"]').val();
                 dictService.addDict(dict, function (data) {
                     if (data.result) {
-                        //向表格中添加
-                        dict.id = data.data;
-                        $('#dict_table').bootstrapTable('append', dict);
+                        //向树中添加
                         //清空表单和验证
                         common.clearForm('addDictForm');
-                        layer.msg('添加成功')
                         //关闭弹窗
-                        layer.close(layerId);
+                        layer.closeAll();
+                        layer.msg('添加成功')
                     } else {
                         layer.msg(data.description)
                     }
@@ -102,18 +163,24 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         }
         dictAdd.init = function () {
             $('#addDict').click(function () {
+                if (dictTree.selected) {
+                    $('input[name="parentName"]').val(dictTree.selected.dictName);
+                    $('input[name="parentCode"]').val(dictTree.selected.dictCode);
+                }
                 //表单验证
                 dictAdd.valia();
-                var layerId = layer.open({
+                layer.open({
                     type: 1,
                     title: '添加字典',
                     offset: '100px',
+                    skin: 'layui-layer-lan',
                     area: '600px',
                     resize: false,
                     content: $('#add_Dict')
                 })
+                console.log("bb")
                 //表单提交
-                dictAdd.submit(layerId);
+                dictAdd.submit();
             })
         }
         dictAdd.init();
@@ -128,364 +195,135 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {
-                    dictName: {
+                    editDictName: {
                         validators: {
                             notEmpty: {
                                 message: '字典名称不能为空'
                             }
                         }
-                    }, dictNo: {
-                        validators: {
-                            notEmpty: {
-                                message: '字典编号不能为空'
-                            }
-                        }
                     }
                 }
             })
         }
-        dictEdit.submit = function (id, index, layerId) {
-            $('#editDictForm').on('success.form.bv', function () {
+        dictEdit.submit = function (row, index) {
+            $('#editDictForm').on('success.form.bv',function () {
                 var dict = {};
                 dict.dictName = $('input[name="editDictName"]').val();
                 dict.dictCode = $('input[name="editDictNo"]').val();
                 dict.remark = $('textarea[name="editRemark"]').val();
-                dict.showOrder = $('input[name="editShowOrder"]').val();
-                dict.id = id;
-                dictService.updateDict(dict, id, function (data) {
+                dict.parentCode = $('input[name="parentCode"]').val();
+                dict.id = row.id;
+                dictService.updateDict(dict, row.id, function (data) {
                     if (data.result) {
                         //更新表格
                         $('#dict_table').bootstrapTable('updateRow', {index: index, row: dict});
                         //清空弹窗和验证
-                        common.clearForm('editDictForm')
-                        layer.msg('修改成功')
+                        common.clearForm('editDictForm');
                         //关闭弹窗
-                        layer.close(layerId);
+                        layer.closeAll();
+                        layer.msg('修改成功');
                     } else {
+                        //清空弹窗和验证
+                        common.clearForm('editDictForm');
+                        //关闭弹窗
+                        layer.closeAll();
                         layer.msg(data.description);
+
                     }
                 })
                 return false;
             })
         }
-        dictEdit.init = function () {
+        dictEdit.init = function (row, index) {
             //表单验证
             dictEdit.valia();
-            $('#editDict').click(function () {
-                var selected = $('#dict_table').bootstrapTable('getSelections');
-                if (selected.length == 0) {
-                    layer.msg('请选择要修改的字典信息')
-                } else if (selected.length > 1) {
-                    layer.msg('一次只能修改一条')
-                } else {
-                    //表单数据填充
-                    $('input[name="editDictName"]').val(selected[0].dictName);
-                    $('input[name="editDictNo"]').val(selected[0].dictCode);
-                    $('textarea[name="editRemark"]').val(selected[0].remark);
-                    $('input[name="editShowOrder"]').val(selected[0].showOrder);
-                    var layerId = layer.open({
-                        type: 1,
-                        title: '修改字典',
-                        offset: '100px',
-                        area: '600px',
-                        resize: false,
-                        content: $('#edit_Dict')
-                    })
-                    //获得选中行的index
-                    var indexs = common.getTableIndex('dict_table');
-                    dictEdit.submit(selected[0].id, indexs[0], layerId)
-                }
+            //表单数据填充
+            $('input[name="editDictName"]').val(row.dictName);
+            $('input[name="editDictNo"]').val(row.dictCode);
+            $('textarea[name="editRemark"]').val(row.remark);
+            $('input[name="parentCode"]').val(row.dictParentCode);
+            layer.open({
+                type: 1,
+                title: '修改字典',
+                offset: '100px',
+                skin: 'layui-layer-lan',
+                area: '600px',
+                resize: false,
+                content: $('#edit_Dict')
             })
+            dictEdit.submit(row, index);
         }
-        dictEdit.init();
         /********************************* 删除字典 ***************************************/
         var dictDel = {};
-        dictDel.init = function () {
-            $('#delDict').click(function () {
-                //获得选择的行
-                var selected = $('#dict_table').bootstrapTable('getSelections');
-                if (selected.length == 0) {
-                    layer.msg('请选择要删除的字典信息')
-                } else {
-                    layer.confirm('确定删除?', {
-                        btn: ['确定', '取消'] //按钮
-                    }, function () {
-                        var ids = new Array();
-                        for (var i = 0; i < selected.length; i++) {
-                            ids.push(selected[i].id);
-                        }
-                        dictService.deleteDictByIds(ids, function (data) {
-                            if (data.result) {
-                                layer.msg('删除成功');
-                                //从表格中删除
-                                $('#dict_table').bootstrapTable('remove', {
-                                    field: 'id',
-                                    values: ids
-                                })
-                            } else {
-                                layer.msg(data.description)
-                            }
-                        })
-                    }, function () {
-                        layer.closeAll();
-                    });
-                }
-            })
-        }
-        dictDel.init();
-        /********************************* 字典表格 ***************************************/
-        var dictTable = {};
-        dictTable.pageNo = 1;
-        dictTable.pageSize = 10;
-        dictTable.init = function () {
-            dictService.getDictList(dictTable.pageNo, dictTable.pageSize, null, null, function (data) {
-                if (data.result) {
-                    $('#dict_table').bootstrapTable({
-                        columns: [{
-                            checkbox: true
-                        }, {
-                            field: 'id',
-                            visible: false
-                        }, {
-                            field: 'dictName',
-                            title: '字典名称',
-                            align: 'center'
-                        }, {
-                            field: 'dictCode',
-                            title: '字典编号',
-                            align: 'center'
-                        }, {
-                            field: 'remark',
-                            title: '备注',
-                            align: 'center'
-                        }],
-                        data: data.data,
-                        onClickRow: function (row, $element, field) {
-                            dictDetailTable.init(row.dictCode);
-                        }
-                    })
-                }
-            })
-        }
-        dictTable.init();
-        /********************************* 字典详情表格 ***************************************/
-        $('#dictDetail_table').bootstrapTable({
-            columns: [{
-                checkbox: true
-            }, {
-                field: 'dictCode',
-                visible: false
-            }, {
-                field: 'detailValue',
-                title: '字典详情名称',
-                align: 'center'
-            }, {
-                field: 'detailCode',
-                title: '字典详情编号',
-                align: 'center'
-            }, {
-                field: 'remark',
-                title: '备注',
-                align: 'center'
-            }]
-        })
-        var dictDetailTable = {};
-        dictDetailTable.init = function (code) {
-            dictService.DictDetailByDictCode(code, function (data) {
-                if (data.result) {
-                    $('#dictDetail_table').bootstrapTable('load',data.data)
-                }
-            })
-        }
-        /********************************* 添加字典详情 ***************************************/
-        var dictDetailAdd = {};
-        dictDetailAdd.valia = function () {
-            $('#addDictDetailForm').bootstrapValidator({
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    detailValue: {
-                        validators: {
-                            notEmpty: {
-                                message: '字典详情名称不能为空'
-                            }
-                        }
-                    }, detailCode: {
-                        validators: {
-                            notEmpty: {
-                                message: '字典详情编号不能为空'
-                            }
-                        }
-                    }
-                }
-            })
-        }
-        dictDetailAdd.submit = function (layerId) {
-            $('#addDictDetailForm').on('success.form.bv',function () {
-                var dictDetail = {};
-                dictDetail.dictCode = $('input[name="dictCode"]').val();
-                dictDetail.detailValue = $('input[name="detailValue"]').val();
-                dictDetail.remark = $('textarea[name="remark"]').val();
-                dictDetail.detailCode = $('input[name="detailCode"]').val();
-                dictService.addDictDetail(dictDetail,function (data) {
+        dictDel.init = function (row) {
+            layer.confirm('确定删除?', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                dictService.deleteDictByIds(row.id, function (data) {
                     if (data.result) {
-                        //向表格中添加
-                        dictDetail.id = data.data;
-                        $('#dictDetail_table').bootstrapTable('append', dictDetail);
-                        //清空表单和验证
-                        common.clearForm('addDictDetailForm');
-                        layer.msg('添加成功')
-                        //关闭弹窗
-                        layer.close(layerId);
+                        layer.msg('删除成功');
+                        //从表格中删除
+                        $('#dict_table').bootstrapTable('remove',{field: 'id', values: [row.id]});
+                        dictTree.init();
                     } else {
                         layer.msg(data.description)
                     }
                 })
-                return false;
-            })
+            }, function () {
+                layer.closeAll();
+            });
         }
-        dictDetailAdd.init = function () {
-            $('#addDictDetail').click(function () {
-                var selected = $('#dict_table').bootstrapTable('getSelections');
-                if (selected.length==0) {
-                    layer.msg('请选择左侧字典')
-                } else if(selected.length>1){
-                    layer.msg('只能选择一个节点')
-                } else {
-                    //表单验证
-                    console.log(selected)
-                    dictDetailAdd.valia();
-                    $('input[name="dictCode"]').val(selected[0].dictCode);
-                    $('input[name="dictName"]').val(selected[0].dictName);
-                    var layerId = layer.open({
-                        type: 1,
-                        title: '添加字典详情',
-                        offset: '100px',
-                        area: '600px',
-                        resize: false,
-                        content: $('#add_DictDetail')
-                    })
-                    //表单提交
-                    dictDetailAdd.submit(layerId);
-                }
-            })
-        }
-        dictDetailAdd.init();
-        /********************************* 修改字典详情 ***************************************/
-        var dictDetailEdit = {};
-        dictDetailEdit.valia = function () {
-            $('#editDictDetailForm').bootstrapValidator({
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
+        /********************************* 字典表格 ***************************************/
+        var dictTable = {};
+        $('#dict_table').bootstrapTable({
+            columns: [{
+                checkbox: true
+            }, {
+                field: 'id',
+                visible: false
+            }, {
+                field: 'dictCode',
+                title: '字典编号',
+                align: 'center'
+            }, {
+                field: 'dictName',
+                title: '字典名称',
+                align: 'center'
+            }, {
+                field: 'dictParentCode',
+                title: '上级字典编号',
+                align: 'center'
+            }, {
+                field: 'remark',
+                title: '描述信息',
+                align: 'center'
+            }, {
+                title: '操作',
+                align: "center",
+                events: {
+                    "click #edit": function (e, value, row, index) {
+                        dictEdit.init(row, index);
+                    },
+                    "click #del": function (e, value, row, index) {
+                        dictDel.init(row)
+                    }
                 },
-                fields: {
-                    editDictDetailName: {
-                        validators: {
-                            notEmpty: {
-                                message: '字典详情名称不能为空'
-                            }
-                        }
-                    }, editDictDetailNo: {
-                        validators: {
-                            notEmpty: {
-                                message: '字典详情编号不能为空'
-                            }
-                        }
-                    }
+                formatter: function () {
+                    var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
+                        "<i class='fa fa-edit'></i>修改</button>" +
+                        "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
+                        "</div>"
+                    return icons;
                 }
-            })
-        }
-        dictDetailEdit.submit = function (id, index, layerId) {
-            $('#editDictDetailForm').on('success.form.bv', function () {
-                var dictDetail = {};
-                dictDetail.detailValue = $('input[name="editDictDetailName"]').val();
-                dictDetail.detailCode=$('input[name="editDictDetailNo"]').val();
-                dictDetail.remark = $('textarea[name="editRemark"]').val();
-                dictDetail.id = id;
-                dictService.updateDictDetail(dictDetail,id, function (data) {
-                    if (data.result) {
-                        //更新表格
-                        $('#dictDetail_table').bootstrapTable('updateRow',{index: index, row: dictDetail});
-                        //清空弹窗和验证
-                        common.clearForm('editDictDetailForm')
-                        layer.msg('修改成功')
-                        //关闭弹窗
-                        layer.close(layerId);
-                    } else {
-                        layer.msg(data.description);
-                    }
-                })
-                return false;
-            })
-        }
-        dictDetailEdit.init = function () {
-            //表单验证
-            dictDetailEdit.valia();
-            $('#editDictDetail').click(function () {
-                var selected = $('#dictDetail_table').bootstrapTable('getSelections');
-                if (selected.length == 0) {
-                    layer.msg('请选择要修改的字典详情信息')
-                } else if (selected.length > 1) {
-                    layer.msg('一次只能修改一条')
+            }]
+        })
+        dictTable.init = function (dictCode) {
+            dictService.getChildList(dictCode, function (data) {
+                if (data.result) {
+                    $('#dict_table').bootstrapTable('load', data.data);
                 } else {
-                    console.log(selected)
-                    //表单数据填充
-                    $('input[name="editDictDetailName"]').val(selected[0].detailValue);
-                    $('input[name="editDictDetailNo"]').val(selected[0].detailCode);
-                    $('textarea[name="editRemark"]').val(selected[0].remark);
-                    var layerId = layer.open({
-                        type: 1,
-                        title: '修改字典详情',
-                        offset: '100px',
-                        area: '600px',
-                        resize: false,
-                        content: $('#edit_DictDetail')
-                    })
-                    //获得选中行的index
-                    var indexs = common.getTableIndex('dict_table');
-                    dictDetailEdit.submit(selected[0].id, indexs[0], layerId)
+                    layer.msg(data.description);
                 }
             })
         }
-        dictDetailEdit.init();
-        /********************************* 删除字典详情 ***************************************/
-        var dictDetailDel = {};
-        dictDetailDel.init = function () {
-            $('#delDict').click(function () {
-                //获得选择的行
-                var selected = $('#dict_table').bootstrapTable('getSelections');
-                if (selected.length == 0) {
-                    layer.msg('请选择要删除的字典信息')
-                } else {
-                    layer.confirm('确定删除?', {
-                        btn: ['确定', '取消'] //按钮
-                    }, function () {
-                        var ids = new Array();
-                        for (var i = 0; i < selected.length; i++) {
-                            ids.push(selected[i].id);
-                        }
-                        dictService.deleteDictByIds(ids, function (data) {
-                            if (data.result) {
-                                layer.msg('删除成功');
-                                //从表格中删除
-                                $('#dict_table').bootstrapTable('remove', {
-                                    field: 'id',
-                                    values: ids
-                                })
-                            } else {
-                                layer.msg(data.description)
-                            }
-                        })
-                    }, function () {
-                        layer.closeAll();
-                    });
-                }
-            })
-        }
-        dictDetailDel.init();
     })

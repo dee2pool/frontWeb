@@ -112,9 +112,10 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                         }
                         layer.closeAll();
                         layer.msg('添加成功');
+                        $('#addMpanel').unbind('click');
                         common.clearForm("addMpanel");
                     } else {
-                        layer.msg('添加失败')
+                        layer.msg(data.description);
                     }
                 })
                 return false;

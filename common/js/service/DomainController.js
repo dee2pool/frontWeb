@@ -114,6 +114,7 @@ define(['common'],function DomainController(common) {
         $.ajax({
             url: requestUrl,
             type: 'GET',
+            async:false,
             data: {
                 domainCode: domainCodeStr,
             },
@@ -168,6 +169,7 @@ define(['common'],function DomainController(common) {
         $.ajax({
             url: requestUrl,
             type: 'GET',
+            async:false,
             data: {
                 domainCode: domainCodeStr,
             },

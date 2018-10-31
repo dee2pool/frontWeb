@@ -44,13 +44,12 @@ define(['common'],function DeviceManufacturerController(common){
       *@param ids ids 
       */
      manufacturerService.deleteDeviceManufacturerByids=function(ids,onSuccess){
-	     var idsStr=JSON.stringify(ids);
 		 var requestUrl=this.url+"/deleteDeviceManufacturerByids";
          $.ajax({
              url:requestUrl,
              type:'POST',
              data:{
-                   ids:idsStr,
+                   ids:ids,
              },
              cache:false,
              success:onSuccess,

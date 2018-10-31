@@ -6,7 +6,7 @@ define(['common'], function OrgController(common) {
      *@param org org 待添加组织的信息
      *@param areaCode areaCode 地区代码
      */
-    orgService.addOrg = function (org, areaCode, onSuccess) {
+    orgService.addOrg = function (org, areaCode,domainCode,onSuccess) {
         var orgStr = JSON.stringify(org);
         var areaCodeStr = areaCode;
         var requestUrl = this.url + "/add";
@@ -16,6 +16,7 @@ define(['common'], function OrgController(common) {
             data: {
                 org: orgStr,
                 areaCode: areaCodeStr,
+                domainCode:domainCode
             },
             cache: false,
             success: onSuccess,

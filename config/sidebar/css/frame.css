@@ -50,16 +50,6 @@ ul li {
     -o-transition: all 0.5s ease;
     transition: all 0.5s ease;
 }
-/*.contentpage a {
-    color: rgba(20, 20, 20, 0.97);
-    text-decoration: none;
-}
-
-.contentpage a:active,
-.contentpage a:hover {
-    color: rgba(20, 20, 20, 0.97);
-    text-decoration: none;
-}*/
 .content {
     position: relative;
     min-height: calc(100vh - 70px);
@@ -71,16 +61,15 @@ ul li {
 .content-panel{
     position: absolute;
     background-color: white;
-    top: 40px;
+    /*top: 40px;*/
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14),
     0 1px 5px 0 rgba(0, 0, 0, 0.12),
     0 3px 1px -2px rgba(0, 0, 0, 0.2);
 }
 .panel-left{
     width: 200px;
-    padding-left: 10px;
-    padding-right: 10px;
     overflow-y: auto;
+    height: calc(100% - 5px);
 }
 .panel-head{
     width: 100%;
@@ -100,14 +89,30 @@ ul li {
 .panel-right{
     left: 203px;
 }
+.panel-main{
+    width: 100%;
+    height: 100%;
+    top: 60px;
+}
 .panel-opera{
     left: 203px;
     height: 55px;
+    width: calc(100% - 205px);
     padding-top: 13px;
+    padding-left: 15px;
+}
+.panel-opera-de{
+    left: 203px;
+    height: 55px;
+    top: 40px;
+    width: calc(100% - 205px);
+    padding-top: 13px;
+    padding-left: 15px;
 }
 .panel-opera-se{
     height: 55px;
     padding-top: 13px;
+    padding-left: 15px;
     width: 100%;
 }
 .panel-search{
@@ -135,7 +140,15 @@ ul li {
 }
 .panel-table{
     left: 203px;
+    top:60px;
+    width: calc(100% - 205px);
+    height: calc(100% - 65px);
+}
+.panel-table-de{
+    left: 203px;
     top:100px;
+    width: calc(100% - 205px);
+    height: calc(100% - 65px);
 }
 .panel-table-se{
     top:100px;
@@ -500,10 +513,10 @@ ul li {
     text-align: center;
     border: 0px;
 }
-.funcMenu p{
+/*.funcMenu p{
     position: absolute;
     left: 8px;
-}
+}*/
 /*图标弹窗*/
 .iconPanel {
     width: 100%;

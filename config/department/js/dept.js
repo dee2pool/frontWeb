@@ -1,8 +1,7 @@
 require.config({
     shim: {
-        'frame': {
-            deps: ['jquery', 'menu', 'MenuService'],
-            exports: "frame"
+        'ztree': {
+            deps: ['jquery']
         },
         'common': {
             deps: ['jquery'],
@@ -19,9 +18,9 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
-        'bootstrap-treeview': {
-            deps: ['jquery'],
-            exports: "treeview"
+        'bootstrap-table-zh-CN': {
+            deps: ['bootstrap-table', 'jquery'],
+            exports: "bootstrapTableZhcN"
         },
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
@@ -29,22 +28,23 @@ require.config({
         }
     },
     paths: {
-        "jquery": '../../common/libs/jquery/jquery-1.11.3.min',
-        "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
+        "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
+        "bootstrap": "../../../common/lib/bootstrap/js/bootstrap.min",
         "common": "../../common/js/util",
-        "layer": "../../common/libs/layer/layer",
+        "layer": "../../../common/lib/layer/layer",
         "frame": "../../sidebar/js/wframe",
         "topBar": "../../../common/component/head/js/topbar",
-        "bootstrap-treeview": "../../common/libs/bootstrap-treeview/js/bootstrap-treeview",
-        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
-        "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
+        "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
+        "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
+        "bootstrap-table-zh-CN": "../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
-        "departMentService": "../../../common/js/service/DepartmentController"
+        "departMentService": "../../../common/js/service/DepartmentController",
+        "ztree": "../../../common/lib/ztree/js/jquery.ztree.core"
     }
 });
-require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table', 'bootstrap', 'bootstrap-treeview', 'topBar', 'departMentService'],
-    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable, bootstrap, treeview, topBar, departMentService) {
+require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table','bootstrap-table-zh-CN','bootstrap', 'topBar', 'departMentService','ztree'],
+    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable,bootstrapTableZhcN,bootstrap,topBar, departMentService,ztree) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -53,173 +53,138 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         topBar.init();
         //解决layer不显示问题
         layer.config({
-            path: '../../common/libs/layer/'
+            path: '../../../common/lib/layer/'
         });
-        //部门树
-        var deptTree = {};
-        deptTree.getTree = function () {
-            var tree = [];
-            var temp = {};
-            departMentService.listAll(function (data) {
-                if (data.result) {
-                    //将节点封装成树形结构
-                    for (var i = 0; i < data.data.length; i++) {
-                        temp[data.data[i].id] = {
-                            id: data.data[i].id,
-                            text: data.data[i].name,
-                            pId: data.data[i].parentId,
-                            remark: data.data[i].remark
-                        };
-                    }
-                    for (i = 0; i < data.data.length; i++) {
-                        var key = temp[data.data[i].parentId];
-                        if (key) {
-                            if (key.nodes == null) {
-                                key.nodes = [];
-                                key.nodes.push(temp[data.data[i].id]);
-                            } else {
-                                key.nodes.push(temp[data.data[i].id]);
-                            }
-                        } else {
-                            tree.push(temp[data.data[i].id]);
-                        }
-                    }
+        /********************************* 部门树 ***************************************/
+        var deptTree={};
+        deptTree.setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "id",
+                    pIdKey: "parentId",
+                },
+                key: {
+                    name: "name"
+                },
+                keep: {
+                    parent: true
                 }
-            })
-            return tree;
-        }
-        deptTree.isNodeSelected = false;
-        deptTree.nodeSelected;
-        deptTree.init = function () {
-            //滚动条
-            $('#depttree').treeview({
-                showBorder: false,
-                data: deptTree.getTree(),
-                onhoverColor: 'lightgrey',
-                selectedBackColor: 'lightgrey',
-                selectedColor: 'black',
-                onNodeSelected: function (event, data) {
-                    deptTree.isNodeSelected = true;
-                    deptTree.nodeSelected = data;
-                    //更新表格
-                    departMentService.getChidlList(data.id, function (data) {
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    deptTree.nodeSelected = treeNode;
+
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    //清空当前父节点的子节点
+                    deptTree.obj.removeChildNodes(treeNode);
+                    departMentService.getChidlList(treeNode.id, function (data) {
                         if (data.result) {
-                            $('#dept_table').bootstrapTable('load', data.data);
-                            //更新分页
-                            common.pageInit(1, 10, data.dataSize)
-                        } else {
-                            layer.msg(data.description);
+                            if (data.result) {
+                                for (var i = 0; i < data.dataSize; i++) {
+                                    data.data[i].isParent = true;
+                                    data.data[i].icon = "../img/dept.png";
+                                }
+                                var newNodes = data.data;
+                                //添加节点
+                                deptTree.obj.addNodes(treeNode, newNodes);
+                            }
                         }
                     })
+                }
+            }
+        };
+        deptTree.zNode = function () {
+            var treeNode;
+            departMentService.getChidlList('-1',function (data) {
+                if(data.result){
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/dept.png";
+                    }
+                    treeNode = data.data;
+                }
+            })
+            return treeNode;
+        }
+        deptTree.init = function () {
+            deptTree.obj = $.fn.zTree.init($("#depttree"), deptTree.setting, deptTree.zNode());
+        }
+        deptTree.init();
+        /********************************* 部门表格 ***************************************/
+        var deptTable={};
+        deptTable.init=function () {
+            var queryUrl=common.host+"/auth"+"/department"+"/list";
+            $('#dept_table').bootstrapTable({
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'name',
+                    title: '部门名称',
+                    align: 'center'
+                }, {
+                    field: 'parentId',
+                    visible: false
+                }, {
+                    field: 'remark',
+                    title: '部门描述',
+                    align: 'center'
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    events: {
+                        "click #edit": function (e, value, row, index) {
+                            deptEdit.init(row,index);
+                        },
+                        "click #del": function (e, value, row, index) {
+                            deptDel.init(row);
+                        }
+                    },
+                    formatter: function () {
+                        var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
+                            "<i class='fa fa-edit'></i>修改</button>" +
+                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
+                            "</div>"
+                        return icons;
+                    }
+                }],
+                url: queryUrl,
+                method: 'GET',
+                cache: false,
+                pagination: true,
+                sidePagination: 'server',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                smartDisplay: false,
+                search: true,
+                trimOnSearch: true,
+                buttonsAlign: 'left',
+                showRefresh: true,
+                queryParamsType: '',
+                responseHandler: function (res) {
+                    var rows = res.data;
+                    var total = res.extra;
+                    return {
+                        "rows": rows,
+                        "total": total
+                    }
                 },
-                onNodeUnselected: function (event, data) {
-                    deptTree.isNodeSelected = false;
-                    deptTree.nodeSelected = null;
+                queryParams: function (params) {
+                    var temp = {
+                        pageNo: params.pageNumber,
+                        pageSise: params.pageSize,
+                        depName:params.searchText
+                    }
+                    return temp
                 }
             })
         }
-        deptTree.init();
-        //部门表格
-        var init_page = {
-            pageNumber: 1,
-            pageSize: 10
-        }
-        departMentService.getDepList(init_page.pageNumber, init_page.pageSize, init_page.domainName, function (data) {
-            if (data.result) {
-                $('#dept_table').bootstrapTable({
-                    columns: [{
-                        checkbox: true
-                    }, {
-                        field: 'name',
-                        title: '部门名称',
-                        align: 'center'
-                    }, {
-                        field: 'parentId',
-                        visible: false
-                    }, {
-                        field: 'remark',
-                        title: '部门描述',
-                        align: 'center'
-                    }, {
-                        title: '操作',
-                        align: 'center',
-                        events: {
-                            "click #edit_role": function (e, value, row, index) {
-                                $('input[name="eidtDeptName"]').val(row.name);
-                                $('textarea[name="eidtDeptRemark"]').val(row.description);
-                                deptValida.editValidator();
-                                layer.open({
-                                    type: 1,
-                                    title: '修改部门',
-                                    offset: '100px',
-                                    area: '600px',
-                                    resize: false,
-                                    content: $('#edit_dept')
-                                })
-                                //表单提交
-                                $('#editDeptForm').on('success.form.bv', function () {
-                                    var dept = {};
-                                    dept.id = row.id;
-                                    dept.name = $('input[name="eidtDeptName"]').val();
-                                    dept.description = $('textarea[name="eidtDeptRemark"]').val();
-                                    dept.parentId = row.parentId
-                                    departMentService.updateDep(dept.id,dept,function (data) {
-                                        if (data.result) {
-                                            layer.msg('更新成功')
-                                            //清除校验
-                                            $("#editDeptForm").data('bootstrapValidator').destroy();
-                                            //更新树
-                                            deptTree.getTree();
-                                            deptTree.init();
-                                            layer.closeAll();
-                                            //更新表格
-                                            $('#dept_table').bootstrapTable('updateRow',{index:index,row:domain})
-                                        } else {
-                                            layer.msg(data.description)
-                                            $("button[type='submit']").removeAttr('disabled');
-                                        }
-                                    })
-                                    return false;
-                                })
-                            },
-                            "click #del_role": function (e, value, row, index) {
-                                //点击删除按钮
-                                layer.confirm('确定删除 ' + row.name + ' ?', {
-                                    btn: ['确定', '取消'] //按钮
-                                }, function () {
-                                    //删除操作
-                                    departMentService.deleteBydepId(row.id, function (data) {
-                                        if (data.result) {
-                                            layer.closeAll();
-                                            //更新树
-                                            deptTree.getTree();
-                                            deptTree.init();
-                                            //更新表格
-                                            $('#dept_table').bootstrapTable('remove', {field: 'id', values: [row.id]})
-                                        } else {
-                                            layer.msg(data.description);
-                                        }
-                                    })
-                                }, function () {
-                                    layer.closeAll();
-                                });
-                            }
-                        },
-                        formatter: function () {
-                            var icons = "<div class='btn-group-sm'><button id='edit_role' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
-                                "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
-                                "</div>"
-                            return icons;
-                        }
-                    }],
-                    data: data.data
-                })
-                //初始化分页组件
-                common.pageInit(init_page.pageNumber, init_page.pageSize, data.extra)
-            }
-        })
-        var deptValida = {};
-        deptValida.addValida = function () {
+        deptTable.init();
+        /********************************* 添加部门 ***************************************/
+        var deptAdd={};
+        deptAdd.valia=function(){
             $('#addDeptForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -237,7 +202,51 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 }
             })
         }
-        deptValida.editValidator = function () {
+        deptAdd.submit=function(){
+            $('#addDeptForm').on('success.form.bv', function () {
+                var dept = {};
+                dept.name = $("input[name='deptName']").val();
+                dept.parentId = $('input[name="parentDeptCode"]').val();
+                dept.remark = $("textarea[name='deptRemark']").val();
+                departMentService.addDepartment(dept, function (data) {
+                    if (data.result) {
+                        layer.closeAll();
+                        common.clearForm('addDeptForm');
+                        deptTree.init();
+                        layer.msg('添加成功 请刷新表格');
+                    } else {
+                        layer.msg(data.description);
+                    }
+                })
+                return false
+            })
+        }
+        deptAdd.init=function(){
+            $('#addDept').click(function () {
+                if (!deptTree.nodeSelected) {
+                    $('input[name="parentDept"]').val('无');
+                    $('input[name="parentDeptCode"]').val('-1');
+                } else {
+                    $('input[name="parentDept"]').val(deptTree.nodeSelected.name);
+                    $('input[name="parentDeptCode"]').val(deptTree.nodeSelected.id);
+                }
+                deptAdd.valia();
+                layer.open({
+                    type: 1,
+                    title: '添加部门',
+                    offset: '100px',
+                    skin: 'layui-layer-lan',
+                    area: '600px',
+                    resize: false,
+                    content: $('.add_dept')
+                })
+                deptAdd.submit();
+            })
+        }
+        deptAdd.init();
+        /********************************* 修改部门 ***************************************/
+        var deptEdit={};
+        deptEdit.valia=function(){
             $('#editDeptForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -245,7 +254,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {
-                    deptName: {
+                    eidtDeptName: {
                         validators: {
                             notEmpty: {
                                 message: '部门名称不能为空'
@@ -255,45 +264,69 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 }
             })
         }
-        //添加部门
-        $('#addDept').click(function () {
-            if(!deptTree.isNodeSelected){
-                $('input[name="parentDept"]').val('无');
-                $('input[name="parentDeptCode"]').val('-1');
-            }else{
-                $('input[name="parentDept"]').val(deptTree.nodeSelected.text);
-                $('input[name="parentDeptCode"]').val(deptTree.nodeSelected.id);
-            }
-            //启用验证
-            deptValida.addValida();
+        deptEdit.submit=function(row,index){
+            //表单提交
+            $('#editDeptForm').on('success.form.bv', function () {
+                var dept = {};
+                dept.id = row.id;
+                dept.name = $('input[name="eidtDeptName"]').val();
+                dept.description = $('textarea[name="eidtDeptRemark"]').val();
+                dept.parentId = row.parentId
+                departMentService.updateDep(dept.id,dept,function (data) {
+                    if (data.result) {
+                        //清除校验
+                        $("#editDeptForm").data('bootstrapValidator').destroy();
+                        //更新表格
+                        $('#dept_table').bootstrapTable('updateRow',{index:index,row:dept});
+                        //更新树
+                        deptTree.init();
+                        layer.closeAll();
+                        layer.msg('更新成功');
+                    } else {
+                        layer.msg(data.description)
+                        $("button[type='submit']").removeAttr('disabled');
+                    }
+                })
+                return false;
+            })
+        }
+        deptEdit.init=function(row,index){
+            $('input[name="eidtDeptName"]').val(row.name);
+            $('textarea[name="eidtDeptRemark"]').val(row.description);
+            deptEdit.valia();
             layer.open({
                 type: 1,
-                title: '添加部门',
+                title: '修改部门',
                 offset: '100px',
+                skin: 'layui-layer-lan',
                 area: '600px',
                 resize: false,
-                content: $('.add_dept')
+                content: $('#edit_dept')
             })
-            $('#addDeptForm').on('success.form.bv', function () {
-                var dept = {};
-                dept.name = $("input[name='deptName']").val();
-                dept.parentId = $('input[name="parentDeptCode"]').val();
-                dept.remark = $("textarea[name='deptRemark']").val();
-                departMentService.addDepartment(dept, function (data) {
+            deptEdit.submit(row,index);
+        }
+        /********************************* 删除部门 ***************************************/
+        var deptDel={};
+        deptDel.init=function(row){
+            //点击删除按钮
+            layer.confirm('确定删除 ' + row.name + ' ?', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                //删除操作
+                departMentService.deleteBydepId(row.id, function (data) {
                     if (data.result) {
+                        //更新表格
+                        $('#dept_table').bootstrapTable('remove', {field: 'id', values: [row.id]})
                         layer.closeAll();
-                        //清空表单
-                        $("input[name='res']").click();
-                        //清空验证
-                        $("#addDeptForm").data('bootstrapValidator').destroy();
-                        //初始化
-                        deptTree.getTree();
+                        //更新树
                         deptTree.init();
+                        layer.msg('刪除成功');
                     } else {
                         layer.msg(data.description);
                     }
                 })
-                return false
-            })
-        })
+            }, function () {
+                layer.closeAll();
+            });
+        }
     })

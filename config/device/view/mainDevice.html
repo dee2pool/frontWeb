@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../css/common.css">
     <link rel="stylesheet" type="text/css" href="../../common/css/normalize.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/mainDevice"></script>
     <title>硬件设备</title>
@@ -40,7 +41,7 @@
                 <input id="keyword" type="text" class="form-control" placeholder="请输入组织或管理域名称" style="height: 30px">
                 <ul id="orgTree" class="ztree"></ul>
             </div>
-            <div class="content-panel panel-opera">
+            <div class="content-panel panel-opera-de">
                 <a id="addDevice" href="javascript:;" class="button button-primary button-small"><span
                         class="glyphicon glyphicon-plus"></span>添加设备
                 </a>
@@ -49,58 +50,19 @@
                 <a id="addMediaSrc" href="javascript:;" data-pushbar-target="left"
                    class="button button-royal  button-small"><span
                         class="glyphicon glyphicon-registration-mark"></span>添加媒体源</a>
-                <a href="mediaSrc.html" data-pushbar-target="left"
+                <a  href="mediaSrc.html" data-pushbar-target="left"
                    class="button button-royal  button-small"><span
-                        class="glyphicon glyphicon-search"></span>查看通道信息</a>
-                <a id="refresh" href="javascript:;" class="button button-primary button-small"><span
-                        class="glyphicon glyphicon-refresh">刷新</span>
-                </a>
-                <span class="button-dropdown button-dropdown-inverse" data-buttons="dropdown">
-                    <button class="button button-inverse button-small">
-                        更多<i class="fa fa-caret-down"></i>
-                    </button>
-                    <ul class="button-dropdown-list is-below">
-                        <li><a href="#">下载模版</a></li>
-                        <li><a href="#">导入设备</a></li>
-                        <li class="button-dropdown-divider"><a href="#">导出模版</a></li>
-                    </ul>
-                </span>
-                <div class="panel-search">
-                    <span>设备名称</span><input type="text" name="d_name" class="form-control">
-                    <span>设备IP</span><input type="text" name="d_ip" class="form-control">
-                    <button id="search" class="button button-primary button-small"><i class="fa fa-search"></i>查询
-                    </button>
-                </div>
+                        class="glyphicon glyphicon-registration-mark"></span>查看通道信息</a>
+                <a  href="deviceModel.html" data-pushbar-target="left"
+                    class="button button-royal  button-small"><span
+                        class="glyphicon glyphicon-registration-mark"></span>设备型号</a>
+                <a  href="deviceManu.html" data-pushbar-target="left"
+                    class="button button-royal  button-small"><span
+                        class="glyphicon glyphicon-registration-mark"></span>设备厂商</a>
             </div>
-            <div class="content-panel panel-table">
+            <div class="content-panel panel-table-de">
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="device_table"></table>
-                </div>
-                <!--分页-->
-                <div class="fixed-table-pagination">
-                    <div class="pull-left">
-                        <span class="pagination-info"></span>
-                        <span class="page-list">
-                            <span class="btn-group dropup">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="page-size">10</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="menuitem" class="active"><a href="#">10</a></li>
-                                    <li role="menuitem"><a href="#">20</a></li>
-                                    <li role="menuitem"><a href="#">30</a></li>
-                                </ul>
-                            </span>
-                            条每页
-                        </span>
-                    </div>
-                    <div class="pull-right pagination">
-                        <ul class="pagination pageAction">
-                            <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
-                            <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
@@ -114,15 +76,8 @@
                 <input name="orgCode" type="hidden">
             </div>
             <div class="form-item form-group-sm form-group">
-                <label class=" control-label"><i class="required">*</i>设备大类：</label>
-                <select name="dictCode" class="form-control">
-                    <option value="111">摄像机</option>
-                </select>
-            </div>
-            <div class="form-item form-group-sm form-group">
                 <label class=" control-label"><i class="required">*</i>设备类型：</label>
-                <select name="typeCode" class="form-control">
-                    <option value="120">nvr</option>
+                <select name="typeCode" class="form-control deviceType">
                 </select>
             </div>
             <div class="form-item form-group-sm form-group">
@@ -135,8 +90,7 @@
             </div>
             <div class="form-item form-group-sm form-group">
                 <label class=" control-label"><i class="required">*</i>网关：</label>
-                <select name="parentCode" class="form-control">
-                    <option value="43000000002000000111">GB28181媒体网关</option>
+                <select id="getWay" name="parentCode" class="form-control">
                 </select>
             </div>
             <div class="form-item form-group-sm form-group">
@@ -182,15 +136,15 @@
                 <input name="devicePwd" class="form-control" type="password">
             </div>
             <div class="form-item form-group-sm form-group">
-                <label class=" control-label"><i class="required">*</i>设备型号：</label>
-                <select name="modelId" class="form-control">
-                    <option value="05c3890c021811e7ba4d507b9da7c91f">大华IPC-HF3100P</option>
+                <label class=" control-label"><i class="required">*</i>设备厂商：</label>
+                <select id="deviceManu" name="manuId" class="form-control">
+                    <option value="">请选择</option>
                 </select>
             </div>
             <div class="form-item form-group-sm form-group">
-                <label class=" control-label"><i class="required">*</i>设备厂商：</label>
-                <select name="manuId" class="form-control">
-                    <option value="3366fc9a181e11e6ac36507b9da7c91f">大华</option>
+                <label class=" control-label"><i class="required">*</i>设备型号：</label>
+                <select id="deviceModel" name="modelId" class="form-control">
+                    <option value="">请选择</option>
                 </select>
             </div>
             <div class="tab-footer">

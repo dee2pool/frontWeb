@@ -5,18 +5,20 @@ define(['./../../../config/common/js/util'], function UserController(common) {
      *添加用户账号信息
      *@param user  待添加的用户账号信息
      */
-    UserService.add = function (user, onSuccess) {
-        var userStr = JSON.stringify(user);
-        var requestUrl = this.url + "/add";
+    UserService.add=function(user,roleIds,onSuccess){
+        var userStr=JSON.stringify(user);
+        var roleIdsStr=JSON.stringify(roleIds);
+        var requestUrl=this.url+"/add";
         $.ajax({
-            url: requestUrl,
-            type: 'Get',
-            data: {
-                user: userStr,
+            url:requestUrl,
+            type:'Get',
+            data:{
+                user:userStr,
+                roleIds:roleIdsStr
             },
-            cache: false,
-            success: onSuccess,
-            error: common.onError
+            cache:false,
+            success:onSuccess,
+            error:common.onError
         });
     };
 
@@ -229,6 +231,51 @@ define(['./../../../config/common/js/util'], function UserController(common) {
             cache: false,
             success: onSuccess,
             error: common.onError
+        });
+    };
+
+    /**
+     *根据用户id修改用户信息
+     *@param user user
+     *@param userId  用户id
+     */
+    UserService.updateUserById=function(user,userId,onSuccess){
+        var userStr=JSON.stringify(user);
+        var userIdStr=userId;
+        var requestUrl=this.url+"/update";
+        $.ajax({
+            url:requestUrl,
+            type:'POST',
+            data:{
+                user:userStr,
+                userId:userIdStr,
+            },
+            cache:false,
+            success:onSuccess,
+            error:common.onError
+        });
+    };
+
+    /**
+     *获取用户所配置的角色
+     *@param roleIds  角色id集合
+     *@param userId   用户id
+     */
+    UserService.getUserRoleById=function(roleIds,userId,onSuccess){
+        var roleIdsStr=JSON.stringify(roleIds);
+        var userIdStr=userId;
+        var requestUrl=this.url+"/user/userRoleList";
+        $.ajax({
+            url:requestUrl,
+            type:'Get',
+            async:false,
+            data:{
+                roleIds:roleIdsStr,
+                userId:userIdStr,
+            },
+            cache:false,
+            success:onSuccess,
+            error:common.onError
         });
     };
 
