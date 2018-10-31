@@ -1,9 +1,5 @@
 require.config({
     shim: {
-        'frame': {
-            deps: ['jquery', 'menu', 'MenuService'],
-            exports: "frame"
-        },
         'common': {
             deps: ['jquery'],
             exports: "common"
@@ -19,40 +15,43 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
-        'RoleService': {
-            deps: ['common'],
-            exports: "RoleService"
-        },
-        'bootstrap-treeview': {
-            deps: ['jquery'],
-            exports: "treeview"
+        'bootstrap-table-zh-CN': {
+            deps: ['bootstrap-table', 'jquery'],
+            exports: "bootstrapTableZhcN"
         },
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapValidator"
+        },
+        'ztree': {
+            deps: ['jquery']
+        },
+        'ztreeCheck':{
+            deps:['ztree','jquery']
         }
     },
     paths: {
         "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
-        "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
+        "bootstrap": "../../../common/lib/bootstrap/js/bootstrap.min",
         "common": "../../common/js/util",
-        "layer": "../../common/libs/layer/layer",
+        "layer": "../../../common/lib/layer/layer",
         "frame": "../../sidebar/js/wframe",
         "topBar": "../../../common/component/head/js/topbar",
         "roleAdd": "role_add",
-        "editRole": "role_edit",
-        "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
-        "bootstrap-treeview": "../../common/libs/bootstrap-treeview/js/bootstrap-treeview",
+        "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
+        "bootstrap-table-zh-CN": "../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
         "menu": "../../sidebar/js/menu",
-        "MenuService": "../../common/js/service/MenuController",
+        "MenuService": "../../../common/js/service/MenuController",
         "RoleService": "../../../common/js/service/RoleController",
         "domainService": "../../../common/js/service/DomainController",
-        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
-        "departMentService": "../../../common/js/service/DepartmentController"
+        "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
+        "departMentService": "../../../common/js/service/DepartmentController",
+        "ztree": "../../../common/lib/ztree/js/jquery.ztree.core",
+        "ztreeCheck":"../../../common/lib/ztree/js/jquery.ztree.excheck"
     }
 });
-require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap', 'bootstrap-treeview', 'topBar', 'roleAdd', 'editRole', 'departMentService','domainService'],
-    function (jquery, layer, frame, common, bootstrapTable, MenuService, RoleService, bootstrapValidator, bootstrap, treeview, topBar, roleAdd, editRole, departMentService,domainService) {
+require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-table-zh-CN', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap', 'topBar', 'roleAdd', 'departMentService', 'domainService','ztree','ztreeCheck'],
+    function (jquery, layer, frame, common, bootstrapTable, bootstrapTableZhcN, MenuService, RoleService, bootstrapValidator, bootstrap, topBar, roleAdd, departMentService, domainService,ztree,ztreeCheck) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -61,428 +60,313 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'MenuService',
         topBar.init();
         //解决layer不显示问题
         layer.config({
-            path: '../../common/libs/layer/'
+            path: '../../../common/lib/layer/'
         });
-        //点击取消
-        $('.btn-cancel').click(function () {
-            layer.closeAll();
-        })
-        var treeData = [];
-        MenuService.getMenuListByParentId(-1, function (data) {
-            if (data.result) {
-                for (var i = 0; i < data.dataSize; i++) {
-                    //生成菜单树节点
-                    var treeNode = {};
-                    treeNode.id = data.data[i].id;
-                    treeNode.text = data.data[i].name;
-                    treeNode.parentId = data.data[i].parentId;
-                    MenuService.getMenuListByParentId(data.data[i].id, function (data2) {
-                        if (data2.result) {
-                            if (data2.dataSize > 0) {
-                                treeNode.nodes = [];
-                                for (var j = 0; j < data2.dataSize; j++) {
-                                    var node2 = {};
-                                    node2.id = data2.data[j].id;
-                                    node2.text = data2.data[j].name;
-                                    node2.parentId = data2.data[j].parentId;
-                                    treeNode.nodes.push(node2);
-                                }
+        /********************************* 权限相关初始化 ***************************************/
+            //菜单权限相关初始化:获得所有菜单
+        var menuList={};
+        menuList.menuIds=new Array();
+        menuList.init=function () {
+            MenuService.getListAll(function (data) {
+                if(data.result){
+                    if(data.dataSize>0){
+                        for(var i=0;i<data.dataSize;i++){
+                            menuList.menuIds.push(data.data[i].id);
+                        }
+                        menuList.menu=data.data;
+                    }
+                }else{
+                    layer.msg(data.description);
+                }
+            })
+        }
+        menuList.init();
+
+        //将菜单封装成树
+        menuList.zNode=function (roleMenuList,menu) {
+            if(roleMenuList&&roleMenuList.length>0) {
+                //将菜单节点封装成树
+                var tree=[];
+                var temp={};
+                //将节点封装成树形结构
+                for (var i = 0; i < menu.length; i++) {
+                    temp[menu[i].id] = {
+                        id: menu[i].id,
+                        name: menu[i].name,
+                        parentId: menu[i].parentId,
+                        icon:'../img/menu.png'
+                    };
+                    for(var j=0;j<roleMenuList.length;j++){
+                        if(menu[i].name===roleMenuList[j].menuName){
+                            if(roleMenuList[j].isGranted){
+                                temp[menu[i].id].checked=true;
+                            }else{
+                                temp[menu[i].id].checked=false;
                             }
+                        }
+                    }
+                }
+                for (i = 0; i < menu.length; i++) {
+                    var key = temp[menu[i].parentId];
+                    if (key) {
+                        if (key.children == null) {
+                            key.children = [];
+                            key.children.push(temp[menu[i].id]);
+                        } else {
+                            key.children.push(temp[menu[i].id]);
+                        }
+                    } else {
+                        tree.push(temp[menu[i].id]);
+                    }
+                }
+                return tree;
+            }else{
+                layer.msg('菜单接口出现异常')
+            }
+        }
+        /********************************* 初始化角色表格 ***************************************/
+        var roleTable = {};
+        roleTable.init = function () {
+            var queryUrl = common.host + "/auth/role/list/page";
+            $('#role_table').bootstrapTable({
+                columns: [{
+                    field: 'id',
+                    visible: false
+                }, {
+                    field: 'name',
+                    title: '角色名称',
+                    align: 'center'
+                }, {
+                    field: 'remark',
+                    title: '描述信息',
+                    align: 'center'
+                }, {
+                    title: '权限配置',
+                    align: 'center',
+                    events: {
+                        "click #menuPre": function (e, value, row, index) {
+                            //得到角色拥有的菜单
+                            if(menuList.menuIds.length!=0){
+                                var zNodes;
+                                MenuService.getMenuByRoleId(row.id,menuList.menuIds,function (data) {
+                                    if(data.result&&data.dataSize>0){
+                                        zNodes=menuList.zNode(data.data,menuList.menu);
+                                        menuTree.init(zNodes);
+                                        layer.open({
+                                            type: 1,
+                                            skin: 'layui-layer-lan',
+                                            area: '500px',
+                                            resize: false,
+                                            scrollbar: false,
+                                            offset: '100px',
+                                            title: '菜单权限配置',
+                                            content: $('#auth_menu')
+                                        })
+                                    }else{
+                                        layer.msg(data.description);
+                                    }
+                                })
+                                menuAuth.init(row.id);
+                            }else{
+                                layer.msg('菜单接口出现异常')
+                            }
+                        }
+                    },
+                    formatter: function () {
+                        var icons = "<div class='button-group'><button id='menuPre' type='button' class='button button-tiny button-highlight'>" +
+                            "<i class='fa fa-edit'></i>菜单</button>" +
+                            "</div>"
+                        return icons;
+                    }
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    events: {
+                        "click #edit": function (e, value, row, index) {
+                            roleEdit.init(row, index);
+
+                        },
+                        "click #del": function (e, value, row, index) {
+                            roleDel.init(row);
+                        }
+                    },
+                    formatter: function () {
+                        var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
+                            "<i class='fa fa-edit'></i>修改</button>" +
+                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
+                            "</div>"
+                        return icons;
+                    }
+                }],
+                url: queryUrl,
+                method: 'GET',
+                cache: false,
+                pagination: true,
+                sidePagination: 'server',
+                pageNumber: 1,
+                pageSize: 5,
+                pageList: [10, 20, 30],
+                smartDisplay: false,
+                showRefresh: true,
+                queryParamsType: '',
+                responseHandler: function (res) {
+                    var rows = res.data;
+                    var total = res.extra;
+                    return {
+                        "rows": rows,
+                        "total": total
+                    }
+                },
+                queryParams: function (params) {
+                    var temp = {
+                        pageNo: params.pageNumber,
+                        pageSize: params.pageSize,
+                    }
+                    return temp
+                }
+            })
+        }
+        roleTable.init();
+        /********************************* 添加角色 ***************************************/
+        roleAdd.init();
+        /********************************* 修改角色 ***************************************/
+        var roleEdit = {};
+        roleEdit.valia = function () {
+            $('#edit_role').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    editname: {
+                        validators: {
+                            notEmpty: {
+                                message: '角色名称不能为空'
+                            }
+                        }
+                    },
+                    editremark: {
+                        validators: {
+                            notEmpty: {
+                                message: '角色描述不能为空'
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        roleEdit.submit = function (row, index) {
+            $('#edit_role').on('success.form.bv', function () {
+                var role = {};
+                role.id=row.id;
+                role.name = $('input[name="editname"]').val();
+                role.remark = $('input[name="editremark"]').val();
+                RoleService.updateRole(role,row.id, function (data) {
+                    if (data.result) {
+                        //更新表格
+                        $('#role_table').bootstrapTable('updateRow', {index: index, row: role});
+                        //清空
+                        common.clearForm('edit_role');
+                        //关闭弹窗
+                        layer.closeAll();
+                        layer.msg('修改角色成功!');
+                    }else{
+                        layer.msg(data.description);
+                        $("button[type='submit']").removeAttr('disabled');
+                    }
+                })
+                return false;
+            })
+        }
+        roleEdit.init = function (row, index) {
+            //启用校验
+            roleEdit.valia();
+            //填充表单
+            $("input[name='editname']").val(row.name);
+            $("input[name='editremark']").val(row.remark);
+            //打开弹窗
+            var layerId = layer.open({
+                type: 1,
+                skin: 'layui-layer-lan',
+                area: '500px',
+                resize: false,
+                scrollbar: false,
+                offset: '100px',
+                title: '修改角色',
+                content: $('#edit_role')
+            })
+            //表单提交
+            roleEdit.submit(row, index);
+        }
+        /********************************* 删除角色 ***************************************/
+        var roleDel = {};
+        roleDel.init = function (row) {
+            //点击删除按钮
+            layer.confirm('确定删除角色 ' + row.name + ' ?', {
+                    btn: ['确定', '取消'] //按钮
+                }, function () {
+                    RoleService.deleteRole(row.id, function (data) {
+                        if (data.result) {
+                            layer.msg('删除成功!')
+                            $('#role_table').bootstrapTable('remove', {
+                                field: 'id',
+                                values: [row.id]
+                            })
+                        } else {
+                            layer.msg('删除失败!')
                         }
                     })
-                    treeData.push(treeNode);
+                }, function () {
+                    layer.closeAll();
                 }
-            }
-        })
-        //菜单树
-        $('#menutree').treeview({
-            showBorder: false,
-            showCheckbox: true,
-            data: treeData,
-            onNodeChecked: function (event, node) {
-                var nodeId = [];
-                //如果有子节点
-                if (node.nodes) {
-                    for (var i = 0; i < node.nodes.length; i++) {
-                        nodeId.push(node.nodes[i].nodeId);
-                    }
-                    $("#menutree").treeview("checkNode", [nodeId, {silent: true}]);
-                } else {
-                    var pId = node.parentId;
-                    if (pId) {
-                        var parentNode = $('#menutree').treeview("getNode", pId);
-                        var checkNum = 0;
-                        for (var i = 0; i < parentNode.nodes.length; i++) {
-                            if (parentNode.nodes[i].state.checked) {
-                                checkNum++;
-                            }
-                        }
-                        if (checkNum == parentNode.nodes.length) {
-                            $("#menutree").treeview("checkNode", parentNode.nodeId);
-                        }
-                    }
+            );
+        }
+        /********************************* 菜单树相关 ***************************************/
+        var menuTree={};
+        menuTree.setting={
+            data: {
+                simpleData: {
+                    enable: false,
+                    idKey: "id",
+                },
+                key: {
+                    name: "name"
                 }
             },
-            onNodeUnchecked: function (event, node) {
-                var nodeId = [];
-                if (node.nodes) {
-                    for (var i = 0; i < node.nodes.length; i++) {
-                        nodeId.push(node.nodes[i].nodeId);
-                    }
-                    $("#menutree").treeview("uncheckNode", [nodeId, {silent: true}]);
-                } else {
-                    var pId = node.parentId;
-                    if (pId) {
-                        var parentNode = $('#menutree').treeview("getNode", pId);
-                        var checkNum = 0;
-                        for (var i = 0; i < parentNode.nodes.length; i++) {
-                            if (!parentNode.nodes[i].state.checked) {
-                                checkNum++;
-                            }
-                        }
-                        if (checkNum == parentNode.nodes.length) {
-                            $("#menutree").treeview("uncheckNode", parentNode.nodeId);
-                        }
-                    }
-                }
+            check:{
+                enable: true,
+                chkStyle: "checkbox",
+                chkboxType: { "Y": "p", "Y": "s" }
             }
-        })
-        $('#menutree').treeview('collapseAll');
-        //部门树
-        var deptTree = {};
-        deptTree.getTreeList = function () {
-            var tree = [];
-            var temp = {};
-            departMentService.listAll(function (data) {
-                if (data.result) {
-                    //将节点封装成树形结构
-                    for (var i = 0; i < data.data.length; i++) {
-                        temp[data.data[i].id] = {
-                            id: data.data[i].id,
-                            text: data.data[i].name,
-                            pId: data.data[i].parentId,
-                            remark: data.data[i].remark
-                        };
+        }
+        menuTree.init=function (zNodes) {
+            menuTree.obj = $.fn.zTree.init($("#menuTree"),menuTree.setting,zNodes);
+        }
+        /********************************* 菜单权限相关 ***************************************/
+        var menuAuth={};
+        menuAuth.init=function (roleId){
+            $('#menuAuthSub').click(function () {
+                if(menuTree.obj){
+                    var nodes=menuTree.obj.getCheckedNodes(true);
+                    var nodesId=new Array();
+                    for(var i=0;i<nodes.length;i++){
+                        nodesId.push(nodes[i].id);
                     }
-                    for (i = 0; i < data.data.length; i++) {
-                        var key = temp[data.data[i].parentId];
-                        if (key) {
-                            if (key.nodes == null) {
-                                key.nodes = [];
-                                key.nodes.push(temp[data.data[i].id]);
-                            } else {
-                                key.nodes.push(temp[data.data[i].id]);
-                            }
-                        } else {
-                            tree.push(temp[data.data[i].id]);
+                    RoleService.resetMenu(roleId,nodesId,function (data) {
+                        if(data.result){
+                            layer.closeAll();
+                            layer.msg('分配菜单成功');
+                            //角色重复点击 这里不知道为什么会重复点击先这样解决???
+                            $('#menuAuthSub').unbind('click');
+                        }else{
+                            layer.msg(data.description);
+                            $("button[type='submit']").removeAttr('disabled');
                         }
-                    }
+                    })
                 }
             })
-            return tree;
         }
-        $('#depttree').treeview({
-            showBorder: false,
-            showCheckbox: true,
-            data: deptTree.getTreeList(),
-            onNodeChecked: function (event, node) {
-                var nodeId = [];
-                //如果有子节点
-                if (node.nodes) {
-                    for (var i = 0; i < node.nodes.length; i++) {
-                        nodeId.push(node.nodes[i].nodeId);
-                    }
-                    $("#depttree").treeview("checkNode", [nodeId, {silent: true}]);
-                } else {
-                    var pId = node.parentId;
-                    if (pId) {
-                        var parentNode = $('#depttree').treeview("getNode", pId);
-                        var checkNum = 0;
-                        for (var i = 0; i < parentNode.nodes.length; i++) {
-                            if (parentNode.nodes[i].state.checked) {
-                                checkNum++;
-                            }
-                        }
-                        if (checkNum == parentNode.nodes.length) {
-                            $("#depttree").treeview("checkNode", parentNode.nodeId);
-                        }
-                    }
-                }
-            },
-            onNodeUnchecked: function (event, node) {
-                var nodeId = [];
-                if (node.nodes) {
-                    for (var i = 0; i < node.nodes.length; i++) {
-                        nodeId.push(node.nodes[i].nodeId);
-                    }
-                    $("#depttree").treeview("uncheckNode", [nodeId, {silent: true}]);
-                } else {
-                    var pId = node.parentId;
-                    if (pId) {
-                        var parentNode = $('#depttree').treeview("getNode", pId);
-                        var checkNum = 0;
-                        for (var i = 0; i < parentNode.nodes.length; i++) {
-                            if (!parentNode.nodes[i].state.checked) {
-                                checkNum++;
-                            }
-                        }
-                        if (checkNum == parentNode.nodes.length) {
-                            $("#depttree").treeview("uncheckNode", parentNode.nodeId);
-                        }
-                    }
-                }
-            }
-        })
-        //管理域树
-        var domainTree={};
-        domainTree.getTree = function () {
-            var tree = [];
-            var temp = {};
-            domainService.listAllDomain(function (data) {
-                if (data.result) {
-                    //将节点封装成树形结构
-                    for (var i = 0; i < data.data.length; i++) {
-                        temp[data.data[i].code] = {
-                            code: data.data[i].code,
-                            text: data.data[i].name,
-                            parentCode: data.data[i].parentCode,
-                            createTime: data.data[i].createTime,
-                            creatorId: data.data[i].creatorId,
-                            description: data.data[i].description,
-                            orderNo: data.data[i].orderNo
-                        };
-                    }
-                    for (i = 0; i < data.data.length; i++) {
-                        var key = temp[data.data[i].parentCode];
-                        if (key) {
-                            if (key.nodes == null) {
-                                key.nodes = [];
-                                key.nodes.push(temp[data.data[i].code]);
-                            } else {
-                                key.nodes.push(temp[data.data[i].code]);
-                            }
-                        } else {
-                            tree.push(temp[data.data[i].code]);
-                        }
-                    }
-                }
-            })
-            return tree;
-        }
-        $('#domaintree').treeview({
-            showBorder: false,
-            showCheckbox: true,
-            data: domainTree.getTree(),
-            onNodeChecked: function (event, node) {
-                var nodeId = [];
-                //如果有子节点
-                if (node.nodes) {
-                    for (var i = 0; i < node.nodes.length; i++) {
-                        nodeId.push(node.nodes[i].nodeId);
-                    }
-                    $("#domaintree").treeview("checkNode", [nodeId, {silent: true}]);
-                } else {
-                    var pId = node.parentId;
-                    if (pId) {
-                        var parentNode = $('#domaintree').treeview("getNode", pId);
-                        var checkNum = 0;
-                        for (var i = 0; i < parentNode.nodes.length; i++) {
-                            if (parentNode.nodes[i].state.checked) {
-                                checkNum++;
-                            }
-                        }
-                        if (checkNum == parentNode.nodes.length) {
-                            $("#domaintree").treeview("checkNode", parentNode.nodeId);
-                        }
-                    }
-                }
-            },
-            onNodeUnchecked: function (event, node) {
-                var nodeId = [];
-                if (node.nodes) {
-                    for (var i = 0; i < node.nodes.length; i++) {
-                        nodeId.push(node.nodes[i].nodeId);
-                    }
-                    $("#domaintree").treeview("uncheckNode", [nodeId, {silent: true}]);
-                } else {
-                    var pId = node.parentId;
-                    if (pId) {
-                        var parentNode = $('#domaintree').treeview("getNode", pId);
-                        var checkNum = 0;
-                        for (var i = 0; i < parentNode.nodes.length; i++) {
-                            if (!parentNode.nodes[i].state.checked) {
-                                checkNum++;
-                            }
-                        }
-                        if (checkNum == parentNode.nodes.length) {
-                            $("#domaintree").treeview("uncheckNode", parentNode.nodeId);
-                        }
-                    }
-                }
-            }
-        })
-        //初始化表格
-        RoleService.getRoleList(function (data) {
-            if (data.result) {
-                //初始化表格
-                $('#role_table').bootstrapTable({
-                    columns: [{
-                        field: 'id',
-                        visible: false
-                    }, {
-                        field: 'name',
-                        title: '角色名称',
-                        align: 'center'
-                    }, {
-                        field: 'remark',
-                        title: '描述信息',
-                        align: 'center'
-                    }, {
-                        field: 'inbuiltFlag',
-                        visible: false
-                    }, {
-                        title: '权限配置',
-                        align: 'center',
-                        events: {
-                            "click #rolecfig": function (e, value, row, index) {
-                                //角色分配权限
-                                layer.open({
-                                    type: 1,
-                                    title: '权限配置',
-                                    offset: '100px',
-                                    area: '600px',
-                                    resize: false,
-                                    content: $('#auth_config')
-                                })
-                                $('#menuPerSave').click(function () {
-                                    permission.grantMenu(row.id);
-                                })
-                                $('#orgPerSave').click(function () {
-                                    if(permission.ids("menutree").length!=0){
-                                        permission.grantMenu(row.id);
-                                    }
-                                    permission.org(row.id);
-                                })
-                                $('#domainPerSave').click(function () {
-                                    if(permission.ids("menutree").length!=0){
-                                        permission.grantMenu(row.id);
-                                    }
-                                    if(permission.ids("depttree").length!=0){
-                                        permission.org(row.id);
-                                    }
-                                    permission.domain(row.id);
-                                })
-                            }
-                        },
-                        formatter: function () {
-                            return "<a id='rolecfig' href='#' style='font-size: 18px'><i class='fa fa-cog fa-1x'></i></a>"
-                        }
-                    }, {
-                        title: '操作',
-                        align: 'center',
-                        events: {
-                            "click #edit_role": function (e, value, row, index) {
-                                //点击编辑按钮
 
-                            },
-                            "click #del_role": function (e, value, row, index) {
-                                //点击删除按钮
-                                layer.confirm('确定删除角色 ' + row.name + ' ?', {
-                                    btn: ['确定', '取消'] //按钮
-                                }, function () {
-                                    //删除操作
-                                    if (row.inbuiltFlag == 1) {
-                                        layer.msg('系统内置角色不能删除!')
-                                    } else {
-                                        RoleService.deleteRole(row.id, function (data) {
-                                            if (data.result) {
-                                                layer.msg('删除成功!')
-                                                $('#role_table').bootstrapTable('remove', {
-                                                    field: 'id',
-                                                    values: [row.id]
-                                                })
-                                            } else {
-                                                layer.msg('删除失败!')
-                                            }
-                                        })
-                                    }
-                                }, function () {
-                                    layer.closeAll();
-                                });
-                            }
-                        },
-                        formatter: function () {
-                            var icons = "<div class='btn-group'>" +
-                                "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
-                                "</div>"
-                            return icons;
-                        }
-                    }],
-                    data: data.data
-                })
-            }
-        })
-        //添加角色
-        roleAdd.init();
-        var permission = {};
-        permission.ids=function(treeId){
-            var checked = $('#'+treeId).treeview('getChecked');
-            console.log(checked)
-            var ids=new Array();
-            for (var i = 0; i < checked.length; i++) {
-                ids.push(checked[i].id);
-            }
-            return ids;
-        }
-        permission.grantMenu = function (roleId) {
-            //得到选择的节点id
-            var menuIds=permission.ids("menutree");
-            if(menuIds.length==0){
-                layer.msg('请选择节点')
-            }else{
-                //分配权限
-                RoleService.grantMenu(roleId, menuIds, function (data) {
-                    if (data.result) {
-                        layer.msg('分配权限成功!');
-                        layer.closeAll();
-                    }else{
-                        layer.msg(data.description);
-                    }
-                })
-            }
-        }
-        permission.org=function (roleId) {
-            //得到选择的id
-            var orgIds=permission.ids("depttree");
-            if(orgIds.length==0){
-                layer.msg('请选择节点')
-            }else {
-                //分配权限
-                RoleService.grantDepartment(roleId,orgIds,function (data) {
-                    if (data.result) {
-                        layer.msg('分配权限成功!');
-                        layer.closeAll();
-                    }else{
-                        layer.msg(data.description);
-                    }
-                })
-            }
-        }
-        permission.domain=function (roleId) {
-            //得到选择的id
-            var domainIds=permission.ids("domaintree");
-            if(domainIds.length==0){
-                layer.msg('请选择节点')
-            }else {
-                //分配权限
-                RoleService.grantDomain(roleId,domainIds,function (data) {
-                    if(data.result){
-                        layer.msg('分配权限成功!');
-                        layer.closeAll();
-                    }else{
-                        layer.msg(data.description);
-                    }
-                })
-            }
-        }
     })

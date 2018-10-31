@@ -159,17 +159,15 @@ define(['layer'], function (layer) {
         common.nextPage(page, initTable);
         common.toPage(page, initTable);
     }
-    //带侧边栏页面动态高度宽度
+    /*//带侧边栏页面动态高度宽度
     common.height = $(window).height();
-    $('.panel-right').width($(window).width() - 380)
-    $('.panel-left').height($(window).height() - 95)
-    //不带侧边栏页面右侧面板动态宽度
-    $('.panel-opera,.panel-table').width($(window).width() - 205)
+    $('.panel-right').width($(window).width() - 380);
+    /!*!//不带侧边栏页面右侧面板动态宽度
+    $('.panel-opera,.panel-table').width($(window).width() - 205)*!/
     $(window).resize(function () {
         $('.panel-right').width($(window).width() - 380)
-        $('.panel-left').height($(window).height() - 95)
-        $('.panel-opera,.panel-table').width($(window).width() - 205)
-    })
+        /!*$('.panel-opera,.panel-table').width($(window).width() - 385)*!/
+    })*/
     //点击取消
     $('.btn-cancel').click(function () {
         layer.closeAll();
@@ -205,6 +203,13 @@ define(['layer'], function (layer) {
         var mm = time.getMinutes() + 1;
         var s = time.getSeconds() + 1;
         return y + '-' + common.add0(m) + '-' + common.add0(d) + ' ' + common.add0(h) + ':' + common.add0(mm) + ':' + common.add0(s);
+    }
+    common.formatDate=function(obj){
+        var date = new Date(obj * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+        var Y = date.getFullYear() + '-';
+        var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+        var D = date.getDate() + ' ';
+        return Y+M+D;
     }
     //将图片转换成canvas
     common.convertImageToCanvas = function (image) {

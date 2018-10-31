@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <title>用户管理</title>
     <link rel="stylesheet" href="../../common/css/common.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
-    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../common/css/buttons.css">
     <link rel="stylesheet" href="../css/user.css">
-    <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+    <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"
+          href="../../../common/lib/bootstrap/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
     <script type="text/javascript" src="../../common/js/md5.js"></script>
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/user"></script>
 </head>
@@ -27,183 +27,30 @@
     <!--主体内容-->
     <div class="contentpage">
         <div class="content">
-            <div class="content-panel panel-left">
-                <div class="head head-tree">
-                    <div class="head-left-tree">
-                        <span style="margin-right: 15px">用户组</span>
-                    </div>
-                </div>
-                <div class="opera-group">
-                    <a id="addUgroup" href="javascript:;"><i class="fa fa-plus">添加</i></a>
-                    <a id="editUgroup" href="javascript:;"><i class="fa fa-pencil">修改</i></a>
-                    <a id="delUgroup" class="remove_ugroup" href="javascript:;"><i class="fa fa-remove">删除</i></a>
-                </div>
-                <!--<form role="form" style="margin-bottom: 10px">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input type="text" class="form-control" placeholder="请输入用户组名称">
-                        </div>
-                    </div>
-                </form>-->
-                <div class="slimscrollleft">
-                    <div id="ugrouptree"></div>
-                </div>
-            </div>
-            <div class="content-panel panel-opera">
+            <div class="content-panel panel-opera-se">
                 <a id="addUser" class="button button-primary button-small"><span
                         class="glyphicon glyphicon-plus"></span>添加用户
                 </a>
+                <a id="grantUg" class="button button-highlight button-small">
+                    <span class="glyphicon glyphicon-royal"></span>分配用户组
+                </a>
+                <a id="reassign" class="button button-royal button-small"><span
+                        class="glyphicon glyphicon-royal"></span>修改角色
+                </a>
+                <a id="altDomain" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-cloud"></span>修改管理域
+                </a>
+                <a id="status" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-cloud"></span>启用/禁用
+                </a>
             </div>
-            <div class="content-panel panel-right">
-                <div class="main-right">
-                    <div class="table-responsive">
-                        <table class="table text-nowrap" id="user_table"></table>
-                    </div>
-                    <!--分页-->
-                    <div class="fixed-table-pagination">
-                        <div class="pull-left">
-                            <span class="pagination-info"></span>
-                            <span class="page-list">
-                            <span class="btn-group dropup">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="page-size">10</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="menuitem" class="active"><a href="#">10</a></li>
-                                    <li role="menuitem"><a href="#">20</a></li>
-                                    <li role="menuitem"><a href="#">30</a></li>
-                                </ul>
-                            </span>
-                            条每页
-                        </span>
-                        </div>
-                        <div class="pull-right pagination">
-                            <ul class="pagination">
-                                <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
-                                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
-                            </ul>
-                        </div>
-                    </div>
+            <div class="content-panel panel-main">
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="user_table"></table>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<!--添加用户组弹窗-->
-<div id="add_ugroup" style="display: none">
-    <ul id="ugroup_tab" class="nav nav-tabs">
-        <li class="active">
-            <a href="#tab-base" data-toggle="tab" style="color: black">
-                基本信息
-            </a>
-        </li>
-        <li>
-            <a href="#tab-roles" data-toggle="tab" style="color: black">
-                角色列表
-            </a>
-        </li>
-    </ul>
-    <form id="uGroup" class="form-horizontal">
-        <div class="tab-content">
-            <div class="tab-pane tab-form fade in active" id="tab-base">
-                <div class="tab-main">
-                    <div class="form-item form-group-sm">
-                        <label class="col-sm-3 control-label"><i class="required">*</i>用户组编号：</label>
-                        <div class="col-sm-6" style="padding: 0px">
-                            <input name="ugroupid" type="text" class="form-control" readonly>
-                        </div>
-                    </div>
-                    <div class="form-item form-group-sm">
-                        <label class="col-sm-3 control-label"><i class="required">*</i>用户组姓名：</label>
-                        <div class="col-sm-6" style="padding: 0px">
-                            <input name="ugroupname" type="text" class="form-control">
-                        </div>
-                        <span class="form-msg">3-14个字,请使用数字、字母、下划线组合</span>
-                    </div>
-                    <div class="form-item form-group-sm">
-                        <label class="col-sm-3 control-label">上级用户组：</label>
-                        <div class="col-sm-6" style="padding: 0px">
-                            <select name="ugroupPre" class="form-control">
-                                <option value="-1">默认用户组</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-item form-group-sm">
-                        <label class="col-sm-3 control-label">备注：</label>
-                        <div class="col-sm-6" style="padding: 0px">
-                            <textarea name="ugroupRem" rows="3" cols="44"></textarea>
-                            <input name="res" type="reset" style="display:none;"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-footer">
-                    <button type="button" class="btn btn-danger btn-next">下一步</button>
-                    <button type="button" class="btn btn-default btn-cancel">取消</button>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="tab-roles">
-                <div class="tab-main">
-                    <table class="role_table"></table>
-                </div>
-                <div class="tab-footer">
-                    <button type="submit" class="btn btn-danger">完成</button>
-                    <button type="button" class="btn btn-default btn-cancel">取消</button>
-                </div>
-            </div>
-        </div>
-    </form>
-</div>
-<!--修改用户组弹窗-->
-<div id="edit_ugroup" style="display: none">
-    <ul id="edit_ugroup_tab" class="nav nav-tabs">
-        <li class="active">
-            <a href="#edit-tab-base" data-toggle="tab" style="color: black">
-                基本信息
-            </a>
-        </li>
-        <li>
-            <a href="#eidt-tab-roles" data-toggle="tab" style="color: black">
-                角色列表
-            </a>
-        </li>
-    </ul>
-    <form id="editform" class="form-horizontal">
-        <div class="tab-content">
-            <div class="tab-pane tab-form fade in active" id="edit-tab-base">
-                <div class="tab-main">
-                    <div class="form-item form-group-sm">
-                        <label class="col-sm-3 control-label"><i class="required">*</i>用户组姓名：</label>
-                        <div class="col-sm-6" style="padding: 0px">
-                            <input name="editugname" type="text" class="form-control">
-                            <input name="editugid" type="hidden">
-                        </div>
-                        <span class="form-msg">3-14个字,请使用数字、字母、下划线组合</span>
-                    </div>
-                    <div class="form-item form-group-sm">
-                        <label class="col-sm-3 control-label">备注：</label>
-                        <div class="col-sm-6" style="padding: 0px">
-                            <textarea name="editugrem" rows="3" cols="44"></textarea>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-footer">
-                    <button type="button" class="btn btn-danger btn-next">下一步</button>
-                    <button type="button" class="btn btn-default btn-cancel">取消</button>
-                </div>
-            </div>
-            <div class="tab-pane fade" id="eidt-tab-roles">
-                <div class="tab-main">
-                    <table class="role_table"></table>
-                </div>
-                <div class="tab-footer">
-                    <button type="submit" class="btn btn-danger">完成</button>
-                    <button type="button" class="btn btn-default btn-cancel">取消</button>
-                </div>
-            </div>
-        </div>
-    </form>
 </div>
 <!--添加用户弹出层-->
 <div id="add_user" style="display: none">
@@ -223,12 +70,6 @@
         <div class="tab-content">
             <div class="tab-pane tab-form fade in active" id="tab-base-user">
                 <div class="tab-main">
-                    <div class="form-item form-group-sm">
-                        <label class="col-sm-2 control-label"><i class="required">*</i>用户组：</label>
-                        <div class="col-sm-6" style="padding: 0px">
-                            <input name="ugroup" type="text" class="form-control" readonly>
-                        </div>
-                    </div>
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label"><i class="required">*</i>用户名：</label>
                         <div class="col-sm-6" style="padding: 0px">
@@ -288,6 +129,7 @@
                         <label class="col-sm-2 control-label">员工ID：</label>
                         <div class="col-sm-6" style="padding: 0px">
                             <input name="employeeNo" type="text" class="form-control">
+                            <input name="res" type="reset" style="display:none;"/>
                         </div>
                     </div>
                     <!--<div class="form-item form-group-sm">
@@ -295,17 +137,17 @@
                         <div class="col-sm-6" style="padding: 0px">
                             <input name="photo" type="file">
                         </div>
-                    </div>
+                    </div>-->
                     <div class="form-item form-group-sm">
                         <label class="col-sm-2 control-label">到期时间：</label>
                         <div class="input-group  date form_datetime col-sm-6" style="padding: 0px">
-                            <input type="text" value="2050-12-31" class="form-control" readonly>
+                            <input type="text" value="2050-12-31" name="expiredTime" class="form-control" readonly>
                             <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                         </div>
-                    </div>-->
+                    </div>
                 </div>
                 <div class="tab-footer">
-                    <button type="button" class="btn btn-danger btn-next">下一步</button>
+                    <button type="button" class="btn btn-primary btn-next">下一步</button>
                     <button type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </div>
@@ -314,12 +156,76 @@
                     <table class="role_table"></table>
                 </div>
                 <div class="tab-footer">
-                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="submit" class="btn btn-primary">完成</button>
                     <button type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </div>
         </div>
     </form>
+</div>
+<!--修改用户弹出层-->
+<div id="edit_user_tap" style="display: none">
+    <form id="editUser" class="form-horizontal">
+        <div class="form-item form-group-sm">
+            <label class="col-sm-2 control-label"><i class="required">*</i>姓名：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="editName" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-2 control-label">性别：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <select name="editGender" class="form-control">
+                    <option value="1">男</option>
+                    <option value="2">女</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-2 control-label">Email：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="editEmail" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-2 control-label">员工ID：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="editId" type="text" class="form-control">
+                <input name="res" type="reset" style="display:none;"/>
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-2 control-label">到期时间：</label>
+            <div class="input-group  date form_datetime col-sm-6" style="padding: 0px">
+                <input type="text" name="editExpiredTime" class="form-control" readonly>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+            </div>
+        </div>
+        <div class="tab-footer">
+            <button type="submit" class="btn btn-primary">完成</button>
+            <button type="button" class="btn btn-default btn-cancel">取消</button>
+        </div>
+    </form>
+</div>
+<!--分配用户组弹出层-->
+<div id="grant_ugroup" style="display: none">
+    <div class="tab-main">
+        <table id="ugTable" class="ugroup_table"></table>
+    </div>
+    <div class="tab-footer">
+        <button id="grantUgSub" type="button" class="btn btn-primary">完成</button>
+        <button type="button" class="btn btn-default btn-cancel">取消</button>
+    </div>
+</div>
+<!--角色弹窗-->
+<div id="role" style="display: none">
+    <div class="tab-main">
+        <table id="roles" class="role_table"></table>
+    </div>
+    <div class="tab-footer">
+        <button id="ressignRoleSub" type="button" class="btn btn-primary">完成</button>
+        <button type="button" class="btn btn-default btn-cancel">取消</button>
+    </div>
 </div>
 <!--菜单图标展示弹窗-->
 <div class="iconPanel" style="display: none">

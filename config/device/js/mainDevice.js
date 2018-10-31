@@ -19,7 +19,7 @@ require.config({
             exports: "bootstrapTable"
         },
         'bootstrap-table-zh-CN': {
-            deps: ['bootstrap', 'jquery'],
+            deps: ['bootstrap-table', 'jquery'],
             exports: "bootstrapTableZhCN"
         },
         'bootstrapValidator': {
@@ -41,18 +41,22 @@ require.config({
         "bootstrap": "../../../common/lib/bootstrap/js/bootstrap.min",
         "ztree": "../../../common/lib/ztree/js/jquery.ztree.core",
         "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
-        "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
         "bootstrap-table-zh-CN": "../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
+        "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
         "domainService": "../../../common/js/service/DomainController",
         "deviceService": "../../../common/js/service/DeviceInfoController",
         "mediaSrcService": "../../../common/js/service/MediaSrcsController",
         "orgService": "../../../common/js/service/OrgController",
         "buttons": "../../common/js/buttons",
-        "orgTree": "../js/orgTree"
+        "orgTree": "../js/orgTree",
+        "dictService": "../../../common/js/service/dictController",
+        "deviceManu":"../../../common/js/service/DeviceManufacturerController",
+        "deviceModel":"../../../common/js/service/DeviceModelController",
+        "gbCatalogService":"../../../common/js/service/GBCatalogController"
     }
 });
-require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrapValidator', 'ztree', 'bootstrap-table', 'bootstrap-table-zh-CN', 'domainService', 'buttons', 'orgService', 'orgTree', 'deviceService', 'mediaSrcService'],
-    function (jquery, frame, topBar, common, layer, bootstrap, bootstrapValidator, ztree, bootstrapTable, bootstrapTableZhCN, domainService, buttons, orgService, orgTree, deviceService, mediaSrcService) {
+require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrapValidator', 'ztree', 'bootstrap-table','bootstrap-table-zh-CN','deviceManu','deviceModel','domainService', 'buttons', 'orgService', 'orgTree', 'deviceService', 'mediaSrcService', 'dictService','gbCatalogService'],
+    function (jquery, frame, topBar, common, layer, bootstrap, bootstrapValidator, ztree, bootstrapTable,bootstrapTableZhcN,deviceManu,deviceModel,domainService, buttons, orgService, orgTree, deviceService, mediaSrcService, dictService,gbCatalogService) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -64,157 +68,298 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             path: '../../../common/lib/layer/'
         });
         /********************************* 区域组织树 ***************************************/
-        var tree = {};
-        tree.setting = {
+        var domainTree = {};
+        domainTree.setting = {
             data: {
-                key: {
-                    title: 'name'
-                },
                 simpleData: {
                     enable: true,
                     idKey: "code",
-                    pIdKey: "parentCode"
+                    pIdKey: "parentCode",
+                },
+                key: {
+                    name: "name"
+                },
+                keep: {
+                    parent: true
                 }
             },
             callback: {
                 onClick: function (event, treeId, treeNode) {
-                    tree.selected = treeNode;
-                    deviceTable.orgCode=treeNode.code;
-                    deviceTable.init();
-                }
-            }
-        }
-        tree.init = function () {
-            var treeObj = $.fn.zTree.init($("#orgTree"), tree.setting, orgTree.zNodes());
-            treeObj.expandAll(true);
-        }
-        tree.init();
-        //搜索树节点
-        tree.search = function () {
-            var treeObj = $.fn.zTree.getZTreeObj('orgTree')
-            var keywords = $('#keyword').val();
-            var nodes = treeObj.getNodesByParamFuzzy("name", keywords, null);
-            if (nodes.length > 0) {
-                treeObj.selectNode(nodes[0]);
-            }
-        }
-        //查询节点
-        document.getElementById('keyword').addEventListener('input', tree.search, false);
-        /********************************* 主设备表格 ***************************************/
-        $('#device_table').bootstrapTable({
-            columns: [{
-                checkbox: true
-            }, {
-                title: '序号',
-                align: 'center',
-                formatter: function (value, row, index) {
-                    return index + 1;
-                }
-            }, {
-                field: 'deviceName',
-                title: '设备名称',
-                align: 'center'
-            }, {
-                field: 'deviceType',
-                title: '设备类型',
-                align: 'center',
-                formatter: function (value, row, index) {
-
-                }
-            }, {
-                field: 'deviceIp',
-                title: '设备IP地址',
-                align: 'center'
-            }, {
-                field: 'amgPort',
-                title: '拉流服务端口',
-                align: 'center'
-            }, {
-                field: 'amgProto',
-                title: '拉流协议',
-                align: 'center'
-            }, {
-                field: 'adgPort',
-                title: '运维端口',
-                align: 'center'
-            }, {
-                field: 'adgProto',
-                title: '运维设备协议',
-                align: 'center'
-            }, {
-                field: 'deviceChaNum',
-                title: '设备通道数',
-                align: 'center'
-            }, {
-                field: 'deviceUser',
-                title: '登录名',
-                align: 'center'
-            }, {
-                field: 'deviceModel',
-                title: '设备型号',
-                align: 'center'
-            }, {
-                field: 'deviceManu',
-                title: '设备厂商',
-                align: 'center'
-            }, {
-                field: 'gb28181Id',
-                title: 'GB28181',
-                align: 'center'
-            }, {
-                field: 'orgCode',
-                title: '组织',
-                align: 'center',
-                formatter: function (value) {
-                    var orgName;
-                    orgService.getOrgByCode(value, function (data) {
-                        if (data.result) {
-                            orgName = data.data.name;
-                        }
-                    })
-                    if (orgName == null) {
-                        return '无'
+                    if (treeNode.type && treeNode.type === 'org') {
+                        domainTree.selOrg=treeNode;
                     } else {
-                        return orgName;
-                    }
-                }
-            }, {
-                title: '操作',
-                align: 'center',
-                events: {
-                    "click #edit_btn": function (e, value, row, index) {
-                        deviceEdit.init(row, index);
+                        domainTree.selDomain = treeNode;
                     }
                 },
-                formatter: function () {
-                    var icons = "<div class='button-group'><button id='edit_btn' type='button' class='button button-tiny button-highlight'><i class='fa fa-edit'></i>修改</button>" +
-                        "</div>"
-                    return icons;
+                onExpand: function (event, treeId, treeNode) {
+                    //清空当前父节点的子节点
+                    domainTree.obj.removeChildNodes(treeNode);
+                    //如果节点是组织，获取组织下的子组织
+                    if (treeNode.type && treeNode.type === 'org') {
+                        //获得组织下的子组织
+                        orgService.getChildList(treeNode.code, function (data) {
+                            if (data.result) {
+                                if (data.dataSize > 0) {
+                                    for (var i = 0; i < data.dataSize; i++) {
+                                        data.data[i].isParent = true;
+                                        data.data[i].icon = "../img/org.png";
+                                        data.data[i].type = 'org';
+                                    }
+                                    var newNodes = data.data;
+                                    //添加节点
+                                    domainTree.obj.addNodes(treeNode, newNodes);
+                                }
+                            }
+                        })
+                    } else {
+                        //判断域下是否有组织
+                        domainService.getDomainOrg(treeNode.code, function (data) {
+                            if (data.result) {
+                                if (data.dataSize > 0) {
+                                    for (var i = 0; i < data.dataSize; i++) {
+                                        //根据组织code查找组织名称 TODO:修改
+                                        orgService.getOrgByCode(data.data[i].orgCode, function (orgData) {
+                                            if (orgData.result) {
+                                                data.data[i].isParent = true;
+                                                data.data[i].icon = "../img/org.png";
+                                                data.data[i].name = orgData.data.name;
+                                                data.data[i].parentCode = orgData.data.parentCode;
+                                                data.data[i].createTime = orgData.data.createTime;
+                                                data.data[i].creatorId = orgData.data.creatorId;
+                                                data.data[i].description = orgData.data.description;
+                                                data.data[i].type = 'org';
+                                                data.data[i].code = data.data[i].orgCode;
+                                            } else {
+                                                layer.msg('获取组织节点失败');
+                                            }
+                                        })
+                                    }
+                                    var newNodes = data.data;
+                                    //添加节点
+                                    domainTree.obj.addNodes(treeNode, newNodes);
+                                }
+                            } else {
+                                layer.msg('获得组织节点失败')
+                            }
+                        })
+                        domainService.getChildList(treeNode.code, function (data) {
+                            if (data.result) {
+                                if (data.dataSize > 0) {
+                                    for (var i = 0; i < data.dataSize; i++) {
+                                        data.data[i].isParent = true;
+                                        data.data[i].icon = "../img/domain.png";
+                                    }
+                                    var newNodes = data.data;
+                                    //添加节点
+                                    domainTree.obj.addNodes(treeNode, newNodes);
+                                }
+                            } else {
+                                layer.msg('获得子域节点失败')
+                            }
+                        })
+                    }
                 }
-            }]
-        })
-        var deviceTable = {};
-        deviceTable.page = {
-            'pageNumber': 1,
-            'pageSize': 10
-        }
-        deviceTable.init = function () {
-            deviceService.getDeviceInfoList(deviceTable.page,deviceTable.ip,deviceTable.name,deviceTable.orgCode, function (data) {
+            }
+        };
+        domainTree.zNode = function () {
+            var treeNode;
+            domainService.getChildList('-1', function (data) {
                 if (data.result) {
-                    //向表格中填充数据
-                    $('#device_table').bootstrapTable('load', data.data);
-                    deviceTable.page['count']=data.extra;
-                    //初始化分页组件
-                    common.pageInit(deviceTable.page.pageNumber, deviceTable.page.pageSize, data.extra);
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/domain.png";
+                    }
+                    treeNode = data.data;
+                }
+            })
+            return treeNode;
+        }
+        domainTree.init = function () {
+            domainTree.obj = $.fn.zTree.init($("#orgTree"), domainTree.setting, domainTree.zNode());
+        }
+        domainTree.init();
+        /********************************* 字典项查询 ***************************************/
+        var dict={};
+        dict.init=function (dictCode,selectId) {
+            dictService.getChildList(dictCode,function (data) {
+                if(data.result){
+                    if(data.dataSize>0){
+                        for (var i = 0; i < data.dataSize; i++) {
+                            $(selectId).append('<option value="' + data.data[i].dictCode + '">' + data.data[i].dictName + '</option>');
+                        }
+                    }
+                }
+            })
+        }
+        /********************************* 设备类型下拉框查询 ***************************************/
+        dict.init('encodeDevice','.deviceType');
+        /********************************* 网关下拉框 ***************************************/
+        gbCatalogService.getGB28181AMGCode(function (data) {
+            if(data.result){
+                if (data.dataCount > 0) {
+                    for (var i = 0; i < data.dataCount; i++) {
+                        $('#getWay').append('<option value="' + data.data[i].deviceId + '">' + data.data[i].name + '</option>');
+                    }
+                }
+            }
+        })
+        /********************************* 设备厂商下拉框 ***************************************/
+        var page={
+            pageNumber:1,
+            pageSize:1000
+        }
+        deviceManu.getManuList(page,function (data) {
+            if(data.result){
+                if (data.extra > 0) {
+                    for (var i = 0; i < data.extra; i++) {
+                        $('#deviceManu').append('<option value="' + data.data[i].id + '">' + data.data[i].manuName + '</option>');
+                    }
+                }
+            }
+        })
+        /********************************* 设备型号下拉框 ***************************************/
+        var page={
+            pageNumber:1,
+            pageSize:1000
+        }
+        deviceModel.getModelList(page,function (data) {
+            if(data.result){
+                if (data.extra > 0) {
+                    for (var i = 0; i < data.extra; i++) {
+                        $('#deviceModel').append('<option value="' + data.data[i].id + '">' + data.data[i].modelName + '</option>');
+                    }
+                }
+            }
+        })
+        /********************************* 主设备表格 ***************************************/
+        var deviceTable={};
+        deviceTable.init=function(){
+            var queryUrl=common.host+"/mgc"+"/deviceInfoService"+"/getDeivceInfoList";
+            $('#device_table').bootstrapTable({
+                columns: [{
+                    checkbox: true
+                }, {
+                    title: '序号',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
+                }, {
+                    field: 'deviceName',
+                    title: '设备名称',
+                    align: 'center'
+                }, {
+                    field: 'deviceIp',
+                    title: '设备IP地址',
+                    align: 'center'
+                }, {
+                    field: 'amgPort',
+                    title: '拉流服务端口',
+                    align: 'center'
+                }, {
+                    field: 'amgProto',
+                    title: '拉流协议',
+                    align: 'center'
+                }, {
+                    field: 'adgPort',
+                    title: '运维端口',
+                    align: 'center'
+                }, {
+                    field: 'adgProto',
+                    title: '运维设备协议',
+                    align: 'center'
+                }, {
+                    field: 'deviceChaNum',
+                    title: '设备通道数',
+                    align: 'center'
+                }, {
+                    field: 'deviceUser',
+                    title: '登录名',
+                    align: 'center'
+                }, {
+                    field: 'devicePwd',
+                    title: '登录密码',
+                    align: 'center'
+                }, {
+                    field: 'deviceModel',
+                    title: '设备型号',
+                    align: 'center'
+                }, {
+                    field: 'deviceManu',
+                    title: '设备厂商',
+                    align: 'center'
+                }, {
+                    field: 'gb28181Id',
+                    title: 'GB28181',
+                    align: 'center'
+                }, {
+                    field: 'orgCode',
+                    title: '组织',
+                    align: 'center',
+                    formatter: function (value) {
+                        var orgName;
+                        orgService.getOrgByCode(value, function (data) {
+                            if (data.result) {
+                                orgName = data.data.name;
+                            }
+                        })
+                        if (orgName == null) {
+                            return '无'
+                        } else {
+                            return orgName;
+                        }
+                    }
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    events: {
+                        "click #edit_btn": function (e, value, row, index) {
+                            deviceEdit.init(row, index);
+                        }
+                    },
+                    formatter: function () {
+                        var icons = "<div class='button-group'><button id='edit_btn' type='button' class='button button-tiny button-highlight'><i class='fa fa-edit'></i>修改</button>" +
+                            "</div>"
+                        return icons;
+                    }
+                }],
+                url:queryUrl,
+                method:'GET',
+                cache:false,
+                pagination:true,
+                sidePagination:'server',
+                pageNumber:1,
+                pageSize:5,
+                pageList:[10,20,30],
+                smartDisplay:false,
+                search:true,
+                trimOnSearch:true,
+                showRefresh:true,
+                queryParamsType:'',
+                responseHandler:function(res){
+                    var rows=res.data;
+                    var total=res.extra;
+                    return{
+                        "rows":rows,
+                        "total":total
+                    }
+                },
+                queryParams:function (params) {
+                    var temp={
+                        page: JSON.stringify({
+                            pageNumber: params.pageNumber,
+                            pageSize: params.pageSize
+                        }),
+                        name:params.searchText
+                    }
+                    return temp
                 }
             })
         }
         deviceTable.init();
-        /********************************* 分页操作 ***************************************/
-        common.initPageOpera(deviceTable.page,deviceTable.init)
         /********************************* 查询设备 ***************************************/
         $('#search').click(function () {
-             deviceTable.ip = $('input[name="d_ip"]').val();
+            deviceTable.ip = $('input[name="d_ip"]').val();
             deviceTable.name = $('input[name="d_name"]').val();
             deviceTable.init();
         })
@@ -229,6 +374,20 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {
+                    dictCode: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备大类不能为空'
+                            }
+                        }
+                    },
+                    typeCode: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备类型不能为空'
+                            }
+                        }
+                    },
                     deviceName: {
                         validators: {
                             notEmpty: {
@@ -239,6 +398,10 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         validators: {
                             notEmpty: {
                                 message: 'ip不能为空'
+                            },
+                            regexp: {
+                                regexp: /^((?:(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d)))\.){3}(?:25[0-5]|2[0-4]\d|((1\d{2})|([1-9]?\d))))$/,
+                                message: 'ip地址格式不正确'
                             }
                         }
                     }, amgPort: {
@@ -283,29 +446,22 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 device.manuId = $('select[name="manuId"]').val();
                 device.amgProto = $('select[name="amgProto"]').val();
                 device.adgProto = $('select[name="adgProto"]').val();
+                device.deviceCode='-1';
                 var parentCode = $('select[name="parentCode"]').val();
                 var orgCode = $('input[name="orgCode"]').val();
-                var dictCode = $('select[name="dictCode"]').val();
+                var dictCode = '-1';
                 var typeCode = $('select[name="typeCode"]').val();
                 deviceService.addDeviceInfo(device, orgCode, parentCode, typeCode, dictCode, function (data) {
                     if (data.result) {
                         //向表格中添加
                         device.id = data.data;
-                        var allPageNum=$('.page-next').prev().children().html();
-                        if(deviceTable.page.pageNumber==allPageNum){
-                            $('#device_table').bootstrapTable('append', device);
-                        }
-                        //更新分页条
-                        common.pageInit(deviceTable.page.pageNumber,deviceTable.page.pageSize,deviceTable.page.count+1);
-                        //清空表格
-                        $("input[name='res']").click();
-                        //清空验证
-                        $("#DeviceForm").data('bootstrapValidator').destroy();
+                        common.clearForm('DeviceForm');
                         //关闭弹窗
                         layer.closeAll();
-                        layer.msg('添加成功')
+                        layer.msg('添加成功 请刷新表格')
                     } else {
                         layer.msg(data.description);
+                        $("button[type='submit']").removeAttr('disabled');
                     }
                 })
                 return false;
@@ -313,17 +469,17 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
         }
         deviceAdd.init = function () {
             $('#addDevice').click(function () {
-                if (tree.selected) {
+                if (domainTree.selOrg) {
                     //开启验证
                     deviceAdd.valiadator();
                     //开启弹窗
-                    $('input[name="orgName"]').val(tree.selected.name)
-                    $('input[name="orgCode"]').val(tree.selected.code)
+                    $('input[name="orgName"]').val(domainTree.selOrg.name)
+                    $('input[name="orgCode"]').val(domainTree.selOrg.code)
                     var layerId = layer.open({
                         type: 1,
                         skin: 'layui-layer-lan',
                         resize: false,
-                        area: ['620px', '435px'],
+                        area: ['620px', '402px'],
                         scrollbar: false,
                         offset: '100px',
                         title: '添加设备',
@@ -486,9 +642,9 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                                     values: ids
                                 })
                                 //更新分页条
-                                var pageCount=deviceTable.page.count-data.dataCount
-                                common.pageInit(deviceTable.page.pageNumber,deviceTable.page.pageSize,pageCount);
-                                deviceTable.page.count=pageCount;
+                                var pageCount = deviceTable.page.count - data.dataCount
+                                common.pageInit(deviceTable.page.pageNumber, deviceTable.page.pageSize, pageCount);
+                                deviceTable.page.count = pageCount;
                             } else {
                                 layer.msg(data.description);
                             }
@@ -531,7 +687,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 resize: false,
                 skin: 'layui-layer-rim',
                 scrollbar: false,
-                title:'关联设备',
+                title: '关联设备',
                 area: ['520px', '457px'],
                 offset: '100px',
                 content: $('#deviceTable')
@@ -580,9 +736,10 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 var uriNum = $('input[name="uriNum"]').val();
                 var deviceName = $('input[name="deviceSrcName"]').val();
                 var deviceConId = $('input[name="deviceSrcConId"]').val();
-                var deviceCode = $('input[name="deviceSrcCode"]').val();;
+                var deviceCode = $('input[name="deviceSrcCode"]').val();
+                ;
                 var typeCode = $('select[name="srcTypeCode"]').val();
-                mediaSrcService.addMediaSrcsList(deviceId,uriNum,deviceName,deviceConId,deviceCode,typeCode, function (data) {
+                mediaSrcService.addMediaSrcsList(deviceId, uriNum, deviceName, deviceConId, deviceCode, typeCode, function (data) {
                     if (data.result) {
                         layer.msg('添加到通道成功!')
                         //清空表格
@@ -626,7 +783,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 $('input[name="deviceSrcId"]').val(row.id);
             }
         })
-        var mediaTable={};
+        var mediaTable = {};
         mediaTable.init = function () {
             var type = new Array();
             //根据设备类型查询设备类型暂时只指定120:ipc，121:dome
@@ -640,8 +797,4 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             })
         }
         mediaTable.init();
-        /********************************* 刷新 ***************************************/
-        $('#refresh').click(function () {
-            deviceTable.init();
-        })
     })

@@ -71,7 +71,6 @@ define(['common'], function MenuController(common) {
         $.ajax({
             url: requestUrl,
             type: 'Get',
-            async: false,
             data: {
                 parentMenuId: parentMenuIdStr,
             },
@@ -121,6 +120,45 @@ define(['common'], function MenuController(common) {
             cache: false,
             success: onSuccess,
             error: common.onError
+        });
+    };
+
+    /**
+     *查询角色是否配置菜单
+     *@param roleId   角色id
+     *@param menuIds  菜单Id集合
+     */
+    MenuService.getMenuByRoleId=function(roleId,menuIds,onSuccess){
+        var roleIdStr=roleId;
+        var menuIdsStr=JSON.stringify(menuIds);
+        var requestUrl=this.url+"/role/menuList";
+        $.ajax({
+            url:requestUrl,
+            type:'Get',
+            data:{
+                roleId:roleIdStr,
+                menuIds:menuIdsStr,
+            },
+            cache:false,
+            success:onSuccess,
+            error:common.onError
+        });
+    };
+
+    /**
+     *获取全部菜单信息
+     */
+    MenuService.getListAll=function(onSuccess){
+        var requestUrl=this.url+"/list/all";
+        $.ajax({
+            url:requestUrl,
+            type:'Get',
+            async:false,
+            data:{
+            },
+            cache:false,
+            success:onSuccess,
+            error:common.onError
         });
     };
 

@@ -1,5 +1,8 @@
 require.config({
     shim: {
+        'ztree': {
+            deps: ['jquery']
+        },
         'frame': {
             deps: ['jquery', 'menu', 'MenuService'],
             exports: "frame"
@@ -19,10 +22,6 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
-        'bootstrap-treeview': {
-            deps: ['jquery'],
-            exports: "treeview"
-        },
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapValidator"
@@ -35,17 +34,17 @@ require.config({
         "layer": "../../../common/lib/layer/layer",
         "frame": "../../sidebar/js/wframe",
         "topBar": "../../../common/component/head/js/topbar",
-        "bootstrap-treeview": "../../../common/lib/bootstrap/libs/bootstrap-treeview/js/bootstrap-treeview",
         "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
         "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
         "domainService": "../../../common/js/service/DomainController",
-        "orgService": "../../../common/js/service/OrgController"
+        "orgService": "../../../common/js/service/OrgController",
+        "ztree": "../../../common/lib/ztree/js/jquery.ztree.core"
     }
 });
-require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-table','bootstrap', 'bootstrap-treeview', 'topBar', 'domainService', 'orgService'],
-    function (jquery, common, layer, frame, bootstrapValidator,bootstrapTable,bootstrap, treeview, topBar, domainService, orgService) {
+require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table', 'bootstrap', 'topBar', 'domainService', 'orgService', 'ztree'],
+    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable, bootstrap, topBar, domainService, orgService, ztree) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -58,317 +57,243 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
         });
         /********************************* 管理域树 ***************************************/
         var domainTree = {};
-        domainTree.getTree = function () {
-            var tree = [];
-            var temp = {};
-            domainService.listAllDomain(function (data) {
-                if (data.result) {
-                    //将节点封装成树形结构
-                    for (var i = 0; i < data.data.length; i++) {
-                        temp[data.data[i].code] = {
-                            code: data.data[i].code,
-                            text: data.data[i].name,
-                            parentCode: data.data[i].parentCode,
-                            createTime: data.data[i].createTime,
-                            creatorId: data.data[i].creatorId,
-                            description: data.data[i].description,
-                            orderNo: data.data[i].orderNo
-                        };
-                    }
-                    for (i = 0; i < data.data.length; i++) {
-                        var key = temp[data.data[i].parentCode];
-                        if (key) {
-                            if (key.nodes == null) {
-                                key.nodes = [];
-                                key.nodes.push(temp[data.data[i].code]);
-                            } else {
-                                key.nodes.push(temp[data.data[i].code]);
-                            }
-                        } else {
-                            tree.push(temp[data.data[i].code]);
-                        }
-                    }
-                }
-            })
-            return tree;
-        }
-        domainTree.isNodeSelected = false;
-        domainTree.nodeSelected;
-        domainTree.init = function () {
-            //滚动条
-            $('#domaintree').treeview({
-                showBorder: false,
-                nodeIcon: 'glyphicon glyphicon-cloud',
-                data: domainTree.getTree(),
-                onhoverColor: 'lightgrey',
-                selectedBackColor: 'lightgrey',
-                selectedColor: 'black',
-                onNodeSelected: function (event, data) {
-                    domainTree.isNodeSelected = true;
-                    domainTree.nodeSelected = data;
-                    //更新表格
-                    domainService.getChildList(data.code,function (data) {
-                        if(data.result){
-                            $('#area_table').bootstrapTable('load',data.data);
-                            //更新分页
-                            common.pageInit(1,10,data.dataSize)
-                        }else{
-                            layer.msg(data.description);
-                        }
-                    })
+        domainTree.setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
                 },
-                onNodeUnselected: function (event, data) {
-                    domainTree.isNodeSelected = false;
-                    domainTree.nodeSelected = null;
+                key: {
+                    name: "name"
+                },
+                keep: {
+                    parent: true
+                }
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    if (treeNode.type && treeNode.type === 'org') {
+                        domainTree.selOrg=treeNode;
+                        if(domainTree.selDomain){
+                            domainTree.selDomain=null;
+                        }
+                        $('#alertOrg').show();
+                        $('#alertDomain').hide();
+                        $('input[name="orgCode"]').val(treeNode.code);
+                        $('input[name="orgpCode"]').val(treeNode.parentCode);
+                        $('input[name="orgName"]').val(treeNode.name);
+                        $('input[name="orgPersion"]').val(treeNode.creatorId);
+                        $('input[name="orgTime"]').val(treeNode.createTime);
+                        $('textarea[name="orgRemark"]').val(treeNode.description);
+                    } else {
+                        domainTree.selDomain = treeNode;
+                        if(domainTree.selOrg){
+                            domainTree.selOrg=null;
+                        }
+                        $('#alertDomain').show();
+                        $('#alertOrg').hide();
+                        $('input[name="dCode"]').val(treeNode.code);
+                        $('input[name="pCode"]').val(treeNode.parentCode);
+                        $('input[name="dName"]').val(treeNode.name);
+                        $('input[name="dPersion"]').val(treeNode.creatorId);
+                        $('input[name="dTime"]').val(treeNode.createTime);
+                        $('textarea[name="dRemark"]').val(treeNode.description);
+                    }
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    //清空当前父节点的子节点
+                    domainTree.obj.removeChildNodes(treeNode);
+                    //如果节点是组织，获取组织下的子组织
+                    if (treeNode.type && treeNode.type === 'org') {
+                        //获得组织下的子组织
+                        orgService.getChildList(treeNode.code, function (data) {
+                            if (data.result) {
+                                if (data.dataSize > 0) {
+                                    for (var i = 0; i < data.dataSize; i++) {
+                                        data.data[i].isParent = true;
+                                        data.data[i].icon = "../img/org.png";
+                                        data.data[i].type = 'org';
+                                        data.data[i].domainCode=treeNode.domainCode;
+                                    }
+                                    var newNodes = data.data;
+                                    console.log(newNodes);
+                                    //添加节点
+                                    domainTree.obj.addNodes(treeNode, newNodes);
+                                }
+                            }
+                        })
+                    } else {
+                        //判断域下是否有组织
+                        domainService.getDomainOrg(treeNode.code, function (data) {
+                            if (data.result) {
+                                if (data.dataSize > 0) {
+                                    for (var i = 0; i < data.dataSize; i++) {
+                                        //根据组织code查找组织名称 TODO:修改
+                                        orgService.getOrgByCode(data.data[i].orgCode, function (orgData) {
+                                            if (orgData.result) {
+                                                data.data[i].isParent = true;
+                                                data.data[i].icon = "../img/org.png";
+                                                data.data[i].name = orgData.data.name;
+                                                data.data[i].parentCode = orgData.data.parentCode;
+                                                data.data[i].createTime = orgData.data.createTime;
+                                                data.data[i].creatorId = orgData.data.creatorId;
+                                                data.data[i].description = orgData.data.description;
+                                                data.data[i].type = 'org';
+                                                data.data[i].code = data.data[i].orgCode;
+                                            } else {
+                                                layer.msg('获取组织节点失败');
+                                            }
+                                        })
+                                    }
+                                    var newNodes = data.data;
+                                    //添加节点
+                                    domainTree.obj.addNodes(treeNode, newNodes);
+                                }
+                            } else {
+                                layer.msg('获得组织节点失败')
+                            }
+                        })
+                        domainService.getChildList(treeNode.code, function (data) {
+                            if (data.result) {
+                                if (data.dataSize > 0) {
+                                    for (var i = 0; i < data.dataSize; i++) {
+                                        data.data[i].isParent = true;
+                                        data.data[i].icon = "../img/domain.png";
+                                    }
+                                    var newNodes = data.data;
+                                    //添加节点
+                                    domainTree.obj.addNodes(treeNode, newNodes);
+                                }
+                            } else {
+                                layer.msg('获得子域节点失败')
+                            }
+                        })
+                    }
+                }
+            }
+        };
+        domainTree.zNode = function () {
+            var treeNode;
+            domainService.getChildList('-1', function (data) {
+                if (data.result) {
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/domain.png";
+                    }
+                    treeNode = data.data;
                 }
             })
+            return treeNode;
+        }
+        domainTree.init = function () {
+            domainTree.obj = $.fn.zTree.init($("#domaintree"), domainTree.setting, domainTree.zNode());
         }
         domainTree.init();
-        /********************************* 组织树 ***************************************/
-        var orgTree={};
-        orgTree.getData=function () {
-            var tree = [];
-            var temp = {};
-            orgService.listAllOrg(function (data) {
-                if (data.result) {
-                    //将节点封装成树形结构
-                    for (var i = 0; i < data.data.length; i++) {
-                        temp[data.data[i].code] = {
-                            code: data.data[i].code,
-                            text: data.data[i].name,
-                            parentCode: data.data[i].parentCode,
-                            createTime: data.data[i].createTime,
-                            creatorId: data.data[i].creatorId,
-                            description: data.data[i].description,
-                            orderNo: data.data[i].orderNo
-                        };
-                    }
-                    for (i = 0; i < data.data.length; i++) {
-                        var key = temp[data.data[i].parentCode];
-                        if (key) {
-                            if (key.nodes == null) {
-                                key.nodes = [];
-                                key.nodes.push(temp[data.data[i].code]);
-                            } else {
-                                key.nodes.push(temp[data.data[i].code]);
-                            }
-                        } else {
-                            tree.push(temp[data.data[i].code]);
-                        }
-                    }
-                }
-            })
-            return tree;
-        }
-        orgTree.init=function () {
-            $('#orgtree').treeview({
-                showBorder: false,
-                showCheckbox: true,
-                data: orgTree.getData(),
-                selectedBackColor: 'lightgrey',
-                selectedColor: 'black',
-                onNodeChecked: function (event,node) {
-                    var nodeId = [];
-                    //如果有子节点
-                    if (node.nodes) {
-                        for (var i = 0; i < node.nodes.length; i++) {
-                            nodeId.push(node.nodes[i].nodeId);
-                        }
-                        $("#orgtree").treeview("checkNode", [nodeId, {silent: true}]);
-                    } else {
-                        var pId = node.parentId;
-                        if (pId) {
-                            var parentNode = $('#orgtree').treeview("getNode", pId);
-                            var checkNum = 0;
-                            for (var i = 0; i < parentNode.nodes.length; i++) {
-                                if (parentNode.nodes[i].state.checked) {
-                                    checkNum++;
-                                }
-                            }
-                            if (checkNum == parentNode.nodes.length) {
-                                $("#orgtree").treeview("checkNode", parentNode.nodeId);
-                            }
-                        }
-                    }
+        /********************************* 修改管理域 ***************************************/
+        var domainEdit = {};
+        domainEdit.valia = function () {
+            $('#alertDomain').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
                 },
-                onNodeUnchecked: function (event,node) {
-                    var nodeId = [];
-                    if (node.nodes) {
-                        for (var i = 0; i < node.nodes.length; i++) {
-                            nodeId.push(node.nodes[i].nodeId);
-                        }
-                        $("#orgtree").treeview("uncheckNode", [nodeId, {silent: true}]);
-                    } else {
-                        var pId = node.parentId;
-                        if (pId) {
-                            var parentNode = $('#orgtree').treeview("getNode", pId);
-                            var checkNum = 0;
-                            for (var i = 0; i < parentNode.nodes.length; i++) {
-                                if (!parentNode.nodes[i].state.checked) {
-                                    checkNum++;
-                                }
-                            }
-                            if (checkNum == parentNode.nodes.length) {
-                                $("#orgtree").treeview("uncheckNode", parentNode.nodeId);
+                fields: {
+                    dName: {
+                        validators: {
+                            notEmpty: {
+                                message: '域名称不能为空'
                             }
                         }
                     }
                 }
             })
         }
-        //管理域表格
-        var init_page={
-            pageNumber: 1,
-            pageSize: 10
-        }
-        domainService.getDomainList(init_page.pageNumber,init_page.pageSize,init_page.domainName,function (data) {
-            if(data.result){
-                console.log(data);
-                $('#area_table').bootstrapTable({
-                    columns:[{
-                        checkbox: true
-                    },{
-                        title:'序号',
-                        align:'center',
-                        formatter: function (value, row, index) {
-                            return index+1;
+        domainEdit.submit = function () {
+            $('#alertDomain').on('success.form.bv', function () {
+                var domain = {};
+                //TODO 修改时不需要获得所有信息,不需要orderNo
+                domain.code = $('input[name="dCode"]').val();
+                domain.name = $('input[name="dName"]').val();
+                domain.createTime = $('input[name="dTime"]').val();
+                domain.creatorId = $('input[name="dPersion"]').val();
+                domain.description = $('textarea[name="dRemark"]').val();
+                domain.parentCode = $('input[name="pCode"]').val();
+                domainService.updateDomain(domain.code, domain, function (data) {
+                    if (data.result) {
+                        //更新树
+                        if (domainTree.obj) {
+                            var node = domainTree.obj.getNodeByTId(domain.code);
+                            node.name = domain.name;
+                            node.description = domain.description;
+                            domainTree.obj.updateNode(node);
                         }
-                    },{
-                        field: 'name',
-                        title: '管理域名称',
-                        align: 'center'
-                    },{
-                        field: 'code',
-                        title: '管理域ID',
-                        align: 'center'
-                    },{
-                        field: 'orderNo',
-                        visible:false
-                    },{
-                        field: 'parentCode',
-                        visible:false
-                    },{
-                        field: 'createTime',
-                        visible:false
-                    },{
-                        field: 'creatorId',
-                        visible:false
-                    },{
-                        field: 'description',
-                        title: '管理域描述',
-                        align: 'center'
-                    },{
-                        title: '操作',
-                        align: 'center',
-                        events: {
-                            "click #edit_role": function (e, value, row, index) {
-                                $('input[name="dName"]').val(row.name);
-                                $('input[name="dNo"]').val(row.orderNo);
-                                $('textarea[name="dRemark"]').val(row.description);
-                                domain.editValidator();
-                                layer.open({
-                                    type: 1,
-                                    title: '修改域',
-                                    offset: '100px',
-                                    area: '600px',
-                                    resize: false,
-                                    content: $('#alt_Domain')
-                                })
-                                //表单提交
-                                $('#altDomainForm').on('success.form.bv', function () {
-                                    var domain = {};
-                                    domain.code = row.code
-                                    domain.name = $('input[name="dName"]').val();
-                                    domain.description = $('textarea[name="dRemark"]').val();
-                                    domain.parentCode = row.parentCode
-                                    domain.orderNo = $('input[name="dNo"]').val();
-                                    domain.createTime = row.createTime
-                                    domain.creatorId = row.creatorId
-                                    domainService.updateDomain(domain.code,domain, function (data) {
-                                        if (data.result) {
-                                            layer.msg('更新成功')
-                                            //清除校验
-                                            $("#altDomainForm").data('bootstrapValidator').destroy();
-                                            //更新树
-                                            domainTree.getTree();
-                                            domainTree.init();
-                                            layer.closeAll();
-                                            //更新表格
-                                            $('#area_table').bootstrapTable('updateRow',{index:index,row:domain})
-                                        } else {
-                                            layer.msg(data.description)
-                                            $("button[type='submit']").removeAttr('disabled');
-                                        }
-                                    })
-                                    return false;
-                                })
-                            },
-                            "click #del_role": function (e, value, row, index) {
-                                //点击删除按钮
-                                layer.confirm('确定删除 ' + row.name + ' ?', {
-                                    btn: ['确定', '取消'] //按钮
-                                }, function () {
-                                    //删除操作
-                                    domainService.deleteDomainByCode(row.code, function (data) {
-                                        if (data.result) {
-                                            layer.closeAll();
-                                            //更新树
-                                            domainTree.getTree();
-                                            domainTree.init();
-                                            //更新表格
-                                            $('#area_table').bootstrapTable('remove', {field: 'code', values: [row.code]})
-                                        } else {
-                                            layer.msg(data.description);
-                                        }
-                                    })
-                                }, function () {
-                                    layer.closeAll();
-                                });
-                            },
-                            "click #cog_org":function (e,value,row,index) {
-                                orgTree.init();
-                                var orgTap=layer.open({
-                                    type: 1,
-                                    title: '分配组织',
-                                    offset: '100px',
-                                    area: '600px',
-                                    resize: false,
-                                    content: $('#add_org')
-                                })
-                                //为管理域分配组织
-                                $('#assignOrg').click(function () {
-                                    var orgIds=new Array();
-                                    var nodeSel=$('#orgtree').treeview('getChecked');
-                                    for (var i = 0; i < nodeSel.length; i++) {
-                                        orgIds.push(nodeSel[i].code);
-                                    }
-                                    domainService.assignOrgToDomain(row.code,orgIds,function (data) {
-                                        if(data.result){
-                                            layer.msg('分配组织成功');
-                                            layer.close(orgTap)
-                                        }else{
-                                            layer.msg(data.description)
-                                        }
-                                    })
-                                })
-                            }
-                        },
-                        formatter: function () {
-                            var icons = "<div class='btn-group-sm'><button id='edit_role' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
-                                "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
-                                "<button id='cog_org' class='btn btn-default'><i class='fa fa-cog'></i></button>" +
-                                "</div>"
-                            return icons;
-                        }
-                    }],
-                    data:data.data
+                        layer.msg('修改管理域成功');
+                        $('button[type="submit"]').removeAttr('disabled');
+                    } else {
+                        layer.msg('修改管理域失败');
+                        $('button[type="submit"]').removeAttr('disabled');
+                    }
                 })
-                //初始化分页组件
-                common.pageInit(init_page.pageNumber,init_page.pageSize,data.extra)
-            }
-        })
-        var domain = {};
-        domain.addValidator = function () {
+                return false;
+            })
+        }
+        domainEdit.valia();
+        domainEdit.submit();
+        /********************************* 修改组织 ***************************************/
+        var orgEdit = {};
+        orgEdit.valia = function () {
+            $('#alertOrg').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    orgName: {
+                        validators: {
+                            notEmpty: {
+                                message: '组织名称不能为空'
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        orgEdit.submit = function () {
+            $('#alertOrg').on('success.form.bv', function () {
+                var org = {};
+                //TODO 修改时不需要获得所有信息,不需要orderNo,areaCode
+                org.code = $('input[name="orgCode"]').val();
+                org.name = $('input[name="orgName"]').val();
+                org.createTime = $('input[name="orgTime"]').val();
+                org.creatorId = $('input[name="orgPersion"]').val();
+                org.description = $('textarea[name="orgRemark"]').val();
+                org.parentCode = $('input[name="orgpCode"]').val();
+                orgService.updateOrg(org.code, org, function (data) {
+                    if (data.result) {
+                        if (domainTree.obj) {
+                            var node = domainTree.obj.getNodeByTId(org.code);
+                            node.name = org.name;
+                            node.description = org.description;
+                            domainTree.obj.updateNode(node);
+                        }
+                        layer.msg('修改组织成功');
+                        $('button[type="submit"]').removeAttr('disabled');
+                    } else {
+                        layer.msg('修改组织失败');
+                        $('button[type="submit"]').removeAttr('disabled');
+                    }
+                })
+                return false;
+            })
+        }
+        orgEdit.valia();
+        orgEdit.submit();
+        /********************************* 添加管理域 ***************************************/
+        var domainAdd = {};
+        domainAdd.valia = function () {
             $('#domainForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -382,99 +307,122 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                                 message: '域名称不能为空'
                             }
                         }
-                    },
-                    orderNo: {
-                        validators: {
-                            notEmpty: {
-                                message: '展示序号不能为空'
-                            },
-                            numeric: {
-                                message: '展示序号只能为数字'
-                            }
-                        }
                     }
                 }
             })
         }
-        domain.editValidator = function () {
-            $('#altDomainForm').bootstrapValidator({
-                feedbackIcons: {
-                    valid: 'glyphicon glyphicon-ok',
-                    invalid: 'glyphicon glyphicon-remove',
-                    validating: 'glyphicon glyphicon-refresh'
-                },
-                fields: {
-                    dName: {
-                        validators: {
-                            notEmpty: {
-                                message: '域名称不能为空'
-                            }
-                        }
-                    }, dNo: {
-                        validators: {
-                            notEmpty: {
-                                message: '展示序号不能为空'
-                            },
-                            numeric: {
-                                message: '展示序号只能为数字'
-                            }
-                        }
-
-                    }
-                }
-            })
-        }
-        //添加域
-        $('#addDomain').click(function () {
-            if(!domainTree.isNodeSelected){
-                $('input[name="parentDoamin"]').val('默认管理域');
-                $('input[name="parentDoaminCode"]').val('00000000000010000049');
-            }else {
-                $('input[name="parentDoamin"]').val(domainTree.nodeSelected.text);
-                $('input[name="parentDoaminCode"]').val(domainTree.nodeSelected.code);
-            }
-            //开启验证
-            domain.addValidator();
-            layer.open({
-                type: 1,
-                title: '添加域',
-                offset: '100px',
-                area: '600px',
-                resize: false,
-                content: $('#add_Domain')
-            })
-            //表单提交
+        domainAdd.submit = function () {
             $('#domainForm').on('success.form.bv', function () {
                 var domain = {};
                 domain.name = $('input[name="domainName"]').val();
                 domain.parentCode = $('input[name="parentDoaminCode"]').val();
-                domain.orderNo = $('input[name="orderNo"]').val();
-                domain.description = $('textarea[name="domainRemark"]').val();
+                domain.remark = $('textarea[name="domainRemark"]').val();
                 domainService.addDomain(domain, function (data) {
                     if (data.result) {
-                        layer.msg('添加域成功');
-                        domainTree.getTree();
+                        //刷新树
                         domainTree.init();
-                        //向表格中添加
-                        domain.code=data.data
-                        $('#area_table').bootstrapTable('append',domain);
+                        //清空表单和验证
+                        common.clearForm('domainForm');
+                        //关闭弹窗
                         layer.closeAll();
-                        //清空表单
-                        $('input[name="parentDoamin"]').val('无');
-                        $('input[name="parentDoaminCode"]').val('-1');
-                        $("input[name='res']").click();
-                        //清空验证
-                        $("#domainForm").data('bootstrapValidator').destroy();
+                        layer.msg('添加成功')
                     } else {
-                        layer.msg(data.description)
+                        layer.closeAll();
+                        //清空表单和验证
+                        common.clearForm('domainForm');
+                        layer.msg(data.description);
                     }
                 })
                 return false;
             })
+        }
+        domainAdd.init = function () {
+            $('#addDomain').click(function () {
+                if (domainTree.selDomain) {
+                    $('input[name="parentDoamin"]').val(domainTree.selDomain.name);
+                    $('input[name="parentDoaminCode"]').val(domainTree.selDomain.code);
+                } else {
+                    $('input[name="parentDoamin"]').val('无');
+                    $('input[name="parentDoaminCode"]').val('-1');
+                }
+                //表单验证
+                domainAdd.valia();
+                layer.open({
+                    type: 1,
+                    title: '添加管理域',
+                    skin: 'layui-layer-lan',
+                    offset: '100px',
+                    area: '600px',
+                    resize: false,
+                    content: $('#add_Domain')
+                })
+                //表单提交
+                domainAdd.submit();
+            })
+        }
+        domainAdd.init();
+        /********************************* 初始化区域树 ***************************************/
+        var areaTree={};
+        areaTree.setting={
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                },
+                key: {
+                    name: "name"
+                },
+                keep: {
+                    parent: true
+                }
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    $('input[name="areaCode"]').val(treeNode.code);
+                    layer.close(areaLayer)
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    orgService.getChildArea(treeNode.code, function (data) {
+                        if (data.result) {
+                            for (var i = 0; i < data.dataSize; i++) {
+                                data.data[i].isParent = true;
+                            }
+                            var newNodes = data.data;
+                            //添加节点
+                            treeObj.addNodes(treeNode, newNodes);
+                        }
+                    })
+                }
+            }
+        }
+        orgService.getChildArea('000000', function (data) {
+            if (data.result) {
+                for (var i = 0; i < data.dataSize; i++) {
+                    data.data[i].isParent = true;
+                }
+                areaTree.treeNode = data.data;
+            } else {
+                layer.msg(data.description);
+            }
         })
-        //添加组织
-        var org = {};
-        org.validator = function () {
+        //选择区域
+        var areaLayer;
+        $('#choseArea').click(function () {
+            areaLayer = layer.open({
+                type: 1,
+                title: '区域编码树',
+                skin: 'layui-layer-rim',
+                offset: '100px',
+                area: ['300px', '450px'],
+                resize: false,
+                content: $('#areatree')
+            })
+        })
+        var treeObj = $.fn.zTree.init($("#areatree"),areaTree.setting,areaTree.treeNode);
+        /********************************* 添加组织 ***************************************/
+        var orgAdd = {};
+        orgAdd.valia = function () {
             $('#orgForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -482,55 +430,131 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator','bootstrap-t
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {
-                    orgName: {
+                    oName: {
                         validators: {
                             notEmpty: {
                                 message: '组织名称不能为空'
                             }
                         }
-                    }, orderNo: {
+                    },
+                    areaCode:{
                         validators: {
                             notEmpty: {
-                                message: '展示序号不能为空'
-                            },
-                            numeric: {
-                                message: '展示序号只能为数字'
+                                message: '区域编码不能为空'
                             }
                         }
-
                     }
                 }
             })
         }
-        $('#addOrg').click(function () {
-            if (!domainTree.isNodeSelected) {
-                layer.msg('请选择管理域')
-            }else{
-                org.validator();
-                $('input[name="domainName"]').val(domainTree.nodeSelected.text);
-                layer.open({
-                    type: 1,
-                    title: '添加组织',
-                    offset: '100px',
-                    area: '600px',
-                    resize: false,
-                    content: $('#add_org')
+        orgAdd.submit = function () {
+            $('#orgForm').on('success.form.bv', function () {
+                var org = {};
+                org.name = $('input[name="oName"]').val();
+                org.description = $('textarea[name="oRemark"]').val();
+                var domainCode;
+                if(domainTree.selDomain){
+                    org.parentCode = '-1';
+                    domainCode=$('input[name="pOrgCode"]').val();
+                }else{
+                    org.parentCode = $('input[name="pOrgCode"]').val();
+                    domainCode=domainTree.selOrg.domainCode;
+                }
+                var areaCode=$('input[name="areaCode"]').val();
+                orgService.addOrg(org,areaCode,domainCode,function (data) {
+                    if (data.result) {
+                        //刷新树
+                        domainTree.init();
+                        //清空表单和验证
+                        common.clearForm('orgForm');
+                        //关闭弹窗
+                        layer.closeAll();
+                        layer.msg('添加成功')
+                    } else {
+                        $('button[type="submit"]').removeAttr('disabled');
+                        layer.msg(data.description);
+                    }
                 })
-                //表单提交
-                $('#orgForm').on('success.form.bv', function () {
-                    var areaCode = domainTree.nodeSelected.code;
-                    var org = {};
-                    org.name = $('input[name="orgName"]').val();
-                    org.description = $('textarea[name="orgRemark"]').val();
-                    org.parentCode = "-1";
-                    org.orderNo = $('input[name="orgOrderNo"]').val();
-                    orgService.addOrg(org,areaCode, function (data) {
-                        if (data.result) {
-                            layer.msg('添加组织成功')
-                        }
+                return false;
+            })
+        }
+        orgAdd.init = function () {
+            //TODO 接口不符合
+            $('#addOrg').click(function () {
+                var isSel=false;
+                if (domainTree.selDomain) {
+                    $('input[name="pOrg"]').val(domainTree.selDomain.name);
+                    $('input[name="pOrgCode"]').val(domainTree.selDomain.code);
+                    isSel=true;
+                } else if(domainTree.selOrg) {
+                    $('input[name="pOrg"]').val(domainTree.selOrg.name);
+                    $('input[name="pOrgCode"]').val(domainTree.selOrg.code);
+                    isSel=true;
+                }else{
+                    layer.msg('请选择组织或管理域')
+                }
+                if(isSel){
+                    //表单验证
+                    orgAdd.valia();
+                    layer.open({
+                        type: 1,
+                        title: '添加管理域',
+                        skin: 'layui-layer-lan',
+                        offset: '100px',
+                        area: '600px',
+                        resize: false,
+                        content: $('#add_org')
                     })
-                    return false;
-                })
-            }
-        })
+                    //表单提交
+                    orgAdd.submit();
+                }
+            })
+        }
+        orgAdd.init();
+        /********************************* 刪除管理域或组织 ***************************************/
+        var del={};
+        del.init=function () {
+            $('#del').click(function () {
+                if(domainTree.selOrg){
+                    //删除组织操作
+                    layer.confirm('确定删除 '+domainTree.selOrg.name+' ?', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function () {
+                        orgService.deleteOrgByCode(domainTree.selOrg.code,function (data) {
+                            if(data.result){
+                                //更新树
+                                domainTree.init();
+                                layer.closeAll();
+                                layer.msg('删除组织成功');
+                            }else{
+                                layer.msg(data.description);
+                            }
+                        })
+                    }, function () {
+                        layer.closeAll();
+                    });
+                }else if(domainTree.selDomain){
+                    //删除管理域操作
+                    layer.confirm('确定删除 '+domainTree.selDomain.name+' ?', {
+                        btn: ['确定', '取消'] //按钮
+                    }, function () {
+                        domainService.deleteDomainByCode(domainTree.selDomain.code,function (data) {
+                            if(data.result){
+                                //更新树
+                                domainTree.init();
+                                layer.closeAll();
+                                layer.msg('删除管理域成功');
+                            }else{
+                                layer.msg(data.description);
+                            }
+                        })
+                    }, function () {
+                        layer.closeAll();
+                    });
+                }else{
+                    layer.msg('请选择要删除的组织或管理域')
+                }
+            })
+        }
+        del.init();
     })

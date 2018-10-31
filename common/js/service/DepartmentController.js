@@ -85,9 +85,9 @@ define(['common'],function DepartmentController(common){
       *@param pageSise pageSize 
       *@param depName depName 
       */
-     departMentService.getDepList=function(pageNo,pageSise,depName,onSuccess){
+     departMentService.getDepList=function(pageNo,pageSize,depName,onSuccess){
 	     var pageNoStr=pageNo;
-	     var pageSiseStr=pageSise;
+	     var pageSizeStr=pageSize;
 	     var depNameStr=depName;
 		 var requestUrl=this.url+"/list";
          $.ajax({
@@ -95,7 +95,7 @@ define(['common'],function DepartmentController(common){
              type:'GET',
              data:{
                    pageNo:pageNoStr,
-                   pageSise:pageSiseStr,
+                   pageSise:pageSizeStr,
                    depName:depNameStr,
              },
              cache:false,
@@ -113,6 +113,7 @@ define(['common'],function DepartmentController(common){
          $.ajax({
              url:requestUrl,
              type:'GET',
+             async:false,
              data:{
                    id:idStr,
              },

@@ -47,13 +47,12 @@ define(['common'],function DeviceModelController(common){
       *@param ids  设备型号集 
       */
      deviceModelService.deleteDeviceModel=function(ids,onSuccess){
-	     var idsStr=JSON.stringify(ids);
 		 var requestUrl=this.url+"/deleteDeviceModel";
          $.ajax({
              url:requestUrl,
              type:'POST',
              data:{
-                   ids:idsStr,
+                   ids:ids,
              },
              cache:false,
              success:onSuccess,

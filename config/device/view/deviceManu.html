@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>设备厂商</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../common/css/buttons.css">
+    <link rel="stylesheet" href="../css/deviceModel.css">
+    <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/css/normalize.css">
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/deviceManu"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content">
+            <div class="content-panel panel-opera-se">
+                <a id="addManu" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加设备厂商
+                </a>
+            </div>
+            <div class="content-panel panel-main">
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="deviceManu_table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--添加设备厂商-->
+<div id="add_deviceManu" style="display: none">
+    <form id="addform" class="form-horizontal">
+        <div class="form-item form-group-sm">
+            <label class="col-sm-3 control-label"><i class="required">*</i>厂商名称：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="manuname" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-3 control-label"><i class="required">*</i>厂商标识：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="manuiden" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <textarea name="manuremark" rows="3" cols="44"></textarea>
+                <input name="res" type="reset" style="display:none;"/>
+            </div>
+        </div>
+        <div class="tab-footer">
+            <button type="submit" class="btn btn-primary">完成</button>
+            <button type="button" class="btn btn-default btn-cancel">取消</button>
+        </div>
+    </form>
+</div>
+<!--修改设备厂商-->
+<div id="edit_deviceManu" style="display: none">
+    <form id="editform" class="form-horizontal">
+        <div class="form-item form-group-sm">
+            <label class="col-sm-3 control-label"><i class="required">*</i>厂商名称：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="emanuname" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-3 control-label"><i class="required">*</i>厂商标识：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <input name="emanuiden" type="text" class="form-control">
+            </div>
+        </div>
+        <div class="form-item form-group-sm">
+            <label class="col-sm-3 control-label">备注：</label>
+            <div class="col-sm-6" style="padding: 0px">
+                <textarea name="emanuremark" rows="3" cols="44"></textarea>
+                <input name="res" type="reset" style="display:none;"/>
+            </div>
+        </div>
+        <div class="tab-footer">
+            <button type="submit" class="btn btn-primary">完成</button>
+            <button type="button" class="btn btn-default btn-cancel">取消</button>
+        </div>
+    </form>
+</div>
+</body>
+</html>
