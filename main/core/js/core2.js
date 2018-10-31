@@ -1952,8 +1952,8 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                             "serverID":temp.serverID,
 
                             "serverRealm":temp.serverRealm,
-                            "serverUserName":temp.serverUserName,
-                            "serverUserPwd":temp.serverUserPwd,
+                            "serverUserName":"43010400004000000001",
+                            "serverUserPwd":"12345678",
                             "Port": temp.Port,
                             "DevID":temp.DevID
                         }
