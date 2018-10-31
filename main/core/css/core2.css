@@ -1,9 +1,17 @@
 @charset "UTF-8";
+a{
+    text-decoration: none!important;
+}
+
 .core-map {
     width: 100%;
     padding: 0;
     background-color: #081832cc;
     height: 878px;
+}
+
+.noShow{
+    display:none;
 }
 
 .left {
@@ -37,7 +45,7 @@
 
 .map-top{
     position: absolute;
-    top: 60px;
+    top: 64px;
     left: 0;
     height: 35px;
     width: 79%;
@@ -191,6 +199,7 @@
     margin: 0 auto;
     font-size: 13px;
     display: none;
+    color: #ffffff;
 }
 
 .map-reslist>ul>li {
@@ -206,6 +215,15 @@
     padding: 5px 0;
     color: #eeeeee;
 }
+
+.map-reslist .queryForm-label{
+    width: 75px;
+}
+
+.map-reslist .queryForm-input{
+    width: 150px;
+}
+
 
 /*core原样式*/
 .img-map{
@@ -387,5 +405,10 @@ th{
 }
 
 /* end-通用的table样式 */
+
+/*图层控制器面板增加背景颜色*/
+.layerControlTreeContainer{
+    background: darkgray;
+}
 
 

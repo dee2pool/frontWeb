@@ -1,0 +1,157 @@
+@charset "UTF-8";
+/*全局滚动条样式*/
+::-webkit-scrollbar-track{border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);}/*滚动条的滑轨背景颜色*/
+::-webkit-scrollbar-thumb{background-color: rgba(0,0,0,0.05);border-radius: 10px;-webkit-box-shadow: inset 1px 1px 0 rgba(75, 75, 75, 0.58);}/*滑块颜色*/
+::-webkit-scrollbar-thumb{background-color: rgba(0,0,0,0.2);border-radius: 10px;-webkit-box-shadow: inset 1px 1px 0 rgba(48, 48, 48, 0.92);}
+::-webkit-scrollbar{width: 16px;height: 16px;}/* 滑块整体设置*/
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-thumb{border-radius: 999px;border: 5px solid transparent;}
+::-webkit-scrollbar-track{box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;}
+::-webkit-scrollbar-thumb{min-height: 20px;background-clip: content-box;box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;}
+::-webkit-scrollbar-corner{background: transparent;}/* 横向滚动条和纵向滚动条相交处尖角的颜色 */
+
+.feature{
+    height: calc(100vh - 70px);
+}
+
+
+.feature-border{
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    background: #fff;
+    box-shadow: 0 0 3px rgba(150,150,150,.5);
+    -webkit-box-shadow: 0 0 3px rgba(150,150,150,.5);
+}
+
+.feature-center{
+    height: 100%;
+    width: 100%;
+}
+
+.left{
+    height: 100%;
+    width: 25%;
+    display: inline-block;
+}
+.left-on{
+    height: 50%;
+}
+.left-up{
+    height: 50%;
+    overflow: auto;
+    /*display: none;*/
+}
+.right{
+    height: 100%;
+    width: 75%;
+    float: right;
+    display: inline-block;
+}
+
+.information{
+    position: relative;
+    width: 100%;
+    height: 50%;
+    bottom: 0;
+    overflow-x: auto;
+    /*padding-top: 50px;*/
+}
+
+.map{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+
+
+.tree-head{
+    border-bottom: grey solid 1px;
+}
+
+.tree-head > a {
+    line-height: 24px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-left: 5px;
+}
+
+.tree-head > a:hover {
+    color: #23527c;
+    text-decoration: underline;
+}
+
+.tree-head > a:active {
+    color: #23527c;
+    text-decoration: underline;
+}
+
+.tree-head > a:focus{
+    color: black!important;
+    text-decoration: underline;
+}
+
+.featureTabContent{
+    padding-top: 15px;
+}
+
+
+
+.feature-foot{
+    display:none;
+    position: relative;
+    margin-top: 10px;
+    height: calc(40% - 10px);
+    width: 100%;
+    padding:15px;
+    overflow:auto;
+}
+
+.little-title{
+    text-align: right;
+    line-height: 33px;
+    font-size: 20px
+}
+
+.form-control{
+    margin-bottom: 25px;
+}
+
+.btn-magbtm{
+    margin-bottom: 25px;
+}
+
+
+.form-hidden{
+    display: none;
+}
+
+.black-a{
+    color: #000;
+}
+
+.black-a:hover{
+    color: #000;
+}
+
+.black-a:focus{
+    color: #000;
+}
+
+.tree-head a{
+    text-decoration: none!important;
+}
+
+.tree-head a{
+    color: black;
+}
+
+.red{
+    color:red;
+}
+
+.black{
+    color: black;
+}
+
+

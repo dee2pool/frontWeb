@@ -1,46 +1,19 @@
 define(['jquery'],function () {
-    var common = {};
+    var giscommon = {};
     //全局服务器连接地址
-    common.geoserver = "http://192.168.0.142:8060";
+    giscommon.host = "http://192.168.0.142:8060";
 
-    common.end = "http://192.168.0.222:8040";
+    giscommon.end = "http://192.168.0.222:8040";
 
     //全局页面跳转地址，用于部署IIS
-    common.openurl = "/hnvmns-frontweb";
+    giscommon.openurl = "/hnvmns-frontweb";
 
     //后端api地址
-    common.api = "http://localhost:8080";
-
-    common.host = "https://192.168.0.144:8080";
-    common.wsHost = 'https:' == document.location.protocol ? "wss://" + document.location.host + "/web" : "ws://" + document.location.host + "/web";
-    //解决跨域
-    $.ajaxSetup({
-        crossDomain: true,
-        xhrFields: {
-            withCredentials: true
-        },
-        error: function (data) {
-            try {
-                var resp = data.responseText;
-                var msg = JSON.parse(resp);
-                var httpStatus = data.status;
-                if (httpStatus == 403) {
-                    window.parent.location.href = loginPageUrl;
-                } else if (httpStatus == 404) {
-                    layer.msg('网络异常，请稍后再试')
-                }
-            } catch (e) {
-                layer.msg('网络异常，请稍后再试')
-                console.log(data.responseText);
-            } finally {
-
-            }
-        }
-    })
+    giscommon.api = "http://localhost:8080";
 
 
     //模拟的WMS参数配置，放到全局变量里是考虑重复使用
-    common.wmsDefaultOption = {
+    giscommon.wmsDefaultOption = {
         service: 'WFS',
         version: '1.0.0',
         request: 'GetFeature',
@@ -49,18 +22,18 @@ define(['jquery'],function () {
         outputFormat: 'application/json'
     };
 
-    common.wmsUrl = "/geoserver/cite/ows?";
+    giscommon.wmsUrl = "/geoserver/cite/ows?";
 
-    common.head =     ["<div id=\"sui_nav\" class=\"sui-nav horizontal\">",
+    giscommon.head =     ["<div id=\"sui_nav\" class=\"sui-nav horizontal\">",
         "    <div class=\"sui-nav-wrapper nav-border nav-line\">",
         "        <div class=\"pull-left nav-header\">",
-        "            <img src=\""+common.openurl+"/common/asset/img/logo.png\" alt=\"华南光电\">",
+        "            <img src=\""+giscommon.openurl+"/giscommon/asset/img/logo.png\" alt=\"华南光电\">",
         "            智能可视化监管系统",
         "        </div>",
         "        <ul>",
-        "            <li><a class=\"\" href=\""+common.openurl+"/index/views/index.html\"></span>&nbsp;主页</a></li>",
-        "            <li><a class=\"\"  href=\""+common.openurl+"/core/view/core.html\"><span class=\"glyphicon glyphicon-fire\"></span>&nbsp;一张图</a></li>",
-        "            <li><a href=\""+common.openurl+"/depot/view/index.html\"><span class=\"glyphicon glyphicon-plane\"></span>驾驶舱</a>",
+        "            <li><a class=\"\" href=\""+giscommon.openurl+"/index/views/index.html\"></span>&nbsp;主页</a></li>",
+        "            <li><a class=\"\"  href=\""+giscommon.openurl+"/core/view/core.html\"><span class=\"glyphicon glyphicon-fire\"></span>&nbsp;一张图</a></li>",
+        "            <li><a href=\""+giscommon.openurl+"/depot/view/index.html\"><span class=\"glyphicon glyphicon-plane\"></span>驾驶舱</a>",
         "                <ul>",
         "                    <li><a href=\"#\"><span class=\"glyphicon glyphicon-edit\"></span> editor</a></li>",
         "                    <li><a href=\"#\"><span class=\"glyphicon glyphicon-pencil\"></span> pencil</a></li>",
@@ -114,11 +87,11 @@ define(['jquery'],function () {
         "        </ul>",
         "    </div>",
         "</div>"].join("");
-    // href=\""+common.openurl+"/index/views/index.html\"
+    // href=\""+giscommon.openurl+"/index/views/index.html\"
 
 
 
-    common.dashboard = [
+    giscommon.dashboard = [
         {
             // onclick="window.location.href='/GIS-Front/test-panel/view/panel.html';"
             id: 'panel1',   // 面板编号
@@ -205,7 +178,7 @@ define(['jquery'],function () {
         }
     ];
 
-    common.indoorJson = {
+    giscommon.indoorJson = {
         "type": "FeatureCollection",
         "features": [
             {
@@ -549,5 +522,5 @@ define(['jquery'],function () {
 
 
 
-    return common;
+    return giscommon;
 });

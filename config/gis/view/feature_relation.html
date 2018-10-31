@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>要素配置</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
+
+    <!--<link rel="stylesheet" href="../../common/libs/nav/css/nav.css">-->
+    <link rel="stylesheet" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+
+    <!--本页-->
+    <link rel="stylesheet" href="../css/feature.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/leaflet.css">
+    <link rel="stylesheet" href="../../../common/lib/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../../common/lib/leaflet/lib/draw/Leaflet.Draw.css">
+    <link rel="stylesheet" href="../../../common/lib/layx/layx.css">
+
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/feature_relation"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content feature">
+            <div class="panel panel-default" style="height: 100%" id="pan">
+                <div class="panel-heading" id="pan-head">
+                    <h3 class="panel-title">要素配置</h3>
+                </div>
+                <div class="panel-body" id="pan-body" style="height:calc(100% - 30px)">
+                    <!--核心内容-->
+                    <div class="feature-center feature-border">
+                        <div class="left feature-border">
+                            <div class="left-on feature-border">
+                                <div class="tree-head">
+                                    <a id="category" href="#" onclick="return false;"><i class="fa fa-hand-o-up"></i>选择加载要素</a>
+                                    <a id="back-to-map" href="#" onclick="return false;"><i class="fa fa-backward"></i>返回区域地图</a>
+                                </div>
+                                <ul id="treeDemo" class="ztree"></ul>
+                            </div>
+
+                            <div id="feature-content" class="left-up">
+
+                                <h4>要素详情</h4>
+                                <!--已经配置的建筑点，从后端拿到的-->
+                                <table id="configFeature" class="table   form-hidden">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>要素名称</th>
+                                        <th>操作</th>
+                                        <th style="display: none">configID</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    </tbody>
+                                </table>
+
+                                <!--这个实际上代指的是oId，关联的组织id，后续名字的重新命名再进行修改-->
+                                <input type="text" style="display: none" id="oId">
+
+                                <input type="text" style="display: none" id="indoorLevelId">
+
+                                <table id="other" class="table   form-hidden">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>要素名称</th>
+                                        <th>是否已关联</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>其他1</td>
+                                        <td><span class="red">是</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>其他2</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td>其他3</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">4</th>
+                                        <td>其他4</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5</th>
+                                        <td>其他5</td>
+                                        <td><span class="red">是</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">6</th>
+                                        <td>其他6</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">7</th>
+                                        <td>其他7</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">8</th>
+                                        <td>其他8</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <table id="build" class="table   form-hidden">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>要素名称</th>
+                                        <th>是否关联</th>
+                                        <th>是否有内部结构</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>建筑1</td>
+                                        <td><span class="red">是</span></td>
+                                        <td><span class="red">是</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary" id="showBuild">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>建筑2</td>
+                                        <td><span class="black">否</span></td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td>建筑3</td>
+                                        <td><span class="black">否</span></td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">4</th>
+                                        <td>建筑4</td>
+                                        <td><span class="black">否</span></td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5</th>
+                                        <td>建筑5</td>
+                                        <td><span class="red">是</span></td>
+                                        <td><span class="red">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary" id="showNoBuild">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">6</th>
+                                        <td>建筑6</td>
+                                        <td><span class="black">否</span></td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">7</th>
+                                        <td>建筑7</td>
+                                        <td><span class="black">否</span></td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">8</th>
+                                        <td>建筑8</td>
+                                        <td><span class="black">否</span></td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-success btn1">关联</button>
+                                                <button type="button" class="btn btn-primary">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <table class="hidden">
+                                    <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th>要素名称</th>
+                                        <th>是否已关联</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>设备1</td>
+                                        <td><span class="red">是</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-default btn1">关联</button>
+                                                <button type="button" class="btn btn-default">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>设备2</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-default ">关联</button>
+                                                <button type="button" class="btn btn-default">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">3</th>
+                                        <td>设备3</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-default ">关联</button>
+                                                <button type="button" class="btn btn-default">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">4</th>
+                                        <td>设备4</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-default ">关联</button>
+                                                <button type="button" class="btn btn-default">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">5</th>
+                                        <td>设备5</td>
+                                        <td><span class="red">是</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-default btn2">关联</button>
+                                                <button type="button" class="btn btn-default">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">6</th>
+                                        <td>设备6</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-default ">关联</button>
+                                                <button type="button" class="btn btn-default">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">7</th>
+                                        <td>设备7</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-default ">关联</button>
+                                                <button type="button" class="btn btn-default">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">8</th>
+                                        <td>设备8</td>
+                                        <td><span class="black">否</span></td>
+                                        <td>
+                                            <div class="btn-group btn-group-xs" role="group" aria-label="...">
+                                                <button type="button" class="btn btn-default ">关联</button>
+                                                <button type="button" class="btn btn-default">查看</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <table class="table-bordered table" id="bt-table"></table>
+
+
+
+                            </div>
+
+
+                        </div>
+                        <div class="right feature-border" >
+                            <div class="map feature-border" id="map" style=""></div>
+                            <div class="map feature-border" id="img-map" style="display: none"></div>
+                            <div class="information feature-border">
+                                <!--位置关联，编辑数据-->
+                                <div class="container-fluid editTreeData form-hidden">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <h3 class="big-title">要素信息</h3>
+                                            </div>
+                                        </div>
+                                        <!--1.1要素名称-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素名称:</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" placeholder="要素名称" id="feature-name">
+                                                    <input type="text" class="form-control hidden" id="feature-resId">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--1.2要素类型-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素分类:</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" readonly="readonly" class="form-control" placeholder="所属分类" id="input-category">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <input type="text" readonly="readonly" class="form-control hidden" placeholder="所属分类" id="input-categoryTypeCode">
+                                                </div>
+                                                <!--用于判断是什么类型（点线面）的要素，从而在后端执行哪一种接口-->
+                                                <div style="display: none">
+                                                    <input type="text" readonly="readonly" class="form-control" id="flag-category">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-danger btn-magbtm" id="open-category-win">选择要素分类</button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+                                        <!--1.4要素图标-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素图标:</label>
+                                                <div class="col-sm-3">
+                                                    <input type="file" class="form-control" placeholder="要素图标" id="upload-img">
+                                                    <input type="text" id="uploadImgName" style="display: none">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-danger btn-magbtm" id="uploadImg">上传图片</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--1.5位置关联-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">位置关联:</label>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-danger btn-magbtm" id="setPosition">位置关联</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--1.3添加楼层-->
+                                        <div class="form-group form-hidden" id="add-building-btn">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">添加楼层:</label>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-danger btn-magbtm" id="add-building">添加楼层</button>
+                                                    <!--<span for="">星沙</span>-->
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--1.6坐标和缩放-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">地理信息:</label>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" placeholder="坐标范围" id="feature-coors">
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <input type="text" class="form-control" placeholder="缩放等级" id="feature-zoom" >
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title"></label>
+                                                <div class="col-sm-3">
+                                                    <button class="btn btn-primary btn-lg" id="submitConnection">提交关联</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--查看数据-->
+                                <div class="container-fluid showTreeData form-hidden">
+                                    <div class="row">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <h3 class="big-title">要素信息</h3>
+                                            </div>
+                                        </div>
+                                        <!--1.1要素名称-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素名称:</label>
+                                                <div class="col-sm-3">
+                                                    <span class="little-title" id="name"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--1.2要素类型-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">要素类型:</label>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="level1">
+                                                        <option value="none">请选择</option>
+                                                        <option value="feature-point">点要素</option>
+                                                        <option value="feature-line">线要素</option>
+                                                        <option value="feature-polygon">面要素</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <select class="form-control" id="level2">
+                                                        <option value="">请选择</option>
+                                                        <option value="">设备</option>
+                                                        <option value="">设备</option>
+                                                        <option value="">道路</option>
+                                                        <option value="">轨迹</option>
+                                                        <option value="">地图</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!--1.6坐标和缩放-->
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <label class="col-sm-2 col-sm-offset-2 little-title">坐标信息:</label>
+                                                <div class="col-sm-3">
+                                                    <span class="little-title" id="coors">90</span>
+                                                </div>
+                                                <div class="col-sm-3">
+                                                    <span class="little-title" id="zoom">90</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+</div>
+<!--楼层信息的弹窗-->
+<section style="display: none">
+    <div id="indoor">
+        <div class="container-fluid editTreeData">
+            <div class="row">
+                <!--1.1楼层信息-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 little-title">楼层信息:</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" placeholder="起始楼层" id="indoor-start">
+                        </div>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" placeholder="终止总数" id="indoor-total">
+                        </div>
+                    </div>
+                </div>
+
+                <!--1.2导入楼层地图-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <div class="col-sm-4 col-sm-offset-8">
+                            <a href="#" class="black-a" id="export-building"><i class="fa fa-hand-o-up"></i>添加楼层信息</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!--1.3自动生成的楼层表格-->
+                <div class="col-sm-10 col-sm-offset-1">
+                    <table class="table   table-striped" id="indoor-table">
+                        <thead>
+                        <tr>
+                            <th>楼层号</th>
+                            <th>楼层名称</th>
+                            <th>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--1.4一键上传按钮-->
+                <div class="form-group">
+                    <div class="col-sm-12">
+                        <label class="col-sm-4 little-title" >一键上传:</label>
+                        <div class="col-sm-3">
+                            <button class="btn btn-primary" id="upload-all-level-img">上传所有楼层图片</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!--1.5保存楼层信息和图片信息-->
+
+
+            </div>
+        </div>
+    </div>
+
+</section>
+
+<!--要素分类选择的弹窗-->
+<section style="display: none">
+    <div id="chooseCategory" class="category">
+        <div class="left feature-border" style="width: 100%">
+            <div class="tree-head">
+                <a id="chooseCategory-btn" href="#" onclick="return false;"><i class="fa fa-plus-circle"></i>确定选择</a>
+            </div>
+            <ul id="treeDemo2" class="ztree"></ul>
+        </div>
+
+    </div>
+</section>
+
+<section style="display: none">
+    <div id="category-win" class="category">
+        <div class="left feature-border" style="width: 100%">
+            <ul id="treeDemo3" class="ztree"></ul>
+
+            <button class="btn btn-danger" id="category-win-commit">选择分类</button>
+        </div>
+    </div>
+</section>
+</body>
+</html>

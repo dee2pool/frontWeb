@@ -105,7 +105,7 @@ define(["../../../common/js/service/LoginController"],function (loginservice) {
     function logOut(){
         $('#loginout').click(function () {
             loginservice.logout(function (data) {
-                window.location.href="../../login.html";
+                window.location.href="../../../config/login.html";
             })
         })
     }

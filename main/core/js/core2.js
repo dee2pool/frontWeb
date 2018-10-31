@@ -7,6 +7,10 @@ require.config({
         'bootstrap': {
             deps: ['jquery'],
         },
+        'common': {
+            deps: ['jquery'],
+            exports:'common'
+        },
         'contextmenu': {
             deps: ['leaflet'],
             exports: 'contextmenu'
@@ -83,7 +87,11 @@ require.config({
         },
         'ztree':{
             deps:['jquery'],
-            export:'ztree'
+            exports:'ztree'
+        },
+        'Test':{
+            deps:['jquery','common'],
+            exports:'Test'
         },
 
 
@@ -91,6 +99,7 @@ require.config({
     paths: {
         "jquery": "../../common/lib/jquery/jquery-3.3.1.min",
         //全局通用变量
+        //"common": "../../common/js/common",
         "common": "../../common/js/common",
         "gisutil": "../../common/js/util/gisutil",
         "bootstrap": "../../common/lib/bootstrap/js/bootstrap",
@@ -119,11 +128,15 @@ require.config({
         "topBar":"../../../common/component/head/js/topbar",
         "BetterWMS":"../../common/lib/leaflet-lib/BetterWMS/BetterWMS",
         "ztree":"../../common/lib/ztree/js/jquery.ztree.all.min",
+        "Test":"../../common/js/Test",
+        "deviceService":"../../common/js/DeviceInfoController",
+        "bluebird":"../../../common/lib/bluebird/bluebird.min",
+        "gbc":"../../../common/js/service/GBCatalogController"
 
     }
 });
-require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS','ztree'],
-    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree) {
+require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', 'gisutil', 'layer', 'draw', 'turf', 'zoomhome', 'jqueryPrint', 'minimap', 'search', 'providers', 'sui', 'device', 'layx', 'echarts', 'jqueryui', 'lobipanel', 'bootstrap-table', 'mock', 'indoor', 'snogylop','topBar','BetterWMS','ztree','bluebird','gbc'],
+    function ($, common, bootstrap, leaflet, contextmenu, history, gisutil, lay, draw, turf, zoomhome, jqueryPrint, minimap, search, providers, sui, device, layx, echarts, jqueryui, lobipanel, bootstrapTable, Mock, indoor, snogylop,topBar,BetterWMS,ztree,bluebird,gbc) {
 
         //加载公用头部导航栏标签
         //$("#head").html(common.head);
@@ -133,11 +146,13 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
         //全局通用地址
-        var host = common.host;
+        var host = common.geoserver;
         var end = common.end;
+        var serviceHost = common.host;
         //全局通用变量，用于所有的绘图图层
         var drawGroup = new L.FeatureGroup();
-        //3+2.5+2.5+2+8+8
+        //初始化设备信息查询的接口
+
         /**
          * 核心地图变量
          */
@@ -310,8 +325,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 skin: 'layui-layer-lan',
                 area: ['200px', '80px'],
                 offset: ['150px', '10px'],
-                //title: false, //不显示标题
-                //.layer-open-content
                 content: $('#history'),
             });
         });
@@ -320,12 +333,10 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         /**
          * 设备点相关
          */
-            //点测试图层
+        //点测试图层
         var xsLayerGroup = L.layerGroup();
-
         var pointOption = common.wmsDefaultOption;
         pointOption.typeName = 'cite:xspoint';
-
         $.getJSON(gisutil.splitWMSUrl(pointOption), function (json) {
             L.geoJSON(json, {
                 onEachFeature: addPoint,
@@ -404,12 +415,12 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         }
 
         //Search插件的加载，有了这个就不用在写WFS查询调用了，主要是json数据已经拿到了，没必要在去查了
-        var queryControl = new L.Control.Search({
-            layer: xsLayerGroup,
-            propertyName: 'name'
-            // collapsed:false
-        });
-        map.addControl(queryControl);
+        // var queryControl = new L.Control.Search({
+        //     layer: xsLayerGroup,
+        //     propertyName: 'name'
+        //     // collapsed:false
+        // });
+        // map.addControl(queryControl);
 
         /**
          * 添加设备相关
@@ -536,14 +547,11 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         function pointRangeSearch(latlngs) {
             //将画线区域显示出来，但是感觉没有必要
             //var range = L.rectangle(latlngs[0], {color: "#ff7800"}).addTo(map);
-
             //构建一个turf区域
             var turfLine = turf.lineString([[latlngs[0][0].lng, latlngs[0][0].lat], [latlngs[0][1].lng, latlngs[0][1].lat], [latlngs[0][2].lng, latlngs[0][2].lat], [latlngs[0][3].lng, latlngs[0][3].lat]]);
             var buffered = turf.lineToPolygon(turfLine);
-
             //将layergroup转换为geojson，方便处理
             var features = xsLayerGroup.toGeoJSON().features;
-
             //使用foreach对数据进行遍历
             features.forEach(function (value) {
                 //console.log(value.geometry);
@@ -559,23 +567,17 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     }).addTo(map);
                 }
             });
-
             //内存释放
             features = null;
             turfLine = null;
             buffered = null;
         }
-
-
-
         /**
          * 轨迹相关
          */
         var routeLayerGroup = L.layerGroup();
-        //routeLayerGroup.addTo(map);
         var routeOption = common.wmsDefaultOption;
         routeOption.typeName = 'cite:route';
-
         $.getJSON(gisutil.splitWMSUrl(routeOption), function (json) {
             L.geoJSON(json, {
                 onEachFeature: function (feature, layer) {
@@ -692,12 +694,9 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     markerGroup.addLayer(marker4);
                     markerGroup.addTo(buildMapTest);
                 });
-
                 indoor2.on("remove",function () {
                     buildMapTest.removeLayer(markerGroup);
                 });
-
-
                 buildMapTest.on("zoom", function (evt) {
                     //console.log(typeof  evt.target._animateToZoom);
                     if (evt.target._animateToZoom == 1) {
@@ -708,10 +707,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     }
                 });
             }
-
-
         });
-
         //用于专题图的测试行政区域
         var chinaWMS=L.tileLayer.betterWms('http://192.168.0.142:8060/geoserver/cite/wms', {
             layers: 'cite:chartmap',
@@ -725,7 +721,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 iconSize: [160, 160],
                 html: '<div id="marker' + 1 + '" style="width: 160px; height: 160px; position: relative; background-color: transparent;">asd</div>'
             })
-        }).addTo(map);
+        });
         //柱状图测试
         var chart = L.marker([28.238828360437484,113.08478097085977], {
             icon: L.divIcon({
@@ -733,7 +729,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                 iconSize: [160, 160],
                 html: '<div id="marker' + 2 + '" style="width: 160px; height: 160px; position: relative; background-color: transparent;">asd</div>'
             })
-        }).addTo(map);
+        });
 
         //GIS配置-要素关联 配置的要素
         //http://localhost:8060/geoserver/cite/wms?service=WMS&version=1.1.0&request=GetMap&layers=cite:feature&styles=&bbox=-180.0,-90.0,180.0,90.0&width=768&height=384&srs=EPSG:4326&format=application/openlayers
@@ -744,223 +740,17 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         });
 
         /**
-         * 异步方式 加载要素关联的要素 主要是通过后台查找来完成
+         * 异步方式数据控制器使用 加载要素关联的要素 主要是通过后台查找来完成
+         * 数据控制器的树来调用
          */
         //异步点的加载
-        var featurePointGroup = L.layerGroup();
-        $.ajax({
-            url:end+'/feature/listPolygon',
-            type:'GET',
-            contentType:"application/json",
-            data:{
-                "feature_id":"feature-point"
-            },
-            cache:false,
-            success:function (data) {
-                //console.log(data);
-                for(var i=0;i<data.length;i++){
-                    var temp = data[i];
-
-                    var Icon = L.icon({
-                        iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
-                    });
-                    var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{icon: Icon});
-                    var configId = temp.configId;
-                    //如果存在室内点，那么触发相应的室内楼层事件
-                    if(temp.hasIndoor == true){
-                        marker.on("dblclick",function () {
-                            //查询相应的所属的楼层图片
-                            //console.log(true);
-                            var buildMapTest = null;
-                            buildMapTest = L.map('img-map', {
-                                minZoom: 0,
-                                maxZoom: 4,
-                                center: [0, 0],
-                                zoom: 4,
-                                crs: L.CRS.Simple
-                            });
-                            // 隐藏map，显示img-map
-                            $("#map").css('display', 'none');
-                            $("#img-map").css('display', 'block');
-
-                            var w = 1024,
-                                h = 650;
-                            //url = imageUrl;
-                            var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
-                            var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
-                            var bounds = new L.LatLngBounds(southWest, northEast);
-
-
-
-                            //切换事件，当不同的layer添加到图上
-                            buildMapTest.on("layeradd",function (layer) {
-                                var bounds = layer.layer._bounds;
-
-                                //如果是undefined，说明添加进来的是点要素，那么什么也不做
-                                //只有添加面要素的时候，才调用后台接口进行加点的操作
-                                if(bounds === undefined){
-
-                                }else{
-                                    var url = layer.layer._url;
-                                    url = url.split("/");
-                                    var imgId = url[url.length-1];
-
-                                    //当面要素切换的时候，清除所有的marker
-                                    buildMapTest.eachLayer(function(layer){
-                                        console.log(layer);
-                                        //对layer的类型进行判断，如果是marker，那么直接进行remove操作
-                                        //仍然通过bound来判断，如果bound是undefined，那么说明是点layer，则将此layer进行清除操作；
-                                        if(layer._bounds === undefined){
-                                            buildMapTest.removeLayer(layer);
-                                        }
-
-                                    });
-
-                                    $.ajax({
-                                        type: "GET",           //因为是传输文件，所以必须是post
-                                        url: end+'/feature/listIndoorPointByImgId',         //对应的后台处理类的地址
-                                        data: {
-                                            imgId:imgId
-                                        },
-                                        contentType:"application/json",
-                                        cache:false,
-                                        success: function (data) {
-                                            if(data.length != 0){
-                                                for(var i=0;i<data.length;i++){
-                                                    L.marker([data[i].geo.coordinates[1], data[i].geo.coordinates[0]]).addTo(buildMapTest);
-                                                }
-
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-
-
-
-
-                            var indoorGroup = new L.FeatureGroup();
-                            //异步加载楼层内部的图片
-                            $.ajax({
-                                url:end+'/feature/listIndoorByConfigId',
-                                type:'GET',
-                                contentType:"application/json",
-                                data:{
-                                    "configId":configId
-                                },
-                                cache:false,
-                                success:function (data) {
-                                    /**
-                                     * 图层控制器
-                                     */
-                                    var baseMap = new Object();
-                                    for(var i=0;i<data.length;i++){
-                                        //console.log(data[i]);
-                                        var num = data[i].indoorNum;
-                                        var level = L.imageOverlay("../../common/asset/img/upload/"+data[i].indoorImg, bounds);
-                                        if(i === 0){
-                                            level.addTo(buildMapTest);
-                                        }
-                                        baseMap[num]=level;
-                                    }
-                                    var overlayMaps = {};
-                                    //设置图层控制器
-                                    var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
-                                },
-                                error:function () {
-                                    //console.log(0)
-                                }
-                            });
-                            console.log(indoorGroup);
-
-
-
-                            buildMapTest.on("zoom", function (evt) {
-                                //console.log(typeof  evt.target._animateToZoom);
-                                if (evt.target._animateToZoom == 1) {
-                                    $("#map").css('display', 'block');
-                                    $(".img-map").css('display', 'none');
-                                    buildMapTest.remove();
-                                    buildMapTest = null;
-                                }
-                            });
-                        });
-                    }
-                    else{
-
-                    }
-                    featurePointGroup.addLayer(marker);
-                }
-            },
-            error:function () {
-                console.log(0)
-            }
-        });
+        //var featurePointGroup = L.layerGroup();
         //异步线的加载
-        var featureLineGroup = L.layerGroup();
-        $.ajax({
-            url:end+'/feature/listPolygon',
-            type:'GET',
-            contentType:"application/json",
-            data:{
-                "feature_id":"feature-line"
-            },
-            cache:false,
-            success:function (data) {
-                //console.log(data);
-                for(var i=0;i<data.length;i++){
-                    var temp = data[i];
-                    //console.log(temp);
-
-                    var latlngs = [];
-                    for(var j=0;j<temp.geo.coordinates.length;j++){
-                        var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
-                        latlngs.push(array);
-                    };
-
-                    var polyline = L.polyline(latlngs, {color: 'black'});
-                    featureLineGroup.addLayer(polyline);
-                }
-            },
-            error:function () {
-                //console.log(0)
-            }
-        });
-
+        //var featureLineGroup = L.layerGroup();
         //异步面的加载
-        var featurePolygonGroup = L.layerGroup();
-        $.ajax({
-            url:end+'/feature/listPolygon',
-            type:'GET',
-            contentType:"application/json",
-            data:{
-                "feature_id":"feature-polygon"
-            },
-            cache:false,
-            success:function (data) {
-                //console.log(data);
-                for(var i=0;i<data.length;i++){
-                    var temp = data[i];
-                    console.log(temp);
+        //var featurePolygonGroup = L.layerGroup();
 
-                    var imageUrl = "../../common/asset/img/upload/"+temp.imgPolygon,
-                        imageBounds = [[temp.geo.coordinates[0][0][1], temp.geo.coordinates[0][0][0]], [[temp.geo.coordinates[0][2][1], temp.geo.coordinates[0][2][0]]]];
-                    var overlay = L.imageOverlay(imageUrl, imageBounds);
-
-                    // var latlngs = [];
-                    // for(var j=0;j<temp.geo.coordinates.length;j++){
-                    //     var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
-                    //     latlngs.push(array);
-                    // };
-                    //
-                    // var polyline = L.polyline(latlngs, {color: 'black'});
-                    featurePolygonGroup.addLayer(overlay);
-                }
-            },
-            error:function () {
-                //console.log(0)
-            }
-        });
+        //异步查询后，进行回调处理
 
         /**
          * 图层控制器
@@ -970,9 +760,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         };
         var overlayMaps = {
             "轨迹": routeLayerGroup,
-            "要素点":featurePointGroup,
-            "要素线":featureLineGroup,
-            "要素面":featurePolygonGroup,
             "设备点": xsLayerGroup,
             "建筑": build,
             "行政区":chinaWMS,
@@ -1451,13 +1238,43 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             lay.open({
                 type: 1,
                 shade: false,
-                title: '<i class="fa fa-tasks"></i>&nbsp图层选择',
+                title: '<i class="fa fa-reorder"></i>&nbsp图层选择',
                 skin: 'layui-layer-lan',
                 //area: ['280px', '250px'],
                 offset: ['150px', '10px'],
                 //title: false, //不显示标题
                 //.layer-open-content
                 content: $('#layerControlContainer'),
+            });
+        });
+
+        //全新的底图控制器
+        $("#topbar-controlBase").on("click", function () {
+            lay.open({
+                type: 1,
+                shade: false,
+                title: '<i class="fa fa-tasks"></i>&nbsp底图控制',
+                skin: 'layui-layer-lan',
+                //area: ['280px', '250px'],
+                offset: ['150px', '10px'],
+                //title: false, //不显示标题
+                //.layer-open-content
+                content: $('#layerControlContainerBase'),
+            });
+        });
+
+        //全新的数据控制器
+        $("#topbar-controlData").on("click", function () {
+            lay.open({
+                type: 1,
+                shade: false,
+                title: '<i class="fa fa-tasks"></i>&nbsp数据控制',
+                skin: 'layui-layer-lan',
+                //area: ['280px', '250px'],
+                offset: ['150px', '10px'],
+                //title: false, //不显示标题
+                //.layer-open-content
+                content: $('#layerControlContainerData'),
             });
         });
 
@@ -1762,7 +1579,407 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
          */
 
 
+        /**
+         * start 视频预览的配置
+         */
+        var videourl = "https://192.168.0.144:8080";
+        var userName="tqd1";
+        var password="C5EDB9E07FC689D5B894BDBD4DE4EC75";
+        var userNameStr=userName;
+        var passwordStr=password;
+        var captchaIdStr=undefined;
+        var captchaStr=undefined;
+        var requestUrl=videourl+"/auth/login";
+        $.ajax({
+            url:requestUrl,
+            type:'Post',
+            data:{
+                userName:userNameStr,
+                password:passwordStr,
+                captchaId:captchaIdStr,
+                captcha:captchaStr,
+            },
+            cache:false,
+            success:function (resp) {
+                if(resp.result != true){
+                    lay.msg('视频服务登陆失败，请刷新重试！');
+                }
+            }
+        });
 
+        /**
+         *
+         */
+        $(function () {
+            var nativeWinService=new NativeWinService("http://localhost:61111/cms");
+            // function authToken(onSuccess){
+            //     $.ajax({
+            //         url:videourl+"/auth/token/temp",
+            //         type:'Get',
+            //         data:{
+            //         },
+            //         cache:false,
+            //         success:onSuccess
+            //     })
+            // };
+            // function runAsync(){
+            //     var p = new bluebird.Promise(function(resolve, reject){
+            //         authToken(function (data) {
+            //             if(data.result){
+            //                 resolve(data);
+            //             }
+            //
+            //         })
+            //     });
+            //     return p;
+            // };
+            // runAsync().then(function(resp){
+            //     if(resp.result != true){
+            //         lay.msg('视频服务token获取失败，请刷新重试！');
+            //     }
+            // });
+            function video() {
+                var nativeWinService=new NativeWinService("http://localhost:61111/cms");
+                $.when(
+                    $.ajax({
+                        url:videourl+"/auth/token/temp",
+                        type:'Get',
+                        data:{
+                        },
+                        cache:false,
+                    })
+                ).done(function (resp) {
+                    var token=resp.data;
+                    var serverUrl=videourl;
+                    nativeWinService.openSession(token,serverUrl);
+                }).then(function (resp) {
+                    //这里存在着一个异步的问题，必须要按照顺序依次执行下面的方法，才能正确调出视频，为了保证不受异步干扰，所以增加了延迟方法
+                    setTimeout(function(){
+                        nativeWinService.createWindow(1,"test",100,100,400,300);
+                    },500);
+                    setTimeout(function(){
+                        nativeWinService.getWindowList();
+                    },2000);
+                    setTimeout(function(){
+                        nativeWinService.preview(winId);
+                    },3000);
+                });
+            }
+
+            $("#video-win").on("click",function () {
+                video();
+            });
+
+        });
+
+        //本地窗口管理模块
+        function NativeWinService(url){
+            var requestUrl=url;
+            /**
+             * 发送操作命令到窗口管理服务
+             * @param {命令} cmd
+             * @param {成功回调函数} onSuccess
+             * @param {失败回调函数} onError
+             */
+            function sendCommand(cmd,onSuccess,onError){
+                var json=JSON.stringify(cmd);
+                $.ajax({
+                    url:requestUrl,
+                    type:'POST',
+                    dataType:"json",
+                    data:json,
+                    cache:false,
+                    success:onSuccess,
+                    error:onError
+                });
+            }
+            //用于保存已经打开的会话,已经基于此会话创建的窗口的信息
+            var object={
+                sessionId:undefined,//会话Id
+                windows:{}//已打开的窗口集合
+            };
+            /**
+             * 创建会话
+             * @param token 临时访问凭据 通过调用LoginController.getTempToken获得
+             * @param serviceUrl 后台服务器地址
+             */
+            object.openSession=function(token,serviceUrl){
+                var createCommand={
+                    "jsonType":"Request",
+                    "requestType":"NewSession",
+                    "data":{
+                        "url":serviceUrl,
+                        "token":token
+                    }
+                };
+                sendCommand(createCommand,function(resp){
+                    if(resp.result==1){
+                        object.sessionId=resp.data.sessionID;
+                    }else{
+                        lay.msg("创建session失败");
+                    }
+                },function(e){});
+            };
+            /**
+             * 注销本次会话,调用此接口,所有已打开窗口都将会关闭
+             */
+            object.closeSession=function(){
+                var closeCmd={
+                    "jsonType": "Request",
+                    "requestType":"CloseSession",
+                    "data":	{
+                        "sessionID":this.sessionId
+                    }
+                };
+                sendCommand(closeCmd,function(resp){
+                    if(resp.result==1){
+                        object.sessionId=undefined;
+                        object.windows={};
+                    }
+                },function(e){});
+            };
+            /**
+             * 创建窗口
+             * @param winType 窗口类型,取值为1,2;1表示视频预览窗口；2表示平台管理窗口
+             * @param title 窗口标题
+             * @param x 窗口位置,横坐标 x
+             * @param y 窗口位置,纵坐标 y
+             * @param width 窗口宽度
+             * @param height 窗口高度
+             */
+            object.createWindow=function(winType,title,x,y,width,height){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"NewWindow",
+                    "data": {
+                        "sessionID":sessionId,
+                        "type":winType,      //1—预览窗口；2—平台
+                        "title": title,
+                        "xPos":x,
+                        "yPos":y,
+                        "width":width,
+                        "height":height
+                    }
+                };
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+                        var winId=resp.data.windowID;
+                        object.windows[winId]={
+                            id:winId,
+                            type:winType,
+                            title: title,
+                            x:x,
+                            y:y,
+                            width:width,
+                            height:height
+                        }
+                    }else{
+                        lay.msg('窗口初始化失败，请刷新后重试！');
+                    }
+                },function(e){});
+
+            };
+            /**
+             * 设置指定窗口的属性
+             * @param winId 指定窗口的属性
+             * @param title 设置后窗口的标题
+             * @param x 设置后窗口的位置横坐标 x
+             * @param y 设置后窗口的位置纵坐标 y
+             * @param width 设置后窗口的宽度
+             * @param height 设置后窗口的高度
+             */
+            object.setWindow=function(winId,title,x,y,width,height){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"PosWindow",
+                    "data": {
+                        "sessionID":sessionId,
+                        "windowID":winId,
+                        "title": title,
+                        "xPos":x,
+                        "yPos":y,
+                        "width":width,
+                        "height":height
+                    }
+                };
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+                        object.windows[winId].title=title;
+                        object.windows[winId].x=x;
+                        object.windows[winId].y=y;
+                        object.windows[winId].width=width;
+                        object.windows[winId].height=height;
+                    }else{
+                        console.log("set win["+title+"] position fail")
+                    }
+                },function(e){});
+            };
+            /**
+             * 关闭指定窗口
+             * @param winId 待关闭窗口的Id
+             */
+            object.closeWindow=function(winId){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"CloseWindow",
+                    "data": {
+                        "sessionID":sessionId,
+                        "windowID":winId
+                    }
+                };
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+                        delete object.windows[winId]
+                    }
+                },function(e){});
+
+            }
+            /**
+             * 将指定窗口最大化
+             * @param winId 待最大化窗口的Id
+             */
+            object.maximumWin=function(winId){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"CtrlWindow",
+                    "data": {
+                        "sessionID": sessionId,
+                        "windowID": winId,
+                        "maxWin": 1
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+
+                    }
+                },function(e){});
+            }
+            /**
+             * 将指定窗口最小化
+             * @param winId 待最小化窗口的Id
+             */
+            object.minimumWin=function(winId){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"CtrlWindow",
+                    "data": {
+                        "sessionID": sessionId,
+                        "windowID": winId,
+                        "maxWin":2
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+
+                    }
+                },function(e){});
+            }
+            /**
+             * 将指定窗口恢复到前一个位置,一般用于窗口最小化后,恢复到原来位置
+             * @param winId 待恢复到原来位置窗口的Id
+             */
+            object.restoreWin=function(winId){
+                var sessionId=this.sessionId;
+                var cmd={
+                    "jsonType": "Request",
+                    "requestType":"CtrlWindow",
+                    "data": {
+                        "sessionID": sessionId,
+                        "windowID": winId,
+                        "maxWin":0
+                    }
+                }
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+
+                    }
+                },function(e){});
+            }
+            /**
+             * 在视频预览类型的窗口上,开始视频预览,目前此函数将设备信息已经写死了,
+             */
+            object.preview=function(winId,temp){
+                var sessionId=this.sessionId;
+                var cmd = null;
+                if(temp === undefined || temp === null){
+                    cmd = {
+                        "jsonType": "Request",
+                        "requestType":"RLVideoWin",
+                        "data": {
+                            //旧设备
+                            // "sessionID":sessionId,
+                            // "windowID":winId,
+                            // "serverIP": "192.168.0.141",
+                            //
+                            // "localIP": "192.168.0.239",
+                            // "localPort": 5065,
+                            //
+                            // "serverID":"43010400002000000001",
+                            // "serverRealm":"4301040000",
+                            // "serverUserName":"43010400004000000001",
+                            // "serverUserPwd":"12345678",
+                            // "Port": 9060,
+                            // //
+                            // "DevID":"43000000001320000004"
+
+                            // //新设备
+                            "sessionID":sessionId,
+                            "windowID":winId,
+                            "serverIP": "192.168.0.142",
+                            "serverID":"43000000002000000001",
+
+                            "serverRealm":"4301040000",
+                            "serverUserName":"43010400004000000001",
+                            "serverUserPwd":"12345678",
+                            "Port": 9060,
+                            "DevID":"11020000001320000002"
+                        }
+                    }
+                }else{
+                    cmd = {
+                        "jsonType": "Request",
+                        "requestType":"RLVideoWin",
+                        "data": {
+                            // //新设备
+                            "sessionID":sessionId,
+                            "windowID":winId,
+                            "serverIP": temp.serverIP,
+                            "serverID":temp.serverID,
+
+                            "serverRealm":temp.serverRealm,
+                            "serverUserName":"43010400004000000001",
+                            "serverUserPwd":"12345678",
+                            "Port": temp.Port,
+                            "DevID":temp.DevID
+                        }
+                }};
+                sendCommand(cmd,function(resp){
+                    if(resp.result==1){
+
+                    }
+                },function(e){});
+
+            }
+            /**
+             * 获取已经打开的窗口的列表
+             */
+            object.getWindowList=function(){
+                var winIds=[];
+                for(winId in object.windows){
+                    winIds.push(object.windows[winId]);
+                }
+                return winIds;
+            }
+            return object;
+        }
+        /**
+         * end 视频预览的配置
+         */
 
 
 
@@ -1893,14 +2110,14 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             mapBarActive();
             //样式存在问题，所以地图导航条延后加载
             $(".map-top").css("display","block");
-
             rightChange();
             //char1();
+            //右侧导航按钮切换
             mapRestList();
+            //返回导航按钮
             back();
-
-            //给main高度
-
+            //空间查询中，选择不同的查询方式，显示对应的窗口
+            querySelectChange()
         });
 
         /**
@@ -1909,7 +2126,6 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
         function initHeight() {
             var height = $("body").height() - 60 + 'px !important';
             $("#core").css('cssText',height);
-            console.log(height);
         }
 
         /**
@@ -1942,19 +2158,43 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
             })
         }
 
-        //服务点击查询
+        //快捷导航中的点击按钮事件
         function mapRestList(){
-            $(".map-work>ul>li").click(function(){
+            //空间查询切换
+            $("#right-nav-query").on("click",function () {
                 $(".map-work>ul").hide();
-                $(".map-reslist").show();
-            })
-        }
+                $("#right-nav-panel-query").show();
+            });
+        };
+
+
         //服务点击 查询结果返回
         function back(){
             $("#back").on("click",function(){
                 $(".map-work>ul").show();
                 $(".map-reslist").hide();
             })
+        }
+
+        function querySelectChange() {
+            $("#right-nav-panel-querySelect").bind("change",function (obj) {
+                //先把全部的li隐藏，然后再分别显示
+                //right-nav-panel-wordQuery
+                //right-nav-panel-radiusQuery
+                //right-nav-panel-rangeQuery
+                $("#right-nav-panel-wordQuery").css("display","none");
+                $("#right-nav-panel-radiusQuery").css("display","none");
+                $("#right-nav-panel-rangeQuery").css("display","none");
+                var flag = obj.target.value;
+                if(flag === 'word'){
+                    $("#right-nav-panel-wordQuery").css("display","block");
+                }else if(flag === 'range'){
+                    $("#right-nav-panel-rangeQuery").css("display","block");
+                }else{
+                    $("#right-nav-panel-radiusQuery").css("display","block");
+                }
+
+            });
         }
 
         //统计分析图
@@ -2021,152 +2261,1255 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
 
 
 
-
-        // 右侧的树加载
-        var setting = {
-            view: {
-                dblClickExpand: false
-            },
+        //start 底图控制器的树
+        var baseLayserSetting = {
             check: {
-                enable: false
+                enable: true,
+                chkStyle: "radio",
+                radioType: "level"
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            }
+        };
+        var baseLayserZNodes =[
+            //底图数据分类
+            { id:'basemap', pId:0,nocheck:true, name:"底图数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
+            { id:'tdt',pId:'basemap',  name:"天地图",  icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'bd', pId:'basemap',  name:"百度地图",icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'gd', pId:'basemap',  name:"高德地图",icon:"../asset/img/ztree/layers-icon.png"},
+        ];
+        //start 底图控制器的树
+
+
+
+        //start 数据控制器树
+        var dataLayserSetting = {
+            check: {
+                enable: true
+            },
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                onCheck: dataLayerTreeOnCheck
+            }
+        };
+        /**
+         * 设置一个缓存数组，当节点处于check状态时，layergroup被放入数组中作为缓存使用；
+         * 当节点处于取消check状态时，根据节点id去从缓存数组中找layergroup，并且把相应的layergroup从地图中移除；
+         */
+        var dataLayertemp = {};
+
+        function dataLayerTreeOnCheck(event, treeId, treeNode) {
+            //首先获取当前节点信息，并且
+            if(treeNode.id === 's_point'){
+                if(dataLayertemp[treeNode.id] === undefined){
+                    var featurePointGroup = L.layerGroup();
+                }else{
+                    featurePointGroup = dataLayertemp[treeNode.id];
+                }
+               // var featurePointGroup = L.layerGroup();
+                if(treeNode.checked === true){
+                    var res = $.when(
+                        $.ajax({
+                            url:end+'/feature/listPolygon',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:{
+                                "feature_id":"feature-point"
+                            },
+                            cache:false,
+                            success:function (data) {
+                            },
+                            error:function () {
+                            }
+                        }));
+                    res.done(function (r1) {
+                        function serviceDataPoint(data) {
+                            for(var i=0;i<data.length;i++){
+                                var temp = data[i];
+
+                                var Icon = L.icon({
+                                    iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
+                                    iconAnchor: [20, 20],
+                                    iconSize: [40, 40]
+                                });
+
+                                var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{
+                                    icon: Icon,
+                                    //在这里attribution仅作为缓存变量来使用
+                                    attribution:temp.resourceCode
+                                });
+
+
+                                var configId = temp.configId;
+                                // marker.on("click",function () {
+                                //     console.log(marker.getLatLng());
+                                //     $("#device-info-name").val("");
+                                //     $("#device-info-desc").val("");
+                                //     $("#device-info-coors").val("");
+                                //
+                                //     var id = temp.resourceCode;
+                                //
+                                //     //console.log(id);
+                                //
+                                //     //异步
+                                //     var requestUrl=common.host+"/mgc"+"/deviceInfoService/getDeviceById";
+                                //     var info = $.when(
+                                //         $.ajax({
+                                //             url:requestUrl,
+                                //             type:'GET',
+                                //             data:{
+                                //                 id:id
+                                //             },
+                                //             cache:false,
+                                //         })
+                                //     );
+                                //
+                                //     info.done(function (r1) {
+                                //         layx.group('group-nomerge', [
+                                //             {
+                                //                 id: 'device-info',
+                                //                 title: '设备信息',
+                                //                 content: '<div class="layx-div"><h3>设备信息</h3>\n' +
+                                //                 '        <div class="input-group">\n' +
+                                //                 '            <span class="input-group-addon">设备名称</span>\n' +
+                                //                 '            <input id="device-info-name" type="text" class="form-control" value=" ' +r1.data[0].deviceName+ ' " name="device-name" readonly>\n' +
+                                //                 '        </div>\n' +
+                                //                 '        <br>\n' +
+                                //                 '        <div class="input-group">\n' +
+                                //                 '            <span class="input-group-addon">坐标信息</span>\n' +
+                                //                 '            <input id="device-info-coors" type="text" class="form-control" value=" ' + " " + ' " name="device-coors" readonly>\n' +
+                                //                 '        </div>\n' +
+                                //                 '        <br>\n' +
+                                //                 '        <div class="input-group">\n' +
+                                //                 '            <span class="input-group-addon">设备类型</span>\n' +
+                                //                 '            <select class="form-control" id="device-info-type" readonly>\n' +
+                                //                 '                <option>A</option>\n' +
+                                //                 '                <option>B</option>\n' +
+                                //                 '                <option>C</option>\n' +
+                                //                 '                <option>D</option>\n' +
+                                //                 '            </select>\n' +
+                                //                 '        </div>\n' +
+                                //                 '        <br>\n' +
+                                //                 '        <div class="input-group">\n' +
+                                //                 '            <span class="input-group-addon">设备描述</span>\n' +
+                                //                 '            <input id="device-info-desc" type="text" class="form-control" name="device-desc" readonly>\n' +
+                                //                 '        </div> </div>',
+                                //                 //cloneElementContent:false,
+                                //             },
+                                //             {
+                                //                 id: 'device-current',
+                                //                 title: '实时监测',
+                                //                 content: document.getElementById('device-chart'),
+                                //                 cloneElementContent: false,
+                                //             },
+                                //             {
+                                //                 id: 'device-history',
+                                //                 title: '历史记录',
+                                //                 content: document.getElementById('device-history'),
+                                //                 cloneElementContent: false,
+                                //             }
+                                //         ], 0, {
+                                //             id: 'info',
+                                //             mergeTitle: false,
+                                //             title: '设备详情',
+                                //         });
+                                //     });
+                                //
+                                //
+                                //
+                                //     // $("#device-info-name").val(feature.properties.name);
+                                //     // $("#device-info-desc").val("");
+                                //     // $("#device-info-coors").val(feature.geometry.coordinates);
+                                // });
+                                featurePointGroup.addLayer(marker);
+                                //如果存在室内点，那么触发相应的室内楼层事件
+                                if(temp.hasIndoor == true){
+                                    marker.on("dblclick",function () {
+                                        //查询相应的所属的楼层图片
+                                        //console.log(true);
+                                        var buildMapTest = null;
+                                        buildMapTest = L.map('img-map', {
+                                            minZoom: 0,
+                                            maxZoom: 4,
+                                            center: [0, 0],
+                                            zoom: 4,
+                                            crs: L.CRS.Simple
+                                        });
+                                        // 隐藏map，显示img-map
+                                        $("#map").css('display', 'none');
+                                        $("#img-map").css('display', 'block');
+
+                                        var w = 1024,
+                                            h = 650;
+                                        //url = imageUrl;
+                                        var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                                        var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                                        var bounds = new L.LatLngBounds(southWest, northEast);
+
+                                        //切换事件，当不同的layer添加到图上，查询当前图层的设备点并且进行加载
+                                        buildMapTest.on("layeradd",function (layer) {
+                                            var bounds = layer.layer._bounds;
+                                            //如果是undefined，说明添加进来的是点要素，那么什么也不做
+                                            //只有添加面要素的时候，才调用后台接口进行加点的操作
+                                            if(bounds === undefined){
+                                            }else{
+                                                var url = layer.layer._url;
+                                                url = url.split("/");
+                                                var imgId = url[url.length-1];
+                                                //当面要素切换的时候，清除所有的marker
+                                                buildMapTest.eachLayer(function(layer){
+                                                    console.log(layer);
+                                                    //对layer的类型进行判断，如果是marker，那么直接进行remove操作
+                                                    //仍然通过bound来判断，如果bound是undefined，那么说明是点layer，则将此layer进行清除操作；
+                                                    if(layer._bounds === undefined){
+                                                        buildMapTest.removeLayer(layer);
+                                                    }
+
+                                                });
+                                                $.ajax({
+                                                    type: "GET",           //因为是传输文件，所以必须是post
+                                                    url: end+'/feature/listIndoorPointByImgId',         //对应的后台处理类的地址
+                                                    data: {
+                                                        imgId:imgId
+                                                    },
+                                                    contentType:"application/json",
+                                                    cache:false,
+                                                    success: function (data) {
+                                                        if(data.length != 0){
+                                                            for(var i=0;i<data.length;i++){
+                                                                L.marker([data[i].geo.coordinates[1], data[i].geo.coordinates[0]]).addTo(buildMapTest);
+                                                            }
+
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                                        var indoorGroup = new L.FeatureGroup();
+                                        //异步加载楼层内部的图片
+                                        $.ajax({
+                                            url:end+'/feature/listIndoorByConfigId',
+                                            type:'GET',
+                                            contentType:"application/json",
+                                            data:{
+                                                "configId":configId
+                                            },
+                                            cache:false,
+                                            success:function (data) {
+                                                /**
+                                                 * 图层控制器
+                                                 */
+                                                var baseMap = new Object();
+                                                for(var i=0;i<data.length;i++){
+                                                    //console.log(data[i]);
+                                                    var num = data[i].indoorNum;
+                                                    var level = L.imageOverlay("../../common/asset/img/upload/"+data[i].indoorImg, bounds);
+                                                    if(i === 0){
+                                                        level.addTo(buildMapTest);
+                                                    }
+                                                    baseMap[num]=level;
+                                                }
+                                                var overlayMaps = {};
+                                                //设置图层控制器
+                                                var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+                                            },
+                                            error:function () {
+                                                //console.log(0)
+                                            }
+                                        });
+                                        console.log(indoorGroup);
+
+                                        buildMapTest.on("zoom", function (evt) {
+                                            //console.log(typeof  evt.target._animateToZoom);
+                                            if (evt.target._animateToZoom == 1) {
+                                                $("#map").css('display', 'block');
+                                                $(".img-map").css('display', 'none');
+                                                buildMapTest.remove();
+                                                buildMapTest = null;
+                                            }
+                                        });
+                                    });
+                                }
+                                else{
+                                }
+
+
+                            }
+                        };
+                         serviceDataPoint(r1);
+                         dataLayertemp[treeNode.id] = featurePointGroup;
+                    });
+                    res.then(function () {
+                        featurePointGroup.eachLayer(function (layer) {
+                            layer.on("click",function () {
+                                $("#device-info-name").val("");
+                                $("#device-info-desc").val("");
+                                $("#device-info-coors").val("");
+                                var id = layer.getAttribution();
+                                console.log(id);
+                                //异步
+                                var requestUrl=common.host+"/mgc"+"/deviceInfoService/getDeviceById";
+                                var info = $.when(
+                                    $.ajax({
+                                        url:requestUrl,
+                                        type:'GET',
+                                        data:{
+                                            id:id
+                                        },
+                                        cache:false,
+                                    })
+                                );
+
+                                info.done(function (r1) {
+                                    //console.log(r1);
+                                    $(document).on('click','#showVideo',function(){
+
+                                    });
+                                    layx.group('group-nomerge', [
+                                        {
+                                            id: 'device-info',
+                                            title: '设备信息',
+                                            content: '<div class="layx-div"><h3>设备信息</h3>\n' +
+                                            '        <div class="input-group">\n' +
+                                            '            <span class="input-group-addon">设备名称</span>\n' +
+                                            '            <input id="device-info-name" type="text" class="form-control" value=" ' +r1.data[0].deviceName+ ' " name="device-name" readonly>\n' +
+                                            '        </div>\n' +
+                                            '        <br>\n' +
+                                            '        <div class="input-group">\n' +
+                                            '            <span class="input-group-addon">视频查看</span>\n' +
+                                            '            <button id="showVideo" type="button">查看视频</button>\n' +
+                                            '        </div> ' +
+                                            '</div>',
+                                            //cloneElementContent:false,
+                                        },
+                                        {
+                                            id: 'device-current',
+                                            title: '实时监测',
+                                            content: document.getElementById('device-chart'),
+                                            cloneElementContent: false,
+                                        },
+                                        {
+                                            id: 'device-history',
+                                            title: '历史记录',
+                                            content: document.getElementById('device-history'),
+                                            cloneElementContent: false,
+                                        }
+                                    ], 0, {
+                                        id: 'info',
+                                        mergeTitle: false,
+                                        title: '设备详情',
+                                    });
+                                });
+
+
+
+                                // $("#device-info-name").val(feature.properties.name);
+                                // $("#device-info-desc").val("");
+                                // $("#device-info-coors").val(feature.geometry.coordinates);
+                            });
+                        });
+                        map.addLayer(featurePointGroup);
+                    });
+                }
+                else{
+                    map.removeLayer(featurePointGroup);
+                    dataLayertemp[treeNode.id] = undefined;
+                }
             }
 
+            if(treeNode.id === 's_line'){
+                if(dataLayertemp[treeNode.id] === undefined){
+                    var featureLineGroup = L.layerGroup();
+                }else{
+                    featureLineGroup = dataLayertemp[treeNode.id];
+                }
+                if(treeNode.checked === true){
+                    var res = $.when(
+                        $.ajax({
+                            url:end+'/feature/listPolygon',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:{
+                                "feature_id":"feature-line"
+                            },
+                            cache:false,
+                            success:function (data) {
+                            },
+                            error:function () {
+                            }
+                        }));
+                    res.done(function (r1) {
+                        //console.log(r1);
+                        function serviceDataLine(data,featureLineGroup) {
+                            //console.log(data);
+                            for(var i=0;i<data.length;i++){
+                                var temp = data[i];
+                                //console.log(temp);
+
+                                var latlngs = [];
+                                for(var j=0;j<temp.geo.coordinates.length;j++){
+                                    var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
+                                    latlngs.push(array);
+                                };
+
+                                var polyline = L.polyline(latlngs, {color: 'black'});
+                                featureLineGroup.addLayer(polyline);
+                            }
+                        };
+                        serviceDataLine(r1,featureLineGroup);
+                        dataLayertemp[treeNode.id] = featureLineGroup;
+
+                    });
+                    res.then(function () {
+                        map.addLayer(featureLineGroup);
+                    });
+
+                }
+                else{
+                    map.removeLayer(featureLineGroup);
+                    dataLayertemp[treeNode.id] = undefined;
+                }
+            }
+
+            if(treeNode.id === 's_polygon'){
+                if(dataLayertemp[treeNode.id] === undefined){
+                    var featurePolygonGroup = L.layerGroup();
+                }else{
+                    featurePolygonGroup = dataLayertemp[treeNode.id];
+                }
+                if(treeNode.checked === true){
+                    var res = $.when(
+                        $.ajax({
+                            url:end+'/feature/listPolygon',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:{
+                                "feature_id":"feature-polygon"
+                            },
+                            cache:false,
+                            success:function (data) {
+                            },
+                            error:function () {
+                            }
+                        }));
+                    res.done(function (r1) {
+                        //serviceDataPolygon(r1);
+                        function serviceDataPolygon(data,featurePolygonGroup) {
+                            for(var i=0;i<data.length;i++){
+                                var temp = data[i];
+                                console.log(temp);
+                                var imageUrl = "../../common/asset/img/upload/"+temp.imgPolygon,
+                                    imageBounds = [[temp.geo.coordinates[0][0][1], temp.geo.coordinates[0][0][0]], [[temp.geo.coordinates[0][2][1], temp.geo.coordinates[0][2][0]]]];
+                                var overlay = L.imageOverlay(imageUrl, imageBounds);
+                                featurePolygonGroup.addLayer(overlay);
+                            }
+                        }
+                        serviceDataPolygon(r1,featurePolygonGroup);
+                        dataLayertemp[treeNode.id] = featurePolygonGroup;
+                    });
+                    res.then(function () {
+                        map.addLayer(featurePolygonGroup);
+                    });
+                }
+                else{
+                    map.removeLayer(featurePolygonGroup);
+                }
+            }
+
+            console.log(treeNode.id + ", " + treeNode.name + "," + treeNode.checked);
         };
-        var zNodes =[
-            {"id":0,"name":"全国","open":true,icon:"../img/down1.png",children:[
-                    { "id":1,"pid":0, "name":"长沙","open":true, icon:"../img/page.png",
-                        children: [
-                            { "id":11,"pid":1, "name":"设备1"},
-                            { "id":12, "pid":1,"name":"设备2"},
-                            { "id":13,"pid":1, "name":"设备3"}
-                        ]
-                    },
-                    {"id":2,"pid":0,"name":"北京",icon:"../img/page.png",
-                        children: [
-                            { "id":21,"pid":2, "name":"设备4"},
-
-                            { "id":23,"pid":2, "name":"设备5"}
-                        ]
-                    },
-                    {"id":3,"pid":0,"name":"广州", icon:"../img/page.png",
-                        children: [
-                            { "id":31,"pid":3, "name":"设备6"},
-
-                            { "id":33,"pid":3, "name":"设备7"}
-                        ]}
-                ]}
-
+        var dataLayerZNodes =[
+            { id:'service', pId:0,nocheck:true, name:"业务数据", open:true,iconOpen:"../asset/img/ztree/folder.png", iconClose:"../asset/img/ztree/folder.png"},
+            { id:'s_point',pId:'service',  name:"点要素",  icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'s_line', pId:'service',  name:"线要素",icon:"../asset/img/ztree/layers-icon.png"},
+            { id:'s_polygon', pId:'service',  name:"面要素",icon:"../asset/img/ztree/layers-icon.png"},
         ];
 
-        var zTree;
+        //要素分类树--------------------------------------------------------
+        var setting_featureCate = {
+            check: {
+                enable: true
+            },
+            async: {
+                enable: true,
+                url: end + "/featureCategory/findByPid",
+                //提交的参数
+                autoParam: ["id=pid"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
+                type: "get",
+                dataFilter: featureCateFilter //用来将ajax异步返回的json数据处理成为ztree能用的json数据
+            },
+            data: {},
+            callback: {
+                //点击查询事件
+                onClick: featureCateClick,
+                onCheck: featureCateOnCheck
+            }
+        };
+
+        //处理返回的数据格式
+        function featureCateFilter(treeId, parentNode, responseData) {
+            var d = []; //构造数组，用于存在改造后的数据，并且返回
+            for (var i = 0; i < responseData.length; i++) {
+                var temp = responseData[i];
+                var t = {};
+                t.id = temp.fcId;
+                t.pid = temp.fcPid;
+                t.name = temp.fcName;
+                t.img = temp.fcIcon;
+                t.isParent = true;
+                d[i] = t;
+            }
+            return d;
+        };
+
+        function featureCateClick(e){
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo"),
+                nodes = zTree.getSelectedNodes(),
+                treeNode = nodes[0];
+            if (nodes.length == 0) {
+                layer.msg("请先选择一个节点");
+                return;
+            };
+            //显示状态的重置
+            console.log(treeNode);
+            featureCategory.clearAllInput();
+            if(treeNode.img != undefined){
+                var url = "../../../main/common/asset/img/upload/"+treeNode.img;
+                $("#icon-preview").attr("src",url);
+            };
+            $("#name").css("display","block");
+            $("#icon-preview").css("display","block");
+            $("#category-name").val(treeNode.name);
+            $("#e-category-name").val(treeNode.name);
+
+        };
+
+        var dataLayertemp = {};
+        function featureCateOnCheck(event, treeId, treeNode) {
+            //首先获取当前节点信息，并且
+            if(dataLayertemp[treeNode.id] === undefined){
+                var featureGroup = L.layerGroup();
+            }else{
+                featureGroup = dataLayertemp[treeNode.id];
+            }
+
+            if(treeNode.checked === true){
+                var res = $.when(
+                    $.ajax({
+                        url:end+'/feature/listPolygon',
+                        type:'GET',
+                        contentType:"application/json",
+                        data:{
+                            "feature_id":treeNode.id
+                        },
+                        cache:false,
+                        success:function (data) {
+                        },
+                        error:function () {
+                        }
+                    }));
+                res.done(function (r1) {
+                    function serviceDataPoint(data) {
+                        for(var i=0;i<data.length;i++){
+                            var temp = data[i];
+                            var type = temp.geo.type;
+
+                            if(type === 'Point'){
+                                var Icon = L.icon({
+                                    iconUrl: "../../common/asset/img/upload/"+temp.featureIcon,
+                                    iconAnchor: [20, 20],
+                                    iconSize: [40, 40]
+                                });
+
+                                var marker = L.marker([temp.geo.coordinates[1], temp.geo.coordinates[0]],{
+                                    icon: Icon,
+                                    //在这里attribution仅作为缓存变量来使用
+                                    attribution:temp.resourceCode
+                                });
+                                featureGroup.addLayer(marker);
+                            }else if(type === 'LineString'){
+                                var latlngs = [];
+                                for(var j=0;j<temp.geo.coordinates.length;j++){
+                                    var array = [temp.geo.coordinates[j][1],temp.geo.coordinates[j][0]];
+                                    latlngs.push(array);
+                                };
+
+                                var polyline = L.polyline(latlngs, {color: 'black'});
+                                featureGroup.addLayer(polyline);
+                            }else if(type === 'Polygon'){
+                                var temp = data[i];
+                                console.log(temp);
+                                var imageUrl = "../../common/asset/img/upload/"+temp.imgPolygon,
+                                    imageBounds = [[temp.geo.coordinates[0][0][1], temp.geo.coordinates[0][0][0]], [[temp.geo.coordinates[0][2][1], temp.geo.coordinates[0][2][0]]]];
+                                var overlay = L.imageOverlay(imageUrl, imageBounds);
+                                featureGroup.addLayer(overlay);
+                            }
+
+
+                        }
+                    };
+                    serviceDataPoint(r1);
+                    dataLayertemp[treeNode.id] = featureGroup;
+                });
+                res.then(function () {
+                    featureGroup.eachLayer(function (layer) {
+                        layer.on("click",function () {
+                            $("#device-info-name").val("");
+                            $("#device-info-desc").val("");
+                            $("#device-info-coors").val("");
+                            var id = layer.getAttribution();
+                            console.log(id);
+                            //异步
+                            var requestUrl=common.host+"/mgc"+"/deviceInfoService/getDeviceById";
+                            var info = $.when(
+                                $.ajax({
+                                    url:requestUrl,
+                                    type:'GET',
+                                    data:{
+                                        id:id
+                                    },
+                                    cache:false,
+                                })
+                            );
+                            info.done(function (r1) {
+                                $(document).on('click','#showVideo',function(){
+                                    console.log(r1);
+                                    var id = r1.data[0].id;
+                                    //调用getGb28181Code接口，获取gb28181Code,mediaSrcsCode
+                                    gbc.getGb28181Code(id,undefined,function (resp) {
+                                        console.log(resp);
+                                        var gb28181Code = resp.data.gb28181Code;
+                                        var mediaSrcsCode = resp.data.mediaSrcsCode;
+                                        if(mediaSrcsCode === null || mediaSrcsCode === undefined){
+                                            lay.msg('此设备没有可以播放的视频！');
+                                            return ;
+                                        }else{
+                                            gbc.getGbConfigByServerId(gb28181Code,function (resp) {
+                                                console.log(resp);
+                                                //相关参数传入，执行打开视频
+                                                var d = {
+                                                    "serverIP": resp.data[20].configValue,
+                                                    "serverID":resp.data[10].configValue,
+                                                    "serverRealm":resp.data[16].configValue,
+                                                    "serverUserName":resp.data[15].configValue,
+                                                    "serverUserPwd":resp.data[17].configValue,
+                                                    "Port": Number(resp.data[11].configValue),
+                                                    "DevID":mediaSrcsCode
+                                                };
+                                                console.log(d);
+                                                function NativeWinService(url){
+                                                    var requestUrl=url;
+                                                    /**
+                                                     * 发送操作命令到窗口管理服务
+                                                     * @param {命令} cmd
+                                                     * @param {成功回调函数} onSuccess
+                                                     * @param {失败回调函数} onError
+                                                     */
+                                                    function sendCommand(cmd,onSuccess,onError){
+                                                        var json=JSON.stringify(cmd);
+                                                        $.ajax({
+                                                            url:requestUrl,
+                                                            type:'POST',
+                                                            dataType:"json",
+                                                            data:json,
+                                                            cache:false,
+                                                            success:onSuccess,
+                                                            error:onError
+                                                        });
+                                                    }
+                                                    //用于保存已经打开的会话,已经基于此会话创建的窗口的信息
+                                                    var object={
+                                                        sessionId:undefined,//会话Id
+                                                        windows:{}//已打开的窗口集合
+                                                    };
+                                                    /**
+                                                     * 创建会话
+                                                     * @param token 临时访问凭据 通过调用LoginController.getTempToken获得
+                                                     * @param serviceUrl 后台服务器地址
+                                                     */
+                                                    object.openSession=function(token,serviceUrl){
+                                                        var createCommand={
+                                                            "jsonType":"Request",
+                                                            "requestType":"NewSession",
+                                                            "data":{
+                                                                "url":serviceUrl,
+                                                                "token":token
+                                                            }
+                                                        };
+                                                        sendCommand(createCommand,function(resp){
+                                                            if(resp.result==1){
+                                                                object.sessionId=resp.data.sessionID;
+                                                            }else{
+                                                                console.log("open session fail")
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 注销本次会话,调用此接口,所有已打开窗口都将会关闭
+                                                     */
+                                                    object.closeSession=function(){
+                                                        var closeCmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CloseSession",
+                                                            "data":	{
+                                                                "sessionID":this.sessionId
+                                                            }
+                                                        }
+                                                        sendCommand(closeCmd,function(resp){
+                                                            if(resp.result==1){
+                                                                object.sessionId=undefined;
+                                                                object.windows={};
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 创建窗口
+                                                     * @param winType 窗口类型,取值为1,2;1表示视频预览窗口；2表示平台管理窗口
+                                                     * @param title 窗口标题
+                                                     * @param x 窗口位置,横坐标 x
+                                                     * @param y 窗口位置,纵坐标 y
+                                                     * @param width 窗口宽度
+                                                     * @param height 窗口高度
+                                                     */
+                                                    object.createWindow=function(winType,title,x,y,width,height){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"NewWindow",
+                                                            "data": {
+                                                                "sessionID":sessionId,
+                                                                "type":winType,      //1—预览窗口；2—平台
+                                                                "title": title,
+                                                                "xPos":x,
+                                                                "yPos":y,
+                                                                "width":width,
+                                                                "height":height
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+                                                                var winId=resp.data.windowID;
+                                                                object.windows[winId]={
+                                                                    id:winId,
+                                                                    type:winType,
+                                                                    title: title,
+                                                                    x:x,
+                                                                    y:y,
+                                                                    width:width,
+                                                                    height:height
+                                                                }
+                                                            }
+                                                        },function(e){});
+
+                                                    }
+                                                    /**
+                                                     * 设置指定窗口的属性
+                                                     * @param winId 指定窗口的属性
+                                                     * @param title 设置后窗口的标题
+                                                     * @param x 设置后窗口的位置横坐标 x
+                                                     * @param y 设置后窗口的位置纵坐标 y
+                                                     * @param width 设置后窗口的宽度
+                                                     * @param height 设置后窗口的高度
+                                                     */
+                                                    object.setWindow=function(winId,title,x,y,width,height){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"PosWindow",
+                                                            "data": {
+                                                                "sessionID":sessionId,
+                                                                "windowID":winId,
+                                                                "title": title,
+                                                                "xPos":x,
+                                                                "yPos":y,
+                                                                "width":width,
+                                                                "height":height
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+                                                                object.windows[winId].title=title;
+                                                                object.windows[winId].x=x;
+                                                                object.windows[winId].y=y;
+                                                                object.windows[winId].width=width;
+                                                                object.windows[winId].height=height;
+                                                            }else{
+                                                                console.log("set win["+title+"] position fail")
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 关闭指定窗口
+                                                     * @param winId 待关闭窗口的Id
+                                                     */
+                                                    object.closeWindow=function(winId){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CloseWindow",
+                                                            "data": {
+                                                                "sessionID":sessionId,
+                                                                "windowID":winId
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+                                                                delete object.windows[winId]
+                                                            }
+                                                        },function(e){});
+
+                                                    }
+                                                    /**
+                                                     * 将指定窗口最大化
+                                                     * @param winId 待最大化窗口的Id
+                                                     */
+                                                    object.maximumWin=function(winId){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CtrlWindow",
+                                                            "data": {
+                                                                "sessionID": sessionId,
+                                                                "windowID": winId,
+                                                                "maxWin": 1
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 将指定窗口最小化
+                                                     * @param winId 待最小化窗口的Id
+                                                     */
+                                                    object.minimumWin=function(winId){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CtrlWindow",
+                                                            "data": {
+                                                                "sessionID": sessionId,
+                                                                "windowID": winId,
+                                                                "maxWin":2
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    /**
+                                                     * 将指定窗口恢复到前一个位置,一般用于窗口最小化后,恢复到原来位置
+                                                     * @param winId 待恢复到原来位置窗口的Id
+                                                     */
+                                                    object.restoreWin=function(winId){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd={
+                                                            "jsonType": "Request",
+                                                            "requestType":"CtrlWindow",
+                                                            "data": {
+                                                                "sessionID": sessionId,
+                                                                "windowID": winId,
+                                                                "maxWin":0
+                                                            }
+                                                        }
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+
+                                                            }
+                                                        },function(e){});
+                                                    }
+                                                    object.preview=function(winId,d){
+                                                        var sessionId=this.sessionId;
+                                                        var cmd= {
+                                                            "jsonType": "Request",
+                                                            "requestType":"RLVideoWin",
+                                                            "data": {
+                                                                "sessionID":sessionId,
+                                                                "windowID":winId,
+                                                                // "serverIP": d.serverIP,
+                                                                // "serverID":d.serverID,
+                                                                //
+                                                                // "serverRealm":d.serverRealm,
+                                                                // "serverUserName":d.serverUserName,
+                                                                // "serverUserPwd":d.serverUserPwd,
+                                                                // "Port": 9060,
+                                                                // "DevID":d.DevID
+                                                                // "sessionID":sessionId,
+                                                                // "windowID":winId,
+                                                                "serverIP": d.serverIP,
+                                                                "serverID":d.serverID,
+
+                                                                "serverRealm":d.serverRealm,
+                                                                "serverUserName":"43010400004000000001",
+                                                                "serverUserPwd":d.serverUserPwd,
+                                                                "Port": Number(d.Port),
+                                                                "DevID":d.DevID
+                                                            }
+                                                        };
+                                                        sendCommand(cmd,function(resp){
+                                                            if(resp.result==1){
+
+                                                            }
+                                                        },function(e){});
+
+                                                    }
+
+                                                    /**
+                                                     * 获取已经打开的窗口的列表
+                                                     */
+                                                    object.getWindowList=function(){
+                                                        var winIds=[];
+                                                        for(winId in object.windows){
+                                                            winIds.push(object.windows[winId]);
+                                                        }
+                                                        return winIds;
+                                                    }
+                                                    return object;
+                                                }
+                                                var nativeWinService=new NativeWinService("http://localhost:61111/cms");
+                                                $.when(
+                                                    $.ajax({
+                                                        url:videourl+"/auth/token/temp",
+                                                        type:'Get',
+                                                        data:{
+                                                        },
+                                                        cache:false,
+                                                    })
+                                                ).done(function (resp) {
+                                                    var token=resp.data;
+                                                    var serverUrl=videourl;
+                                                    nativeWinService.openSession(token,serverUrl);
+                                                }).then(function (resp) {
+                                                    //这里存在着一个异步的问题，必须要按照顺序依次执行下面的方法，才能正确调出视频，为了保证不受异步干扰，所以增加了延迟方法
+                                                    setTimeout(function(){
+                                                        nativeWinService.createWindow(1,"test",100,100,400,300);
+                                                    },500);
+                                                    setTimeout(function(){
+                                                        nativeWinService.getWindowList();
+                                                    },2000);
+                                                    setTimeout(function(){
+                                                        nativeWinService.preview(winId,d);
+                                                    },3000);
+                                                });
+
+
+
+                                            });
+                                        }
+                                    });
+                                });
+                                layx.group('group-nomerge', [
+                                    {
+                                        id: 'device-info',
+                                        title: '设备信息',
+                                        content: '<div class="layx-div"><h3>设备信息</h3>\n' +
+                                        '        <div class="input-group">\n' +
+                                        '            <span class="input-group-addon">设备名称</span>\n' +
+                                        '            <input id="device-info-name" type="text" class="form-control" value=" ' +r1.data[0].deviceName+ ' " name="device-name" readonly>\n' +
+                                        '        </div>\n' +
+                                        '        <br>\n' +
+                                        '        <div class="input-group">\n' +
+                                        '            <span class="input-group-addon">视频查看</span>\n' +
+                                        '            <button id="showVideo" class="form-control" type="button">查看视频</button>\n' +
+                                        '        </div> ' +
+                                        '</div>',
+                                        //cloneElementContent:false,
+                                    },
+                                    {
+                                        id: 'device-current',
+                                        title: '实时监测',
+                                        content: document.getElementById('device-chart'),
+                                        cloneElementContent: false,
+                                    },
+                                    {
+                                        id: 'device-history',
+                                        title: '历史记录',
+                                        content: document.getElementById('device-history'),
+                                        cloneElementContent: false,
+                                    }
+                                ], 0,
+                                    {
+                                    id: 'info',
+                                    mergeTitle: false,
+                                    title: '设备详情',
+                                });
+                            });
+                        });
+                    });
+                    map.addLayer(featureGroup);
+                });
+            }
+            else{
+                map.removeLayer(featureGroup);
+                dataLayertemp[treeNode.id] = undefined;
+            }
+            console.log(treeNode.id + ", " + treeNode.name + "," + treeNode.checked);
+    };
+
+        var zNodes_chooseCategory = [
+            {id: 'fc', pId: 0, name: "要素分类", open: true,isParent:true,doCheck:false},
+        ];
+        $.fn.zTree.init($("#layerControlData"), setting_featureCate, zNodes_chooseCategory);
+        //end 数据控制器的树-------------------------------------------------------
+
+
+
+
+
+
+        //start 组织树控制器
+        var setting_orgCategory = {
+            async: {
+                enable: true,
+                url: getAsyncOrgUrl,
+                //提交的参数
+                autoParam: ["code=parentTypeCode"],//异步加载时需要自动提交父节点属性的参数，提交parentTypeCode为当前节点的code值
+                type: "get",
+                dataFilter: ajaxchooseCategoryOrgFilter //用来将ajax异步返回的json数据处理成为ztree能用的json数据
+            },
+            data: {},
+            callback: {
+                //点击查询事件
+                onClick: ajaxchooseCategoryOnOrgClick
+            }
+        };
+        //动态构造url
+        function getAsyncOrgUrl(treeId, treeNode) {
+            var url = serviceHost+"/base-data/org/"+treeNode.code+"/chidlren";
+            return url;
+        };
+
+        //处理返回的数据格式
+        function ajaxchooseCategoryOrgFilter(treeId, parentNode, responseData) {
+            var d = []; //构造数组，用于存在改造后的数据，并且返回
+            for (var i = 0; i < responseData.dataSize; i++) {
+                var temp = responseData.data[i];
+                //加isParent主要是为了使得数组可以下拉打开查询
+                //如果此节点下有节点，那么会加载相应的节点，如果没有，则不会添加相应的节点
+                temp.isParent = 'true';
+                d[i] = temp
+            }
+
+            return d;
+        };
+
+        var orgGroup = L.featureGroup().addTo(map);
+        function ajaxchooseCategoryOnOrgClick(event, treeId, treeNode) {
+            var code = treeNode.code;
+            var markerData = null;
+            orgGroup.clearLayers();
+            $.when($.ajax({
+                url: end + '/orggeo/listByOrgId',
+                type: 'get',
+                dataType: 'json',
+                data:{
+                    code:code
+                },
+                success: function (resp) {
+                    var data = resp[0];
+                    var marker
+                }
+            })).done(function (resp) {
+                markerData = resp[0];
+            }).then(function (resp) {
+                console.log(markerData);
+                if(markerData != undefined){
+                    //如果存在内部地图，那么触发相应的绑定事件
+                    if(markerData.hasIndoor){
+                        console.log('有内部地图');
+                        var configId = markerData.orgId;
+                        //把configId赋值到input中去，用于后期的要素管理
+                        $("#oId").val(configId);
+
+                        //异步查询内部代码
+                        $.ajax({
+                            url:end+'/orggeo/listByOrgId',
+                            type:'GET',
+                            contentType:"application/json",
+                            data:{
+                                code:configId
+                            },
+                            cache:false,
+                            success:function (resp) {
+                                //console.log(data);
+                                var data = resp[0];
+                                var coor = data.geom.coordinates;
+                                var oId = data.oid;
+                                var marker = L.marker([coor[1],coor[0]]).addTo(map);
+                                map.panTo([coor[1],coor[0]]);
+                                orgGroup.addLayer(marker);
+                                marker.on("dblclick",function () {
+                                    //start
+                                    //查询相应的所属的楼层图片
+                                    //console.log(true);
+                                    var buildMapTest = null;
+                                    buildMapTest = L.map('img-map', {
+                                        minZoom: 0,
+                                        maxZoom: 4,
+                                        center: [0, 0],
+                                        zoom: 4,
+                                        crs: L.CRS.Simple
+                                    });
+                                    // 隐藏map，显示img-map
+                                    $("#map").css('display', 'none');
+                                    $("#img-map").css('display', 'block');
+
+                                    var w = 1024,
+                                        h = 650;
+                                    //url = imageUrl;
+                                    var southWest = buildMapTest.unproject([0, h], buildMapTest.getMaxZoom() - 1);
+                                    var northEast = buildMapTest.unproject([w, 0], buildMapTest.getMaxZoom() - 1);
+                                    var bounds = new L.LatLngBounds(southWest, northEast);
+
+                                    //切换事件，当不同的layer添加到图上，查询当前图层的设备点并且进行加载
+                                    buildMapTest.on("layeradd",function (layer) {
+                                        var bounds = layer.layer._bounds;
+                                        //如果是undefined，说明添加进来的是点要素，那么什么也不做
+                                        //只有添加面要素的时候，才调用后台接口进行加点的操作
+                                        if(bounds === undefined){
+                                        }else{
+                                            var url = layer.layer._url;
+                                            url = url.split("/");
+                                            var imgId = url[url.length-1];
+                                            //当面要素切换的时候，清除所有的marker
+                                            buildMapTest.eachLayer(function(layer){
+                                                console.log(layer);
+                                                //对layer的类型进行判断，如果是marker，那么直接进行remove操作
+                                                //仍然通过bound来判断，如果bound是undefined，那么说明是点layer，则将此layer进行清除操作；
+                                                if(layer._bounds === undefined){
+                                                    buildMapTest.removeLayer(layer);
+                                                }
+
+                                            });
+                                            $.ajax({
+                                                type: "GET",
+                                                url: end+'/orggeo/listIndoorPointByImgId',
+                                                data: {
+                                                    imgId:imgId
+                                                },
+                                                contentType:"application/json",
+                                                cache:false,
+                                                success: function (data) {
+                                                    if(data.length != 0){
+                                                        for(var i=0;i<data.length;i++){
+                                                            L.marker([data[i].geo.coordinates[1], data[i].geo.coordinates[0]]).addTo(buildMapTest);
+                                                        }
+
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    });
+
+                                    var indoorGroup = new L.FeatureGroup();
+                                    //异步加载楼层内部的图片
+                                    $.ajax({
+                                        url:end+'/orggeo/listByOidToIndoor',
+                                        type:'GET',
+                                        contentType:"application/json",
+                                        data:{
+                                            "oId":oId
+                                        },
+                                        cache:false,
+                                        success:function (data) {
+                                            /**
+                                             * 图层控制器
+                                             */
+                                            var baseMap = new Object();
+                                            for(var i=0;i<data.length;i++){
+                                                //console.log(data[i]);
+                                                var num = data[i].indoorNum;
+                                                var level = L.imageOverlay("../../common/asset/img/upload/"+data[i].indoorImg, bounds);
+                                                if(i === 0){
+                                                    level.addTo(buildMapTest);
+                                                }
+                                                baseMap[num]=level;
+                                            }
+                                            var overlayMaps = {};
+                                            //设置图层控制器
+                                            var layerControl = L.control.layers(baseMap, overlayMaps, { collapsed: false,position:'bottomright' }).addTo(buildMapTest);
+                                        },
+                                        error:function () {
+                                            //console.log(0)
+                                        }
+                                    });
+                                    console.log(indoorGroup);
+
+                                    buildMapTest.on("zoom", function (evt) {
+                                        //console.log(typeof  evt.target._animateToZoom);
+                                        if (evt.target._animateToZoom == 1) {
+                                            $("#map").css('display', 'block');
+                                            $(".img-map").css('display', 'none');
+                                            buildMapTest.remove();
+                                            buildMapTest = null;
+                                        }
+                                    });
+                                    //end
+
+                                });
+                            },
+                            error:function () {
+                                alert("添加失败");
+                            }
+                        });
+                    }
+                    else{
+                        console.log('没有内部地图');
+                        var marker = L.marker([markerData.geom.coordinates[1],markerData.geom.coordinates[0]]).addTo(map);
+                        map.panTo([markerData.geom.coordinates[1],markerData.geom.coordinates[0]],markerData.zoomNum);
+                        orgGroup.addLayer(marker);
+                    }
+                }
+
+
+            })
+            //异步处理
+
+        };
+
+        $.ajax({
+            url: serviceHost + '/base-data/org/-1/chidlren',
+            type: 'get',
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                var d = data.data[0];
+                d.isParent = 'true';
+                $.fn.zTree.init($("#treeDemo"), setting_orgCategory, data.data[0]);
+            }
+        });
+        //end 组织树控制器
+
+
         $(document).ready(function(){
-            $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-            $.fn.zTree.init($("#treeDemo1"), setting, zNodes);
-            $.fn.zTree.init($("#treeDemo2"), setting, zNodes);
-            zTree = $.fn.zTree.getZTreeObj("treeDemo");
+
+            //$.fn.zTree.init($("#treeDemo"), setting, zNodes);
+            // $.fn.zTree.init($("#treeDemo1"), setting, zNodes);
+            // $.fn.zTree.init($("#treeDemo2"), setting, zNodes);
+            //zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            //底图控制器
+            $.fn.zTree.init($("#layerControlBase"), baseLayserSetting, baseLayserZNodes);
+
+            //数据控制器
+            //var dataControlTree = $.fn.zTree.init($("#layerControlTest"), dataLayserSetting, dataLayerZNodes);
         });
 
         /**
          * index-panel初始化
          */
 
-        // mock 模拟 添加
-        // Mock.mock('http://123.123.123.123:8080/mock/alarm', {
-        //     "data|20": [
-        //         {
-        //             'id': '@integer(1, 100)',
-        //             'name': '@name',
-        //             'age': '@integer(1, 100)',
-        //             'time': '@datetime',
-        //             'email': '@email',
-        //             'ip': '@ip'
-        //
-        //         }
-        //     ]
-        // });
-
-        $('#workOrder-table').bootstrapTable({
-            method: 'get',
-            contentType: "application/x-www-form-urlencoded",//一种编码。好像在post请求的时候需要用到。这里用的get请求，注释掉这句话也能拿到数据
-            url: "http://123.123.123.123:8080/mock/alarm",//要请求数据的文件路径
-            dataField: "data",//这是返回的json数组的key.默认好像是"rows".这里只有前后端约定好就行
-            pageNumber: 1, //初始化加载第一页，默认第一页
-            pagination: true,//是否分页
-            // queryParams:queryParams,//请求服务器时所传的参数
-            sidePagination: 'client',//指定服务器端分页
-            pageSize: 10,//单页记录数
-            pageList: [10, 20, 30, 40],//分页步进值
-            responseHandler: responseHandler,//请求数据成功后，渲染表格前的方法
-            colums: [{//列参数
-                field: "id",
-                title: "id",
-            }, {
-                field: "name",
-                title: "名称",
-            }, {
-                field: "price",
-                title: "价格"
-            }]
-        });
-        // //请求服务数据时所传参数
-        // function queryParams(params){
-        //     return {
-        //         pageSize : params.limit, //每一页的数据行数，默认是上面设置的10(pageSize)
-        //         pageIndex : params.offset/params.limit+1, //当前页面,默认是上面设置的1(pageNumber)
-        //     }
-        // };
-
-        function responseHandler(result) {
-            console.log(result);
-            return {
-                total: result.dataLength, //总页数,前面的key必须为"total"
-                data: result.rowDatas //行数据，前面的key要与之前设置的dataField的值一致.
-            };
-        };
-
-        // // $.ajax({
-        // //
-        // //     dataType: 'json',
-        // //     success: function (e) {
-        // //
-        // //     }
-        // // });
-        //
-        // $('#workOrder-table').bootstrapTable({
-        //     url: '123.123.123.123:8080/mock/alarm',
-        //     method:'get',
-        //     striped:true,
-        //     clickToSelect:true,
-        //     pagination:true,
-        //     sidePagination: "client",           //分页方式：client客户端分页，server服务端分页（*）
-        //     pageNumber: 1,                       //初始化加载第一页，默认第一页
-        //     pageSize: 10,                       //每页的记录行数（*）
-        //     pageList: [10, 25, 50, 100],        //可供选择的每页的行数（*）
-        //     total:20,
-        //     // queryParamsType:'',
-        //     // queryParams: function queryParams(params) {   //设置查询参数
-        //     //     var param = {
-        //     //         pageNumber: params.pageNumber,
-        //     //         pageSize: params.pageSize,
-        //     //     };
-        //     //     return param;
-        //     // },
-        //     columns: [{
-        //         radio:true
-        //     },{
-        //         field: 'id',
-        //         title: 'guid'
-        //     }, {
-        //         field: 'name',
-        //         title: '姓名'
-        //     },
-        //         {
-        //             field: 'age',
-        //             title: '年龄'
-        //         }
-        //     ],
-        //     //data:e.data
-        // });
 
 
         //使用layx作为工单和告警中心的弹窗

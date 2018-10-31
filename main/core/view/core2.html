@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="../css/core2.css">
     <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
 
-
     <script src="../../common/lib/requirejs/require.js" defer async="true" data-main="../js/core2"></script>
 </head>
 <body>
@@ -38,7 +37,14 @@
     <section class="map-left left">
         <div class="map-top">
             <ul>
-                <li><i class="fa fa-reorder margin-right-5"></i><a href="javascript:void (0)" id="topbar-control" class="active">图层选择</a></li>
+                <li class="dropdown"><i class="fa fa-reorder margin-right-5"></i><a href="javascript:void (0)" id="topbar-layerControl" data-toggle="dropdown">图层</a>
+                    <ul class="dropdown-menu dropdown-menu-right topbar-dropdown-width" aria-labelledby="topbar-measure">
+                        <li><a href="javascript:void (0)" id="topbar-control"><i class="fa fa-reorder margin-right-5"></i>图层选择</a></li>
+                        <!--全新的图层控制器-->
+                        <li><a href="javascript:void(0)" id="topbar-controlBase"><i class="fa fa-tasks margin-right-5"></i>底图控制</a></li>
+                        <li><a href="javascript:void(0)" id="topbar-controlData"><i class="fa fa-tasks margin-right-5"></i>数据控制</a></li>
+                    </ul>
+                </li>
                 <li><i class="fa fa-plus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomin">拉框放大</a> </li>
                 <li><i class="fa fa-minus margin-right-5"></i><a href="javascript:void (0)" id="topbar-zoomout">拉框缩小</a> </li>
                 <li><i class="fa fa-history margin-right-5"></i><a href="javascript:void (0)" id="topbar-history">历史视图</a> </li>
@@ -50,9 +56,9 @@
                         <li><a href="javascript:void (0)" id="topbar-measure-clear"><i class="fa fa-trash margin-right-5"></i>清理</a></li>
                     </ul>
                 </li>
-                <li class="dropdown"><i class="fa fa-cogs margin-right-5"></i><a href="javascript:void (0)" id="topbar-setting" data-toggle="dropdown">设置</a>
+                <li class="dropdown"><i class="fa fa-video-camera margin-right-5"></i><a href="javascript:void (0)" id="topbar-setting" data-toggle="dropdown">视频</a>
                     <ul class="dropdown-menu dropdown-menu-right topbar-setting" aria-labelledby="topbar-setting">
-                        <li><a href="#">设置1</a></li>
+                        <li><a id="video-win" href="#">查看视频</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#">设置2</a></li>
                     </ul>
@@ -72,7 +78,7 @@
             <ul>
                 <!--<li>统计信息</li>-->
                 <li class="li-active">快捷导航</li>
-                <li>专题信息</li>
+                <li>组织导航</li>
             </ul>
         </div>
 
@@ -132,10 +138,10 @@
             <div class="map-core-content" style="display:block">
                 <div class="map-work">
                     <ul>
-                        <li>
+                        <li id="right-nav-query">
                             <!-- <div class="img_div img_div01"></div> -->
-                            <i class="fa fa-yoast fa-2x white"></i>
-                            <div class="white">服务</div>
+                            <i class="fa fa-search fa-2x white"></i>
+                            <div class="white">查询</div>
                         </li>
                         <li>
                             <i class="fa fa-skyatlas fa-2x white"></i>
@@ -145,69 +151,97 @@
                             <i class="fa fa-download fa-2x white"></i>
                             <div>服务</div>
                         </li>
-                        <li>
-                            <i class="fa fa-paper-plane fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-dashboard fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-hand-o-left fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-adn fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-desktop fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
-                        <li>
-                            <i class="fa fa-envelope fa-2x white"></i>
-                            <div>服务</div>
-                        </li>
                     </ul>
-                    <div class="map-reslist">
-                        <p class="set_list"><i class="fa fa-plane white"></i> 查询结果：
+                    <!--跳转面板-->
+                    <div class="map-reslist" id="right-nav-panel-query">
+                        <p class="set_list"><i class="fa fa-search white"></i>查询：
                             <span class="right">
-                                    <i class="fa fa-backward"></i>
-                                    <a href="javascript:void(0)" class="white" id="back">返回上级菜单</a>
-                                </span>
+                                <i class="fa fa-backward"></i>
+                                <a href="javascript:void(0)" class="white" id="back">返回上级菜单</a>
+                            </span>
                         </p>
-
                         <ul>
                             <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src="../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
+                                <!--选择查询类型-->
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label class="queryForm-label" >查询类型：</label>
+                                        <select class="form-control queryForm-input" id="right-nav-panel-querySelect">
+                                            <option value="" disabled selected></option>
+                                            <option value="word">关键字查询</option>
+                                            <option value="radius">半径查询</option>
+                                            <option value="range">拉框查询</option>
+                                        </select>
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <!--form里面的button的type默认为submit，应当修改为button-->
+                                        <label class="queryForm-label">图层选择：</label>
+                                        <!--<label未选择图层</label>-->
+                                        <input type="text" class="queryForm-input form-control" disabled placeholder="未选择">
+                                        <button class="btn btn-danger" type="button">选择</button>
+                                    </div>
+                                </form>
                             </li>
-                            <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src=" ../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
+                            <li id="right-nav-panel-wordQuery" class="noShow">
+                                <!--关键字查询-->
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label class="queryForm-label">关键字：</label>
+                                        <input type="text" class="queryForm-input form-control" placeholder="请输入关键字">
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label class="queryForm-label"></label>
+                                        <input type="button" class="queryForm-input btn btn-danger" value="确认查询">
+                                    </div>
+                                </form>
                             </li>
-                            <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src=" ../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
+
+                            <li id="right-nav-panel-radiusQuery" class="noShow">
+                                <!--半径查询-->
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label class="queryForm-label">半径：</label>
+                                        <input type="text" class="queryForm-input form-control" placeholder="请输入半径">
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label class="queryForm-label">中心选择：</label>
+                                        <input type="text" class="queryForm-input form-control" disabled placeholder="未选择">
+                                        <button class="btn btn-danger" type="button">选择</button>
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label class="queryForm-label"></label>
+                                        <input type="button" class="queryForm-input btn btn-danger" value="确认查询">
+                                    </div>
+                                </form>
                             </li>
-                            <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src=" ../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
-                            </li>
-                            <li>
-                                <p><strong>华南光电</strong><span class="right"><a href="javascript:void(0)" title="视频"><img
-                                        src=" ../asset/img/nav_5.png"> </a><a href="javascript:void(0)" title="定位"><img src=" ../asset/img/find01.png">                                                </a>
-                                            </span></p>
-                                <p>湖南省长沙市长沙县星沙街道</p>
+                            <li id="right-nav-panel-rangeQuery" class="noShow">
+                                <!--拉框查询-->
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label class="queryForm-label">范围选择：</label>
+                                        <input type="text" class="queryForm-input form-control" disabled placeholder="未选择">
+                                        <button class="btn btn-danger" type="button">选择</button>
+                                    </div>
+                                </form>
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label class="queryForm-label"></label>
+                                        <input type="button" class="queryForm-input btn btn-danger" value="确认查询">
+                                    </div>
+                                </form>
                             </li>
                         </ul>
                     </div>
@@ -216,7 +250,7 @@
             <!-- 3 -->
             <div class="map-core-content" style="display:none">
                 <p class="set_list">
-                    <i class="fa fa-list"></i> 专题列表：
+                    <i class="fa fa-list"></i>组织列表
                 </p>
 
                 <p>
@@ -263,6 +297,26 @@
     <span class="layer-open-content-title">图层控制：</span>
     <div class="layer-open-content-history">
         <div id="layerControl" class="layer-open-content-control"></div>
+    </div>
+</section>
+<!--全新的底图控制器-->
+<section class="layer-open-section layerControlTreeContainer" id="layerControlContainerBase">
+    <span class="layer-open-content-title">底图控制：</span>
+    <div class="layer-open-content-history">
+        <div class="layer-open-content-control">
+            <ul id="layerControlBase" class="ztree"></ul>
+            <ul id="layerControlBase2" class="ztree"></ul>
+        </div>
+    </div>
+</section>
+<!--全新的数据控制器-->
+<section class="layer-open-section layerControlTreeContainer" id="layerControlContainerData">
+    <span class="layer-open-content-title">数据控制：</span>
+    <div class="layer-open-content-history">
+        <div id="" class="layer-open-content-control">
+            <ul id="layerControlData" class="ztree"></ul>
+            <ul id="layerControlTest" class="ztree"></ul>
+        </div>
     </div>
 </section>
 <!--坐标显示容器容器-->
@@ -365,91 +419,6 @@
                     <td>John</td>
                     <td>Doe</td>
                     <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
-                </tr>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>john@example.com</td>
-                </tr>
-                <tr>
-                    <td>Mary</td>
-                    <td>Moe</td>
-                    <td>mary@example.com</td>
-                </tr>
-                <tr>
-                    <td>July</td>
-                    <td>Dooley</td>
-                    <td>july@example.com</td>
                 </tr>
                 </tbody>
             </table>
