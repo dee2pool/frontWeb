@@ -177,7 +177,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     area: '600px',
                     resize: false,
                     content: $('#add_Dict')
-                })
+                });
                 console.log("bb")
                 //表单提交
                 dictAdd.submit();

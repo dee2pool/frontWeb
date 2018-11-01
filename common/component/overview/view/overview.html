@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>样式统一</title>
+    <link rel="stylesheet" href="../../../../config/common/css/common.css">
+    <link rel="stylesheet" href="../../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet" href="../../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../../../config/sidebar/css/frame.css">
+    <link rel="stylesheet" href="../../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="../css/overview.css">
+
+    <script src="../../../lib/requirejs/require.js" defer async="true" data-main="../js/overview"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content">
+            <div class="content-panel panel-opera-se">
+                <a id="addUgroup" class="button button-primary button-small"><span
+                        class="glyphicon glyphicon-plus"></span>添加用户组
+                </a>
+                <a id="reassign" class="button button-royal button-small"><span
+                        class="glyphicon glyphicon-royal"></span>修改角色
+                </a>
+            </div>
+            <div class="content-panel panel-main">
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="usergroup_table"></table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
