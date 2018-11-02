@@ -142,7 +142,7 @@ ul li {
     left: 203px;
     top:60px;
     width: calc(100% - 205px);
-    height: calc(100% - 65px);
+    /*height: calc(100% - 65px);*/
 }
 .panel-table-de{
     left: 203px;

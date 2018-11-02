@@ -1,9 +1,5 @@
 require.config({
     shim: {
-        'frame': {
-            deps: ['jquery', 'menu', 'MenuService'],
-            exports: "frame"
-        },
         'common': {
             deps: ['jquery'],
             exports: "common"
@@ -19,47 +15,36 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
-        'bootstrap-treeview': {
-            deps: ['jquery'],
-            exports: "treeview"
+        'bootstrap-table-zh-CN': {
+            deps: ['bootstrap-table', 'jquery'],
+            exports: "bootstrapTableZhcN"
         },
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapValidator"
-        },
-        'bootstrap-switch': {
-            deps: ['jquery'],
-            exports: "bootstrapSwitch"
-        },
-        'bootstrap-datetimepicker': {
-            deps: ['bootstrap', 'jquery'],
-            exports: "datetimepicker"
-        },
-        'bootstrap-datetimepicker.zh-CN': {
-            deps: ['bootstrap-datetimepicker', 'jquery']
         },
         'ztree': {
             deps: ['jquery']
         }
     },
     paths: {
-        "jquery": '../../common/libs/jquery/jquery-1.11.3.min',
-        "bootstrap": "../../common/libs/bootstrap/js/bootstrap.min",
+        "jquery": '../../../common/lib/jquery/jquery-3.3.1.min',
+        "bootstrap": "../../../common/lib/bootstrap/js/bootstrap.min",
         "common": "../../common/js/util",
-        "layer": "../../common/libs/layer/layer",
+        "layer": "../../../common/lib/layer/layer",
         "frame": "../../sidebar/js/wframe",
         "topBar": "../../../common/component/head/js/topbar",
-        "bootstrap-treeview": "../../common/libs/bootstrap-treeview/js/bootstrap-treeview",
-        "bootstrapValidator": "../../common/libs/bootstrap-validator/js/bootstrapValidator.min",
-        "bootstrap-table": "../../common/libs/bootstrap/js/bootstrap-table",
+        "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
+        "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
+        "bootstrap-table-zh-CN": "../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
         "orgService": "../../../common/js/service/OrgController",
         "ztree": "../../../common/lib/ztree/js/jquery.ztree.core",
     }
 });
-require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table', 'bootstrap', 'bootstrap-treeview', 'topBar', 'orgService', 'ztree'],
-    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable, bootstrap, treeview, topBar, orgService, ztree) {
+require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'topBar', 'orgService', 'ztree'],
+    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable, bootstrapTableZhcN, bootstrap, topBar, orgService, ztree) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -68,204 +53,187 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         topBar.init();
         //解决layer不显示问题
         layer.config({
-            path: '../../common/libs/layer/'
+            path: '../../../common/lib/layer/'
         });
+        /********************************* 组织树 ***************************************/
         var orgTree = {};
-        /*orgTree.getTree = function () {
-            var tree = [];
-            var temp = {};
-            orgService.listAllOrg(function (data) {
-                if (data.result) {
-                    //将节点封装成树形结构
-                    for (var i = 0; i < data.data.length; i++) {
-                        temp[data.data[i].code] = {
-                            code: data.data[i].code,
-                            text: data.data[i].name,
-                            parentCode: data.data[i].parentCode,
-                            createTime: data.data[i].createTime,
-                            creatorId: data.data[i].creatorId,
-                            description: data.data[i].description,
-                            orderNo: data.data[i].orderNo
-                        };
-                    }
-                    for (i = 0; i < data.data.length; i++) {
-                        var key = temp[data.data[i].parentCode];
-                        if (key) {
-                            if (key.nodes == null) {
-                                key.nodes = [];
-                                key.nodes.push(temp[data.data[i].code]);
-                            } else {
-                                key.nodes.push(temp[data.data[i].code]);
-                            }
-                        } else {
-                            tree.push(temp[data.data[i].code]);
-                        }
-                    }
+        orgTree.setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                },
+                key: {
+                    name: "name"
+                },
+                keep: {
+                    parent: true
                 }
-            })
-            return tree;
-        }*/
-        orgTree.getTree = function () {
-            orgService.getChildList('-1', function (data) {
-                if (data.result) {
-                    return data.data;
-                }
-            })
-        }
-        orgTree.isNodeSelected = false;
-        orgTree.nodeSelected;
-        orgTree.init = function () {
-            //滚动条
-            $('#orgtree').treeview({
-                showBorder: false,
-                nodeIcon: 'glyphicon glyphicon-cloud',
-                data: orgTree.getTree(),
-                onhoverColor: 'lightgrey',
-                selectedBackColor: 'lightgrey',
-                selectedColor: 'black',
-                onNodeSelected: function (event, data) {
-                    orgTree.isNodeSelected = true;
-                    orgTree.nodeSelected = data;
-                    //更新表格
-                    orgService.getChildList(data.code, function (data) {
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    orgTree.nodeSelected = treeNode;
+                    $('#org_table').bootstrapTable('refresh',{silent:true,query:{orgCode:treeNode.code}});
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    //清空当前父节点的子节点
+                    orgTree.obj.removeChildNodes(treeNode);
+                    orgService.getChildList(treeNode.code, function (data) {
                         if (data.result) {
-                            $('#org_table').bootstrapTable('load', data.data);
-                            //更新分页
-                            common.pageInit(1, 10, data.dataSize)
-                        } else {
-                            layer.msg(data.description);
+                            if (data.result) {
+                                for (var i = 0; i < data.dataSize; i++) {
+                                    data.data[i].isParent = true;
+                                    data.data[i].icon = "../img/org.png";
+                                }
+                                var newNodes = data.data;
+                                //添加节点
+                                orgTree.obj.addNodes(treeNode, newNodes);
+                            } else {
+                                layer.msg('加载组织树失败');
+                            }
                         }
                     })
+                }
+            }
+        };
+        orgTree.zNode = function () {
+            var treeNode;
+            orgService.getChildList('-1', function (data) {
+                if (data.result) {
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/org.png";
+                    }
+                    treeNode = data.data;
+                } else {
+                    layer.msg('加载组织树失败');
+                }
+            })
+            return treeNode;
+        }
+        orgTree.init = function () {
+            orgTree.obj = $.fn.zTree.init($("#orgtree"), orgTree.setting, orgTree.zNode());
+        }
+        //动态添加节点
+        orgTree.addNode = function (newNode) {
+            if (orgTree.obj) {
+                //获取当前选中的节点
+                var selected = orgTree.obj.getSelectedNodes();
+                console.log(selected)
+                if (selected.length > 0) {
+                    //在节点下添加节点
+                    console.log("aa")
+                    orgTree.obj.addNodes(selected[0], newNode);
+                } else {
+                    //在根节点添加节点
+                    orgTree.obj.addNodes(null, newNode);
+                }
+            }
+        }
+        orgTree.updateNode = function (newNode) {
+            if (orgTree.obj) {
+                console.log(newNode.code);
+                var node = orgTree.obj.getNodeByParam('code',newNode.code);
+                console.log(node);
+                if (node) {
+                    node.name = newNode.name;
+                    node.description = newNode.description;
+                    orgTree.obj.updateNode(node);
+                }
+            }
+        }
+        orgTree.init();
+        /********************************* 组织表格 ***************************************/
+        var orgTable = {};
+        orgTable.init = function () {
+            var queryUrl = common.host + "/base-data" + "/org" + "/list";
+            $('#org_table').bootstrapTable({
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'name',
+                    title: '组织名称',
+                    align: 'center'
+                }, {
+                    field: 'code',
+                    visible: false
+
+                }, {
+                    field: 'parentCode',
+                    visible: false
+                }, {
+                    field: 'createTime',
+                    visible: false
+                }, {
+                    field: 'creatorId',
+                    visible: false
+                }, {
+                    field: 'areaCode',
+                    visible: false
+                }, {
+                    field: 'description',
+                    title: '备注',
+                    align: 'center'
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    events: {
+                        "click #edit": function (e, value, row, index) {
+                            orgEdit.init(row,index);
+                        },
+                        "click #del": function (e, value, row, index) {
+                            orgDel.init(row)
+                        }
+                    },
+                    formatter: function () {
+                        var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
+                            "<i class='fa fa-edit'></i>修改</button>" +
+                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
+                            "</div>"
+                        return icons;
+                    }
+                }],
+                url: queryUrl,
+                method: 'GET',
+                cache: false,
+                pagination: true,
+                sidePagination: 'server',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                smartDisplay: false,
+                search: true,
+                trimOnSearch: true,
+                buttonsAlign: 'left',
+                showRefresh: true,
+                queryParamsType: '',
+                responseHandler: function (res) {
+                    var rows = res.data;
+                    var total = res.extra;
+                    return {
+                        "rows": rows,
+                        "total": total
+                    }
                 },
-                onNodeUnselected: function (event, data) {
-                    domainTree.isNodeSelected = false;
-                    domainTree.nodeSelected = null;
+                queryParams: function (params) {
+                    var temp = {
+                        pageNo: params.pageNumber,
+                        pageSize: params.pageSize,
+                        orgName: params.searchText
+                    }
+                    return temp
                 }
             })
         }
-        orgTree.init();
-        //表格
-        var init_page = {
-            pageNumber: 1,
-            pageSize: 10
-        }
-        orgService.getOrgList(init_page.pageNumber, init_page.pageSize, init_page.orgName, function (data) {
-            if (data.result) {
-                $('#org_table').bootstrapTable({
-                    columns: [{
-                        checkbox: true
-                    }, {
-                        field: 'name',
-                        title: '组织名称',
-                        align: 'center'
-                    }, {
-                        field: 'code',
-                        title: '组织ID',
-                        align: 'center'
-                    }, {
-                        field: 'orderNo',
-                        visible: false
-                    }, {
-                        field: 'parentCode',
-                        visible: false
-                    }, {
-                        field: 'createTime',
-                        visible: false
-                    }, {
-                        field: 'creatorId',
-                        visible: false
-                    }, {
-                        field: 'areaCode',
-                        visible: false
-                    }, {
-                        field: 'description',
-                        title: '组织描述',
-                        align: 'center'
-                    }, {
-                        title: '操作',
-                        align: 'center',
-                        events: {
-                            "click #edit_role": function (e, value, row, index) {
-                                $('input[name="altorgName"]').val(row.name);
-                                $('textarea[name="altorgRemark"]').val(row.description);
-                                orgvalia.editValidator();
-                                layer.open({
-                                    type: 1,
-                                    title: '修改组织',
-                                    offset: '100px',
-                                    area: '600px',
-                                    resize: false,
-                                    content: $('#alt_org')
-                                })
-                                //表单提交
-                                $('#altorgForm').on('success.form.bv', function () {
-                                    var org = {};
-                                    org.code = row.code
-                                    org.name = $('input[name="altorgName"]').val();
-                                    org.description = $('textarea[name="altorgRemark"]').val();
-                                    org.parentCode = row.parentCode
-                                    org.orderNo = row.orderNo
-                                    org.createTime = new Date(row.createTime).valueOf();
-                                    org.creatorId = row.creatorId
-                                    orgService.updateOrg(org.code, org, function (data) {
-                                        if (data.result) {
-                                            //清除校验
-                                            $("#altorgForm").data('bootstrapValidator').destroy();
-                                            //更新树
-                                            orgTree.getTree();
-                                            orgTree.init();
-                                            layer.closeAll();
-                                            //更新表格
-                                            $('#org_table').bootstrapTable('updateRow', {index: index, row: org})
-                                        } else {
-                                            layer.msg(data.description)
-                                            $("button[type='submit']").removeAttr('disabled');
-                                        }
-                                    })
-                                    return false;
-                                })
-                            },
-                            "click #del_role": function (e, value, row, index) {
-                                //点击删除按钮
-                                layer.confirm('确定删除 ' + row.name + ' ?', {
-                                    btn: ['确定', '取消'] //按钮
-                                }, function () {
-                                    //删除操作
-                                    orgService.deleteOrgByCode(row.code, function (data) {
-                                        if (data.result) {
-                                            layer.closeAll();
-                                            //更新树
-                                            orgTree.getTree();
-                                            orgTree.init();
-                                            //更新表格
-                                            $('#org_table').bootstrapTable('remove', {
-                                                field: 'code',
-                                                values: [row.code]
-                                            })
-                                        } else {
-                                            layer.msg(data.description);
-                                        }
-                                    })
-                                }, function () {
-                                    layer.closeAll();
-                                });
-                            }
-                        },
-                        formatter: function () {
-                            var icons = "<div class='btn-group-sm'><button id='edit_role' class='btn btn-default'><i class='fa fa-edit'></i></button>" +
-                                "<button id='del_role' class='btn btn-default'><i class='fa fa-remove'></i></button>" +
-                                "</div>"
-                            return icons;
-                        }
-                    }],
-                    data: data.data
-                })
-                //初始化分页组件
-                common.pageInit(init_page.pageNumber, init_page.pageSize, data.extra)
-            }
-        })
-        var orgvalia = {};
-        orgvalia.addValidator = function () {
+        orgTable.init();
+        //初始化表格高度
+        $('#org_table').bootstrapTable('resetView',{height:$(window).height()-135});
+        //自适应表格高度
+        common.resizeTableH('#org_table');
+        /********************************* 添加组织 ***************************************/
+        var orgAdd = {};
+        orgAdd.valia = function () {
             $('#orgForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -300,7 +268,69 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 }
             })
         }
-        orgvalia.editValidator = function () {
+        orgAdd.submit = function () {
+            $('#orgForm').on('success.form.bv', function () {
+                var org = {};
+                org.name = $.trim($('input[name="orgName"]').val());
+                org.parentCode = $.trim($('input[name="orgParentCode"]').val());
+                org.description = $.trim($('textarea[name="orgRemark"]').val());
+                areaCode = $('input[name="areaCode"]').val();
+                orgService.addOrg(org, areaCode, function (data) {
+                    if (data.result) {
+                        //清空表单和验证
+                        common.clearForm('orgForm');
+                        //在树节点中添加节点
+                        org.id = data.data;
+                        org.icon = "../img/org.png";
+                        orgTree.addNode(org);
+                        //刷新表格
+                        $('#org_table').bootstrapTable('refresh', {silent: true});
+                        layer.closeAll();
+                        layer.msg('添加组织成功')
+                    } else {
+                        layer.msg(data.description)
+                    }
+                })
+                return false;
+            })
+        }
+        orgAdd.init = function () {
+            $('#addOrg').click(function () {
+                //表单填充
+                if (!orgTree.nodeSelected) {
+                    $('input[name="orgParentName"]').val('无');
+                    $('input[name="orgParentCode"]').val('-1');
+                } else {
+                    $('input[name="orgParentName"]').val(orgTree.nodeSelected.name);
+                    $('input[name="orgParentCode"]').val(orgTree.nodeSelected.code);
+                }
+                //开启验证
+                orgAdd.valia();
+                //打开弹窗
+                layer.open({
+                    type: 1,
+                    title: '添加组织',
+                    offset: '100px',
+                    skin: 'layui-layer-lan',
+                    area: '600px',
+                    resize: false,
+                    content: $('#add_org'),
+                    cancel: function (index, layero) {
+                        common.clearForm('orgForm');
+                    }
+                })
+                //关闭弹窗
+                $('.btn-cancel').click(function () {
+                    layer.closeAll();
+                    common.clearForm('orgForm');
+                })
+                orgAdd.submit();
+            })
+        }
+        orgAdd.init();
+        /********************************* 修改组织 ***************************************/
+        var orgEdit = {};
+        orgEdit.valia = function () {
             $('#altorgForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -318,57 +348,85 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 }
             })
         }
-        //添加组织
-        $('#addOrg').click(function () {
-            if (!orgTree.isNodeSelected) {
-                $('input[name="orgParentName"]').val('无');
-                $('input[name="orgParentCode"]').val('-1');
-            } else {
-                $('input[name="orgParentName"]').val(orgTree.nodeSelected.text);
-                $('input[name="orgParentCode"]').val(orgTree.nodeSelected.code);
-            }
-            //开启验证
-            orgvalia.addValidator();
-            layer.open({
-                type: 1,
-                title: '添加组织',
-                offset: '100px',
-                area: '600px',
-                resize: false,
-                content: $('#add_org')
-            })
-            //表单提交
-            $('#orgForm').on('success.form.bv', function () {
+        orgEdit.submit = function (row, index) {
+            $('#altorgForm').on('success.form.bv', function () {
                 var org = {};
-                org.name = $('input[name="orgName"]').val();
-                org.parentCode = $('input[name="orgParentCode"]').val();
-                org.orderNo = $('input[name="orgOrderNo"]').val();
-                org.description = $('textarea[name="orgRemark"]').val();
-                areaCode = $('input[name="areaCode"]').val();
-                orgService.addOrg(org, areaCode, function (data) {
+                org.code = row.code;
+                org.name = $('input[name="altorgName"]').val();
+                org.description = $('textarea[name="altorgRemark"]').val();
+                orgService.updateOrg(row.code, org, function (data) {
                     if (data.result) {
-                        layer.msg('添加组织成功');
-                        orgTree.getTree();
-                        orgTree.init();
-                        //向表格中添加
-                        org.code = data.data
-                        $('#org_table').bootstrapTable('append', org);
+                        //清空表格和验证
+                        common.clearForm('altorgForm');
+                        //更新表格
+                        $('#org_table').bootstrapTable('updateCell', {index: index, field:"name", value: org.name});
+                        $('#org_table').bootstrapTable('updateCell', {
+                            index: index,
+                            field: 'description',
+                            value: org.description
+                        });
+                        //更新树节点
+                        orgTree.updateNode(org);
+                        //关闭弹窗
                         layer.closeAll();
-                        //清空表单
-                        $('input[name="orgParentName"]').val('无');
-                        $('input[name="orgParentCode"]').val('-1');
-                        $("input[name='res']").click();
-                        //清空验证
-                        $("#orgForm").data('bootstrapValidator').destroy();
+                        layer.msg('修改组织成功')
                     } else {
-                        layer.msg(data.description)
+                        layer.msg("修改组织失败");
                     }
                 })
                 return false;
             })
-        })
-
-        //初始化区域树
+        }
+        orgEdit.init = function (row, index) {
+            //表单验证
+            orgEdit.valia();
+            $('input[name="altorgName"]').val(row.name);
+            $('textarea[name="altorgRemark"]').val(row.description);
+            layer.open({
+                type: 1,
+                title: '修改组织',
+                offset: '100px',
+                area: '600px',
+                resize: false,
+                content: $('#alt_org'),
+                cancel: function (index, layero) {
+                    common.clearForm('altorgForm');
+                }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('altorgForm');
+            })
+            //表单提交
+            orgEdit.submit(row,index);
+        }
+        /********************************* 删除组织 ***************************************/
+        var orgDel={};
+        orgDel.init=function (row) {
+            //删除组织操作
+            layer.confirm('确定删除 '+row.name+' ?', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                orgService.deleteOrgByCode(row.code,function (data) {
+                    if(data.result){
+                        //更新表格
+                        $('#org_table').bootstrapTable('remove', {
+                            field: 'code',
+                            values: [row.code]
+                        })
+                        //更新树
+                        layer.closeAll();
+                        layer.msg('删除组织成功');
+                    }else{
+                        layer.msg(data.description);
+                    }
+                })
+            }, function () {
+                layer.closeAll();
+            });
+        }
+        /********************************* 初始化区域树 ***************************************/
         var treeNode;
         orgService.getChildArea('000000', function (data) {
             if (data.result) {
@@ -410,6 +468,10 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             callback: {
                 onClick: function (event, treeId, treeNode) {
                     $('input[name="areaCode"]').val(treeNode.code);
+                    //去除验证
+                    $('#orgForm').data('bootstrapValidator')
+                        .updateStatus('areaCode', 'NOT_VALIDATED', null)
+                        .validateField('areaCode');
                     layer.close(areaLayer)
                 },
                 onExpand: function (event, treeId, treeNode) {

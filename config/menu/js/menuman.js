@@ -226,8 +226,9 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                             values: [row.id]
                         })
                         layer.closeAll();
+                        layer.msg('删除菜单成功!')
                     } else {
-                        layer.msg(data.description)
+                        layer.msg('删除菜单失败!')
                     }
                 })
                 //删除操作

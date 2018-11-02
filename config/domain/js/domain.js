@@ -22,6 +22,10 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
+        'bootstrap-table-zh-CN': {
+            deps: ['bootstrap-table', 'jquery'],
+            exports: "bootstrapTableZhcN"
+        },
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapValidator"
@@ -36,6 +40,7 @@ require.config({
         "topBar": "../../../common/component/head/js/topbar",
         "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
         "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
+        "bootstrap-table-zh-CN": "../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
         "menu": "../../sidebar/js/menu",
         "MenuService": "../../common/js/service/MenuController",
         "domainService": "../../../common/js/service/DomainController",
@@ -43,8 +48,8 @@ require.config({
         "ztree": "../../../common/lib/ztree/js/jquery.ztree.core"
     }
 });
-require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table', 'bootstrap', 'topBar', 'domainService', 'orgService', 'ztree'],
-    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable, bootstrap, topBar, domainService, orgService, ztree) {
+require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-table','bootstrap-table-zh-CN','bootstrap','topBar','domainService','orgService','ztree'],
+    function (jquery, common, layer, frame, bootstrapValidator, bootstrapTable,bootstrapTableZhcN,bootstrap,topBar,domainService,orgService,ztree) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -190,6 +195,105 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             domainTree.obj = $.fn.zTree.init($("#domaintree"), domainTree.setting, domainTree.zNode());
         }
         domainTree.init();
+        /********************************* 管理域表格 ***************************************/
+        var domainTable={};
+        domainTable.init=function () {
+            var queryUrl = common.host + "/auth" + "/domain"+"/list";
+            $('#domain_table').bootstrapTable({
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'name',
+                    title: '管理域名称',
+                    align: 'center'
+                }, {
+                    field: 'code',
+                    visible: false
+
+                }, {
+                    field: 'parentCode',
+                    visible: false
+                }, {
+                    field: 'createTime',
+                    visible: false
+                }, {
+                    field: 'creatorId',
+                    visible: false
+                }, {
+                    field: 'description',
+                    title: '备注',
+                    align: 'center'
+                }, {
+                    title: '分配组织',
+                    align: 'center',
+                    events: {
+                        "click #assign": function (e, value, row, index) {
+
+                        }
+                    },
+                    formatter: function () {
+                        var icons = "<div class='button-group'>" +
+                            "<button id='assign' type='button' class='button button-tiny button-highlight'>" +
+                            "<i class='fa fa-edit'></i>分配组织</button>"
+                        return icons;
+                    }
+                }, {
+                    title: '操作',
+                    align: 'center',
+                    events: {
+                        "click #edit": function (e, value, row, index) {
+                            /*domainEdit.init(row,index);*/
+                        },
+                        "click #del": function (e, value, row, index) {
+                            /*domainDel.init(row)*/
+                        }
+                    },
+                    formatter: function () {
+                        var icons = "<div class='button-group'>" +
+                            "<button id='edit' type='button' class='button button-tiny button-highlight'>" +
+                            "<i class='fa fa-edit'></i>修改</button>" +
+                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
+                            "</div>"
+                        return icons;
+                    }
+                }],
+                url: queryUrl,
+                method: 'GET',
+                cache: false,
+                pagination: true,
+                sidePagination: 'server',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                smartDisplay: false,
+                search: true,
+                trimOnSearch: true,
+                buttonsAlign: 'left',
+                showRefresh: true,
+                queryParamsType: '',
+                responseHandler: function (res) {
+                    var rows = res.data;
+                    var total = res.extra;
+                    return {
+                        "rows": rows,
+                        "total": total
+                    }
+                },
+                queryParams: function (params) {
+                    var temp = {
+                        pageNo: params.pageNumber,
+                        pageSize: params.pageSize,
+                        domainName: params.searchText
+                    }
+                    return temp
+                }
+            })
+        }
+        domainTable.init();
+        //初始化表格高度
+        $('#domain_table').bootstrapTable('resetView',{height:$(window).height()-135});
+        //自适应表格高度
+        common.resizeTableH('#domain_table');
         /********************************* 修改管理域 ***************************************/
         var domainEdit = {};
         domainEdit.valia = function () {
@@ -557,4 +661,9 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             })
         }
         del.init();
+        /********************************* 为管理域分配组织 ***************************************/
+        var assignOrg={};
+        assignOrg.init=function () {
+
+        }
     })

@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
     <link rel="stylesheet" href="../../../common/component/head/css/head.css">
     <link rel="stylesheet" href="../../common/css/buttons.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" href="../css/user.css">
     <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet"
@@ -100,7 +101,6 @@
                         <label class="col-sm-2 control-label" style="padding-left: 5px">管理范围：</label>
                         <div class="col-sm-6" style="padding: 0px">
                             <select name="domain" class="form-control">
-
                             </select>
                         </div>
                     </div>
@@ -224,6 +224,14 @@
     </div>
     <div class="tab-footer">
         <button id="ressignRoleSub" type="button" class="btn btn-primary">完成</button>
+        <button type="button" class="btn btn-default btn-cancel">取消</button>
+    </div>
+</div>
+<!--修改管理域弹窗-->
+<div id="domain" style="display: none">
+    <ul id="domaintree" class="ztree"></ul>
+    <div class="tab-footer">
+        <button id="altDomainSub" type="button" class="btn btn-primary">完成</button>
         <button type="button" class="btn btn-default btn-cancel">取消</button>
     </div>
 </div>

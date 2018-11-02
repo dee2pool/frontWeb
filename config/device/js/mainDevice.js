@@ -87,8 +87,14 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 onClick: function (event, treeId, treeNode) {
                     if (treeNode.type && treeNode.type === 'org') {
                         domainTree.selOrg=treeNode;
+                        if(domainTree.selDomain){
+                            domainTree.selDomain=null;
+                        }
                     } else {
                         domainTree.selDomain = treeNode;
+                        if(domainTree.selOrg){
+                            domainTree.selOrg=null;
+                        }
                     }
                 },
                 onExpand: function (event, treeId, treeNode) {
@@ -212,7 +218,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             if(data.result){
                 if (data.extra > 0) {
                     for (var i = 0; i < data.extra; i++) {
-                        $('#deviceManu').append('<option value="' + data.data[i].id + '">' + data.data[i].manuName + '</option>');
+                        $('.deviceManu').append('<option value="' + data.data[i].id + '">' + data.data[i].manuName + '</option>');
                     }
                 }
             }
@@ -226,7 +232,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             if(data.result){
                 if (data.extra > 0) {
                     for (var i = 0; i < data.extra; i++) {
-                        $('#deviceModel').append('<option value="' + data.data[i].id + '">' + data.data[i].modelName + '</option>');
+                        $('.deviceModel').append('<option value="' + data.data[i].id + '">' + data.data[i].modelName + '</option>');
                     }
                 }
             }
@@ -374,13 +380,6 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {
-                    dictCode: {
-                        validators: {
-                            notEmpty: {
-                                message: '设备大类不能为空'
-                            }
-                        }
-                    },
                     typeCode: {
                         validators: {
                             notEmpty: {
@@ -426,6 +425,18 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         validators: {
                             notEmpty: {
                                 message: '登录密码不能为空'
+                            }
+                        }
+                    }, modelId: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备型号不能为空'
+                            }
+                        }
+                    }, manuId: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备厂商不能为空'
                             }
                         }
                     }
@@ -479,7 +490,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         type: 1,
                         skin: 'layui-layer-lan',
                         resize: false,
-                        area: ['620px', '402px'],
+                        area: ['620px', '395px'],
                         scrollbar: false,
                         offset: '100px',
                         title: '添加设备',
@@ -552,6 +563,20 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                                 message: '登录密码不能为空'
                             }
                         }
+                    },
+                    editModelId: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备型号不能为空'
+                            }
+                        }
+                    },
+                    editManuId: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备厂商不能为空'
+                            }
+                        }
                     }
 
                 }
@@ -610,7 +635,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 type: 1,
                 skin: 'layui-layer-lan',
                 resize: false,
-                area: ['620px', '385px'],
+                area: ['620px', '355px'],
                 scrollbar: false,
                 offset: '100px',
                 title: '修改设备',
@@ -737,7 +762,6 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 var deviceName = $('input[name="deviceSrcName"]').val();
                 var deviceConId = $('input[name="deviceSrcConId"]').val();
                 var deviceCode = $('input[name="deviceSrcCode"]').val();
-                ;
                 var typeCode = $('select[name="srcTypeCode"]').val();
                 mediaSrcService.addMediaSrcsList(deviceId, uriNum, deviceName, deviceConId, deviceCode, typeCode, function (data) {
                     if (data.result) {

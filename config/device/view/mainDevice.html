@@ -136,14 +136,14 @@
                 <input name="devicePwd" class="form-control" type="password">
             </div>
             <div class="form-item form-group-sm form-group">
-                <label class=" control-label"><i class="required">*</i>设备厂商：</label>
-                <select id="deviceManu" name="manuId" class="form-control">
+                <label class=" control-label"><i class="required">*</i>设备型号：</label>
+                <select name="modelId" class="form-control deviceModel">
                     <option value="">请选择</option>
                 </select>
             </div>
             <div class="form-item form-group-sm form-group">
-                <label class=" control-label"><i class="required">*</i>设备型号：</label>
-                <select id="deviceModel" name="modelId" class="form-control">
+                <label class=" control-label"><i class="required">*</i>设备厂商：</label>
+                <select name="manuId" class="form-control deviceManu">
                     <option value="">请选择</option>
                 </select>
             </div>
@@ -210,14 +210,14 @@
             </div>
             <div class="form-item form-group-sm form-group">
                 <label class=" control-label"><i class="required">*</i>设备型号：</label>
-                <select name="editModelId" class="form-control">
-                    <option value="HK-IPC">HK-IPC</option>
+                <select name="editModelId" class="form-control deviceModel">
+                    <option value="">请选择</option>
                 </select>
             </div>
             <div class="form-item form-group-sm form-group">
                 <label class=" control-label"><i class="required">*</i>设备厂商：</label>
-                <select name="editManuId" class="form-control">
-                    <option value="HIKVISION">HIKVISION</option>
+                <select name="editManuId" class="form-control deviceManu">
+                    <option value="">请选择</option>
                 </select>
             </div>
             <div class="tab-footer">
@@ -255,7 +255,7 @@
             <div class="form-item form-group-sm">
                 <label class="col-sm-4 control-label">通道类型：</label>
                 <div class="col-sm-6" style="padding: 0px">
-                    <select class="form-control" name="srcTypeCode">
+                    <select class="form-control" name="srcTypeCode" style="height: 30px">
                         <option value="131">模拟摄像机</option>
                         <option value="132">网络摄像机</option>
                     </select>

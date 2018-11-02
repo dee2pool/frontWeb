@@ -1,5 +1,11 @@
 require.config({
     shim: {
+        'ztree': {
+            deps: ['jquery']
+        },
+        'ztreeCheck':{
+            deps:['ztree','jquery']
+        },
         'common': {
             deps: ['jquery'],
             exports: "common"
@@ -65,11 +71,13 @@ require.config({
         "userService": "../../../common/js/service/UserController",
         "domainService": "../../../common/js/service/DomainController",
         "RoleService": "../../../common/js/service/RoleController",
-        "buttons": "../../common/js/buttons"
+        "buttons": "../../common/js/buttons",
+        "ztree": "../../../common/lib/ztree/js/jquery.ztree.core",
+        "ztreeCheck":"../../../common/lib/ztree/js/jquery.ztree.excheck"
     }
 });
-require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'buttons', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar', 'ugroupService', 'userService', 'domainService', 'RoleService'],
-    function (jquery, common, frame, bootstrapTable, bootstrapTableZhcN, bootstrap, buttons, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar, ugroupService, userService, domainService, RoleService) {
+require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'buttons', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar', 'ugroupService', 'userService', 'domainService', 'RoleService','ztree','ztreeCheck'],
+    function (jquery, common, frame, bootstrapTable, bootstrapTableZhcN, bootstrap, buttons, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar, ugroupService, userService, domainService, RoleService,ztree,ztreeCheck) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -90,6 +98,71 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 }
             }
         })
+        /********************************* 管理域树 ***************************************/
+        var domainTree = {};
+        domainTree.setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                },
+                key: {
+                    name: "name"
+                },
+                check:{
+                    enable: true,
+                    chkStyle: "checkbox",
+                    chkboxType: { "Y": "p", "Y": "s" }
+                },
+                keep: {
+                    parent: true
+                }
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    //清空当前父节点的子节点
+                    domainTree.obj.removeChildNodes(treeNode);
+                    domainService.getChildList(treeNode.code, function (data) {
+                        if (data.result) {
+                            if (data.dataSize > 0) {
+                                for (var i = 0; i < data.dataSize; i++) {
+                                    data.data[i].isParent = true;
+                                    data.data[i].icon = "../img/domain.png";
+                                    data.data[i].checked=false;
+                                }
+                                var newNodes = data.data;
+                                //添加节点
+                                domainTree.obj.addNodes(treeNode, newNodes);
+                            }
+                        } else {
+                            layer.msg('获得子域节点失败')
+                        }
+                    })
+                }
+            }
+        };
+        domainTree.zNode = function () {
+            var treeNode;
+            domainService.getChildList('-1', function (data) {
+                if (data.result) {
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/domain.png";
+                        data.data[i].checked=false;
+                    }
+                    treeNode = data.data;
+                }
+            })
+            return treeNode;
+        }
+        domainTree.init = function () {
+            domainTree.obj = $.fn.zTree.init($("#domaintree"), domainTree.setting, domainTree.zNode());
+        }
+        domainTree.init();
         /********************************* 获得角色列表 ***************************************/
         var roleTable = {};
         roleTable.init = function () {
@@ -737,5 +810,21 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
         }
         changeStatus.init();
         /********************************* 修改用户管理域 ***************************************/
+        var altDomain={};
+        altDomain.init=function () {
+            $('#altDomain').click(function () {
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-lan',
+                    area: '500px',
+                    resize: false,
+                    scrollbar: false,
+                    offset: '100px',
+                    title: '修改管理域',
+                    content: $('#domain')
+                })
+            })
+        }
+        altDomain.init();
     }
 )
