@@ -138,6 +138,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             })
         }
         deviceManuTable.init();
+        //初始化表格高度
+        $('#deviceManu_table').bootstrapTable('resetView', {height: $(window).height() - 165});
+        //自适应表格高度
+        common.resizeTableDH('#deviceManu_table');
         /********************************* 添加设备厂商 ***************************************/
         var dmAdd = {};
         dmAdd.valia = function () {
@@ -175,7 +179,9 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     if (data.result) {
                         common.clearForm('addform');
                         layer.closeAll();
-                        layer.msg('添加成功 请刷新表格')
+                        layer.msg('添加成功')
+                        //刷新表格
+                        $('#deviceManu_table').bootstrapTable('refresh', {silent: true});
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');

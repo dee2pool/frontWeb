@@ -120,27 +120,26 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             if (orgTree.obj) {
                 //获取当前选中的节点
                 var selected = orgTree.obj.getSelectedNodes();
-                console.log(selected)
-                if (selected.length > 0) {
+                if (selected.length > 0&&selected[0].open) {
                     //在节点下添加节点
-                    console.log("aa")
                     orgTree.obj.addNodes(selected[0], newNode);
-                } else {
-                    //在根节点添加节点
-                    orgTree.obj.addNodes(null, newNode);
                 }
             }
         }
         orgTree.updateNode = function (newNode) {
             if (orgTree.obj) {
-                console.log(newNode.code);
                 var node = orgTree.obj.getNodeByParam('code',newNode.code);
-                console.log(node);
                 if (node) {
                     node.name = newNode.name;
                     node.description = newNode.description;
                     orgTree.obj.updateNode(node);
                 }
+            }
+        }
+        orgTree.delNode=function(code){
+            var node=orgTree.obj.getNodeByParam('code',code,null);
+            if(node){
+                orgTree.obj.removeNode(node);
             }
         }
         orgTree.init();
@@ -298,33 +297,32 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             $('#addOrg').click(function () {
                 //表单填充
                 if (!orgTree.nodeSelected) {
-                    $('input[name="orgParentName"]').val('无');
-                    $('input[name="orgParentCode"]').val('-1');
+                    layer.msg('请选择上级组织')
                 } else {
                     $('input[name="orgParentName"]').val(orgTree.nodeSelected.name);
                     $('input[name="orgParentCode"]').val(orgTree.nodeSelected.code);
-                }
-                //开启验证
-                orgAdd.valia();
-                //打开弹窗
-                layer.open({
-                    type: 1,
-                    title: '添加组织',
-                    offset: '100px',
-                    skin: 'layui-layer-lan',
-                    area: '600px',
-                    resize: false,
-                    content: $('#add_org'),
-                    cancel: function (index, layero) {
+                    //开启验证
+                    orgAdd.valia();
+                    //打开弹窗
+                    layer.open({
+                        type: 1,
+                        title: '添加组织',
+                        offset: '100px',
+                        skin: 'layui-layer-lan',
+                        area: '600px',
+                        resize: false,
+                        content: $('#add_org'),
+                        cancel: function (index, layero) {
+                            common.clearForm('orgForm');
+                        }
+                    })
+                    //关闭弹窗
+                    $('.btn-cancel').click(function () {
+                        layer.closeAll();
                         common.clearForm('orgForm');
-                    }
-                })
-                //关闭弹窗
-                $('.btn-cancel').click(function () {
-                    layer.closeAll();
-                    common.clearForm('orgForm');
-                })
-                orgAdd.submit();
+                    })
+                    orgAdd.submit();
+                }
             })
         }
         orgAdd.init();
@@ -416,6 +414,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                             values: [row.code]
                         })
                         //更新树
+                        orgTree.delNode(row.code);
                         layer.closeAll();
                         layer.msg('删除组织成功');
                     }else{

@@ -38,9 +38,6 @@
                 <a id="addDomain" class="button button-primary button-small"><span
                         class="glyphicon glyphicon-plus"></span>添加管理域
                 </a>
-                <a id="addOrg" class="button button-primary button-small"><span
-                        class="glyphicon glyphicon-plus"></span>分配组织
-                </a>
             </div>
             <div class="content-panel panel-table">
                 <div class="table-responsive">
@@ -78,11 +75,33 @@
             </div>
         </form>
     </div>
+    <!--修改管理域-->
+    <div id="alt_Domain" style="display: none">
+        <form id="altDomainForm" class="form-horizontal">
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label"><i class="required">*</i>域名称：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <input name="eDomainName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-item form-group-sm">
+                <label class="col-sm-4 control-label">备注：</label>
+                <div class="col-sm-6" style="padding: 0px">
+                    <textarea name="eDomainRemark" cols="40" rows="2"></textarea>
+                    <input name="res" type="reset" style="display:none;"/>
+                </div>
+            </div>
+            <div class="tab-footer">
+                <button type="submit" class="btn btn-primary">完成</button>
+                <button type="button" class="btn btn-default btn-cancel">取消</button>
+            </div>
+        </form>
+    </div>
     <!--组织树-->
     <div id="assign_org" style="display: none">
         <ul id="orgTree" class="ztree"></ul>
         <div class="tab-footer">
-            <button id="menuAuthSub" type="button" class="btn btn-primary">完成</button>
+            <button id="assignOrgSub" type="button" class="btn btn-primary">完成</button>
             <button type="button" class="btn btn-default btn-cancel">取消</button>
         </div>
     </div>

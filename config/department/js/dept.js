@@ -111,6 +111,33 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         deptTree.init = function () {
             deptTree.obj = $.fn.zTree.init($("#depttree"), deptTree.setting, deptTree.zNode());
         }
+        //动态添加节点
+        deptTree.addNode = function (newNode) {
+            if (deptTree.obj) {
+                //获取当前选中的节点
+                var selected = deptTree.obj.getSelectedNodes();
+                if (selected.length > 0&&selected[0].open) {
+                    //在节点下添加节点
+                    deptTree.obj.addNodes(selected[0], newNode);
+                }
+            }
+        }
+        deptTree.updateNode = function (newNode) {
+            if (deptTree.obj) {
+                var node = deptTree.obj.getNodeByParam('id',newNode.id);
+                if (node) {
+                    node.name = newNode.name;
+                    node.remark = newNode.remark;
+                    deptTree.obj.updateNode(node);
+                }
+            }
+        }
+        deptTree.delNode=function(id){
+            var node=deptTree.obj.getNodeByParam('id',id,null);
+            if(node){
+                deptTree.obj.removeNode(node);
+            }
+        }
         deptTree.init();
         /********************************* 部门表格 ***************************************/
         var deptTable={};
@@ -182,6 +209,10 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             })
         }
         deptTable.init();
+        //初始化表格高度
+        $('#dept_table').bootstrapTable('resetView',{height:$(window).height()-135});
+        //自适应表格高度
+        common.resizeTableH('#dept_table');
         /********************************* 添加部门 ***************************************/
         var deptAdd={};
         deptAdd.valia=function(){
@@ -210,10 +241,15 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 dept.remark = $("textarea[name='deptRemark']").val();
                 departMentService.addDepartment(dept, function (data) {
                     if (data.result) {
+                        dept.id=data.data;
+                        dept.icon="../img/dept.png";
                         layer.closeAll();
                         common.clearForm('addDeptForm');
-                        deptTree.init();
-                        layer.msg('添加成功 请刷新表格');
+                        //更新表格
+                        $('#dept_table').bootstrapTable('refresh', {silent: true});
+                        //更新树
+                        deptTree.addNode(dept);
+                        layer.msg('添加成功');
                     } else {
                         layer.msg(data.description);
                     }
@@ -279,7 +315,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         //更新表格
                         $('#dept_table').bootstrapTable('updateRow',{index:index,row:dept});
                         //更新树
-                        deptTree.init();
+                        deptTree.updateNode(dept);
                         layer.closeAll();
                         layer.msg('更新成功');
                     } else {
@@ -319,7 +355,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         $('#dept_table').bootstrapTable('remove', {field: 'id', values: [row.id]})
                         layer.closeAll();
                         //更新树
-                        deptTree.init();
+                        deptTree.delNode(row.id)
                         layer.msg('刪除成功');
                     } else {
                         layer.msg(data.description);

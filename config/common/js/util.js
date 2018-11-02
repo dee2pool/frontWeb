@@ -165,6 +165,12 @@ define(['layer'], function (layer) {
             $(id).bootstrapTable('resetView',{height:$(window).height()-135})
         })
     }
+    //设备管理表格高度自适应
+    common.resizeTableDH=function(id){
+        $(window).resize(function () {
+            $(id).bootstrapTable('resetView',{height:$(window).height()-165})
+        })
+    }
     //点击取消
     $('.btn-cancel').click(function () {
         layer.closeAll();

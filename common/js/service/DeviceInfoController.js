@@ -126,19 +126,20 @@ define(['common'],function DeviceInfoController(common){
     /**
       *根据设备信息id查询设备信息 
       */
-     deviceService.getDeviceById=function(onSuccess){
+     deviceService.getDeviceById=function(id,onSuccess){
 		 var requestUrl=this.url+"/getDeviceById";
          $.ajax({
              url:requestUrl,
              type:'GET',
+             async:false,
              data:{
+                 id:id
              },
              cache:false,
              success:onSuccess,
              error:common.onError
              });
     };
-           
     /**
       *根据设备类型查询设备信息 
       *@param type type 

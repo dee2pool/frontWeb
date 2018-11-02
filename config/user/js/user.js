@@ -294,6 +294,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         return status;
                     }
                 }, {
+                    field:'role',
                     title: '角色',
                     align: "center",
                     formatter: function (value, row, index) {
@@ -385,6 +386,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             pickerPosition: 'bottom-left'
         });
         userTable.init();
+        //初始化表格高度
+        $('#user_table').bootstrapTable('resetView', {height: $(window).height() - 135});
+        //自适应表格高度
+        common.resizeTableH('#user_table');
         /********************************* 用户状态插件 ***************************************/
         var userState = {};
         userState.switch = function () {
@@ -551,7 +556,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 user.realName = $("input[name='username']").val();
                 user.state = '1';
                 user.email = $("input[name='email']").val();
-                user.domainCode = $("select[name='domain']").val();
+                user.domainCode = $("input[name='domain']").val();
                 user.inbuiltFlag = '0';
                 var date=new Date($("input[name='expiredTime']").val()).valueOf();
                 user.expiredTime = date/1000;
@@ -559,7 +564,9 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     if (data.result) {
                         common.clearForm('user');
                         layer.closeAll();
-                        layer.msg('添加用户成功 请刷新表格');
+                        layer.msg('添加用户成功');
+                        //刷新表格
+                        $('#user_table').bootstrapTable('refresh', {silent: true});
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -744,13 +751,21 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             $('#ressignRoleSub').click(function () {
                 var roles = $('#roles').bootstrapTable('getSelections');
                 var roleIds = new Array();
+                var roleNames=new Array();
                 for (var i = 0; i < roles.length; i++) {
                     roleIds.push(roles[i].id);
+                    roleNames.push(roles[i].name);
                 }
                 userService.resetRole(userId, roleIds, function (data) {
                     if (data.result) {
                         layer.closeAll();
-                        layer.msg('修改角色成功 请刷新表格');
+                        layer.msg('修改角色成功');
+                        var index=common.getTableIndex('user_table');
+                        $('#user_table').bootstrapTable('updateCell', {
+                            index: index[0],
+                            field: 'role',
+                            value: roleNames
+                        });
                         $('#ressignRoleSub').unbind('click')
                     } else {
                         layer.msg(data.description)
@@ -809,6 +824,74 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             })
         }
         changeStatus.init();
+        /********************************* 管理域树 ***************************************/
+        var domainTree={};
+        domainTree.setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                },
+                key: {
+                    name: "name"
+                },
+                keep: {
+                    parent: true
+                }
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    $('input[name="domainName"]').val(treeNode.name);
+                    $('input[name="domain"]').val(treeNode.code);
+                    layer.close(domainLayer);
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    domainService.getChildList(treeNode.code, function (data) {
+                        if (data.result) {
+                            if (data.dataSize > 0) {
+                                for (var i = 0; i < data.dataSize; i++) {
+                                    data.data[i].isParent = true;
+                                    data.data[i].icon = "../img/domain.png";
+                                }
+                                var newNodes = data.data;
+                                //添加节点
+                                treeObj.addNodes(treeNode, newNodes);
+                            }
+                        } else {
+                            layer.msg('获得子域节点失败')
+                        }
+                    })
+                }
+            }
+        }
+        domainService.getChildList('-1',function (data) {
+            if(data.result){
+                if (data.dataSize > 0) {
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/domain.png";
+                    }
+                    domainTree.treeNode = data.data;
+                }
+            }else{
+                layer.msg('获得子域节点失败')
+            }
+        })
+        //选择管理域
+        var domainLayer;
+        $('#choseDomain').click(function () {
+            domainLayer = layer.open({
+                type: 1,
+                title: '管理域树',
+                skin: 'layui-layer-rim',
+                offset: '100px',
+                area: ['300px', '450px'],
+                resize: false,
+                content: $('#dTree')
+            })
+        })
+        var treeObj = $.fn.zTree.init($("#dTree"), domainTree.setting, domainTree.treeNode);
         /********************************* 修改用户管理域 ***************************************/
         var altDomain={};
         altDomain.init=function () {

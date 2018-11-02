@@ -198,7 +198,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             })
         }
         /********************************* 设备类型下拉框查询 ***************************************/
-        dict.init('encodeDevice','.deviceType');
+        dict.init('1','.deviceType');
         /********************************* 网关下拉框 ***************************************/
         gbCatalogService.getGB28181AMGCode(function (data) {
             if(data.result){
@@ -335,7 +335,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 pagination:true,
                 sidePagination:'server',
                 pageNumber:1,
-                pageSize:5,
+                pageSize:10,
                 pageList:[10,20,30],
                 smartDisplay:false,
                 search:true,
@@ -363,6 +363,10 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             })
         }
         deviceTable.init();
+        //初始化表格高度
+        $('#device_table').bootstrapTable('resetView', {height: $(window).height() - 165});
+        //自适应表格高度
+        common.resizeTableDH('#device_table');
         /********************************* 查询设备 ***************************************/
         $('#search').click(function () {
             deviceTable.ip = $('input[name="d_ip"]').val();
@@ -469,7 +473,8 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         common.clearForm('DeviceForm');
                         //关闭弹窗
                         layer.closeAll();
-                        layer.msg('添加成功 请刷新表格')
+                        //刷新表格
+                        $('#device_table').bootstrapTable('refresh', {silent: true});
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -763,12 +768,12 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 var deviceConId = $('input[name="deviceSrcConId"]').val();
                 var deviceCode = $('input[name="deviceSrcCode"]').val();
                 var typeCode = $('select[name="srcTypeCode"]').val();
-                mediaSrcService.addMediaSrcsList(deviceId, uriNum, deviceName, deviceConId, deviceCode, typeCode, function (data) {
+                mediaSrcService.addMediaSrcsList(deviceConId, uriNum, deviceName, deviceId, deviceCode, typeCode, function (data) {
                     if (data.result) {
-                        layer.msg('添加到通道成功!')
                         //清空表格
-                        //清空验证
-                        $("#addMediaForm").data('bootstrapValidator').destroy();
+                        common.clearForm('addMediaForm');
+                        layer.closeAll();
+                        layer.msg('添加到通道成功!');
                     } else {
                         layer.msg(data.description);
                     }

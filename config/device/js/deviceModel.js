@@ -148,6 +148,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             })
         }
         deviceModelTable.init();
+        //初始化表格高度
+        $('#deviceModel_table').bootstrapTable('resetView', {height: $(window).height() - 165});
+        //自适应表格高度
+        common.resizeTableDH('#deviceModel_table');
         /********************************* 设备厂商下拉框 ***************************************/
         var page={
             pageNumber:1,
@@ -163,7 +167,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             }
         })
         /********************************* 设备类型下拉框 ***************************************/
-        dictService.getChildList('encodeDevice',function (data) {
+        dictService.getChildList('1',function (data) {
             if(data.result){
                 if(data.dataSize>0){
                     for (var i = 0; i < data.dataSize; i++) {
@@ -225,7 +229,9 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         if(data.result){
                             common.clearForm('addform');
                             layer.closeAll();
-                            layer.msg('添加成功 请刷新表格')
+                            layer.msg('添加成功');
+                            //刷新表格
+                            $('#deviceModel_table').bootstrapTable('refresh', {silent: true});
                         }else{
                             layer.msg(data.description);
                             $("button[type='submit']").removeAttr('disabled');

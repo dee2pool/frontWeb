@@ -15,9 +15,9 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
-        'bootstrap-table-zh-CN':{
-            deps:['bootstrap-table','jquery'],
-            exports:"bootstrapTableZhcN"
+        'bootstrap-table-zh-CN': {
+            deps: ['bootstrap-table', 'jquery'],
+            exports: "bootstrapTableZhcN"
         },
         'bootstrap-treeview': {
             deps: ['jquery'],
@@ -49,8 +49,8 @@ require.config({
         "buttons": "../../common/js/buttons"
     }
 });
-require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN','bootstrap', 'bootstrapValidator', 'topBar','buttons','ugroupService', 'userService','RoleService'],
-    function (jquery, common, frame, bootstrapTable,bootstrapTableZhcN,bootstrap, bootstrapValidator,topBar,buttons,ugroupService, userService, RoleService) {
+require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'bootstrapValidator', 'topBar', 'buttons', 'ugroupService', 'userService', 'RoleService'],
+    function (jquery, common, frame, bootstrapTable, bootstrapTableZhcN, bootstrap, bootstrapValidator, topBar, buttons, ugroupService, userService, RoleService) {
         /********************************* 页面初始化 ***************************************/
         //初始化frame
         $('#sidebar').html(frame.htm);
@@ -63,13 +63,13 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
             path: '../../../common/lib/layer/'
         });
         /********************************* 获得角色列表 ***************************************/
-        var roleTable={};
-        roleTable.init=function () {
-            var queryUrl=common.host+"/auth/role/list/page";
+        var roleTable = {};
+        roleTable.init = function () {
+            var queryUrl = common.host + "/auth/role/list/page";
             $('.role_table').bootstrapTable({
-                columns:[{
+                columns: [{
                     checkbox: true
-                },{
+                }, {
                     field: 'id',
                     visible: false
                 }, {
@@ -81,27 +81,27 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
                     title: '描述信息',
                     align: 'center'
                 }],
-                url:queryUrl,
-                method:'GET',
-                cache:false,
-                pagination:true,
-                sidePagination:'server',
-                pageNumber:1,
-                pageSize:5,
-                pageList:[10,20,30],
-                queryParamsType:'',
-                responseHandler:function(res){
-                    var rows=res.data;
-                    var total=res.extra;
-                    return{
-                        "rows":rows,
-                        "total":total
+                url: queryUrl,
+                method: 'GET',
+                cache: false,
+                pagination: true,
+                sidePagination: 'server',
+                pageNumber: 1,
+                pageSize: 5,
+                pageList: [10, 20, 30],
+                queryParamsType: '',
+                responseHandler: function (res) {
+                    var rows = res.data;
+                    var total = res.extra;
+                    return {
+                        "rows": rows,
+                        "total": total
                     }
                 },
-                queryParams:function (params) {
-                    var temp={
-                        pageNo:params.pageNumber,
-                        pageSize:params.pageSize
+                queryParams: function (params) {
+                    var temp = {
+                        pageNo: params.pageNumber,
+                        pageSize: params.pageSize
                     }
                     return temp
                 }
@@ -110,9 +110,9 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
         }
         roleTable.init();
         /********************************* 用户组表格 ***************************************/
-        var ugroupTable={};
-        ugroupTable.init=function () {
-            var queryUrl=common.host+"/auth/userGroup/list";
+        var ugroupTable = {};
+        ugroupTable.init = function () {
+            var queryUrl = common.host + "/auth/userGroup/list";
             $('#usergroup_table').bootstrapTable({
                 columns: [{
                     checkbox: true
@@ -134,36 +134,37 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
                     title: '备注',
                     align: "center"
                 }, {
+                    field: 'role',
                     title: '角色',
                     align: "center",
-                    formatter:function (value,row,index) {
+                    formatter: function (value, row, index) {
                         var role = $('.role_table').bootstrapTable('getData', {'useCurrentPage': true});
                         var roleIds = new Array();
                         for (var i = 0; i < role.length; i++) {
                             roleIds.push(role[i].id);
                         }
                         var roleName = new Array();
-                        ugroupService.getUserGroupRoleById(row.id,roleIds,function (data) {
-                            if(data.result){
+                        ugroupService.getUserGroupRoleById(row.id, roleIds, function (data) {
+                            if (data.result) {
                                 if (data.dataSize > 0) {
                                     for (var i = 0; i < data.dataSize; i++) {
-                                        if(data.data[i].isGranted){
+                                        if (data.data[i].isGranted) {
                                             roleName.push(data.data[i].roleName);
                                         }
                                     }
                                 }
-                            }else{
+                            } else {
                                 layer.msg('获得角色信息失败');
                             }
                         })
                         return roleName;
                     }
-                },{
+                }, {
                     title: '操作',
                     align: "center",
                     events: {
-                        "click #edit": function (e,value,row,index) {
-                            ugroupEdit.init(row,index);
+                        "click #edit": function (e, value, row, index) {
+                            ugroupEdit.init(row, index);
                         },
                         "click #del": function (e, value, row, index) {
                             ugroupDel.init(row)
@@ -177,48 +178,52 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
                         return icons;
                     }
                 }],
-                url:queryUrl,
-                method:'GET',
-                cache:false,
-                pagination:true,
-                sidePagination:'server',
-                pageNumber:1,
-                pageSize:5,
-                pageList:[10,20,30],
-                smartDisplay:false,
-                search:true,
-                trimOnSearch:true,
-                showRefresh:true,
-                queryParamsType:'',
-                responseHandler:function(res){
-                    var rows=res.data;
-                    var total=res.extra;
-                    return{
-                        "rows":rows,
-                        "total":total
+                url: queryUrl,
+                method: 'GET',
+                cache: false,
+                pagination: true,
+                sidePagination: 'server',
+                pageNumber: 1,
+                pageSize: 5,
+                pageList: [10, 20, 30],
+                smartDisplay: false,
+                search: true,
+                trimOnSearch: true,
+                showRefresh: true,
+                queryParamsType: '',
+                responseHandler: function (res) {
+                    var rows = res.data;
+                    var total = res.extra;
+                    return {
+                        "rows": rows,
+                        "total": total
                     }
                 },
-                queryParams:function (params) {
-                    var temp={
-                        pageNo:params.pageNumber,
-                        pageSize:params.pageSize,
-                        name:params.searchText
+                queryParams: function (params) {
+                    var temp = {
+                        pageNo: params.pageNumber,
+                        pageSize: params.pageSize,
+                        name: params.searchText
                     }
                     return temp
                 }
             })
         }
         ugroupTable.init();
+        //初始化表格高度
+        $('#usergroup_table').bootstrapTable('resetView', {height: $(window).height() - 135});
+        //自适应表格高度
+        common.resizeTableH('#usergroup_table');
         /********************************* 添加用户组弹窗点击下一步 ***************************************/
-        var ugroup={};
-        ugroup.nextBtn=function (tabId) {
+        var ugroup = {};
+        ugroup.nextBtn = function (tabId) {
             $('.btn-next').click(function () {
                 $('#' + tabId + ' a:last').tab('show')
             })
         }
         /********************************* 添加用户组 ***************************************/
-        var ugroupAdd={};
-        ugroupAdd.valia=function () {
+        var ugroupAdd = {};
+        ugroupAdd.valia = function () {
             $('#ugroupForm').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -236,41 +241,31 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
                 }
             })
         }
-        ugroupAdd.submit=function () {
-            $('#ugroupForm').on('success.form.bv',function () {
-                var roleSelected=$('#addUgRoleTable').bootstrapTable('getSelections');
+        ugroupAdd.submit = function () {
+            $('#ugroupForm').on('success.form.bv', function () {
+                var roleSelected = $('#addUgRoleTable').bootstrapTable('getSelections');
                 console.log(roleSelected)
-                if(roleSelected.length==0){
+                if (roleSelected.length == 0) {
                     layer.msg('请选择用户组角色')
                     $("button[type='submit']").removeAttr('disabled');
-                }else{
+                } else {
                     //获得所选角色id
-                    var roleIds=new Array();
-                    for(var i=0;i<roleSelected.length;i++){
+                    var roleIds = new Array();
+                    for (var i = 0; i < roleSelected.length; i++) {
                         roleIds.push(roleSelected[i].id);
                     }
                     //添加用户组
-                    var ug={};
-                    ug.name=$("input[name='ugroupname']").val();
+                    var ug = {};
+                    ug.name = $("input[name='ugroupname']").val();
                     ug.remark = $("textarea[name='ugroupRem']").val();
-                    ugroupService.addUserGroup(ug,roleIds,function (data) {
-                        if(data.result){
-                            /*//TODO 为用户组添加权限：待修改
-                            ugroupService.assignRoleToUserGroup(data.data,roleIds,function (data) {
-                                if (data.result) {
-                                    //初始化表单
-                                    $("input[name='res']").click();
-                                    //初始化验证规则
-                                    $("#ugroupForm").data('bootstrapValidator').destroy();
-                                    //关闭弹窗
-                                    layer.closeAll();
-                                    layer.msg('添加用户组成功')
-                                }
-                            })*/
+                    ugroupService.addUserGroup(ug, roleIds, function (data) {
+                        if (data.result) {
                             common.clearForm('ugroupForm');
                             layer.closeAll();
-                            layer.msg('添加用户成功 请刷新表格');
-                        }else{
+                            //刷新表格
+                            $('#usergroup_table').bootstrapTable('refresh', {silent: true});
+                            layer.msg('添加用户成功');
+                        } else {
                             layer.msg(data.description);
                         }
                     })
@@ -278,7 +273,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
                 return false;
             })
         }
-        ugroupAdd.init=function () {
+        ugroupAdd.init = function () {
             $('#addUgroup').click(function () {
                 //表单验证
                 ugroupAdd.valia();
@@ -300,8 +295,8 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
         }
         ugroupAdd.init();
         /********************************* 修改用户组 ***************************************/
-        var ugroupEdit={};
-        ugroupEdit.valia=function () {
+        var ugroupEdit = {};
+        ugroupEdit.valia = function () {
             $('#editform').bootstrapValidator({
                 feedbackIcons: {
                     valid: 'glyphicon glyphicon-ok',
@@ -319,15 +314,15 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
                 }
             })
         }
-        ugroupEdit.submit=function (row,index,layerId) {
-            $('#editform').on('success.form.bv',function () {
-                var ug={};
-                ug.name=$("input[name='editugname']").val();
+        ugroupEdit.submit = function (row, index, layerId) {
+            $('#editform').on('success.form.bv', function () {
+                var ug = {};
+                ug.name = $("input[name='editugname']").val();
                 ug.remark = $("textarea[name='editRemark']").val();
-                ugroupService.updateUserGroup(row.id,ug,function (data) {
-                    if(data.result){
+                ugroupService.updateUserGroup(row.id, ug, function (data) {
+                    if (data.result) {
                         //修改表格
-                        $('#usergroup_table').bootstrapTable('updateRow',{index: index, row: ug});
+                        $('#usergroup_table').bootstrapTable('updateRow', {index: index, row: ug});
                         //清空表格
                         $("input[name='res']").click();
                         //初始化验证规则
@@ -335,14 +330,14 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
                         //关闭弹窗
                         layer.closeAll();
                         layer.msg('修改用户组成功');
-                    }else{
+                    } else {
                         layer.msg('修改用户组失败')
                     }
                 })
                 return false;
             })
         }
-        ugroupEdit.init=function (row,index) {
+        ugroupEdit.init = function (row, index) {
             //启用验证
             ugroupEdit.valia();
             //填充表单
@@ -359,18 +354,18 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
                 content: $('#edit_ugroup')
             })
             //表单提交
-            ugroupEdit.submit(row,index);
+            ugroupEdit.submit(row, index);
         }
         /********************************* 删除用户组 ***************************************/
-        var ugroupDel={};
+        var ugroupDel = {};
         ugroupDel.init = function (row) {
             //点击删除按钮
             layer.confirm('确定删除 ' + row.name + ' ?', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
                 //删除操作
-                ugroupService.deleteUserGroupByIds(row.id,function (data) {
-                    if(data.result){
+                ugroupService.deleteUserGroupByIds(row.id, function (data) {
+                    if (data.result) {
                         $('#usergroup_table').bootstrapTable('remove', {field: 'id', values: [row.id]});
                         layer.msg("删除成功!")
                     }
@@ -385,13 +380,21 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
             $('#ressignRoleSub').click(function () {
                 var roles = $('#roles').bootstrapTable('getSelections');
                 var roleIds = new Array();
+                var roleNames=new Array();
                 for (var i = 0; i < roles.length; i++) {
                     roleIds.push(roles[i].id);
+                    roleNames.push(roles[i].name);
                 }
-                ugroupService.reassignRoleToUserGroup(ugId,roleIds,function (data) {
+                ugroupService.reassignRoleToUserGroup(ugId, roleIds, function (data) {
                     if (data.result) {
                         layer.closeAll();
                         layer.msg('修改角色成功');
+                        var index = common.getTableIndex('usergroup_table');
+                        $('#usergroup_table').bootstrapTable('updateCell', {
+                            index: index[0],
+                            field: 'role',
+                            value: roleNames
+                        });
                         $('#ressignRoleSub').unbind('click')
                     } else {
                         layer.msg(data.description)
@@ -423,34 +426,34 @@ require(['jquery', 'common', 'frame', 'bootstrap-table','bootstrap-table-zh-CN',
         }
         ressignRole.init();
         /********************************* 剥夺用户组角色 ***************************************/
-        var deprive={};
-        deprive.init=function () {
+        var deprive = {};
+        deprive.init = function () {
             $('#deprive').click(function () {
-                var ug=$('#usergroup_table').bootstrapTable('getSelections');
-                if(ug.length==0){
+                var ug = $('#usergroup_table').bootstrapTable('getSelections');
+                if (ug.length == 0) {
                     layer.msg('请选择用户组')
-                }else if(ug.length>1){
+                } else if (ug.length > 1) {
                     layer.msg('一次只能选择一个用户组')
-                }else{
+                } else {
 
                 }
             })
         }
-        var roleId=new Array();
-        RoleService.getRoleList('1','10',function (data) {
-            if(data.result){
-                for(var i=0;i<data.dataSize;i++){
+        var roleId = new Array();
+        RoleService.getRoleList('1', '10', function (data) {
+            if (data.result) {
+                for (var i = 0; i < data.dataSize; i++) {
                     roleId.push(data.data[i].id);
                 }
             }
         })
         /********************************* 查询用户组所拥有的角色 ***************************************/
-        var getUgRole={};
-        getUgRole.getRole=function (row) {
-            ugroupService.getUserGroupRoleById(row.id,roleId,function (data) {
-                if(data.result){
+        var getUgRole = {};
+        getUgRole.getRole = function (row) {
+            ugroupService.getUserGroupRoleById(row.id, roleId, function (data) {
+                if (data.result) {
                     console.log(data.data);
                 }
             })
         }
-})
+    })

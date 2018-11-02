@@ -204,7 +204,7 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
                 pagination: true,
                 sidePagination: 'server',
                 pageNumber: 1,
-                pageSize: 5,
+                pageSize: 10,
                 pageList: [10, 20, 30],
                 smartDisplay: false,
                 showRefresh: true,
@@ -227,6 +227,10 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
             })
         }
         roleTable.init();
+        //初始化表格高度
+        $('#role_table').bootstrapTable('resetView', {height: $(window).height() - 135});
+        //自适应表格高度
+        common.resizeTableH('#role_table');
         /********************************* 添加角色 ***************************************/
         roleAdd.init();
         /********************************* 修改角色 ***************************************/
