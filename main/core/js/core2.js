@@ -1687,6 +1687,7 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                     url:requestUrl,
                     type:'POST',
                     dataType:"json",
+                    async:false,
                     data:json,
                     cache:false,
                     success:onSuccess,
@@ -2579,15 +2580,18 @@ require(['jquery', 'common', 'bootstrap', 'leaflet', 'contextmenu', 'history', '
                             nativeWinService.openSession(token,serverUrl);
                         }).then(function (resp) {
                             //这里存在着一个异步的问题，必须要按照顺序依次执行下面的方法，才能正确调出视频，为了保证不受异步干扰，所以增加了延迟方法
-                            setTimeout(function(){
-                                nativeWinService.createWindow(1,"test",100,100,400,300);
-                            },500);
-                            setTimeout(function(){
-                                nativeWinService.getWindowList();
-                            },2000);
-                            setTimeout(function(){
-                                nativeWinService.preview(winId,d);
-                            },3000);
+                            // setTimeout(function(){
+                            //
+                            // },500);
+                            // setTimeout(function(){
+                            //
+                            // },2000);
+                            // setTimeout(function(){
+                            //
+                            // },3000);
+                            nativeWinService.createWindow(1,"test",100,100,400,300);
+                            nativeWinService.getWindowList();
+                            nativeWinService.preview(winId,d);
                         });
 
 

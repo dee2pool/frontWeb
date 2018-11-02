@@ -93,7 +93,7 @@ function ($,common,bootstrap,bootstrapTable,  frame, bootstrapValidator,treeview
         });
     });
 
-    //4.2询问弹出层
+    //4.2.1询问弹出层1
     $("#layer-msg").on("click",function () {
         layer.msg('是否确定删除？', {
             time: 20000, //20s后自动关闭
@@ -106,6 +106,17 @@ function ($,common,bootstrap,bootstrapTable,  frame, bootstrapValidator,treeview
                 console.log('失败！');
                 layer.closeAll();
             },
+        });
+    });
+
+    //4.2.2询问弹出层2
+    $("#layer-confirm").on("click",function () {
+        layer.confirm('是否确定删除？', {
+            btn: ['确定','取消'] //按钮
+        }, function(){
+            layer.msg('确定删除！');
+        }, function(){
+            layer.msg('取消删除！');
         });
     });
 
