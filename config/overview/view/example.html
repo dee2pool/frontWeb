@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>样式示例</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+    <!--本页-->
+    <link rel="stylesheet" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="../../../common/lib/layx/layx.css">
+    <link rel="stylesheet" href="../../../common/lib/layer/theme/default/layer.css">
+
+    <!--<link rel="stylesheet" href="../css/overview.css">-->
+    <link rel="stylesheet" href="../css/example.css">
+
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/overview"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content">
+            <!--左侧-->
+            <div class="content-panel left layout-border">
+                <div class="content-head">
+                    <span class="content-head-title">管理域</span>
+                </div>
+                <ul id="domaintree" class="ztree"><li id="domaintree_1" class="level0" tabindex="0" hidefocus="true" treenode=""><span id="domaintree_1_switch" title="" class="button level0 switch root_close" treenode_switch=""></span><a id="domaintree_1_a" class="level0" treenode_a="" onclick="" target="_blank" style="" title="默认管理域"><span id="domaintree_1_ico" title="" treenode_ico="" class="button ico_close" style="background:url(../img/domain.png) 0 0 no-repeat;"></span><span id="domaintree_1_span" class="node_name">默认管理域</span></a></li></ul>
+            </div>
+
+            <!--右上侧-->
+            <div class="content-panel right-top layout-border">
+                <buttton class="btn btn-primary btn-sm">提交/确定</buttton>
+                <buttton class="btn btn-danger btn-sm">删除</buttton>
+                <buttton class="btn btn-default btn-sm">取消</buttton>
+                <buttton class="btn btn-info btn-sm">其他操作</buttton>
+                <buttton class="btn btn-warning btn-sm">其他操作</buttton>
+            </div>
+
+            <!--右下侧-->
+            <div class="content-panel right-bottom layout-border">
+                <div class="content-head">
+                    <span class="content-head-title">表单内容</span>
+                </div>
+                <h3>方案一</h3>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">用户名：</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" placeholder="用户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-1 control-label">密码：</label>
+                        <div class="col-sm-3">
+                            <input type="password" class="form-control" placeholder="密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">下拉框：</label>
+                        <div class="col-sm-3">
+                            <select class="form-control">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">单选：</label>
+                        <div class="col-sm-3">
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 1
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 3
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">文本域：</label>
+                        <div class="col-sm-3">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-1 control-label">文本域：</label>
+                        <div class="col-sm-3">
+                            <input type="file" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-3">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox">记住
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-1 col-sm-3">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                            <button type="submit" class="btn btn-danger">取消</button>
+                        </div>
+                    </div>
+                </form>
+                <h3>方案二</h3>
+                <form style="margin: 0 5px 0 5px">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Email address</label>
+                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">File input</label>
+                        <input type="file" id="exampleInputFile">
+                        <p class="help-block">Example block-level help text here.</p>
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox"> Check me out
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-default">Submit</button>
+                </form>
+
+                <h3>方案三</h3>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">用户名：</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" placeholder="用户名">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label  class="col-sm-4 control-label">密码：</label>
+                        <div class="col-sm-4">
+                            <input type="password" class="form-control" placeholder="密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">下拉框：</label>
+                        <div class="col-sm-4">
+                            <select class="form-control">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">单选：</label>
+                        <div class="col-sm-4">
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> 1
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> 2
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="inlineRadioOptions" id="inlineRadio3" value="option3"> 3
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">文本域：</label>
+                        <div class="col-sm-4">
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label">文本域：</label>
+                        <div class="col-sm-4">
+                            <input type="file" class="form-control" >
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-4">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox">记住
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-4 col-sm-4">
+                            <button type="submit" class="btn btn-primary">提交</button>
+                            <button type="submit" class="btn btn-danger">取消</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

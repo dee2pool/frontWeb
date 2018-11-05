@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>全局样式</title>
+    <link rel="stylesheet" href="../../common/css/common.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
+    <link rel="stylesheet"  href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../sidebar/css/frame.css">
+    <link rel="stylesheet" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../common/libs/bootstrap-switch/css/bootstrap3/bootstrap-switch.css">
+    <!--本页-->
+    <link rel="stylesheet" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="../../../common/lib/layx/layx.css">
+    <link rel="stylesheet" href="../../../common/lib/layer/theme/default/layer_opacity.css">
+
+    <link rel="stylesheet" href="../css/overview.css">
+
+    <script src="../../common/libs/require.js" defer async="true" data-main="../js/overview"></script>
+</head>
+<body>
+<div class="wrapper">
+    <!--头部-->
+    <div id="head"></div>
+    <!--侧边栏-->
+    <div id="sidebar"></div>
+    <!--主体内容-->
+    <div class="contentpage">
+        <div class="content">
+            <div class="content-panel">
+                <!--1.整体布局-->
+                <h3>一、整体事项</h3>
+                <p>1.布局内部高度：calc(100vh - 63px，100vh减去头部的高度)；</p>
+                <p>2.字体：采用默认通用字体："Open Sans", sans-serif;</p>
+                <p>3.字号：默认字号采用"14px"，大标题采用"<span style="font-size: 24px">h3</span>"，小标题采用"<span style="font-size: 18px">h4</span>"；</p>
+                <p>4.字体颜色：浅色背景下采用black，深色背景下采用white</p>
+                <p><strong>5.注意：前端目前是基于ES5标准，不要混入ES6标准的代码；</strong></p>
+
+                <!--2.按钮-->
+                <h3>二、按钮</h3>
+                <p><strong>所有按钮的样式原则上只采用目前使用的bootstrap自带的样式，不得引入第三方框架；</strong></p>
+                <p>1.小按钮（用于表格内，导航栏等）：
+                    <buttton class="btn btn-primary btn-sm">提交/确定</buttton>
+                    <buttton class="btn btn-danger btn-sm">删除</buttton>
+                    <buttton class="btn btn-default btn-sm">取消</buttton>
+                    <buttton class="btn btn-info btn-sm">其他操作</buttton>
+                    <buttton class="btn btn-warning btn-sm">其他操作</buttton>
+                </p>
+                <p>2.标准按钮（用于表单提交等）：
+                    <buttton class="btn btn-primary">提交/确定</buttton>
+                    <buttton class="btn btn-danger">删除</buttton>
+                    <buttton class="btn btn-default">取消</buttton>
+                    <buttton class="btn btn-info">其他操作</buttton>
+                    <buttton class="btn btn-warning">其他操作</buttton>
+                </p>
+
+                <!--3.表单-->
+                <h3>三、表单</h3>
+                <p>
+                    1.水平排列表单
+                </p>
+                <div class="border">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">Email</label>
+                            <div class="col-sm-3">
+                                <input type="email" class="form-control" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label  class="col-sm-1 control-label">Password</label>
+                            <div class="col-sm-3">
+                                <input type="password" class="form-control" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-1 control-label">Password</label>
+                            <div class="col-sm-3">
+                                <input type="password" class="form-control" placeholder="Password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-3">
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox"> Remember me
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-3">
+                                <button type="submit" class="btn btn-default">Sign in</button>
+                            </div>
+                        </div>
+                </form>
+                </div>
+                <p>2.表单参考（仅仅作为样式的参考）：
+                    <a href="https://www.layui.com/admin/pro/#/set/system/website" target="_blank">layui方案</a>，
+                    <a href="https://preview.pro.ant.design/form/basic-form" target="_blank">antd方案</a>
+                    <a href="http://element-cn.eleme.io/#/zh-CN/component/form" target="_blank">element ui方案</a>
+                    <a href="https://wrappixel.com/demos/admin-templates/material-pro/material/form-basic.html" target="_blank">bt方案1</a>
+                    <a href="http://www.ampleadmin.wrappixel.com/ampleadmin-html/ampleadmin-minimal/form-float-input.html" target="_blank">bt方案2</a>
+                </p>
+
+                <!--4.弹出层-->
+                <h3>四、弹出层</h3>
+                <p>1.表单弹出层（layer）
+                    <button class="btn btn-default" id="layer-form">表单弹出层</button>
+                </p>
+                <p>2.询问弹出层（layer）
+                    <button class="btn btn-default" id="layer-msg">询问弹出层1</button>
+                    <button class="btn btn-default" id="layer-confirm">询问弹出层2</button>
+                </p>
+                <p>3.提示弹出层（layer）
+                    <button class="btn btn-default" id="layer-info">提示弹出层</button>
+                </p>
+                <p>
+                    <strong>4.layx弹出层：</strong>layer弹出层只适用于提示，交互，和小型表单的弹出层，对于需要在弹出层中使用复杂结构和事件等（如tab等），建议使用layx；
+                </p>
+                <p>5.layx效果展示：<button class="btn btn-warning" id="layx-win">layx弹出层</button>
+                </p>
+                <div id="layer-win" style="display: none;padding: 10px 0px 0 0px;">
+                    <form id="addDictForm" class="form-horizontal">
+                        <div class="form-item form-group-sm">
+                            <label class="col-sm-3 control-label"><i class="required">*</i>名称：</label>
+                            <div class="col-sm-6" style="padding: 0px">
+                                <input name="dictName" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-item form-group-sm">
+                            <label class="col-sm-3 control-label"><i class="required">*</i>编号：</label>
+                            <div class="col-sm-6" style="padding: 0px">
+                                <input name="dictNo" class="form-control" type="text">
+                            </div>
+                        </div>
+                        <div class="form-item form-group-sm">
+                            <label class="col-sm-3 control-label"><i class="required">*</i>上级：</label>
+                            <div class="col-sm-6" style="padding: 0px">
+                                <input name="parentName" class="form-control" type="text" value="无">
+                                <input type="hidden" name="parentCode" value="-1">
+                            </div>
+                        </div>
+                        <div class="form-item form-group-sm">
+                            <label class="col-sm-3 control-label">备注：</label>
+                            <div class="col-sm-6" style="padding: 0px">
+                                <textarea name=remark" cols="40" rows="2"></textarea>
+                                <input name="res" type="reset" style="display:none;"/>
+                            </div>
+                        </div>
+                        <div class="tab-footer">
+                            <button type="submit" class="btn btn-primary">完成</button>
+                            <button type="button" class="btn btn-default btn-cancel">取消</button>
+                        </div>
+                    </form>
+                </div>
+
+                <p>6.layer弹出层的皮肤样式采用layer自带的：<code>skin: 'layui-layer-lan'</code></p>
+
+                <!--5.超链-->
+                <h3>五、超链</h3>
+                <p>1.超链（a标签）的使用，主要是在a标签中嵌套icon图标，进而构成一个按钮使用，例如
+                    <a href="#" class="a-btn" onclick="return false;" id="a-button"><span class="fa fa-plus"></span>添加</a>
+                </p>
+
+                <!--6.布局-->
+                <h3>六、布局（<a href="./example.html">布局示例</a>）</h3>
+                <div class="layout">
+                    <div class="left layout-border"></div>
+                    <div class="right">
+                        <div class="top-side layout-border"></div>
+                        <div class="bottom-side layout-border"></div>
+                    </div>
+                </div>
+
+                <!--7.图标-->
+                <h3>七、图标</h3>
+                <p>1.由于bootstrap自带的字体图标较少（仅有250个），不能满足网页端对于大量图标的需求，所以引入使用对于bootstrap完全兼容的fontawesome(上千个图标)。原则上，所有的字体
+                    图标均采用fontawesome，不使用bootstrap自带的Glyphicons图标；
+                </p>
+                <p>
+                    2.效果展示:
+                    <span class="fa fa-plus" style="margin-right: 10px"></span>
+                    <span class="fa fa-remove" style="margin-right: 10px"></span>
+                    <span class="fa fa-list" style="margin-right: 10px"></span>
+                    <span class="fa fa-globe" style="margin-right: 10px"></span>
+                </p>
+                <p>
+                    3.更多图标查看：
+                    https://fontawesome.com/icons?d=gallery
+                </p>
+
+                <!--8.表格-->
+                <h3>八、表格</h3>
+                <p>1.表格直接采用bootstrap table插件，由于此插件功能及其强大，并且带有分页功能，所以原则上所有的基于表格的数据展示和对数据的增删改查，全部基于此插件完成;</p>
+                <p>2.效果展示：</p>
+                <table class="table-bordered table" id="bt-table"></table>
+                <p>3.全局bootstrap-table.js文件中，我已经加入中文化设置，后续不用再单独加载bootstrap-table-zh-CN.js了；</p>
+
+                <!--9.边框、圆角-->
+                <h3>九、边框、圆角</h3>
+                <code>-webkit-border-radius: 2px;</code><br>
+                <code>border-radius: 2px;</code><br>
+                <code>background: #fff;</code><br>
+                <code>box-shadow: inset 0 4px 7px 1px #fff, inset 0 -5px 20px rgba(173,186,204,.25), 0 2px 6px rgba(0,21,64,.14), 0 10px 20px rgba(0,21,64,.05);</code><br>
+                <code>-webkit-box-shadow: inset 0 4px 7px 1px #fff, inset 0 -5px 20px rgba(173,186,204,.25), 0 2px 6px rgba(0,21,64,.14), 0 10px 20px rgba(0,21,64,.05);</code><br>
+
+                <!--10.树结构-->
+                <h3>十、树结构</h3>
+                <p>1.树结构采用ztree，对于树结构的设置，当前采用ztree的默认主题（zTreeStyle），暂时不显示图标，只显示"+"和"-"以及连接线；对于显示何种图标，可以根据实际需要进行加载，如果确实没有图标的需求，那么不添加图标；</p>
+                <p>2.由于树结构的生成是来自于结构数据，为了防止树结构加载数据过多卡死，每次点击某一个节点时，只加载显示此节点所属的节点；</p>
+                <p><strong>3.展示效果如下：</strong></p>
+                <ul id="treeDemo" class="ztree"></ul>
+
+
+                <!--11.滚动条-->
+                <h3>十一、滚动条</h3>
+                <p>1.滚动条效果即右侧滚动条效果；</p>
+                <code>::-webkit-scrollbar-track{border-radius: 10px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0);}/*滚动条的滑轨背景颜色*/</code>
+                <br>
+                <code>::-webkit-scrollbar-thumb{background-color: rgba(0,0,0,0.05);border-radius: 10px;-webkit-box-shadow: inset 1px 1px 0 rgba(75, 75, 75, 0.58);}/*滑块颜色*/</code>
+                <br>
+                <code>::-webkit-scrollbar-thumb{background-color: rgba(0,0,0,0.2);border-radius: 10px;-webkit-box-shadow: inset 1px 1px 0 rgba(48, 48, 48, 0.92);}</code>
+                <br>
+                <code>::-webkit-scrollbar{width: 16px;height: 16px;}/* 滑块整体设置*/</code>
+                <br>
+                <code>::-webkit-scrollbar-track</code>
+                <br>
+                <code>::-webkit-scrollbar-thumb{border-radius: 999px;border: 5px solid transparent;}</code>
+                <br>
+                <code>::-webkit-scrollbar-track{box-shadow: 1px 1px 5px rgba(0,0,0,.2) inset;}</code>
+                <br>
+                <code>::-webkit-scrollbar-thumb{min-height: 20px;background-clip: content-box;box-shadow: 0 0 0 5px rgba(0,0,0,.2) inset;}</code>
+                <br>
+                <code>::-webkit-scrollbar-corner{background: transparent;}/* 横向滚动条和纵向滚动条相交处尖角的颜色 */</code>
+                <br>
+                <p>2.滚动条原则上y轴设置为auto，x轴设置为hidden</p>
+                <code>
+                    overflow-y: auto;
+                    overflow-x: hidden;
+                </code>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
