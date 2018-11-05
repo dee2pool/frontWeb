@@ -444,7 +444,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 var domain = {};
                 domain.name = $('input[name="domainName"]').val();
                 domain.parentCode = $('input[name="parentDoaminCode"]').val();
-                domain.remark = $('textarea[name="domainRemark"]').val();
+                domain.description = $('textarea[name="domainRemark"]').val();
                 domainService.addDomain(domain, function (data) {
                     if (data.result) {
                         //清空表单和验证

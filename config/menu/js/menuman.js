@@ -20,7 +20,7 @@ require.config({
             exports: "bootstrapTable"
         },
         'bootstrap-table-zh-CN':{
-            deps: ['bootstrap', 'jquery'],
+            deps: ['bootstrap-table', 'jquery'],
             exports: "bootstrapTableZhCN"
         },
         'bootstrapValidator': {
@@ -112,20 +112,19 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                         }
                         layer.closeAll();
                         layer.msg('添加成功');
-                        $('#addMpanel').unbind('click');
+                        menuAdd.isClick=false;
                         common.clearForm("addMpanel");
                     } else {
-                        layer.msg(data.description);
+                        layer.msg('添加失败 请稍后重试');
                     }
                 })
                 return false;
             })
         }
+        //阻止表单重复提交
+        menuAdd.isClick=false;
         menuAdd.init = function () {
             $('#addMenu').click(function () {
-                //启用验证
-                menuAdd.valia();
-                menuAdd.initSele();
                 //开启弹窗
                 var layerId = layer.open({
                     type: 1,
@@ -134,10 +133,26 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                     scrollbar: false,
                     offset: '100px',
                     title: '添加菜单',
-                    content: $('#addMpanel')
+                    content: $('#addMpanel'),
+                    cancel: function (index, layero) {
+                        common.clearForm('addMpanel');
+                        menuAdd.isClick=false;
+                    }
                 })
-                //表单提交
-                menuAdd.submit(layerId);
+                if(!menuAdd.isClick){
+                    //启用验证
+                    menuAdd.valia();
+                    menuAdd.initSele();
+                    //表单提交
+                    menuAdd.submit(layerId);
+                    menuAdd.isClick=true;
+                }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('addMpanel');
+                menuAdd.isClick=false;
             })
         }
         menuAdd.init();
@@ -185,18 +200,18 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                         if (row.parentId == '-1') {
                             $('#menu_table').bootstrapTable('updateRow', {index: index, row: menu});
                         }
-                        $("button[type='submit']").removeAttr('disabled');
-                        //清空验证
-                        $("#editMpanel").data('bootstrapValidator').destroy();
+                        common.clearForm('editMpanel');
+                        menuEdit.isClick=false;
                     } else {
-                        layer.msg(data.description);
+                        layer.msg('修改菜单失败 请稍后重试');
                     }
                 })
                 return false;
             })
         }
+        //组织表单重复提交
+        menuEdit.isClick=false;
         menuEdit.init = function (row, index) {
-            menuEdit.valia();
             $("input[name='edit_Mid']").val(row.id);
             $("input[name='edit_Mname']").val(row.name);
             $("input[name='edit_Murl']").val(row.url);
@@ -211,7 +226,11 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                 title: '修改菜单',
                 content: $('#editMpanel')
             })
-            menuEdit.submit(row, index, layerId);
+            if(!menuEdit.isClick){
+                menuEdit.valia();
+                menuEdit.submit(row, index, layerId);
+                menuEdit.isClick=true;
+            }
         }
         /********************************* 删除菜单 ***************************************/
         var menuDel = {};

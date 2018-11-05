@@ -538,6 +538,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
         }
         //表单提交
         userAdd.submit = function () {
+            $('button[type="submit"]').unbind('click');
             $('#user').on('success.form.bv', function () {
                 //获得角色id
                 var role = $('#role_table').bootstrapTable('getSelections');
