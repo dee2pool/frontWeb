@@ -273,10 +273,6 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                             title: '菜单URL',
                             align: 'center'
                         }, {
-                            field: 'parentId',
-                            title: '上级菜单编号',
-                            align: 'center'
-                        }, {
                             field: 'orderNo',
                             title: '菜单展示序号',
                             align: 'center'
@@ -298,9 +294,8 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                                 }
                             },
                             formatter: function () {
-                                var icons = "<div class='button-group'><button id='edit_btn' type='button' class='button button-tiny button-highlight'><i class='fa fa-edit'></i>修改</button>" +
-                                    "<button id='del_btn' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>删除</button>" +
-                                    "</div>"
+                                var icons = "<button id='edit_btn' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                                    "<button id='del_btn' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                                 return icons;
                             }
                         }],
@@ -315,4 +310,8 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
             })
         }
         menuTable.init('-1', '#menu_table');
+        //初始化表格高度
+        $('#menu_table').bootstrapTable('resetView',{height:$(window).height()-135});
+        //自适应表格高度
+        common.resizeTableH('#menu_table');
     })

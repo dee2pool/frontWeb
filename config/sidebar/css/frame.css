@@ -158,9 +158,9 @@ ul li {
 .table th{
     background-color: lightgray;
 }
-.table>tbody>tr>td{
+/*.table>tbody>tr>td{
     border: 0px;
-}
+}*/
 .sidebar {
     position: fixed;
     top: 63px;

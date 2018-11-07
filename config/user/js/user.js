@@ -541,7 +541,8 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             $('button[type="submit"]').unbind('click');
             $('#user').on('success.form.bv', function () {
                 //获得角色id
-                var role = $('#role_table').bootstrapTable('getSelections');
+                var role = $('#roleTable').bootstrapTable('getSelections');
+                console.log(role)
                 var roleIds = new Array();
                 if (role.length > 0) {
                     for (var i = 0; i < role.length; i++) {
@@ -683,7 +684,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             $("select[name='editGender']").val(row.gender);
             $("input[name='editEmail']").val(row.email);
             $("input[name='editId']").val(row.employeeNo);
-            $("input[name='editExpiredTime']").val(row.expiredTime);
+            $("input[name='editExpiredTime']").val(common.formatDate(row.expiredTime));
             //打开弹窗
             var layerId = layer.open({
                 type: 1,
