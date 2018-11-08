@@ -47,7 +47,6 @@ require.config({
         "deviceService": "../../../common/js/service/DeviceInfoController",
         "mediaSrcService": "../../../common/js/service/MediaSrcsController",
         "orgService": "../../../common/js/service/OrgController",
-        "buttons": "../../common/js/buttons",
         "orgTree": "../js/orgTree",
         "dictService": "../../../common/js/service/dictController",
         "deviceManu":"../../../common/js/service/DeviceManufacturerController",
@@ -55,8 +54,8 @@ require.config({
         "gbCatalogService":"../../../common/js/service/GBCatalogController"
     }
 });
-require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrapValidator', 'ztree', 'bootstrap-table','bootstrap-table-zh-CN','deviceManu','deviceModel','domainService', 'buttons', 'orgService', 'orgTree', 'deviceService', 'mediaSrcService', 'dictService','gbCatalogService'],
-    function (jquery, frame, topBar, common, layer, bootstrap, bootstrapValidator, ztree, bootstrapTable,bootstrapTableZhcN,deviceManu,deviceModel,domainService, buttons, orgService, orgTree, deviceService, mediaSrcService, dictService,gbCatalogService) {
+require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrapValidator', 'ztree', 'bootstrap-table','bootstrap-table-zh-CN','deviceManu','deviceModel','domainService', 'orgService', 'orgTree', 'deviceService', 'mediaSrcService', 'dictService','gbCatalogService'],
+    function (jquery, frame, topBar, common, layer, bootstrap, bootstrapValidator, ztree, bootstrapTable,bootstrapTableZhcN,deviceManu,deviceModel,domainService, orgService, orgTree, deviceService, mediaSrcService, dictService,gbCatalogService) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -324,8 +323,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit_btn' type='button' class='button button-tiny button-highlight'><i class='fa fa-edit'></i>修改</button>" +
-                            "</div>"
+                        var icons = "<button id='edit_btn' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>"
                         return icons;
                     }
                 }],
@@ -340,7 +338,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 smartDisplay:false,
                 search:true,
                 trimOnSearch:true,
-                showRefresh:true,
+                showRefresh:false,
                 queryParamsType:'',
                 responseHandler:function(res){
                     var rows=res.data;
@@ -475,6 +473,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         layer.closeAll();
                         //刷新表格
                         $('#device_table').bootstrapTable('refresh', {silent: true});
+                        deviceAdd.isClick=false;
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -483,11 +482,11 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 return false;
             })
         }
+        //阻止表单重复提交
+        deviceAdd.isClick=false;
         deviceAdd.init = function () {
             $('#addDevice').click(function () {
                 if (domainTree.selOrg) {
-                    //开启验证
-                    deviceAdd.valiadator();
                     //开启弹窗
                     $('input[name="orgName"]').val(domainTree.selOrg.name)
                     $('input[name="orgCode"]').val(domainTree.selOrg.code)
@@ -499,13 +498,28 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         scrollbar: false,
                         offset: '100px',
                         title: '添加设备',
-                        content: $('#add_device')
+                        content: $('#add_device'),
+                        cancel: function (index, layero) {
+                            common.clearForm('DeviceForm');
+                            deviceAdd.isClick=false;
+                        }
                     })
-                    //表单提交
-                    deviceAdd.submit();
+                    if(!deviceTable.isClick){
+                        //开启验证
+                        deviceAdd.valiadator();
+                        //表单提交
+                        deviceAdd.submit();
+                        deviceTable.isClick=true;
+                    }
                 } else {
                     layer.msg('请选择左侧组织')
                 }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('DeviceForm');
+                deviceTable.isClick=false;
             })
         }
         deviceAdd.init();
@@ -611,6 +625,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         $("button[type='submit']").removeAttr('disabled');
                         //清空验证
                         $("#editDeviceForm").data('bootstrapValidator').destroy();
+                        deviceEdit.isClick=false;
                     } else {
                         layer.msg(data.description);
                     }
@@ -618,9 +633,9 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 return false;
             })
         }
+        //阻止表单重复提交
+        deviceEdit.isClick=false;
         deviceEdit.init = function (row, index) {
-            //启用校验
-            deviceEdit.valia();
             //填充表单
             $("select[name='eidtDictCode']").val(row.deviceType);
             $("input[name='editDeviceName']").val(row.deviceName);
@@ -646,8 +661,13 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 title: '修改设备',
                 content: $('#edit_device')
             })
-            //表单提交
-            deviceEdit.submit(row, index, layerId)
+            if(!deviceEdit.isClick){
+                //启用校验
+                deviceEdit.valia();
+                //表单提交
+                deviceEdit.submit(row, index, layerId)
+                deviceEdit.isClick=true;
+            }
         }
         /********************************* 删除设备 ***************************************/
         var deviceDel = {};

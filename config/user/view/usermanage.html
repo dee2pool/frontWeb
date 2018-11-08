@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
     <link rel="stylesheet" href="../../../common/component/head/css/head.css">
-    <link rel="stylesheet" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" href="../css/user.css">
     <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -29,20 +28,20 @@
     <div class="contentpage">
         <div class="content">
             <div class="content-panel panel-opera-se">
-                <a id="addUser" class="button button-primary button-small"><span
+                <a id="addUser" class="btn btn-primary"><span
                         class="glyphicon glyphicon-plus"></span>添加用户
                 </a>
-                <a id="grantUg" class="button button-highlight button-small">
-                    <span class="glyphicon glyphicon-royal"></span>分配用户组
+                <a id="grantUg" class="btn btn-info">
+                    <span class="glyphicon glyphicon-user"></span>分配用户组
                 </a>
-                <a id="reassign" class="button button-royal button-small"><span
-                        class="glyphicon glyphicon-royal"></span>修改角色
+                <a id="reassign" class="btn btn-success"><span
+                        class="glyphicon glyphicon-pencil"></span>修改角色
                 </a>
                <!-- <a id="altDomain" class="button button-primary button-small"><span
                         class="glyphicon glyphicon-cloud"></span>修改管理域
                 </a>-->
-                <a id="status" class="button button-primary button-small"><span
-                        class="glyphicon glyphicon-cloud"></span>启用/禁用
+                <a id="status" class="btn btn-info"><span
+                        class="glyphicon glyphicon-lock"></span>启用/禁用
                 </a>
             </div>
             <div class="content-panel panel-main">
@@ -54,7 +53,7 @@
     </div>
 </div>
 <!--添加用户弹出层-->
-<div id="add_user" style="display: none">
+<div id="add_user" style="display: none;padding: 10px 0px 0 0px;">
     <ul id="u_tab" class="nav nav-tabs">
         <li class="active">
             <a href="#tab-base-user" data-toggle="tab" style="color: black">
@@ -165,7 +164,7 @@
     </form>
 </div>
 <!--修改用户弹出层-->
-<div id="edit_user_tap" style="display: none">
+<div id="edit_user_tap" style="display: none;padding: 10px 0px 0 0px;">
     <form id="editUser" class="form-horizontal">
         <div class="form-item form-group-sm">
             <label class="col-sm-2 control-label"><i class="required">*</i>姓名：</label>

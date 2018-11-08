@@ -274,7 +274,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     align: "center"
                 }, {
                     field: 'orgName',
-                    title: '管理域',
+                    title: '管理范围',
                     align: "center"
                 }, {
                     field: 'email',
@@ -326,18 +326,16 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     title: '操作',
                     align: "center",
                     events: {
-                        "click #edit_user": function (e, value, row, index) {
+                        "click #edit": function (e, value, row, index) {
                             userEdit.init(row, index)
                         },
-                        "click #del_user": function (e, value, row, index) {
+                        "click #del": function (e, value, row, index) {
                             userDel.init(row)
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit_user' type='button' class='button button-tiny button-highlight'>" +
-                            "<i class='fa fa-edit'></i>修改</button>" +
-                            "<button id='del_user' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                            "</div>"
+                        var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                            "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                         return icons;
                     }
                 }],
@@ -353,7 +351,6 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 search: true,
                 trimOnSearch: true,
                 buttonsAlign: 'left',
-                showRefresh: true,
                 queryParamsType: '',
                 responseHandler: function (res) {
                     var rows = res.data;
@@ -532,6 +529,12 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                                 message: '请输入姓名'
                             }
                         }
+                    }, email: {
+                        validators: {
+                            emailAddress: {
+                                message: '邮箱格式不正确'
+                            }
+                        }
                     }
                 }
             })
@@ -569,6 +572,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         layer.msg('添加用户成功');
                         //刷新表格
                         $('#user_table').bootstrapTable('refresh', {silent: true});
+                        userAdd.isClick=false;
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -577,14 +581,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 return false
             })
         }
+        //阻止表单重复提交
+        userAdd.isClick=false;
         userAdd.init = function () {
             $('#addUser').click(function () {
-                //账号到期时间初始化
-                $('.form_datetime').datetimepicker('setStartDate', new Date());
-                //表单验证
-                userAdd.valia();
-                //启用密码验证
-                userAdd.pwd();
                 //打开弹窗
                 layer.open({
                     type: 1,
@@ -594,10 +594,29 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     area: '600px',
                     resize: false,
                     zIndex: 1000,//日期控件的zIndex为1001
-                    content: $('#add_user')
+                    content: $('#add_user'),
+                    cancel: function (index, layero) {
+                        common.clearForm('user');
+                        userAdd.isClick=false;
+                    }
                 })
-                //表单提交
-                userAdd.submit();
+                if(!userAdd.isClick){
+                    //账号到期时间初始化
+                    $('.form_datetime').datetimepicker('setStartDate', new Date());
+                    //表单验证
+                    userAdd.valia();
+                    //启用密码验证
+                    userAdd.pwd();
+                    //表单提交
+                    userAdd.submit();
+                    userAdd.isClick=true;
+                }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('user');
+                userAdd.isClick=false;
             })
         }
         userAdd.init();
@@ -612,15 +631,19 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             layer.confirm('确定删除 ' + row.loginName + ' ?', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                //删除操作
-                userService.delete(row.id, function (data) {
-                    if (data.result) {
-                        layer.msg("删除成功!")
-                        $('#user_table').bootstrapTable('remove', {field: 'id', values: [row.id]});
-                        //初始化状态插件
-                        userState.switch();
-                    }
-                })
+                if(row.inbuiltFlag===1){
+                    layer.msg('系统内置账号不能删除')
+                }else {
+                    //删除操作
+                    userService.delete(row.id, function (data) {
+                        if (data.result) {
+                            layer.msg("删除成功!")
+                            $('#user_table').bootstrapTable('remove', {field: 'id', values: [row.id]});
+                            //初始化状态插件
+                            userState.switch();
+                        }
+                    })
+                }
             }, function () {
                 layer.closeAll();
             });
@@ -640,6 +663,12 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         validators: {
                             notEmpty: {
                                 message: '请输入姓名'
+                            }
+                        }
+                    }, email: {
+                        validators: {
+                            emailAddress: {
+                                message: '邮箱格式不正确'
                             }
                         }
                     }
@@ -668,6 +697,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         //关闭弹窗
                         layer.closeAll();
                         layer.msg('修改用户成功');
+                        userEdit.isClick=false;
                     } else {
                         layer.msg(data.description);
                     }
@@ -675,9 +705,8 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 return false;
             })
         }
+        userEdit.isClick=false;
         userEdit.init = function (row, index) {
-            //启用校验
-            userEdit.valia();
             //填充表单
             $("input[name='editUname']").val(row.loginName);
             $("input[name='editName']").val(row.realName);
@@ -697,8 +726,13 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 title: '修改用戶',
                 content: $('#edit_user_tap')
             })
-            //表单提交
-            userEdit.submit(row, index, layerId);
+            if(!userEdit.isClick){
+                //启用校验
+                userEdit.valia();
+                //表单提交
+                userEdit.submit(row, index, layerId);
+                userEdit.isClick=true;
+            }
         }
         /********************************* 为用户分配用户组 ***************************************/
         var grantUgroup = {};

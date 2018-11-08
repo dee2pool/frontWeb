@@ -11,7 +11,6 @@
           href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
     <link rel="stylesheet" type="text/css" href="../../sidebar/css/frame.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" type="text/css" href="../css/domain.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -35,8 +34,8 @@
                 <ul id="domaintree" class="ztree"></ul>
             </div>
             <div class="content-panel panel-opera">
-                <a id="addDomain" class="button button-primary button-small"><span
-                        class="glyphicon glyphicon-plus"></span>添加管理域
+                <a id="addDomain" class="btn btn-primary"><span
+                        class="glyphicon glyphicon-plus"></span>添加区域
                 </a>
             </div>
             <div class="content-panel panel-table">
@@ -47,16 +46,16 @@
         </div>
     </div>
     <!--添加管理域-->
-    <div id="add_Domain" style="display: none">
+    <div id="add_Domain" style="display: none;padding: 10px 0px 0 0px;">
         <form id="domainForm" class="form-horizontal">
             <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label"><i class="required">*</i>域名称：</label>
+                <label class="col-sm-4 control-label"><i class="required">*</i>区域名称：</label>
                 <div class="col-sm-6" style="padding: 0px">
                     <input name="domainName" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label">上级域：</label>
+                <label class="col-sm-4 control-label">上级区域：</label>
                 <div class="col-sm-6" style="padding: 0px">
                     <input type="text" class="form-control" name="parentDoamin" readonly>
                     <input type="hidden" name="parentDoaminCode">
@@ -76,10 +75,10 @@
         </form>
     </div>
     <!--修改管理域-->
-    <div id="alt_Domain" style="display: none">
+    <div id="alt_Domain" style="display: none;padding: 10px 0px 0 0px;">
         <form id="altDomainForm" class="form-horizontal">
             <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label"><i class="required">*</i>域名称：</label>
+                <label class="col-sm-4 control-label"><i class="required">*</i>区域名称：</label>
                 <div class="col-sm-6" style="padding: 0px">
                     <input name="eDomainName" class="form-control" type="text">
                 </div>

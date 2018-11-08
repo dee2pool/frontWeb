@@ -37,7 +37,6 @@ require.config({
         "layer": "../../../common/lib/layer/layer",
         "frame": "../../sidebar/js/wframe",
         "topBar": "../../../common/component/head/js/topbar",
-        "roleAdd": "role_add",
         "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
         "bootstrap-table-zh-CN": "../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
         "menu": "../../sidebar/js/menu",
@@ -50,8 +49,8 @@ require.config({
         "ztreeCheck":"../../../common/lib/ztree/js/jquery.ztree.excheck"
     }
 });
-require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-table-zh-CN', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap', 'topBar', 'roleAdd', 'departMentService', 'domainService','ztree','ztreeCheck'],
-    function (jquery, layer, frame, common, bootstrapTable, bootstrapTableZhcN, MenuService, RoleService, bootstrapValidator, bootstrap, topBar, roleAdd, departMentService, domainService,ztree,ztreeCheck) {
+require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-table-zh-CN', 'MenuService', 'RoleService', 'bootstrapValidator', 'bootstrap', 'topBar', 'departMentService', 'domainService','ztree','ztreeCheck'],
+    function (jquery, layer, frame, common, bootstrapTable, bootstrapTableZhcN, MenuService, RoleService, bootstrapValidator, bootstrap, topBar, departMentService, domainService,ztree,ztreeCheck) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -173,7 +172,7 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='menuPre' type='button' class='button button-tiny button-highlight'>" +
+                        var icons = "<div class='button-group'><button id='menuPre' type='button' class='btn btn-info btn-xs'>" +
                             "<i class='fa fa-edit'></i>菜单</button>" +
                             "</div>"
                         return icons;
@@ -191,10 +190,8 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
-                            "<i class='fa fa-edit'></i>修改</button>" +
-                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                            "</div>"
+                        var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                            "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                         return icons;
                     }
                 }],
@@ -207,7 +204,7 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 smartDisplay: false,
-                showRefresh: true,
+                showRefresh: false,
                 queryParamsType: '',
                 responseHandler: function (res) {
                     var rows = res.data;
@@ -232,6 +229,86 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
         //自适应表格高度
         common.resizeTableH('#role_table');
         /********************************* 添加角色 ***************************************/
+        var roleAdd={};
+        roleAdd.valia=function () {
+            $('#add_role').bootstrapValidator({
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    name: {
+                        validators: {
+                            notEmpty: {
+                                message: '角色名称不能为空!'
+                            }
+                        }
+                    },
+                    remark: {
+                        validators: {
+                            notEmpty: {
+                                message: '描述信息不能为空!'
+                            }
+                        }
+                    }
+                }
+            })
+        }
+        roleAdd.submit=function () {
+            $('#add_role').on('success.form.bv', function (e) {
+                var sub_data={};
+                sub_data.name=$("input[name='name']").val();
+                sub_data.remark=$("input[name='remark']").val();
+                RoleService.addRole(sub_data,function (data) {
+                    if(data.result){
+                        sub_data.id=data.data;
+                        sub_data.inbuiltFlag=0;
+                        sub_data.permit=1;
+                        layer.closeAll();
+                        $('#role_table').bootstrapTable('append',sub_data);
+                        //表单清空
+                        common.clearForm('add_role');
+                        layer.msg('添加角色成功');
+                        roleAdd.isClick=false;
+                    }else{
+                        layer.msg(data.description);
+                        $("button[type='submit']").removeAttr('disabled');
+                    }
+                })
+                return false;
+            })
+        }
+        //阻止表单重复提交
+        roleAdd.isClick=false;
+        roleAdd.init=function () {
+            $('#addRole').click(function () {
+                layer.open({
+                    type: 1,
+                    area: '380px',
+                    skin: 'layui-layer-lan',
+                    offset: '100px',
+                    scrollbar: false,
+                    title: '添加角色',
+                    content: $('#add_role'),
+                    cancel: function (index, layero) {
+                        common.clearForm('add_role');
+                        roleAdd.isClick=false;
+                    }
+                })
+                if(!roleAdd.isClick){
+                    roleAdd.valia();
+                    roleAdd.submit();
+                    roleAdd.isClick=true;
+                }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('add_role');
+                roleAdd.isClick=false;
+            })
+        }
         roleAdd.init();
         /********************************* 修改角色 ***************************************/
         var roleEdit = {};
@@ -276,6 +353,7 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
                         //关闭弹窗
                         layer.closeAll();
                         layer.msg('修改角色成功!');
+                        roleEdit.isClick=false;
                     }else{
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -284,9 +362,9 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
                 return false;
             })
         }
+        //阻止表单重复提交
+        roleEdit.isClick=false;
         roleEdit.init = function (row, index) {
-            //启用校验
-            roleEdit.valia();
             //填充表单
             $("input[name='editname']").val(row.name);
             $("input[name='editremark']").val(row.remark);
@@ -301,8 +379,13 @@ require(['jquery', 'layer', 'frame', 'common', 'bootstrap-table', 'bootstrap-tab
                 title: '修改角色',
                 content: $('#edit_role')
             })
-            //表单提交
-            roleEdit.submit(row, index);
+            if(!roleEdit.isClick){
+                //启用校验
+                roleEdit.valia();
+                //表单提交
+                roleEdit.submit(row, index);
+                roleEdit.isClick=true;
+            }
         }
         /********************************* 删除角色 ***************************************/
         var roleDel = {};

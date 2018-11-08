@@ -186,10 +186,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
-                            "<i class='fa fa-edit'></i>修改</button>" +
-                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                            "</div>"
+                        var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                            "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                         return icons;
                     }
                 }],
@@ -205,7 +203,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 search: true,
                 trimOnSearch: true,
                 buttonsAlign: 'left',
-                showRefresh: true,
+                showRefresh: false,
                 queryParamsType: '',
                 responseHandler: function (res) {
                     var rows = res.data;
@@ -285,7 +283,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         //刷新表格
                         $('#org_table').bootstrapTable('refresh', {silent: true});
                         layer.closeAll();
-                        layer.msg('添加组织成功')
+                        layer.msg('添加组织成功');
+                        orgAdd.isClick=false;
                     } else {
                         layer.msg(data.description)
                     }
@@ -293,6 +292,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 return false;
             })
         }
+        //阻止表单重复提交
+        orgAdd.isClick=false;
         orgAdd.init = function () {
             $('#addOrg').click(function () {
                 //表单填充
@@ -301,8 +302,6 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 } else {
                     $('input[name="orgParentName"]').val(orgTree.nodeSelected.name);
                     $('input[name="orgParentCode"]').val(orgTree.nodeSelected.code);
-                    //开启验证
-                    orgAdd.valia();
                     //打开弹窗
                     layer.open({
                         type: 1,
@@ -316,13 +315,19 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                             common.clearForm('orgForm');
                         }
                     })
-                    //关闭弹窗
-                    $('.btn-cancel').click(function () {
-                        layer.closeAll();
-                        common.clearForm('orgForm');
-                    })
-                    orgAdd.submit();
+                    if(!orgAdd.isClick){
+                        //开启验证
+                        orgAdd.valia();
+                        orgAdd.submit();
+                        orgAdd.isClick=true;
+                    }
                 }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('orgForm');
+                orgAdd.isClick=false;
             })
         }
         orgAdd.init();
@@ -367,7 +372,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         orgTree.updateNode(org);
                         //关闭弹窗
                         layer.closeAll();
-                        layer.msg('修改组织成功')
+                        layer.msg('修改组织成功');
+                        orgEdit.isClick=false;
                     } else {
                         layer.msg("修改组织失败");
                     }
@@ -375,9 +381,9 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 return false;
             })
         }
+        //阻止表单重复提交
+        orgEdit.isClick=false;
         orgEdit.init = function (row, index) {
-            //表单验证
-            orgEdit.valia();
             $('input[name="altorgName"]').val(row.name);
             $('textarea[name="altorgRemark"]').val(row.description);
             layer.open({
@@ -396,8 +402,13 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 layer.closeAll();
                 common.clearForm('altorgForm');
             })
-            //表单提交
-            orgEdit.submit(row,index);
+            if(!orgEdit.isClick){
+                //表单验证
+                orgEdit.valia();
+                //表单提交
+                orgEdit.submit(row,index);
+                orgEdit.isClick=true;
+            }
         }
         /********************************* 删除组织 ***************************************/
         var orgDel={};
@@ -406,21 +417,25 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             layer.confirm('确定删除 '+row.name+' ?', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                orgService.deleteOrgByCode(row.code,function (data) {
-                    if(data.result){
-                        //更新表格
-                        $('#org_table').bootstrapTable('remove', {
-                            field: 'code',
-                            values: [row.code]
-                        })
-                        //更新树
-                        orgTree.delNode(row.code);
-                        layer.closeAll();
-                        layer.msg('删除组织成功');
-                    }else{
-                        layer.msg(data.description);
-                    }
-                })
+                if(row.parentCode==='-1'){
+                    layer.msg('默认控制中心不能删除')
+                }else{
+                    orgService.deleteOrgByCode(row.code,function (data) {
+                        if(data.result){
+                            //更新表格
+                            $('#org_table').bootstrapTable('remove', {
+                                field: 'code',
+                                values: [row.code]
+                            })
+                            //更新树
+                            orgTree.delNode(row.code);
+                            layer.closeAll();
+                            layer.msg('删除组织成功');
+                        }else{
+                            layer.msg(data.description);
+                        }
+                    })
+                }
             }, function () {
                 layer.closeAll();
             });

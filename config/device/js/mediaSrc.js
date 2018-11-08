@@ -85,7 +85,7 @@ require(['jquery', 'common', 'topBar', 'layer', 'bootstrap', 'bootstrapValidator
                 search: true,
                 trimOnSearch: true,
                 buttonsAlign: 'left',
-                showRefresh: true,
+                showRefresh: false,
                 queryParamsType: '',
                 responseHandler: function (res) {
                     var rows = res.data;

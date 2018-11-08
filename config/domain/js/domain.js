@@ -256,7 +256,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     checkbox: true
                 }, {
                     field: 'name',
-                    title: '管理域名称',
+                    title: '区域名称',
                     align: 'center'
                 }, {
                     field: 'code',
@@ -285,7 +285,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     },
                     formatter: function () {
                         var icons = "<div class='button-group'>" +
-                            "<button id='assign' type='button' class='button button-tiny button-highlight'>" +
+                            "<button id='assign' type='button' class='btn btn-warning btn-xs'>" +
                             "<i class='fa fa-edit'></i>分配</button>"
                         return icons;
                     }
@@ -301,11 +301,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'>" +
-                            "<button id='edit' type='button' class='button button-tiny button-highlight'>" +
-                            "<i class='fa fa-edit'></i>修改</button>" +
-                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                            "</div>"
+                        var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                            "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                         return icons;
                     }
                 }],
@@ -321,7 +318,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 search: true,
                 trimOnSearch: true,
                 buttonsAlign: 'left',
-                showRefresh: true,
+                showRefresh: false,
                 queryParamsType: '',
                 responseHandler: function (res) {
                     var rows = res.data;
@@ -387,37 +384,46 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         domainTree.altNode(domain);
                         //关闭弹窗
                         layer.closeAll();
-                        layer.msg('修改管理域成功')
+                        layer.msg('修改区域成功');
+                        domainEdit.isClick=false;
                     } else {
-                        layer.msg('修改管理域失败');
+                        layer.msg('修改区域失败');
                     }
                 })
                 return false;
             })
         }
+        //阻止表单重复提交
+        domainEdit.isClick=false;
         domainEdit.init=function(row,index){
-            //表单验证
-            domainEdit.valia();
             $('input[name="eDomainName"]').val(row.name);
             $('textarea[name="eDomainRemark"]').val(row.description);
             layer.open({
                 type: 1,
-                title: '修改管理域',
+                title: '修改区域',
+                skin: 'layui-layer-lan',
                 offset: '100px',
                 area: '600px',
                 resize: false,
                 content: $('#alt_Domain'),
                 cancel: function (index, layero) {
                     common.clearForm('altDomainForm');
+                    domainEdit.isClick=false;
                 }
             })
             //关闭弹窗
             $('.btn-cancel').click(function () {
                 layer.closeAll();
                 common.clearForm('altDomainForm');
+                domainEdit.isClick=false;
             })
-            //表单提交
-            domainEdit.submit(row,index);
+            if(!domainEdit.isClick){
+                //表单验证
+                domainEdit.valia();
+                //表单提交
+                domainEdit.submit(row,index);
+                domainEdit.isClick=true;
+            }
         }
         /********************************* 添加管理域 ***************************************/
         var domainAdd = {};
@@ -457,7 +463,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         $('#domain_table').bootstrapTable('refresh', {silent: true});
                         //关闭弹窗
                         layer.closeAll();
-                        layer.msg('添加成功')
+                        layer.msg('添加成功');
+                        domainAdd.isClick=false;
                     } else {
                         layer.msg(data.description);
                     }
@@ -465,16 +472,16 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 return false;
             })
         }
+        //防止表单重复提交
+        domainAdd.isClick=false;
         domainAdd.init = function () {
             $('#addDomain').click(function () {
                 if (domainTree.selDomain) {
                     $('input[name="parentDoamin"]').val(domainTree.selDomain.name);
                     $('input[name="parentDoaminCode"]').val(domainTree.selDomain.code);
-                    //表单验证
-                    domainAdd.valia();
                     layer.open({
                         type: 1,
-                        title: '添加管理域',
+                        title: '添加区域',
                         skin: 'layui-layer-lan',
                         offset: '100px',
                         area: '600px',
@@ -482,18 +489,25 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         content: $('#add_Domain'),
                         cancel: function (index, layero) {
                             common.clearForm('domainForm');
+                            domainAdd.isClick=false;
                         }
                     })
-                    //关闭弹窗
-                    $('.btn-cancel').click(function () {
-                        layer.closeAll();
-                        common.clearForm('domainForm');
-                    })
-                    //表单提交
-                    domainAdd.submit();
+                    if(!domainAdd.isClick){
+                        //表单验证
+                        domainAdd.valia();
+                        //表单提交
+                        domainAdd.submit();
+                        domainAdd.isClick=true;
+                    }
                 } else {
-                    layer.msg('请选择上级管理域')
+                    layer.msg('请选择上级区域')
                 }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('domainForm');
+                domainAdd.isClick=false;
             })
         }
         domainAdd.init();
@@ -563,21 +577,25 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             layer.confirm('确定删除 ' + row.name + ' ?', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                domainService.deleteDomainByCode(row.code, function (data) {
-                    if (data.result) {
-                        //更新表格
-                        $('#domain_table').bootstrapTable('remove', {
-                            field: 'code',
-                            values: [row.code]
-                        })
-                        //更新树
-                        domainTree.deleteNode(row.code);
-                        layer.closeAll();
-                        layer.msg('删除管理域成功');
-                    } else {
-                        layer.msg(data.description);
-                    }
-                })
+                if(row.parentCode==='-1'){
+                    layer.msg('默认管控中心不能删除')
+                }else{
+                    domainService.deleteDomainByCode(row.code, function (data) {
+                        if (data.result) {
+                            //更新表格
+                            $('#domain_table').bootstrapTable('remove', {
+                                field: 'code',
+                                values: [row.code]
+                            })
+                            //更新树
+                            domainTree.deleteNode(row.code);
+                            layer.closeAll();
+                            layer.msg('删除区域成功');
+                        } else {
+                            layer.msg(data.description);
+                        }
+                    })
+                }
             }, function () {
                 layer.closeAll();
             });

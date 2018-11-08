@@ -341,10 +341,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     }
                 },
                 formatter: function () {
-                    var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
-                        "<i class='fa fa-edit'></i>修改</button>" +
-                        "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                        "</div>"
+                    var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                        "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                     return icons;
                 }
             }]
@@ -358,4 +356,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 }
             })
         }
+        //初始化表格高度
+        $('#dict_table').bootstrapTable('resetView',{height:$(window).height()-135});
+        //自适应表格高度
+        common.resizeTableH('#dict_table');
     })

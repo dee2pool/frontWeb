@@ -131,6 +131,7 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                     area: '380px',
                     skin: 'layui-layer-lan',
                     scrollbar: false,
+                    resize: false,
                     offset: '100px',
                     title: '添加菜单',
                     content: $('#addMpanel'),
@@ -209,7 +210,7 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                 return false;
             })
         }
-        //组织表单重复提交
+        //阻止表单重复提交
         menuEdit.isClick=false;
         menuEdit.init = function (row, index) {
             $("input[name='edit_Mid']").val(row.id);
@@ -245,9 +246,9 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                             values: [row.id]
                         })
                         layer.closeAll();
-                        layer.msg('删除菜单成功!')
+                        layer.msg('删除菜单成功')
                     } else {
-                        layer.msg('删除菜单失败!')
+                        layer.msg('删除菜单失败')
                     }
                 })
                 //删除操作

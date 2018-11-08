@@ -45,12 +45,11 @@ require.config({
         "MenuService": "../../../common/js/service/MenuController",
         "ugroupService": "../../../common/js/service/UserGroupController",
         "userService": "../../../common/js/service/UserController",
-        "RoleService": "../../../common/js/service/RoleController",
-        "buttons": "../../common/js/buttons"
+        "RoleService": "../../../common/js/service/RoleController"
     }
 });
-require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'bootstrapValidator', 'topBar', 'buttons', 'ugroupService', 'userService', 'RoleService'],
-    function (jquery, common, frame, bootstrapTable, bootstrapTableZhcN, bootstrap, bootstrapValidator, topBar, buttons, ugroupService, userService, RoleService) {
+require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'bootstrapValidator', 'topBar', 'ugroupService', 'userService', 'RoleService'],
+    function (jquery, common, frame, bootstrapTable, bootstrapTableZhcN, bootstrap, bootstrapValidator, topBar, ugroupService, userService, RoleService) {
         /********************************* 页面初始化 ***************************************/
         //初始化frame
         $('#sidebar').html(frame.htm);
@@ -171,10 +170,8 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
-                            "<i class='fa fa-edit'></i>修改</button>" +
-                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                            "</div>"
+                        var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                            "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                         return icons;
                     }
                 }],
@@ -189,7 +186,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 smartDisplay: false,
                 search: true,
                 trimOnSearch: true,
-                showRefresh: true,
+                showRefresh: false,
                 queryParamsType: '',
                 responseHandler: function (res) {
                     var rows = res.data;
@@ -265,6 +262,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                             //刷新表格
                             $('#usergroup_table').bootstrapTable('refresh', {silent: true});
                             layer.msg('添加用户成功');
+                            ugroupAdd.isClick=false;
                         } else {
                             layer.msg(data.description);
                         }
@@ -273,10 +271,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 return false;
             })
         }
+        //阻止表单重复提交
+        ugroupAdd.isClick=false;
         ugroupAdd.init = function () {
             $('#addUgroup').click(function () {
-                //表单验证
-                ugroupAdd.valia();
                 //打开弹窗
                 layer.open({
                     type: 1,
@@ -285,12 +283,27 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     offset: '100px',
                     area: '600px',
                     resize: false,
-                    content: $('#add_ugroup')
+                    content: $('#add_ugroup'),
+                    cancel: function (index, layero) {
+                        common.clearForm('ugroupForm');
+                        ugroupAdd.isClick=false;
+                    }
                 })
                 //点击下一步
                 ugroup.nextBtn('ugroup_tab');
-                //表单提交
-                ugroupAdd.submit();
+                if(!ugroupAdd.isClick){
+                    //表单验证
+                    ugroupAdd.valia();
+                    //表单提交
+                    ugroupAdd.submit();
+                    ugroupAdd.isClick=true;
+                }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('ugroupForm');
+                ugroupAdd.isClick=false;
             })
         }
         ugroupAdd.init();
@@ -330,6 +343,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         //关闭弹窗
                         layer.closeAll();
                         layer.msg('修改用户组成功');
+                        ugroupEdit.isClick=false;
                     } else {
                         layer.msg('修改用户组失败')
                     }
@@ -337,9 +351,8 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 return false;
             })
         }
+        ugroupEdit.isClick=false;
         ugroupEdit.init = function (row, index) {
-            //启用验证
-            ugroupEdit.valia();
             //填充表单
             $("input[name='editugname']").val(row.name);
             $("textarea[name='editRemark']").val(row.remark);
@@ -353,8 +366,13 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 resize: false,
                 content: $('#edit_ugroup')
             })
-            //表单提交
-            ugroupEdit.submit(row, index);
+            if(!ugroupEdit.isClick){
+                //启用验证
+                ugroupEdit.valia();
+                //表单提交
+                ugroupEdit.submit(row, index);
+                ugroupEdit.isClick=true;
+            }
         }
         /********************************* 删除用户组 ***************************************/
         var ugroupDel = {};

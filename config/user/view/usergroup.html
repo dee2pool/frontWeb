@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
     <link rel="stylesheet" href="../../../common/component/head/css/head.css">
-    <link rel="stylesheet" href="../../common/css/buttons.css">
     <link rel="stylesheet" href="../css/user.css">
     <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../common/css/normalize.css">
@@ -27,11 +26,11 @@
     <div class="contentpage">
         <div class="content">
             <div class="content-panel panel-opera-se">
-                <a id="addUgroup" class="button button-primary button-small"><span
+                <a id="addUgroup" class="btn btn-primary"><span
                         class="glyphicon glyphicon-plus"></span>添加用户组
                 </a>
-                <a id="reassign" class="button button-royal button-small"><span
-                        class="glyphicon glyphicon-royal"></span>修改角色
+                <a id="reassign" class="btn btn-success"><span
+                        class="glyphicon glyphicon-pencil"></span>修改角色
                 </a>
             </div>
             <div class="content-panel panel-main">
@@ -42,7 +41,7 @@
         </div>
     </div>
     <!--添加用户组弹窗-->
-    <div id="add_ugroup" style="display: none">
+    <div id="add_ugroup" style="display: none;padding: 10px 0px 0 0px;">
         <ul id="ugroup_tab" class="nav nav-tabs">
             <li class="active">
                 <a href="#tab-base" data-toggle="tab" style="color: black">
@@ -91,7 +90,7 @@
         </form>
     </div>
     <!--修改用户组弹窗-->
-    <div id="edit_ugroup" style="display: none">
+    <div id="edit_ugroup" style="display: none;padding: 10px 0px 0 0px;">
         <form id="editform" class="form-horizontal">
             <div class="form-item form-group-sm">
                 <label class="col-sm-3 control-label"><i class="required">*</i>用户组姓名：</label>
