@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="../../common/css/buttons.css">
     <link rel="stylesheet" href="../css/deviceModel.css">
     <link rel="stylesheet" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../css/common.css">
     <link rel="stylesheet" href="../../common/css/normalize.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/deviceModel"></script>
 </head>
@@ -22,6 +23,17 @@
     <!--主体内容-->
     <div class="contentpage">
         <div class="content">
+            <ul class="breadcrumb">
+                <li>
+                    <a href="index.html">主页</a>
+                </li>
+                <li>
+                    <a href="mainDevice.html">设备管理</a>
+                </li>
+                <li>
+                    <a href="#">设备型号</a>
+                </li>
+            </ul>
             <div class="content-panel panel-opera-se">
                 <a id="addModel" class="button button-primary button-small"><span
                         class="glyphicon glyphicon-plus"></span>添加设备型号
@@ -94,7 +106,7 @@
                 <input name="edmiden" type="text" class="form-control">
             </div>
         </div>
-        <div class="form-item form-group-sm">
+        <!--<div class="form-item form-group-sm">
             <label class="col-sm-3 control-label"><i class="required">*</i>设备类型：</label>
             <div class="col-sm-6" style="padding: 0px">
                 <select class="form-control" name="dmtype">
@@ -109,7 +121,7 @@
 
                 </select>
             </div>
-        </div>
+        </div>-->
         <div class="form-item form-group-sm">
             <label class="col-sm-3 control-label">备注：</label>
             <div class="col-sm-6" style="padding: 0px">

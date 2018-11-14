@@ -9,7 +9,6 @@
     <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" type="text/css" href="../../sidebar/css/frame.css">
     <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../css/menu.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../../common/css/normalize.css">
@@ -24,7 +23,7 @@
     <div class="contentpage">
         <div class="content">
             <div class="content-panel panel-opera-se">
-                <a id="addMenu" class="button button-primary button-small"><span
+                <a id="addMenu" class="btn btn-primary"><span
                         class="glyphicon glyphicon-plus"></span>添加菜单
                 </a>
             </div>
@@ -35,7 +34,7 @@
     </div>
 </div>
 <!--添加菜单弹窗-->
-<form id="addMpanel" class="form-horizontal" style="display: none">
+<form id="addMpanel" class="form-horizontal" style="display: none;padding: 10px 0px 0 0px;">
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4"><i class="required">*</i>菜单名称：</label>
         <div class="col-sm-7" style="padding: 0px">
@@ -62,7 +61,7 @@
             <input name="MenuorderNo" type="text" class="form-control">
         </div>
     </div>
-<!--    <div class="form-item form-group-sm">
+    <!--<div class="form-item form-group-sm">
         <label class="control-label col-sm-4">菜单图标：</label>
         <div class="col-md-3">
             <div class="menuIcon" style="width: 55px;height: 55px;border: 1px solid lightgray;text-align: center;vertical-align: center;padding-top: 8px">
@@ -74,7 +73,7 @@
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">备注：</label>
         <div class="col-sm-7" style="padding: 0px">
-            <textarea name="Menuremark" class="form-control"></textarea>
+            <textarea name="Menuremark" class="form-control" style="resize: none"></textarea>
             <input  name="res" type="reset" style="display:none;" />
         </div>
     </div>
@@ -84,7 +83,7 @@
     </div>
 </form>
 <!--修改菜单弹窗-->
-<form id="editMpanel" class="form-horizontal" style="display: none">
+<form id="editMpanel" class="form-horizontal" style="display: none;padding: 10px 0px 0 0px;">
     <div class="form-item form-group-sm">
         <label class="control-label col-sm-4">菜单名称：</label>
         <div class="col-sm-7" style="padding: 0px">

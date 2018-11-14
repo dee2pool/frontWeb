@@ -6,7 +6,7 @@ define(['common'], function OrgController(common) {
      *@param org org 待添加组织的信息
      *@param areaCode areaCode 地区代码
      */
-    orgService.addOrg = function (org, areaCode,domainCode,onSuccess) {
+    orgService.addOrg = function (org, areaCode, onSuccess) {
         var orgStr = JSON.stringify(org);
         var areaCodeStr = areaCode;
         var requestUrl = this.url + "/add";
@@ -15,8 +15,7 @@ define(['common'], function OrgController(common) {
             type: 'Post',
             data: {
                 org: orgStr,
-                areaCode: areaCodeStr,
-                domainCode:domainCode
+                areaCode: areaCodeStr
             },
             cache: false,
             success: onSuccess,
@@ -71,22 +70,24 @@ define(['common'], function OrgController(common) {
      *@param pageSize no comment
      *@param orgName no comment
      */
-    orgService.getOrgList = function (pageNo, pageSize, orgName, onSuccess) {
-        var pageNoStr = pageNo;
-        var pageSizeStr = pageSize;
-        var orgNameStr = orgName;
-        var requestUrl = this.url + "/list";
+    orgService.getOrgList=function(pageNo,pageSize,orgName,orgCode,onSuccess){
+        var pageNoStr=pageNo;
+        var pageSizeStr=pageSize;
+        var orgNameStr=orgName;
+        var orgCodeStr=orgCode;
+        var requestUrl=this.url+"/list";
         $.ajax({
-            url: requestUrl,
-            type: 'GET',
-            data: {
-                pageNo: pageNoStr,
-                pageSize: pageSizeStr,
-                orgName: orgNameStr,
+            url:requestUrl,
+            type:'GET',
+            data:{
+                pageNo:pageNoStr,
+                pageSize:pageSizeStr,
+                orgName:orgNameStr,
+                orgCode:orgCodeStr,
             },
-            cache: false,
-            success: onSuccess,
-            error: common.onError
+            cache:false,
+            success:onSuccess,
+            error:common.onError
         });
     };
 
@@ -99,6 +100,7 @@ define(['common'], function OrgController(common) {
         var requestUrl = this.url + "/" + orgCodeStr + "/chidlren";
         $.ajax({
             url: requestUrl,
+            async: false,
             type: 'GET',
             data: {
                 orgCode: orgCodeStr,
@@ -174,7 +176,7 @@ define(['common'], function OrgController(common) {
         $.ajax({
             url: requestUrl,
             type: 'GET',
-            async:false,
+            async: false,
             data: {
                 orgCode: orgCodeStr,
             },

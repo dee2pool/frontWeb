@@ -7,12 +7,11 @@
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap-treeview/css/bootstrap-treeview.css">
     <link rel="stylesheet" href="../../common/libs/bootstrap/css/bootstrap-table.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../../common/libs/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../sidebar/css/frame.css">
     <link rel="stylesheet" href="../css/org.css">
-    <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
-    <link rel="stylesheet" href="../../../common/lib/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../../common/component/head/css/head.css">
+    <link rel="stylesheet" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/org"></script>
 </head>
 <body>
@@ -24,74 +23,28 @@
         <!--主体内容-->
         <div class="contentpage">
             <div class="content">
-                <!-- <div class="panel-head">
-                     <ul class="breadcrumb">
-                         <li>
-                             <a href="#">Home</a>
-                         </li>
-                         <li>
-                             <a href="#">Tutorials</a>
-                         </li>
-                         <li class="active">HTML5</li>
-                     </ul>
-                 </div>-->
                 <div class="content-panel panel-left">
                     <div class="head head-tree">
                         <div class="head-left-tree">
-                            <span>组织机构树</span>
+                            <span>组织</span>
                         </div>
                     </div>
-                    <!--<form role="form">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <input type="text" class="form-control" placeholder="区域或组织名称"
-                                       style="display: inline-block">
-                            </div>
-                        </div>
-                    </form>-->
-                    <div id="orgtree"></div>
+                    <ul id="orgtree" class="ztree"></ul>
                 </div>
                 <div class="content-panel panel-opera">
-                    <a id="addOrg" class="button button-primary button-small"><span
+                    <a id="addOrg" class="btn btn-primary"><span
                             class="glyphicon glyphicon-plus"></span>添加组织
                     </a>
                 </div>
-                <div class="content-panel panel-right">
+                <div class="content-panel panel-table">
                     <div class="table-responsive">
                         <table class="table text-nowrap" id="org_table"></table>
-                    </div>
-                    <!--分页-->
-                    <div class="fixed-table-pagination">
-                        <div class="pull-left">
-                            <span class="pagination-info"></span>
-                            <span class="page-list">
-                            <span class="btn-group dropup">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="page-size">10</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="menuitem" class="active"><a href="#">10</a></li>
-                                    <li role="menuitem"><a href="#">20</a></li>
-                                    <li role="menuitem"><a href="#">30</a></li>
-                                </ul>
-                            </span>
-                            条每页
-                        </span>
-                        </div>
-                        <div class="pull-right pagination">
-                            <ul class="pagination">
-                                <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
-                                <li class="page-item pNo active"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <!--添加组织弹窗-->
-        <div id="add_org" style="display: none">
+        <div id="add_org" style="display: none;padding: 10px 0px 0 0px;">
             <form id="orgForm" class="form-horizontal">
                 <div class="form-item form-group-sm">
                     <label class="col-sm-4 control-label"><i class="required">*</i>组织名称：</label>
@@ -114,12 +67,6 @@
                     </div>
                 </div>
                 <div class="form-item form-group-sm">
-                    <label class="col-sm-4 control-label"><i class="required">*</i>同级排序：</label>
-                    <div class="col-sm-6" style="padding: 0px">
-                        <input name="orgOrderNo" class="form-control" type="text">
-                    </div>
-                </div>
-                <div class="form-item form-group-sm">
                     <label class="col-sm-4 control-label">备注：</label>
                     <div class="col-sm-6" style="padding: 0px">
                         <textarea name="orgRemark" cols="40" rows="2"></textarea>
@@ -127,13 +74,13 @@
                     </div>
                 </div>
                 <div class="tab-footer">
-                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="submit" class="btn btn-primary">完成</button>
                     <button type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </form>
         </div>
         <!--修改组织弹窗-->
-        <div id="alt_org" style="display: none">
+        <div id="alt_org" style="display: none;padding: 10px 0px 0 0px;">
             <form id="altorgForm" class="form-horizontal">
                 <div class="form-item form-group-sm">
                     <label class="col-sm-4 control-label"><i class="required">*</i>组织名称：</label>
@@ -149,7 +96,7 @@
                     </div>
                 </div>
                 <div class="tab-footer">
-                    <button type="submit" class="btn btn-danger">完成</button>
+                    <button type="submit" class="btn btn-primary">完成</button>
                     <button type="button" class="btn btn-default btn-cancel">取消</button>
                 </div>
             </form>

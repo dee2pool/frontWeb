@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css"
           href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../css/common.css">
@@ -45,54 +44,23 @@
                 <ul id="orgTree" class="ztree"></ul>
             </div>-->
             <div class="content-panel panel-opera-se">
-                <a id="altMediaDev" class="button button-primary button-small"><span
+                <a id="altMediaDev" class="btn btn-primary"><span
                         class="glyphicon glyphicon-edit"></span>修改通道关联设备
                 </a>
-                <a id="delMediaDev" class="button button-caution button-small"><span
+                <a id="delMediaDev" class="btn btn-danger"><span
                         class="glyphicon glyphicon-remove"></span>批量删除
                 </a>
-                <div class="panel-search">
-                    <span>通道名称</span><input type="text" name="d_name" class="form-control">
-                    <button id="search" class="button button-primary button-small"><i class="fa fa-search"></i>查询
-                    </button>
-                </div>
             </div>
             <div class="content-panel panel-main">
                 <div class="table-responsive">
                     <table class="table text-nowrap" id="mediaSrc_table"></table>
-                </div>
-                <!--分页-->
-                <div class="fixed-table-pagination">
-                    <div class="pull-left">
-                        <span class="pagination-info"></span>
-                        <span class="page-list">
-                            <span class="btn-group dropup">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="page-size">10</span>
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li role="menuitem" class="active"><a href="#">10</a></li>
-                                    <li role="menuitem"><a href="#">20</a></li>
-                                    <li role="menuitem"><a href="#">30</a></li>
-                                </ul>
-                            </span>
-                            条每页
-                        </span>
-                    </div>
-                    <div class="pull-right pagination">
-                        <ul class="pagination pageAction">
-                            <li class="page-item page-pre"><a class="page-link" href="#">‹</a></li>
-                            <li class="page-item page-next"><a class="page-link" href="#">›</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 <!--加入通道弹窗-->
-<div id="addMedia" style="display: none">
+<div id="addMedia" style="display: none;padding: 10px 0px 0 0px;">
     <form id="addMediaForm" class="form-horizontal">
         <div class="form-item form-group-sm">
             <label class="col-sm-4 control-label"><i class="required">*</i>媒体源名称：</label>

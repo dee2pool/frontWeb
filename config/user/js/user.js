@@ -1,5 +1,11 @@
 require.config({
     shim: {
+        'ztree': {
+            deps: ['jquery']
+        },
+        'ztreeCheck':{
+            deps:['ztree','jquery']
+        },
         'common': {
             deps: ['jquery'],
             exports: "common"
@@ -65,11 +71,13 @@ require.config({
         "userService": "../../../common/js/service/UserController",
         "domainService": "../../../common/js/service/DomainController",
         "RoleService": "../../../common/js/service/RoleController",
-        "buttons": "../../common/js/buttons"
+        "buttons": "../../common/js/buttons",
+        "ztree": "../../../common/lib/ztree/js/jquery.ztree.core",
+        "ztreeCheck":"../../../common/lib/ztree/js/jquery.ztree.excheck"
     }
 });
-require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'buttons', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar', 'ugroupService', 'userService', 'domainService', 'RoleService'],
-    function (jquery, common, frame, bootstrapTable, bootstrapTableZhcN, bootstrap, buttons, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar, ugroupService, userService, domainService, RoleService) {
+require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN', 'bootstrap', 'buttons', 'bootstrapValidator', 'bootstrap-datetimepicker', 'bootstrap-datetimepicker.zh-CN', 'bootstrap-switch', 'topBar', 'ugroupService', 'userService', 'domainService', 'RoleService','ztree','ztreeCheck'],
+    function (jquery, common, frame, bootstrapTable, bootstrapTableZhcN, bootstrap, buttons, bootstrapValidator, datetimepicker, datetimepickerzhCN, bootstrapSwitch, topBar, ugroupService, userService, domainService, RoleService,ztree,ztreeCheck) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -90,6 +98,71 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 }
             }
         })
+        /********************************* 管理域树 ***************************************/
+        var domainTree = {};
+        domainTree.setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                },
+                key: {
+                    name: "name"
+                },
+                check:{
+                    enable: true,
+                    chkStyle: "checkbox",
+                    chkboxType: { "Y": "p", "Y": "s" }
+                },
+                keep: {
+                    parent: true
+                }
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    //清空当前父节点的子节点
+                    domainTree.obj.removeChildNodes(treeNode);
+                    domainService.getChildList(treeNode.code, function (data) {
+                        if (data.result) {
+                            if (data.dataSize > 0) {
+                                for (var i = 0; i < data.dataSize; i++) {
+                                    data.data[i].isParent = true;
+                                    data.data[i].icon = "../img/domain.png";
+                                    data.data[i].checked=false;
+                                }
+                                var newNodes = data.data;
+                                //添加节点
+                                domainTree.obj.addNodes(treeNode, newNodes);
+                            }
+                        } else {
+                            layer.msg('获得子域节点失败')
+                        }
+                    })
+                }
+            }
+        };
+        domainTree.zNode = function () {
+            var treeNode;
+            domainService.getChildList('-1', function (data) {
+                if (data.result) {
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/domain.png";
+                        data.data[i].checked=false;
+                    }
+                    treeNode = data.data;
+                }
+            })
+            return treeNode;
+        }
+        domainTree.init = function () {
+            domainTree.obj = $.fn.zTree.init($("#domaintree"), domainTree.setting, domainTree.zNode());
+        }
+        domainTree.init();
         /********************************* 获得角色列表 ***************************************/
         var roleTable = {};
         roleTable.init = function () {
@@ -201,7 +274,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     align: "center"
                 }, {
                     field: 'orgName',
-                    title: '管理域',
+                    title: '管理范围',
                     align: "center"
                 }, {
                     field: 'email',
@@ -221,6 +294,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         return status;
                     }
                 }, {
+                    field:'role',
                     title: '角色',
                     align: "center",
                     formatter: function (value, row, index) {
@@ -252,18 +326,16 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     title: '操作',
                     align: "center",
                     events: {
-                        "click #edit_user": function (e, value, row, index) {
+                        "click #edit": function (e, value, row, index) {
                             userEdit.init(row, index)
                         },
-                        "click #del_user": function (e, value, row, index) {
+                        "click #del": function (e, value, row, index) {
                             userDel.init(row)
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit_user' type='button' class='button button-tiny button-highlight'>" +
-                            "<i class='fa fa-edit'></i>修改</button>" +
-                            "<button id='del_user' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                            "</div>"
+                        var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                            "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                         return icons;
                     }
                 }],
@@ -279,7 +351,6 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 search: true,
                 trimOnSearch: true,
                 buttonsAlign: 'left',
-                showRefresh: true,
                 queryParamsType: '',
                 responseHandler: function (res) {
                     var rows = res.data;
@@ -312,6 +383,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             pickerPosition: 'bottom-left'
         });
         userTable.init();
+        //初始化表格高度
+        $('#user_table').bootstrapTable('resetView', {height: $(window).height() - 135});
+        //自适应表格高度
+        common.resizeTableH('#user_table');
         /********************************* 用户状态插件 ***************************************/
         var userState = {};
         userState.switch = function () {
@@ -454,15 +529,23 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                                 message: '请输入姓名'
                             }
                         }
+                    }, email: {
+                        validators: {
+                            emailAddress: {
+                                message: '邮箱格式不正确'
+                            }
+                        }
                     }
                 }
             })
         }
         //表单提交
         userAdd.submit = function () {
+            $('button[type="submit"]').unbind('click');
             $('#user').on('success.form.bv', function () {
                 //获得角色id
-                var role = $('#role_table').bootstrapTable('getSelections');
+                var role = $('#roleTable').bootstrapTable('getSelections');
+                console.log(role)
                 var roleIds = new Array();
                 if (role.length > 0) {
                     for (var i = 0; i < role.length; i++) {
@@ -478,7 +561,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 user.realName = $("input[name='username']").val();
                 user.state = '1';
                 user.email = $("input[name='email']").val();
-                user.domainCode = $("select[name='domain']").val();
+                user.domainCode = $("input[name='domain']").val();
                 user.inbuiltFlag = '0';
                 var date=new Date($("input[name='expiredTime']").val()).valueOf();
                 user.expiredTime = date/1000;
@@ -486,7 +569,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     if (data.result) {
                         common.clearForm('user');
                         layer.closeAll();
-                        layer.msg('添加用户成功 请刷新表格');
+                        layer.msg('添加用户成功');
+                        //刷新表格
+                        $('#user_table').bootstrapTable('refresh', {silent: true});
+                        userAdd.isClick=false;
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -495,14 +581,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 return false
             })
         }
+        //阻止表单重复提交
+        userAdd.isClick=false;
         userAdd.init = function () {
             $('#addUser').click(function () {
-                //账号到期时间初始化
-                $('.form_datetime').datetimepicker('setStartDate', new Date());
-                //表单验证
-                userAdd.valia();
-                //启用密码验证
-                userAdd.pwd();
                 //打开弹窗
                 layer.open({
                     type: 1,
@@ -512,10 +594,29 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     area: '600px',
                     resize: false,
                     zIndex: 1000,//日期控件的zIndex为1001
-                    content: $('#add_user')
+                    content: $('#add_user'),
+                    cancel: function (index, layero) {
+                        common.clearForm('user');
+                        userAdd.isClick=false;
+                    }
                 })
-                //表单提交
-                userAdd.submit();
+                if(!userAdd.isClick){
+                    //账号到期时间初始化
+                    $('.form_datetime').datetimepicker('setStartDate', new Date());
+                    //表单验证
+                    userAdd.valia();
+                    //启用密码验证
+                    userAdd.pwd();
+                    //表单提交
+                    userAdd.submit();
+                    userAdd.isClick=true;
+                }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('user');
+                userAdd.isClick=false;
             })
         }
         userAdd.init();
@@ -530,15 +631,19 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             layer.confirm('确定删除 ' + row.loginName + ' ?', {
                 btn: ['确定', '取消'] //按钮
             }, function () {
-                //删除操作
-                userService.delete(row.id, function (data) {
-                    if (data.result) {
-                        layer.msg("删除成功!")
-                        $('#user_table').bootstrapTable('remove', {field: 'id', values: [row.id]});
-                        //初始化状态插件
-                        userState.switch();
-                    }
-                })
+                if(row.inbuiltFlag===1){
+                    layer.msg('系统内置账号不能删除')
+                }else {
+                    //删除操作
+                    userService.delete(row.id, function (data) {
+                        if (data.result) {
+                            layer.msg("删除成功!")
+                            $('#user_table').bootstrapTable('remove', {field: 'id', values: [row.id]});
+                            //初始化状态插件
+                            userState.switch();
+                        }
+                    })
+                }
             }, function () {
                 layer.closeAll();
             });
@@ -558,6 +663,12 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         validators: {
                             notEmpty: {
                                 message: '请输入姓名'
+                            }
+                        }
+                    }, email: {
+                        validators: {
+                            emailAddress: {
+                                message: '邮箱格式不正确'
                             }
                         }
                     }
@@ -586,6 +697,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         //关闭弹窗
                         layer.closeAll();
                         layer.msg('修改用户成功');
+                        userEdit.isClick=false;
                     } else {
                         layer.msg(data.description);
                     }
@@ -593,16 +705,15 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 return false;
             })
         }
+        userEdit.isClick=false;
         userEdit.init = function (row, index) {
-            //启用校验
-            userEdit.valia();
             //填充表单
             $("input[name='editUname']").val(row.loginName);
             $("input[name='editName']").val(row.realName);
             $("select[name='editGender']").val(row.gender);
             $("input[name='editEmail']").val(row.email);
             $("input[name='editId']").val(row.employeeNo);
-            $("input[name='editExpiredTime']").val(row.expiredTime);
+            $("input[name='editExpiredTime']").val(common.formatDate(row.expiredTime));
             //打开弹窗
             var layerId = layer.open({
                 type: 1,
@@ -615,8 +726,13 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 title: '修改用戶',
                 content: $('#edit_user_tap')
             })
-            //表单提交
-            userEdit.submit(row, index, layerId);
+            if(!userEdit.isClick){
+                //启用校验
+                userEdit.valia();
+                //表单提交
+                userEdit.submit(row, index, layerId);
+                userEdit.isClick=true;
+            }
         }
         /********************************* 为用户分配用户组 ***************************************/
         var grantUgroup = {};
@@ -671,13 +787,21 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             $('#ressignRoleSub').click(function () {
                 var roles = $('#roles').bootstrapTable('getSelections');
                 var roleIds = new Array();
+                var roleNames=new Array();
                 for (var i = 0; i < roles.length; i++) {
                     roleIds.push(roles[i].id);
+                    roleNames.push(roles[i].name);
                 }
                 userService.resetRole(userId, roleIds, function (data) {
                     if (data.result) {
                         layer.closeAll();
-                        layer.msg('修改角色成功 请刷新表格');
+                        layer.msg('修改角色成功');
+                        var index=common.getTableIndex('user_table');
+                        $('#user_table').bootstrapTable('updateCell', {
+                            index: index[0],
+                            field: 'role',
+                            value: roleNames
+                        });
                         $('#ressignRoleSub').unbind('click')
                     } else {
                         layer.msg(data.description)
@@ -736,6 +860,90 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             })
         }
         changeStatus.init();
+        /********************************* 管理域树 ***************************************/
+        var domainTree={};
+        domainTree.setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "code",
+                    pIdKey: "parentCode",
+                },
+                key: {
+                    name: "name"
+                },
+                keep: {
+                    parent: true
+                }
+            },
+            callback: {
+                onClick: function (event, treeId, treeNode) {
+                    $('input[name="domainName"]').val(treeNode.name);
+                    $('input[name="domain"]').val(treeNode.code);
+                    layer.close(domainLayer);
+                },
+                onExpand: function (event, treeId, treeNode) {
+                    domainService.getChildList(treeNode.code, function (data) {
+                        if (data.result) {
+                            if (data.dataSize > 0) {
+                                for (var i = 0; i < data.dataSize; i++) {
+                                    data.data[i].isParent = true;
+                                    data.data[i].icon = "../img/domain.png";
+                                }
+                                var newNodes = data.data;
+                                //添加节点
+                                treeObj.addNodes(treeNode, newNodes);
+                            }
+                        } else {
+                            layer.msg('获得子域节点失败')
+                        }
+                    })
+                }
+            }
+        }
+        domainService.getChildList('-1',function (data) {
+            if(data.result){
+                if (data.dataSize > 0) {
+                    for (var i = 0; i < data.dataSize; i++) {
+                        data.data[i].isParent = true;
+                        data.data[i].icon = "../img/domain.png";
+                    }
+                    domainTree.treeNode = data.data;
+                }
+            }else{
+                layer.msg('获得子域节点失败')
+            }
+        })
+        //选择管理域
+        var domainLayer;
+        $('#choseDomain').click(function () {
+            domainLayer = layer.open({
+                type: 1,
+                title: '管理域树',
+                skin: 'layui-layer-rim',
+                offset: '100px',
+                area: ['300px', '450px'],
+                resize: false,
+                content: $('#dTree')
+            })
+        })
+        var treeObj = $.fn.zTree.init($("#dTree"), domainTree.setting, domainTree.treeNode);
         /********************************* 修改用户管理域 ***************************************/
+        var altDomain={};
+        altDomain.init=function () {
+            $('#altDomain').click(function () {
+                layer.open({
+                    type: 1,
+                    skin: 'layui-layer-lan',
+                    area: '500px',
+                    resize: false,
+                    scrollbar: false,
+                    offset: '100px',
+                    title: '修改管理域',
+                    content: $('#domain')
+                })
+            })
+        }
+        altDomain.init();
     }
 )

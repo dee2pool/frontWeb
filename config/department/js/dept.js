@@ -111,6 +111,37 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         deptTree.init = function () {
             deptTree.obj = $.fn.zTree.init($("#depttree"), deptTree.setting, deptTree.zNode());
         }
+        //动态添加节点
+        deptTree.addNode = function (newNode) {
+            if (deptTree.obj) {
+                //获取当前选中的节点
+                var selected = deptTree.obj.getSelectedNodes();
+                if (selected.length > 0) {
+                    if(selected[0].open){
+                        //在节点下添加节点
+                        deptTree.obj.addNodes(selected[0], newNode);
+                    }
+                }else{
+                    deptTree.obj.addNodes(null, newNode);
+                }
+            }
+        }
+        deptTree.updateNode = function (newNode) {
+            if (deptTree.obj) {
+                var node = deptTree.obj.getNodeByParam('id',newNode.id);
+                if (node) {
+                    node.name = newNode.name;
+                    node.remark = newNode.remark;
+                    deptTree.obj.updateNode(node);
+                }
+            }
+        }
+        deptTree.delNode=function(id){
+            var node=deptTree.obj.getNodeByParam('id',id,null);
+            if(node){
+                deptTree.obj.removeNode(node);
+            }
+        }
         deptTree.init();
         /********************************* 部门表格 ***************************************/
         var deptTable={};
@@ -142,10 +173,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
-                            "<i class='fa fa-edit'></i>修改</button>" +
-                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                            "</div>"
+                        var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                            "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                         return icons;
                     }
                 }],
@@ -182,6 +211,10 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
             })
         }
         deptTable.init();
+        //初始化表格高度
+        $('#dept_table').bootstrapTable('resetView',{height:$(window).height()-135});
+        //自适应表格高度
+        common.resizeTableH('#dept_table');
         /********************************* 添加部门 ***************************************/
         var deptAdd={};
         deptAdd.valia=function(){
@@ -210,10 +243,17 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 dept.remark = $("textarea[name='deptRemark']").val();
                 departMentService.addDepartment(dept, function (data) {
                     if (data.result) {
+                        dept.isParent = true;
+                        dept.id=data.data;
+                        dept.icon="../img/dept.png";
                         layer.closeAll();
                         common.clearForm('addDeptForm');
-                        deptTree.init();
-                        layer.msg('添加成功 请刷新表格');
+                        //更新表格
+                        $('#dept_table').bootstrapTable('refresh', {silent: true});
+                        //更新树
+                        deptTree.addNode(dept);
+                        layer.msg('添加成功');
+                        deptAdd.isClick=false;
                     } else {
                         layer.msg(data.description);
                     }
@@ -221,6 +261,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 return false
             })
         }
+        //阻止表单重复提交
+        deptAdd.isClick=false;
         deptAdd.init=function(){
             $('#addDept').click(function () {
                 if (!deptTree.nodeSelected) {
@@ -230,7 +272,6 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     $('input[name="parentDept"]').val(deptTree.nodeSelected.name);
                     $('input[name="parentDeptCode"]').val(deptTree.nodeSelected.id);
                 }
-                deptAdd.valia();
                 layer.open({
                     type: 1,
                     title: '添加部门',
@@ -238,9 +279,23 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     skin: 'layui-layer-lan',
                     area: '600px',
                     resize: false,
-                    content: $('.add_dept')
+                    content: $('.add_dept'),
+                    cancel: function (index, layero) {
+                        common.clearForm('addDeptForm');
+                        deptAdd.isClick=false;
+                    }
                 })
-                deptAdd.submit();
+                if(!deptAdd.isClick){
+                    deptAdd.valia();
+                    deptAdd.submit();
+                    deptAdd.isClick=true;
+                }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('addDeptForm');
+                deptAdd.isClick=false;
             })
         }
         deptAdd.init();
@@ -270,7 +325,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 var dept = {};
                 dept.id = row.id;
                 dept.name = $('input[name="eidtDeptName"]').val();
-                dept.description = $('textarea[name="eidtDeptRemark"]').val();
+                dept.remark = $('textarea[name="eidtDeptRemark"]').val();
                 dept.parentId = row.parentId
                 departMentService.updateDep(dept.id,dept,function (data) {
                     if (data.result) {
@@ -279,9 +334,10 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         //更新表格
                         $('#dept_table').bootstrapTable('updateRow',{index:index,row:dept});
                         //更新树
-                        deptTree.init();
+                        deptTree.updateNode(dept);
                         layer.closeAll();
                         layer.msg('更新成功');
+                        deptEdit.isClick=false;
                     } else {
                         layer.msg(data.description)
                         $("button[type='submit']").removeAttr('disabled');
@@ -290,10 +346,11 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 return false;
             })
         }
+        //阻止表单重复提交
+        deptEdit.isClick=false;
         deptEdit.init=function(row,index){
             $('input[name="eidtDeptName"]').val(row.name);
-            $('textarea[name="eidtDeptRemark"]').val(row.description);
-            deptEdit.valia();
+            $('textarea[name="eidtDeptRemark"]').val(row.remark);
             layer.open({
                 type: 1,
                 title: '修改部门',
@@ -303,7 +360,11 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 resize: false,
                 content: $('#edit_dept')
             })
-            deptEdit.submit(row,index);
+            if(!deptEdit.isClick){
+                deptEdit.valia();
+                deptEdit.submit(row,index);
+                deptEdit.isClick=true;
+            }
         }
         /********************************* 删除部门 ***************************************/
         var deptDel={};
@@ -319,7 +380,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         $('#dept_table').bootstrapTable('remove', {field: 'id', values: [row.id]})
                         layer.closeAll();
                         //更新树
-                        deptTree.init();
+                        deptTree.delNode(row.id)
                         layer.msg('刪除成功');
                     } else {
                         layer.msg(data.description);

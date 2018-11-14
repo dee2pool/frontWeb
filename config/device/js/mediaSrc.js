@@ -15,6 +15,10 @@ require.config({
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapTable"
         },
+        'bootstrap-table-zh-CN': {
+            deps: ['bootstrap-table', 'jquery'],
+            exports: "bootstrapTableZhcN"
+        },
         'bootstrapValidator': {
             deps: ['bootstrap', 'jquery'],
             exports: "bootstrapValidator"
@@ -28,110 +32,86 @@ require.config({
         "bootstrap": "../../../common/lib/bootstrap/js/bootstrap.min",
         "bootstrapValidator": "../../../common/lib/bootstrap/libs/bootstrap-validator/js/bootstrapValidator.min",
         "bootstrap-table": "../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table",
+        "bootstrap-table-zh-CN": "../../../common/lib/bootstrap/libs/bootstrapTable/locale/bootstrap-table-zh-CN.min",
         "ztree": "../../../common/lib/ztree/js/jquery.ztree.core",
         "mediaSrcService": "../../../common/js/service/MediaSrcsController",
         "deviceService": "../../../common/js/service/DeviceInfoController",
         "orgService": "../../../common/js/service/OrgController"
     }
 });
-require(['jquery', 'common', 'topBar', 'layer', 'bootstrap', 'bootstrapValidator', 'ztree', 'bootstrap-table', 'mediaSrcService', 'deviceService', 'orgService'],
-    function (jquery, common, topBar, layer, bootstrap, bootstrapValidator, ztree, bootstrapTable, mediaSrcService, deviceService, orgService) {
+require(['jquery', 'common', 'topBar', 'layer', 'bootstrap', 'bootstrapValidator', 'ztree', 'bootstrap-table','bootstrap-table-zh-CN','mediaSrcService', 'deviceService', 'orgService'],
+    function (jquery, common, topBar, layer, bootstrap, bootstrapValidator, ztree, bootstrapTable,bootstrapTableZhcN,mediaSrcService, deviceService, orgService) {
         $('#head').html(topBar.htm);
         topBar.init();
         //解决layer不显示问题
         layer.config({
             path: '../../../common/lib/layer/'
         });
-        /********************************* 媒体源信息表格 ***************************************/
-        $('#mediaSrc_table').bootstrapTable({
-            columns: [{
-                checkbox: true
-            }, {
-                title: '序号',
-                align: 'center',
-                formatter: function (value, row, index) {
-                    return index + 1;
-                }
-            }, {
-                field: 'srcsName',
-                title: '通道名称',
-                align: 'center'
-            }, {
-                field: 'srcsUri',
-                title: '通道号',
-                align: 'center'
-            }, {
-                field: 'srcsType',
-                title: '通道类型',
-                align: 'center'
-            }, {
-                field: 'srcsReferId',
-                title: '关联设备',
-                align: 'center',
-                formatter: function (value, row, index) {
-
-                }
-            }, {
-                field: 'srcsPublished',
-                title: '是否已发布',
-                align: 'center',
-                formatter: function (value, row, index) {
-                    if (value == 1) {
-                        return '已发布'
-                    }
-                    if (value == 0) {
-                        return '未发布'
-                    }
-                }
-            }, {
-                field: 'deviceName',
-                title: '主设备',
-                align: 'center'
-            }/*, {
-                field: 'deviceIp',
-                title: '主设备IP',
-                align: 'center'
-            }, {
-                field: 'deviceUser',
-                title: '主设备登录账号',
-                align: 'center'
-            }, {
-                field: 'devicePwd',
-                title: '主设备登录密码',
-                align: 'center'
-            }, {
-                field: 'deviceChaNum',
-                title: '主设备通道数',
-                align: 'center'
-            }, {
-                field: 'amgPort',
-                title: '拉流端口',
-                align: 'center'
-            }, {
-                field: 'amgProto',
-                title: '拉流协议',
-                align: 'center'
-            }*/]
-        })
         /********************************* 媒体源信息 ***************************************/
         var mediaTable = {};
-        mediaTable.page = {
-            'pageNumber': 1,
-            'pageSize': 10
-        }
         mediaTable.init = function () {
-            mediaSrcService.getMediaSrcsList(mediaTable.page, null, function (data) {
-                if (data.result) {
-                    //向表格中填充数据
-                    $('#mediaSrc_table').bootstrapTable('load', data.data);
-                    common.pageInit(mediaTable.page.pageNumber, mediaTable.page.pageSize, data.extra)
-                    mediaTable.page['count']=data.extra;
+            var queryUrl = common.host +"/mgc"+"/mediaSrcsService"+"/getList";
+            $('#mediaSrc_table').bootstrapTable({
+                columns: [{
+                    checkbox: true
+                }, {
+                    title: '序号',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
+                }, {
+                    field: 'srcsName',
+                    title: '通道名称',
+                    align: 'center'
+                }, {
+                    field: 'srcsUri',
+                    title: '通道号',
+                    align: 'center'
+                }, {
+                    field: 'channeldevicename',
+                    title: '关联设备名称',
+                    align: 'center'
+                }],
+                url: queryUrl,
+                method: 'GET',
+                cache: false,
+                pagination: true,
+                sidePagination: 'server',
+                pageNumber: 1,
+                pageSize: 10,
+                pageList: [10, 20, 30],
+                smartDisplay: false,
+                search: true,
+                trimOnSearch: true,
+                buttonsAlign: 'left',
+                showRefresh: false,
+                queryParamsType: '',
+                responseHandler: function (res) {
+                    var rows = res.data;
+                    var total = res.extra;
+                    return {
+                        "rows": rows,
+                        "total": total
+                    }
+                },
+                queryParams: function (params) {
+                    var temp = {
+                        page: JSON.stringify({
+                            pageNumber: params.pageNumber,
+                            pageSize: params.pageSize
+                        }),
+                        srcsName: params.searchText
+                    }
+                    return temp
                 }
             })
         }
         mediaTable.init();
-        /********************************* 分页操作 ***************************************/
-        common.initPageOpera(mediaTable.page,mediaTable.init)
+        //初始化表格高度
+        $('#mediaSrc_table').bootstrapTable('resetView', {height: $(window).height() - 165});
+        //自适应表格高度
+        common.resizeTableDH('#mediaSrc_table');
         /******************************** 通道关联设备表格 **************************************/
         $('#device_table_media').bootstrapTable({
             columns: [{

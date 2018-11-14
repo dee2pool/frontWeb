@@ -100,10 +100,8 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
-                            "<i class='fa fa-edit'></i>修改</button>" +
-                            "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                            "</div>"
+                        var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                            "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                         return icons;
                     }
                 }],
@@ -116,7 +114,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 pageSize: 10,
                 pageList: [10, 20, 30],
                 smartDisplay: false,
-                showRefresh: true,
+                showRefresh: false,
                 queryParamsType: '',
                 responseHandler: function (res) {
                     var rows = res.data;
@@ -138,6 +136,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             })
         }
         deviceManuTable.init();
+        //初始化表格高度
+        $('#deviceManu_table').bootstrapTable('resetView', {height: $(window).height() - 165});
+        //自适应表格高度
+        common.resizeTableDH('#deviceManu_table');
         /********************************* 添加设备厂商 ***************************************/
         var dmAdd = {};
         dmAdd.valia = function () {
@@ -175,7 +177,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     if (data.result) {
                         common.clearForm('addform');
                         layer.closeAll();
-                        layer.msg('添加成功 请刷新表格')
+                        layer.msg('添加成功')
+                        //刷新表格
+                        $('#deviceManu_table').bootstrapTable('refresh', {silent: true});
+                        dmAdd.isClick=false;
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -184,10 +189,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 return false;
             })
         }
+        //阻止表单重复提交
+        dmAdd.isClick=false;
         dmAdd.init = function () {
             $('#addManu').click(function () {
-                //启用校验
-                dmAdd.valia();
                 //打开弹窗
                 layer.open({
                     type: 1,
@@ -196,10 +201,23 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                     offset: '100px',
                     area: '600px',
                     resize: false,
-                    content: $('#add_deviceManu')
+                    content: $('#add_deviceManu'),
+                    cancel: function (index, layero) {
+                        common.clearForm('addform');
+                        dmAdd.isClick=false;
+                    }
                 })
-                //表单提交
-                dmAdd.submit();
+                if(!dmAdd.isClick){
+                    dmAdd.valia();
+                    dmAdd.submit();
+                    dmAdd.isClick=true;
+                }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('addform');
+                dmAdd.isClick=false;
             })
         }
         dmAdd.init();
@@ -244,6 +262,7 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                         common.clearForm('editform');
                         layer.closeAll();
                         layer.msg('修改成功');
+                        dmEdit.isClick=false;
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -252,9 +271,8 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 return false;
             })
         }
+        dmEdit.isClick=false;
         dmEdit.init = function (row, index) {
-            //启用校验
-            dmEdit.valia();
             //填充表单
             $('input[name="emanuname"]').val(row.manuName);
             $('input[name="emanuiden"]').val(row.manuIdentity);
@@ -269,8 +287,13 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                 resize: false,
                 content: $('#edit_deviceManu')
             })
-            //表单提交
-            dmEdit.submit(row, index);
+            if(!dmEdit.isClick){
+                //启用校验
+                dmEdit.valia();
+                //表单提交
+                dmEdit.submit(row, index);
+                dmEdit.isClick=true;
+            }
         }
         /********************************* 删除设备厂商 ***************************************/
         var dmDel = {};

@@ -11,7 +11,6 @@
           href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
     <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
     <link rel="stylesheet" type="text/css" href="../../sidebar/css/frame.css">
-    <link rel="stylesheet" type="text/css" href="../../common/css/buttons.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" type="text/css" href="../css/domain.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
@@ -29,111 +28,34 @@
             <div class="content-panel panel-left">
                 <div class="head head-tree">
                     <div class="head-left-tree">
-                        <span>管理域</span>
+                        <span>区域组织树</span>
                     </div>
                 </div>
-                <!--<form role="form">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <input type="text" class="form-control" placeholder="区域或组织名称"
-                                   style="display: inline-block">
-                        </div>
-                    </div>
-                </form>-->
                 <ul id="domaintree" class="ztree"></ul>
             </div>
             <div class="content-panel panel-opera">
-                <a id="addDomain" class="button button-primary button-small"><span
-                        class="glyphicon glyphicon-plus"></span>添加管理域
-                </a>
-                <a id="addOrg" class="button button-primary button-small"><span
-                        class="glyphicon glyphicon-plus"></span>添加组织
-                </a>
-                <a id="del" class="button button-primary button-small"><span
-                        class="glyphicon glyphicon-plus"></span>删除
+                <a id="addDomain" class="btn btn-primary"><span
+                        class="glyphicon glyphicon-plus"></span>添加区域
                 </a>
             </div>
             <div class="content-panel panel-table">
-                <form id="alertDomain" class="form-horizontal form-main">
-                    <div class="form-item">
-                        <label class="col-sm-5 control-label"><i class="required">*</i>域名称：</label>
-                        <div class="col-sm-3" style="padding: 0px">
-                            <input name="dName" class="form-control" type="text">
-                            <input name="dCode" class="form-control" type="hidden">
-                            <input name="pCode" class="form-control" type="hidden">
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label class="col-sm-5 control-label">创建人：</label>
-                        <div class="col-sm-3" style="padding: 0px">
-                            <input name="dPersion" class="form-control" type="text" readonly>
-                        </div>
-                    </div>
-                    <!--TODO 用户在页面不能修改-->
-                    <div class="form-item">
-                        <label class="col-sm-5 control-label">创建时间：</label>
-                        <div class="col-sm-3" style="padding: 0px">
-                            <input name="dTime" class="form-control" type="text" readonly>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label class="col-sm-5 control-label">备注：</label>
-                        <div class="col-sm-3" style="padding: 0px">
-                            <textarea name="dRemark" cols="40" rows="4"></textarea>
-                        </div>
-                    </div>
-                    <div class="tab-footer">
-                        <button type="submit" class="btn btn-primary">完成</button>
-                        <button type="button" class="btn btn-default btn-cancel">取消</button>
-                    </div>
-                </form>
-                <form id="alertOrg" class="form-horizontal form-main" style="display: none">
-                    <div class="form-item">
-                        <label class="col-sm-5 control-label"><i class="required">*</i>组织名称：</label>
-                        <div class="col-sm-3" style="padding: 0px">
-                            <input name="orgName" class="form-control" type="text">
-                            <input name="orgCode" class="form-control" type="hidden">
-                            <input name="orgpCode" class="form-control" type="hidden">
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label class="col-sm-5 control-label">创建人：</label>
-                        <div class="col-sm-3" style="padding: 0px">
-                            <input name="orgPersion" class="form-control" type="text" readonly>
-                        </div>
-                    </div>
-                    <!--TODO 用户在页面不能修改-->
-                    <div class="form-item">
-                        <label class="col-sm-5 control-label">创建时间：</label>
-                        <div class="col-sm-3" style="padding: 0px">
-                            <input name="orgTime" class="form-control" type="text" readonly>
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <label class="col-sm-5 control-label">备注：</label>
-                        <div class="col-sm-3" style="padding: 0px">
-                            <textarea name="orgRemark" cols="40" rows="4"></textarea>
-                        </div>
-                    </div>
-                    <div class="tab-footer">
-                        <button type="submit" class="btn btn-primary">完成</button>
-                        <button type="button" class="btn btn-default btn-cancel">取消</button>
-                    </div>
-                </form>
+                <div class="table-responsive">
+                    <table class="table text-nowrap" id="domain_table"></table>
+                </div>
             </div>
         </div>
     </div>
     <!--添加管理域-->
-    <div id="add_Domain" style="display: none">
+    <div id="add_Domain" style="display: none;padding: 10px 0px 0 0px;">
         <form id="domainForm" class="form-horizontal">
             <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label"><i class="required">*</i>域名称：</label>
+                <label class="col-sm-4 control-label"><i class="required">*</i>区域名称：</label>
                 <div class="col-sm-6" style="padding: 0px">
                     <input name="domainName" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-item form-group-sm">
-                <label class="col-sm-4 control-label">上级域：</label>
+                <label class="col-sm-4 control-label">上级区域：</label>
                 <div class="col-sm-6" style="padding: 0px">
                     <input type="text" class="form-control" name="parentDoamin" readonly>
                     <input type="hidden" name="parentDoaminCode">
@@ -152,34 +74,19 @@
             </div>
         </form>
     </div>
-    <!--添加组织-->
-    <div id="add_org" style="display: none">
-        <form id="orgForm" class="form-horizontal">
+    <!--修改管理域-->
+    <div id="alt_Domain" style="display: none;padding: 10px 0px 0 0px;">
+        <form id="altDomainForm" class="form-horizontal">
             <div class="form-item form-group-sm">
-                <label class="col-sm-3 control-label"><i class="required">*</i>组织名称：</label>
+                <label class="col-sm-4 control-label"><i class="required">*</i>区域名称：</label>
                 <div class="col-sm-6" style="padding: 0px">
-                    <input name="oName" class="form-control" type="text">
+                    <input name="eDomainName" class="form-control" type="text">
                 </div>
             </div>
             <div class="form-item form-group-sm">
-                <label class="col-sm-3 control-label">上级组织(管理域)：</label>
+                <label class="col-sm-4 control-label">备注：</label>
                 <div class="col-sm-6" style="padding: 0px">
-                    <input type="text" class="form-control" name="pOrg" readonly>
-                    <input type="hidden" name="pOrgCode">
-                </div>
-                <span class="form-msg">点击左侧树选择上级组织或管理域</span>
-            </div>
-            <div class="form-item form-group-sm">
-                <label class="col-sm-3 control-label"><i class="required">*</i>区域编码：</label>
-                <div class="col-sm-6" style="padding: 0px">
-                    <input name="areaCode" class="form-control" type="text" readonly>
-                </div>
-                <a id="choseArea" href="#"style="display: inline-block;margin-top: 5px;margin-left: 10px"><span class="badge">选择</span></a>
-            </div>
-            <div class="form-item form-group-sm">
-                <label class="col-sm-3 control-label">备注：</label>
-                <div class="col-sm-6" style="padding: 0px">
-                    <textarea name="oRemark" cols="40" rows="2"></textarea>
+                    <textarea name="eDomainRemark" cols="40" rows="2"></textarea>
                     <input name="res" type="reset" style="display:none;"/>
                 </div>
             </div>
@@ -188,6 +95,14 @@
                 <button type="button" class="btn btn-default btn-cancel">取消</button>
             </div>
         </form>
+    </div>
+    <!--组织树-->
+    <div id="assign_org" style="display: none">
+        <ul id="orgTree" class="ztree"></ul>
+        <div class="tab-footer">
+            <button id="assignOrgSub" type="button" class="btn btn-primary">完成</button>
+            <button type="button" class="btn btn-default btn-cancel">取消</button>
+        </div>
     </div>
     <!--区域树-->
     <ul id="areatree" class="ztree" style="display: none;"></ul>

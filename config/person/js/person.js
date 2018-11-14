@@ -473,6 +473,10 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
             })
         }
         personTable.init();
+        //初始化表格高度
+        $('#person_table').bootstrapTable('resetView', {height: $(window).height() - 135});
+        //自适应表格高度
+        common.resizeTableH('#person_table');
         /********************************* 迁移人员 ***************************************/
         $('#movePerson').click(function () {
             var selecte = $('#person_table').bootstrapTable('getSelections');

@@ -111,6 +111,32 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         dictTree.init = function () {
             dictTree.obj = $.fn.zTree.init($("#dictTree"), dictTree.setting, dictTree.zNode());
         }
+        dictTree.addNode=function(newNode){
+            if (dictTree.obj) {
+                //获取当前选中的节点
+                var selected = dictTree.obj.getSelectedNodes();
+                if (selected.length > 0&&selected[0].open) {
+                    //在节点下添加节点
+                    dictTree.obj.addNodes(selected[0],newNode);
+                }
+            }
+        }
+        dictTree.altNode=function(newNode){
+            if (dictTree.obj) {
+                var node = dictTree.obj.getNodeByParam('id',newNode.id);
+                if (node) {
+                    node.dictName = newNode.dictName;
+                    node.remark = newNode.remark;
+                    dictTree.obj.updateNode(node);
+                }
+            }
+        }
+        dictTree.delNode=function(id){
+            var node=dictTree.obj.getNodeByParam('id',id,null);
+            if(node){
+                dictTree.obj.removeNode(node);
+            }
+        }
         dictTree.init();
         /********************************* 添加字典 ***************************************/
         var dictAdd = {};
@@ -140,7 +166,6 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
         }
         dictAdd.submit = function (layerId) {
             $('#addDictForm').on('success.form.bv', function () {
-                console.log("aa")
                 var dict = {};
                 dict.dictName = $('input[name="dictName"]').val();
                 dict.dictCode = $('input[name="dictNo"]').val();
@@ -148,7 +173,12 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 dict.remark = $('textarea[name="remark"]').val();
                 dictService.addDict(dict, function (data) {
                     if (data.result) {
+                        dict.id=data.data;
+                        dict.icon="../img/dict.png";
                         //向树中添加
+                        dictTree.addNode(dict);
+                        //向表格中添加
+                        $('#dict_table').bootstrapTable('append',dict);
                         //清空表单和验证
                         common.clearForm('addDictForm');
                         //关闭弹窗
@@ -177,8 +207,7 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     area: '600px',
                     resize: false,
                     content: $('#add_Dict')
-                });
-                console.log("bb")
+                })
                 //表单提交
                 dictAdd.submit();
             })
@@ -217,6 +246,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     if (data.result) {
                         //更新表格
                         $('#dict_table').bootstrapTable('updateRow', {index: index, row: dict});
+                        //更新树
+                        dictTree.altNode(dict);
                         //清空弹窗和验证
                         common.clearForm('editDictForm');
                         //关闭弹窗
@@ -264,7 +295,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                         layer.msg('删除成功');
                         //从表格中删除
                         $('#dict_table').bootstrapTable('remove',{field: 'id', values: [row.id]});
-                        dictTree.init();
+                        //从树中删除
+                        dictTree.delNode(row.id);
                     } else {
                         layer.msg(data.description)
                     }
@@ -309,10 +341,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                     }
                 },
                 formatter: function () {
-                    var icons = "<div class='button-group'><button id='edit' type='button' class='button button-tiny button-highlight'>" +
-                        "<i class='fa fa-edit'></i>修改</button>" +
-                        "<button id='del' type='button' class='button button-tiny button-caution'><i class='fa fa-remove'></i>刪除</button>" +
-                        "</div>"
+                    var icons = "<button id='edit' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>" +
+                        "<button id='del' class='btn btn-danger btn-xs'><i class='fa fa-remove'></i>删除</button>"
                     return icons;
                 }
             }]
@@ -326,4 +356,8 @@ require(['jquery', 'common', 'layer', 'frame', 'bootstrapValidator', 'bootstrap-
                 }
             })
         }
+        //初始化表格高度
+        $('#dict_table').bootstrapTable('resetView',{height:$(window).height()-135});
+        //自适应表格高度
+        common.resizeTableH('#dict_table');
     })

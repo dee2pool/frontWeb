@@ -142,7 +142,7 @@ ul li {
     left: 203px;
     top:60px;
     width: calc(100% - 205px);
-    height: calc(100% - 65px);
+    /*height: calc(100% - 65px);*/
 }
 .panel-table-de{
     left: 203px;
@@ -158,9 +158,9 @@ ul li {
 .table th{
     background-color: lightgray;
 }
-.table>tbody>tr>td{
+/*.table>tbody>tr>td{
     border: 0px;
-}
+}*/
 .sidebar {
     position: fixed;
     top: 63px;

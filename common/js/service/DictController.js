@@ -74,7 +74,7 @@ define(['common'], function DictController(common) {
             url: requestUrl,
             type: 'Post',
             data: {
-                ids: ids,
+                codes: ids,
             },
             cache: false,
             success: onSuccess,

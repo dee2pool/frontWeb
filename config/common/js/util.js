@@ -159,15 +159,18 @@ define(['layer'], function (layer) {
         common.nextPage(page, initTable);
         common.toPage(page, initTable);
     }
-    /*//带侧边栏页面动态高度宽度
-    common.height = $(window).height();
-    $('.panel-right').width($(window).width() - 380);
-    /!*!//不带侧边栏页面右侧面板动态宽度
-    $('.panel-opera,.panel-table').width($(window).width() - 205)*!/
-    $(window).resize(function () {
-        $('.panel-right').width($(window).width() - 380)
-        /!*$('.panel-opera,.panel-table').width($(window).width() - 385)*!/
-    })*/
+    //表格高度自适应
+    common.resizeTableH=function(id){
+        $(window).resize(function () {
+            $(id).bootstrapTable('resetView',{height:$(window).height()-135})
+        })
+    }
+    //设备管理表格高度自适应
+    common.resizeTableDH=function(id){
+        $(window).resize(function () {
+            $(id).bootstrapTable('resetView',{height:$(window).height()-165})
+        })
+    }
     //点击取消
     $('.btn-cancel').click(function () {
         layer.closeAll();

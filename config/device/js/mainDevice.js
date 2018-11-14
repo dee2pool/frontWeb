@@ -47,7 +47,6 @@ require.config({
         "deviceService": "../../../common/js/service/DeviceInfoController",
         "mediaSrcService": "../../../common/js/service/MediaSrcsController",
         "orgService": "../../../common/js/service/OrgController",
-        "buttons": "../../common/js/buttons",
         "orgTree": "../js/orgTree",
         "dictService": "../../../common/js/service/dictController",
         "deviceManu":"../../../common/js/service/DeviceManufacturerController",
@@ -55,8 +54,8 @@ require.config({
         "gbCatalogService":"../../../common/js/service/GBCatalogController"
     }
 });
-require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrapValidator', 'ztree', 'bootstrap-table','bootstrap-table-zh-CN','deviceManu','deviceModel','domainService', 'buttons', 'orgService', 'orgTree', 'deviceService', 'mediaSrcService', 'dictService','gbCatalogService'],
-    function (jquery, frame, topBar, common, layer, bootstrap, bootstrapValidator, ztree, bootstrapTable,bootstrapTableZhcN,deviceManu,deviceModel,domainService, buttons, orgService, orgTree, deviceService, mediaSrcService, dictService,gbCatalogService) {
+require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrapValidator', 'ztree', 'bootstrap-table','bootstrap-table-zh-CN','deviceManu','deviceModel','domainService', 'orgService', 'orgTree', 'deviceService', 'mediaSrcService', 'dictService','gbCatalogService'],
+    function (jquery, frame, topBar, common, layer, bootstrap, bootstrapValidator, ztree, bootstrapTable,bootstrapTableZhcN,deviceManu,deviceModel,domainService, orgService, orgTree, deviceService, mediaSrcService, dictService,gbCatalogService) {
         //初始化frame
         $('#sidebar').html(frame.htm);
         frame.init();
@@ -87,8 +86,14 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 onClick: function (event, treeId, treeNode) {
                     if (treeNode.type && treeNode.type === 'org') {
                         domainTree.selOrg=treeNode;
+                        if(domainTree.selDomain){
+                            domainTree.selDomain=null;
+                        }
                     } else {
                         domainTree.selDomain = treeNode;
+                        if(domainTree.selOrg){
+                            domainTree.selOrg=null;
+                        }
                     }
                 },
                 onExpand: function (event, treeId, treeNode) {
@@ -192,7 +197,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             })
         }
         /********************************* 设备类型下拉框查询 ***************************************/
-        dict.init('encodeDevice','.deviceType');
+        dict.init('1','.deviceType');
         /********************************* 网关下拉框 ***************************************/
         gbCatalogService.getGB28181AMGCode(function (data) {
             if(data.result){
@@ -212,7 +217,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             if(data.result){
                 if (data.extra > 0) {
                     for (var i = 0; i < data.extra; i++) {
-                        $('#deviceManu').append('<option value="' + data.data[i].id + '">' + data.data[i].manuName + '</option>');
+                        $('.deviceManu').append('<option value="' + data.data[i].id + '">' + data.data[i].manuName + '</option>');
                     }
                 }
             }
@@ -226,7 +231,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             if(data.result){
                 if (data.extra > 0) {
                     for (var i = 0; i < data.extra; i++) {
-                        $('#deviceModel').append('<option value="' + data.data[i].id + '">' + data.data[i].modelName + '</option>');
+                        $('.deviceModel').append('<option value="' + data.data[i].id + '">' + data.data[i].modelName + '</option>');
                     }
                 }
             }
@@ -318,8 +323,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         }
                     },
                     formatter: function () {
-                        var icons = "<div class='button-group'><button id='edit_btn' type='button' class='button button-tiny button-highlight'><i class='fa fa-edit'></i>修改</button>" +
-                            "</div>"
+                        var icons = "<button id='edit_btn' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>修改</button>"
                         return icons;
                     }
                 }],
@@ -329,12 +333,12 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 pagination:true,
                 sidePagination:'server',
                 pageNumber:1,
-                pageSize:5,
+                pageSize:10,
                 pageList:[10,20,30],
                 smartDisplay:false,
                 search:true,
                 trimOnSearch:true,
-                showRefresh:true,
+                showRefresh:false,
                 queryParamsType:'',
                 responseHandler:function(res){
                     var rows=res.data;
@@ -357,6 +361,10 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
             })
         }
         deviceTable.init();
+        //初始化表格高度
+        $('#device_table').bootstrapTable('resetView', {height: $(window).height() - 165});
+        //自适应表格高度
+        common.resizeTableDH('#device_table');
         /********************************* 查询设备 ***************************************/
         $('#search').click(function () {
             deviceTable.ip = $('input[name="d_ip"]').val();
@@ -374,13 +382,6 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                     validating: 'glyphicon glyphicon-refresh'
                 },
                 fields: {
-                    dictCode: {
-                        validators: {
-                            notEmpty: {
-                                message: '设备大类不能为空'
-                            }
-                        }
-                    },
                     typeCode: {
                         validators: {
                             notEmpty: {
@@ -428,6 +429,18 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                                 message: '登录密码不能为空'
                             }
                         }
+                    }, modelId: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备型号不能为空'
+                            }
+                        }
+                    }, manuId: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备厂商不能为空'
+                            }
+                        }
                     }
                 }
             })
@@ -458,7 +471,9 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         common.clearForm('DeviceForm');
                         //关闭弹窗
                         layer.closeAll();
-                        layer.msg('添加成功 请刷新表格')
+                        //刷新表格
+                        $('#device_table').bootstrapTable('refresh', {silent: true});
+                        deviceAdd.isClick=false;
                     } else {
                         layer.msg(data.description);
                         $("button[type='submit']").removeAttr('disabled');
@@ -467,11 +482,11 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 return false;
             })
         }
+        //阻止表单重复提交
+        deviceAdd.isClick=false;
         deviceAdd.init = function () {
             $('#addDevice').click(function () {
                 if (domainTree.selOrg) {
-                    //开启验证
-                    deviceAdd.valiadator();
                     //开启弹窗
                     $('input[name="orgName"]').val(domainTree.selOrg.name)
                     $('input[name="orgCode"]').val(domainTree.selOrg.code)
@@ -479,17 +494,32 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         type: 1,
                         skin: 'layui-layer-lan',
                         resize: false,
-                        area: ['620px', '402px'],
+                        area: ['620px', '395px'],
                         scrollbar: false,
                         offset: '100px',
                         title: '添加设备',
-                        content: $('#add_device')
+                        content: $('#add_device'),
+                        cancel: function (index, layero) {
+                            common.clearForm('DeviceForm');
+                            deviceAdd.isClick=false;
+                        }
                     })
-                    //表单提交
-                    deviceAdd.submit();
+                    if(!deviceTable.isClick){
+                        //开启验证
+                        deviceAdd.valiadator();
+                        //表单提交
+                        deviceAdd.submit();
+                        deviceTable.isClick=true;
+                    }
                 } else {
                     layer.msg('请选择左侧组织')
                 }
+            })
+            //关闭弹窗
+            $('.btn-cancel').click(function () {
+                layer.closeAll();
+                common.clearForm('DeviceForm');
+                deviceTable.isClick=false;
             })
         }
         deviceAdd.init();
@@ -552,6 +582,20 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                                 message: '登录密码不能为空'
                             }
                         }
+                    },
+                    editModelId: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备型号不能为空'
+                            }
+                        }
+                    },
+                    editManuId: {
+                        validators: {
+                            notEmpty: {
+                                message: '设备厂商不能为空'
+                            }
+                        }
                     }
 
                 }
@@ -581,6 +625,7 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                         $("button[type='submit']").removeAttr('disabled');
                         //清空验证
                         $("#editDeviceForm").data('bootstrapValidator').destroy();
+                        deviceEdit.isClick=false;
                     } else {
                         layer.msg(data.description);
                     }
@@ -588,9 +633,9 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 return false;
             })
         }
+        //阻止表单重复提交
+        deviceEdit.isClick=false;
         deviceEdit.init = function (row, index) {
-            //启用校验
-            deviceEdit.valia();
             //填充表单
             $("select[name='eidtDictCode']").val(row.deviceType);
             $("input[name='editDeviceName']").val(row.deviceName);
@@ -610,14 +655,19 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 type: 1,
                 skin: 'layui-layer-lan',
                 resize: false,
-                area: ['620px', '385px'],
+                area: ['620px', '355px'],
                 scrollbar: false,
                 offset: '100px',
                 title: '修改设备',
                 content: $('#edit_device')
             })
-            //表单提交
-            deviceEdit.submit(row, index, layerId)
+            if(!deviceEdit.isClick){
+                //启用校验
+                deviceEdit.valia();
+                //表单提交
+                deviceEdit.submit(row, index, layerId)
+                deviceEdit.isClick=true;
+            }
         }
         /********************************* 删除设备 ***************************************/
         var deviceDel = {};
@@ -737,14 +787,13 @@ require(['jquery', 'frame', 'topBar', 'common', 'layer', 'bootstrap', 'bootstrap
                 var deviceName = $('input[name="deviceSrcName"]').val();
                 var deviceConId = $('input[name="deviceSrcConId"]').val();
                 var deviceCode = $('input[name="deviceSrcCode"]').val();
-                ;
                 var typeCode = $('select[name="srcTypeCode"]').val();
-                mediaSrcService.addMediaSrcsList(deviceId, uriNum, deviceName, deviceConId, deviceCode, typeCode, function (data) {
+                mediaSrcService.addMediaSrcsList(deviceConId, uriNum, deviceName, deviceId, deviceCode, typeCode, function (data) {
                     if (data.result) {
-                        layer.msg('添加到通道成功!')
                         //清空表格
-                        //清空验证
-                        $("#addMediaForm").data('bootstrapValidator').destroy();
+                        common.clearForm('addMediaForm');
+                        layer.closeAll();
+                        layer.msg('添加到通道成功!');
                     } else {
                         layer.msg(data.description);
                     }
