@@ -80,6 +80,16 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                                 message: '菜单展示序号不能为空'
                             }
                         }
+                    },Menuurl:{
+                        validators: {
+                            regexp: {
+                                regexp:/^#|(..\/)*[a-z0-9\/]+(.html){1}$/,
+                                message: '页面路径格式不正确'
+                            },
+                            notEmpty: {
+                                message: '页面路径不能为空'
+                            }
+                        }
                     }
                 }
             })
@@ -180,6 +190,16 @@ require(['jquery', 'common', 'layer', 'frame', 'MenuService','bootstrap','bootst
                             },
                             notEmpty: {
                                 message: '菜单展示序号不能为空'
+                            }
+                        }
+                    },Menuurl:{
+                        validators: {
+                            regexp: {
+                                regexp:/^#|(..\/)*[a-z0-9\/]+(.html){1}$/,
+                                message: '页面路径格式不正确'
+                            },
+                            notEmpty: {
+                                message: '页面路径不能为空'
                             }
                         }
                     }

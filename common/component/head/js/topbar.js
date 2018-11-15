@@ -34,8 +34,12 @@ define(["../../../common/js/service/LoginController"],function (loginservice) {
         '                            <p>基础配置</p></a></div>',
         '                    <div class="col-md-3 funcMenu" style="background-color: #79d57f">',
         '                               <a href="'+topBar.deviceManage+'"><i class="fa fa-server fa-2x"></i>',
-        '                                  <p>设备管理</p></a></div>',
-        '                    <div class="col-md-3 funcMenu"></div>',
+        '                                  <p>设备管理</p></a>' +
+        '                    </div>',
+        '                    <div class="col-md-3 funcMenu" style="background-color: #79d57f">',
+        '                               <a href="'+topBar.deviceManage+'"><i class="fa fa-tasks fa-2x"></i>',
+        '                                  <p>任务中心</p></a>' +
+        '                    </div>',
         '                    <div class="col-md-3 funcMenu"></div>',
         '                    <div class="col-md-3 funcMenu"></div>',
         '                    <div class="col-md-3 funcMenu"></div>',
