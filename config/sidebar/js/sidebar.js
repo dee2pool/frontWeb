@@ -21,4 +21,5 @@ require(['jquery', 'bootstrap','frame'], function (jquery, bootstrap, frame) {
     //初始化frame
     $('#sidebar').html(frame.htm);
     frame.init();
+
 })

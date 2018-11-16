@@ -18,6 +18,46 @@ define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
         '    <span class="ham-top"></span>',
         '    <span class="ham-bottom"></span>',
         '</button>'].join("");
+    frame.taskHtm=['<div class="side-left">',
+        '        <nav class="sidebar" data-sidenav>',
+        '            <ul class="side-menu menu">',
+        '                <li>',
+        '                    <a class="menu-elem" href="index.html">',
+        '                        <span>任务看板</span>',
+        '                        <div class="edit-menu"><i class="fa fa-cog"></i></div>',
+        '                    </a>',
+        '                </li>',
+        '                <li>',
+        '                    <a class="menu-elem" href="taskconfig.html">',
+        '                        <span>基础配置</span>',
+        '                        <div class="edit-menu"><i class="fa fa-cog"></i></div>',
+        '                    </a>',
+        '                </li>',
+        '                <li>',
+        '                    <a class="menu-elem" href="taskmain.html">',
+        '                        <span>任务管理</span>',
+        '                        <div class="edit-menu"><i class="fa fa-cog"></i></div>',
+        '                    </a>',
+        '                </li>',
+        '                <li>',
+        '                    <a class="menu-elem" href="tasklog.html">',
+        '                        <span>任务日志</span>',
+        '                        <div class="edit-menu"><i class="fa fa-cog"></i></div>',
+        '                    </a>',
+        '                </li>',
+        '            </ul>',
+        '            <div class="add_menu">',
+        '                <p class="side-collapse"><a id="hideSide" href="#">',
+        '                    <i class="fa fa-angle-left"style="font-size: 25px"></i></a></p>',
+        '                <ul class="config-menu">',
+        '                </ul>',
+        '            </div>',
+        '        </nav>',
+        '    </div>',
+        '    <button type="button" class="hambuger is-closed">',
+        '        <span class="ham-top"></span>',
+        '        <span class="ham-bottom"></span>',
+        '    </button>'].join("");
     //创建菜单
     function displayMenu() {
         MenuService.getCurrentUserMenuListByParentId(-1, function (data) {
@@ -56,7 +96,6 @@ define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
             $('.hambuger').hide();
         })
     }
-
     //隐藏侧边栏
     function hideSide() {
         $('#hideSide').click(function () {
@@ -67,7 +106,6 @@ define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
             $('.hambuger').show();
         })
     }
-
     /*//显示菜单栏编辑按钮
     function showEditIcon() {
         $('.menu-elem').mouseover(function () {
@@ -121,6 +159,10 @@ define(["menu", "MenuService", "layer"], function (menu, MenuService, layer) {
         //菜单效果初始化
         menu.secondMenuShow();
         menu.secondMenuLeave();
+        showSide();
+        hideSide();
+    }
+    frame.showLeave=function () {
         showSide();
         hideSide();
     }

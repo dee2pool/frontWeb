@@ -9,9 +9,7 @@
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/sidebar"></script>
 </head>
 <body>
-<!--侧边栏-->
-<div id="sidebar"></div>
-<form id="addMpanel" class="form-horizontal">
+<!--<form id="addMpanel" class="form-horizontal">
     <div class="form-group form-group-sm" style="margin: 15px 0px">
         <label class="control-label col-sm-4"><i class="required">*</i>菜单名称</label>
         <div class="col-sm-7">
@@ -54,83 +52,48 @@
         <button name="doAdd" type="submit" class="btn btn-danger" style="margin-right: 30px">提交</button>
         <button name="doCancel" type="button" class="btn btn-default">取消</button>
     </div>
-</form>
-<div class="side-left">
-    <nav class="navbar sidebar" data-sidenav>
-        <ul class="side-menu menu">
-            <li>
-                <a class="menu-elem" href="">
-                    <i class="fa fa-user-o"></i>
-                    <span>用户管理</span>
-                    <div class="edit-menu"><i class="fa fa-cog"></i></div>
-                </a>
-            </li>
-            <li>
-                <a class="menu-elem" href="">
-                    <span>设备管理</span>
-                    <div class="edit-menu"><i class="fa fa-cog"></i></div>
-                </a>
-            </li>
-        </ul>
-        <div class="add_menu">
-            <p class="side-collapse"><a id="hideSide" href="#">
-                <i class="fa fa-angle-left"style="font-size: 25px"></i></a></p>
-            <ul class="config-menu">
+</form>-->
+<div class="sidebar">
+    <div class="side-left">
+        <nav class="sidebar" data-sidenav>
+            <ul class="side-menu menu">
                 <li>
-                    <a id="addMenu" href="javascript:;">
-                        <i class="fa fa-plus-circle"></i>
-                        <span>添加菜单</span>
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="second-menu-list">
-        <div class="second-menu">
-            <ul class="menu">
-                <li>
-                    <a class="menu-elem" href="../../role/view/rolemanage.html">
-                        <i class="fa fa-address-book"></i>
-                        <span>角色管理</span>
+                    <a class="menu-elem" href="">
+                        <span>首頁</span>
                         <div class="edit-menu"><i class="fa fa-cog"></i></div>
                     </a>
                 </li>
                 <li>
-                    <a class="menu-elem" href="../../user/view/usermanage.html">,
-                        <i class="fa fa-user-o"></i>
-                        <span>用户管理</span>
+                    <a class="menu-elem" href="">
+                        <span>基础配置</span>
+                        <div class="edit-menu"><i class="fa fa-cog"></i></div>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-elem" href="">
+                        <span>任务管理</span>
+                        <div class="edit-menu"><i class="fa fa-cog"></i></div>
+                    </a>
+                </li>
+                <li>
+                    <a class="menu-elem" href="">
+                        <span>日志</span>
                         <div class="edit-menu"><i class="fa fa-cog"></i></div>
                     </a>
                 </li>
             </ul>
-        </div>
-        <div class="second-menu">
-            <ul class="menu">
-                <li>
-                    <a class="menu-elem" href="../../hn_med_deviceInfo/views/hn_med_deviceInfo.html">
-                        <span>设备信息</span>
-                        <div class="edit-menu"><i class="fa fa-cog"></i></div>
-                    </a>
-                </li>
-                <li>
-                    <a class="menu-elem" href="../../hn_med_deviceMode/view/hm_med_deviceMode.html">,
-                        <span>设备型号</span>
-                        <div class="edit-menu"><i class="fa fa-cog"></i></div>
-                    </a>
-                </li>
-                <li>
-                    <a class="menu-elem" href="../../hn_med_manufacturer/views/hn_med_manufacturer.html">
-                        <span>设备厂商</span>
-                        <div class="edit-menu"><i class="fa fa-cog"></i></div>
-                    </a>
-                </li>
-            </ul>
-        </div>
+            <div class="add_menu">
+                <p class="side-collapse"><a id="hideSide" href="#">
+                    <i class="fa fa-angle-left"style="font-size: 25px"></i></a></p>
+                <ul class="config-menu">
+                </ul>
+            </div>
+        </nav>
     </div>
+    <button type="button" class="hambuger is-closed">
+        <span class="ham-top"></span>
+        <span class="ham-bottom"></span>
+    </button>
 </div>
-<button type="button" class="hambuger is-closed">
-    <span class="ham-top"></span>
-    <span class="ham-bottom"></span>
-</button>
 </body>
 </html>

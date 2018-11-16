@@ -4,6 +4,7 @@ define(["../../../common/js/service/LoginController"],function (loginservice) {
     topBar.imgSrc='../../../common/component/head/img/logo.png';
     topBar.menuManage='../../../config/menu/view/menumanage.html';
     topBar.deviceManage='../../../config/device/view/index.html';
+    topBar.taskCenter="../../../config/task/view/index.html";
     topBar.url = "/hnvmns-frontweb";
     topBar.img=topBar.url+"/common/component/head/img";
     topBar.htm=['<nav class="navbar navbar-default top-navbar" role="navigation">',
@@ -36,8 +37,8 @@ define(["../../../common/js/service/LoginController"],function (loginservice) {
         '                               <a href="'+topBar.deviceManage+'"><i class="fa fa-server fa-2x"></i>',
         '                                  <p>设备管理</p></a>' +
         '                    </div>',
-        '                    <div class="col-md-3 funcMenu" style="background-color: #79d57f">',
-        '                               <a href="'+topBar.deviceManage+'"><i class="fa fa-tasks fa-2x"></i>',
+        '                    <div class="col-md-3 funcMenu" style="background-color: #ed737e">',
+        '                               <a href="'+topBar.taskCenter+'"><i class="fa fa-tasks fa-2x"></i>',
         '                                  <p>任务中心</p></a>' +
         '                    </div>',
         '                    <div class="col-md-3 funcMenu"></div>',
