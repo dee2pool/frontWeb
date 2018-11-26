@@ -7,9 +7,11 @@
     <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/BootstrapTable/bootstrap-table.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/bootstrap-validator/css/bootstrapValidator.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/bootstrap/libs/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="../../sidebar/css/frame.css">
     <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
     <link rel="stylesheet" type="text/css" href="../../common/css/normalize.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/taskmain"></script>
 </head>
@@ -37,32 +39,67 @@
     </div>
     <!--添加任务弹窗-->
     <div id="add_task" style="display: none;padding: 10px 0px 0 0px;">
-        <form id="domainForm" class="form-horizontal">
-            <div class="form-item form-group-sm">
-                <label class="col-sm-2 control-label"><i class="required">*</i>任务编号：</label>
-                <div class="col-sm-3" style="padding: 0px">
-                    <input name="domainName" class="form-control" type="text">
+        <form id="taskForm" class="form-horizontal">
+            <div class="form-item form-group-sm" style="display: inline-block;width: 320px">
+                <label class="col-sm-4 control-label"><i class="required">*</i>任务名称：</label>
+                <div class="col-sm-8" style="padding: 0px">
+                    <input name="taskName" class="form-control" type="text">
                 </div>
             </div>
-            <div class="form-item form-group-sm">
-                <label class="col-sm-2 control-label">任务类型：</label>
-                <div class="col-sm-3" style="padding: 0px">
-                    <input type="text" class="form-control" name="parentDoamin" readonly>
+            <div class="form-item form-group-sm" style="display: inline-block;width: 320px">
+                <label class="col-sm-4 control-label">优先级：</label>
+                <div class="col-sm-8" style="padding: 0px">
+                    <input type="number" class="form-control" name="property" readonly>
                     <input type="hidden" name="parentDoaminCode">
                 </div>
             </div>
-            <div class="form-item form-group-sm">
-                <label class="col-sm-2 control-label">优先级：</label>
-                <div class="col-sm-3" style="padding: 0px">
-                    <input type="number" class="form-control" name="parentDoamin" readonly>
-                    <input type="hidden" name="parentDoaminCode">
+            <div class="form-item form-group-sm" style="display: inline-block;width: 320px">
+                <label class="col-sm-4 control-label">任务类型：</label>
+                <div class="col-sm-8" style="padding: 0px">
+                    <select id="taskType"  class="form-control">
+                        <option value="1">实时</option>
+                        <option value="2">定时</option>
+                        <option value="3">周期</option>
+                    </select>
                 </div>
             </div>
-            <div class="form-item form-group-sm">
-                <label class="col-sm-2 control-label">备注：</label>
-                <div class="col-sm-3" style="padding: 0px">
-                    <textarea name="domainRemark" cols="40" rows="2"></textarea>
+            <div id="triTime" class="form-item form-group-sm" style="display: none;width: 320px">
+                <label class="col-sm-4 control-label">触发时间：</label>
+                <div class="input-group  date form_datetime col-sm-8" style="padding: 0px">
+                    <input type="text" name="triggerTime" class="form-control" readonly>
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                </div>
+            </div>
+            <div id="cronText" class="form-item form-group-sm" style="display: none;width: 320px">
+                <label class="col-sm-4 control-label">检测周期：</label>
+                <div class="col-sm-8" style="padding: 0px">
+                    <select class="form-control">
+                        <option value="">30分钟</option>
+                        <option value="">60分钟</option>
+                        <option value="">90分钟</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-item form-group-sm" style="width: 320px">
+                <label class="col-sm-4 control-label">备注：</label>
+                <div class="col-sm-8" style="padding: 0px">
+                    <textarea name="domainRemark" cols="40" rows="3"></textarea>
                     <input name="res" type="reset" style="display:none;"/>
+                </div>
+            </div>
+            <div class="panel panel-info" style="margin: 0px">
+                <div class="panel-heading">
+                    设备选择
+                </div>
+                <div class="panel-body" style="padding: 0px">
+                    <div class="panel panel-info col-md-3" style="margin: 0px;height: 300px;overflow: auto">
+                        <ul id="orgtree" class="ztree"></ul>
+                    </div>
+                    <div class="panel panel-info col-md-9" style="margin: 0px;padding-left:0px;padding-right: 0px;height: 300px;overflow: auto">
+                        <div class="table-responsive">
+                            <table class="table text-nowrap" id="camera_table"></table>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="tab-footer">
