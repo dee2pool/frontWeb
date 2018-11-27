@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="../../../common/component/head/css/head.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/font-awesome-4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="../../../common/lib/ztree/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" type="text/css" href="../css/taskmain.css">
     <link rel="stylesheet" type="text/css" href="../../common/css/normalize.css">
     <script src="../../common/libs/require.js" defer async="true" data-main="../js/taskmain"></script>
 </head>
@@ -46,11 +47,16 @@
                     <input name="taskName" class="form-control" type="text">
                 </div>
             </div>
-            <div class="form-item form-group-sm" style="display: inline-block;width: 320px">
+            <div class="form-item form-group-sm spinner" style="display: inline-block;width: 360px">
                 <label class="col-sm-4 control-label">优先级：</label>
                 <div class="col-sm-8" style="padding: 0px">
-                    <input type="number" class="form-control" name="property" readonly>
-                    <input type="hidden" name="parentDoaminCode">
+                    <input type="text" class="form-control" onkeyup="(this.v=function(){this.value=this.value.replace(/[^0-9-]+/,'');}).call(this)" onblur="this.v();"
+                           name="property" value="100" style="display: inline-block;
+                    width: 150px;height: 32px;text-align: right">
+                    <div class="input-group-btn-vertical">
+                        <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                        <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                    </div>
                 </div>
             </div>
             <div class="form-item form-group-sm" style="display: inline-block;width: 320px">

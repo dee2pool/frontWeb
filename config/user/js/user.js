@@ -641,6 +641,8 @@ require(['jquery', 'common', 'frame', 'bootstrap-table', 'bootstrap-table-zh-CN'
                             $('#user_table').bootstrapTable('remove', {field: 'id', values: [row.id]});
                             //初始化状态插件
                             userState.switch();
+                        }else{
+                            layer.msg('删除失败!')
                         }
                     })
                 }

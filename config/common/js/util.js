@@ -216,6 +216,15 @@ define(['layer'], function (layer) {
         var D = date.getDate() + ' ';
         return Y+M+D;
     }
+    //将字符串转为时间
+    common.convertDateFromString=function (dateString) {
+        if (dateString) {
+            var arr1 = dateString.split(" ");
+            var sdate = arr1[0].split('-');
+            var date = new Date(sdate[0], sdate[1]-1, sdate[2]);
+            return date;
+        }
+    }
     //将图片转换成canvas
     common.convertImageToCanvas = function (image) {
         //创建canvas dom元素，设置宽高与图片一样

@@ -70,6 +70,13 @@ require(['jquery', 'common', 'layer','bootstrap','frame','bootstrapValidator', '
         layer.config({
             path: '../../../common/lib/layer/'
         });
+        /********************************* 数字加减操作 ***************************************/
+        $('.spinner .btn:first-of-type').on('click', function() {
+            $('.spinner input').val( parseInt($('.spinner input').val(), 10) + 1);
+        });
+        $('.spinner .btn:last-of-type').on('click', function() {
+            $('.spinner input').val( parseInt($('.spinner input').val(), 10) - 1);
+        });
         /********************************* 任务表格 ***************************************/
         var taskTable={};
         taskTable.init=function () {
@@ -114,14 +121,27 @@ require(['jquery', 'common', 'layer','bootstrap','frame','bootstrapValidator', '
                     title: '备注',
                     align: 'center'
                 }, {
+                    field: 'executeResult',
+                    title: '详情',
+                    align: 'center',
+                    events: {
+                        "click #showDetail": function (e, value, row, index) {
+                            alert(value)
+                        }
+                    },
+                    formatter: function () {
+                        var icons = "<button id='showDetail' class='btn btn-success btn-xs'><i class='fa fa-pencil'></i>查看</button>"
+                        return icons;
+                    }
+                }, {
                     title: '操作',
                     align: 'center',
                     events: {
                         "click #edit": function (e, value, row, index) {
-
+                            retryTask.init(row)
                         },
                         "click #del": function (e, value, row, index) {
-
+                            taskDel.init(row)
                         }
                     },
                     formatter: function () {
@@ -329,6 +349,7 @@ require(['jquery', 'common', 'layer','bootstrap','frame','bootstrapValidator', '
                     var deviceList=new Array();
                     for(var i=0;i<cameras.length;i++){
                         var device={};
+                        device.deviceName=cameras[i].cResName;
                         device.deviceCode=cameras[i].cResCode;
                         device.port=cameras[i].iStreamPort;
                         device.strIp=cameras[i].cIpAddr;
@@ -342,7 +363,7 @@ require(['jquery', 'common', 'layer','bootstrap','frame','bootstrapValidator', '
                     task.jobType=$('#taskType').val();
                     switch ($('#taskType').val()){
                         case '2':
-                            task.triggerTime=$('input[name="triggerTime"]').val();
+                            task.triggerTime=new Date($('input[name="triggerTime"]').val()).valueOf();
                             break;
                         case '3':
                             task.cronTemplet=$('select[name=""]').val();
@@ -361,7 +382,12 @@ require(['jquery', 'common', 'layer','bootstrap','frame','bootstrapValidator', '
                     task.remarks=$('textarea[name="res"]').val();
                     taskService.addTask(task,function (data) {
                         if(data.result){
-                            layer.msg('添加成功')
+                            common.clearForm('taskForm');
+                            layer.closeAll();
+                            layer.msg('添加成功');
+                            //刷新表格
+                            $('#task_table').bootstrapTable('refresh', {silent: true});
+                            addTask.isClick=false;
                         }else {
                             layer.msg(data.description)
                         }
@@ -388,6 +414,7 @@ require(['jquery', 'common', 'layer','bootstrap','frame','bootstrapValidator', '
                     content: $('#add_task'),
                     cancel: function (index, layero) {
                         common.clearForm('taskForm');
+                        addTask.isClick=false;
                     }
                 })
                 if(!addTask.isClick){
@@ -406,4 +433,49 @@ require(['jquery', 'common', 'layer','bootstrap','frame','bootstrapValidator', '
             })
         }
         addTask.init();
+        /********************************* 删除任务 ***************************************/
+        var taskDel={};
+        taskDel.init=function (row) {
+            //点击删除按钮
+            layer.confirm('确定删除 ' + row.taskName + ' ?', {
+                btn: ['确定', '取消'] //按钮
+            }, function () {
+                var canDelete=true;
+                if(row.jobType > 1){
+                    if(row.jobType==2){
+                        if(new Date(row.triggerTime).getTime()>new Date().getTime()){
+                            canDelete=false;
+                        }
+                    }
+                    if(row.jobType==3){
+                        canDelete=false;
+                    }
+                }
+                if(canDelete){
+                    taskService.deleteTask(row.taskId,function (data) {
+                        if(data.result){
+                            layer.msg('删除成功!');
+                            $('#task_table').bootstrapTable('remove', {field: 'taskId', values: [row.taskId]});
+                        }else{
+                            layer.msg('删除失败!')
+                        }
+                    })
+                }else{
+                    layer.msg('任务还未执行 不能删除')
+                }
+            }, function () {
+                layer.closeAll();
+            });
+        }
+        /********************************* 重试任务 ***************************************/
+        var retryTask={};
+        retryTask.init=function (row) {
+            taskService.retryTask(row.taskId,function (data) {
+                if(data.result){
+                    layer.msg('任务重试成功')
+                }else{
+                    layer.msg(data.description)
+                }
+            })
+        }
     })
